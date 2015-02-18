@@ -1,0 +1,11 @@
+target
+bin
+.settings
+src/build
+.classpath
+.project
+phantomjsdriver.log
+node/
+node_modules/
+ivysettings.xml
+ivy_ivy_id_dsa

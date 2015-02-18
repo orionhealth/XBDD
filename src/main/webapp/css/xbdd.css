@@ -1,0 +1,273 @@
+/**
+ * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+body {
+    padding-top: 60px;
+}
+
+.announcements .alert {
+    margin-bottom: 0;
+}
+
+.announcements {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    z-index: 10;
+}
+
+.all-steps {
+    word-wrap: break-word;
+}
+
+.btn-faded {
+    opacity: 0.3;
+}
+
+.change-mode {
+    cursor: pointer;
+}
+
+.highlighted-index-entry {
+    margin-left: 0;
+    border-left: 15px;
+    border-left-style: solid;
+    border-color: initial;
+    font-weight: bold;
+}
+
+.pre-text {
+    overflow: auto;
+    white-space: pre;
+    word-wrap: normal;
+}
+
+label.active {
+    opacity: 1.0;
+}
+
+tr:first-child {
+    color: #000;
+}
+
+.edit-label {
+    float: right;
+    width: 125px;
+}
+
+.edit-label span {
+    width: 60px;
+}
+
+#panel-content .yui3-widget-hd {
+    background: -webkit-gradient(linear,left bottom,left top,from(#000),
+    color-stop(0.07,#494949),color-stop(0.5,#252525),to(#000));
+    background-color: #6b6b6b;
+}
+
+.feature-view {
+    margin-top: 10px;
+    border: 2px solid #e3e3e3;
+    padding-top: 15px;
+    border-radius: 4px;
+}
+
+.feature-edit {
+    margin: 10px;
+}
+
+.feature-edit hr {
+    border-top-color: #c2c2c2;
+}
+
+.edit-title {
+    font-weight: 700;
+}
+
+.change-detail hr {
+    margin: 1px 0 0 0;
+    border-top-color: #e2e2e2;
+}
+
+.scenario-div {
+    margin-left: 10px;
+}
+
+.label-div {
+    float: right;
+    width: 55px;
+}
+
+.edit-label .label-div {
+    float: left;
+}
+
+.arrow-div {
+    float: left;
+    width: 15px;
+}
+
+.arrow-div .html-entity {
+    margin: 2px;
+    font-size: 12px;
+}
+
+.prev-label {
+    float: right;
+}
+
+.curr-label {
+    float: left;
+}
+
+.embeddings-change {
+    float: right;
+    width: 55px;
+}
+
+.upload-attachment {
+    height: 11px;
+    /* hide input button for file upload */
+         opacity: 0;
+    -moz-opacity: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+}
+
+.attachment-wrapper {
+    position: relative;
+    width: 15px;
+    height: 14px;
+    overflow: hidden;
+    padding: 1px;
+    cursor: pointer;
+}
+
+.cucumber-labels {
+    padding: 3px 3px;
+}
+
+.error-message-host {
+    position: relative;
+    z-index: 100;
+    word-wrap: break-word;
+}
+
+.feature-index-column {
+    position: fixed;
+    top: 60px;
+    bottom: 0;
+    overflow-y: scroll;
+}
+
+.feature-tag {
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.trend-chart {
+    width: 600px;
+    height: 200px;
+}
+
+@media (max-width: 768px) {
+    .feature-index-column {
+        top: 170px;
+    }
+
+    .feature-detail-column {
+        top: 120px;
+    }
+
+    .announcements {
+        top: 150px;
+        z-index: 10;
+    }
+}
+
+.feature-index-entry {
+    cursor: pointer;
+}
+
+.scenenario-heading.panel-heading {
+    padding: 0;
+}
+
+.step .table-cont {
+	overflow: auto;
+}
+
+.step .table-cont .table {
+	overflow: auto;
+}
+
+.steps .feature-list-item {
+    cursor: pointer;
+}
+
+.step-failed-auto {
+    list-style: url('/xbdd/icons/cross-small.png');
+}
+
+.step-passed-auto {
+    list-style: url('/xbdd/icons/tick-small.png');
+}
+
+.step-failed {
+    text-decoration: line-through;
+    background-color: #fdd;
+}
+
+.step-passed {
+    background-color: #dfd;
+}
+
+@media screen {
+    .print-header {
+        display: none;
+    }
+}
+
+@media print {
+    body {
+        padding-top: 0;
+    }
+
+    ul,
+    ol {
+        padding-left: 15px;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    /* disable feature border displayed in feature print view */
+    .row.feature-view {
+        border: 0;
+    }
+
+    .row.feature-row {
+        page-break-after: always;
+    }
+
+    .panel-body {
+        padding-top: 4pt;
+        font-size: 8pt;
+    }
+}
+
+@media page {
+    margin: 1cm 0.5cm;
+}

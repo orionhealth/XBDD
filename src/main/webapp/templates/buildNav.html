@@ -1,0 +1,90 @@
+<!--
+
+    Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<div class="nav-slide-right" id="#nav-slide">
+	{{#eachProperty this}} {{! each product}}
+	<div class="nav-in" id="{{#safeencode}}{{key}}{{/safeencode}}">
+		<h3 class="build-nav-title">{{this.key}} Builds</h3>
+		<div class="toggle-multi-select">
+			<button type="button" class="btn btn-default btn-info" data-toggle="tooltip" data-placement="bottom" title="Toggle to select multiple builds">
+				<span class="glyphicon"></span>
+			</button>
+		</div>
+		<h3 class="build-nav-title">Version
+			<select id="build-nav-vselect" class="build-nav-vselect form-control" style="display:inline; width:auto" data-product="{{#safeencode}}{{this.key}}{{/safeencode}}">
+				{{#eachVersionInReverseOrder this.value}} {{! each version}}
+				<option>{{this.key}}</option>
+				{{/eachVersionInReverseOrder}}
+			</select>
+		</h3>
+		<input class="form-control build-search" placeholder="Type to Search" id="build-search">
+		{{#eachVersionInReverseOrder this.value}} {{! each version}}
+		<ul id="{{#safeencode}}{{../../key}}{{/safeencode}}buildsV{{#safeencode}}{{this.key}}{{/safeencode}}" class="build-nav-list">
+			{{#adminonly}}
+			<button class="btn btn-sm btn-danger version-controls delete-version" data-version="{{../../this.key}}/{{this.key}}"><span class="glyphicon glyphicon-remove"></span></button>
+			{{/adminonly}}
+			<div class="pinned-builds-cont">
+				{{#haspinned this}}
+					<h4 class="build-nav-title">Pinned Builds</h4>
+				{{/haspinned}}
+				{{#each this.pinned}} {{! each pinned build}}
+					<li class="build-nav-item">
+						<a class="build-link" href="{{getContext}}reports/{{../../key}}/{{../this.key}}/{{this}}">Build {{this}}</a>
+						<div class="btn-group product-action-menu">
+							<button type="button" style="background:#ddd" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+								<span class="glyphicon glyphicon-cog"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li class="pin-build" data-build="{{../../this.key}}/{{../this.key}}/{{this}}" data-pinned="true"><a href="javascript:void(0)"><span class="glyphicon glyphicon-pushpin"></span> Un-Pin Build</a></li>
+								{{#adminonly}}
+								<li class="delete-build" data-build="{{../../../this.key}}/{{../../this.key}}/{{this}}"><a href="javascript:void(0)"><span class="glyphicon glyphicon-remove"></span> Remove</a></li>
+								{{/adminonly}}
+							</ul>
+						</div>
+						<span class="glyphicon glyphicon-ok hidden"></span>
+					</li>
+				{{/each}}
+			</div>
+			{{#haspinned this}}
+				<h4 class="build-nav-title">All Builds</h4>
+			{{/haspinned}}
+			{{#each this.value}} {{! each build}}
+				<li class="build-nav-item">
+					<a class="build-link" href="{{getContext}}reports/{{../../key}}/{{../this.key}}/{{this}}">Build {{this}}</a>
+					<div class="btn-group product-action-menu">
+						<button type="button" style="background:#ddd" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							<span class="glyphicon glyphicon-cog"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li class="pin-build" data-build="{{../../this.key}}/{{../this.key}}/{{this}}" data-pinned="false"><a href="javascript:void(0)"><span class="glyphicon glyphicon-pushpin"></span> {{#ispinned this ../this}}Un-{{/ispinned}}Pin Build</a></li>
+							{{#adminonly}}
+							<li class="delete-build" data-build="{{../../../this.key}}/{{../../this.key}}/{{this}}"><a href="javascript:void(0)"><span class="glyphicon glyphicon-remove"></span> Remove</a></li>
+							{{/adminonly}}
+						</ul>
+					</div>
+					<span class="glyphicon glyphicon-ok hidden"></span>
+				</li>
+			{{/each}}
+		</ul>
+		{{/eachVersionInReverseOrder}}
+		<div class="btn-group btn-group-justified up-new">
+			<a class="drop-upload open-upload btn btn-success" name = "{{key}}" >Upload new...</a>
+			<a class="btn btn-warning reorder-trigger" data-product="{{key}}">Reorder Builds</a>
+		</div>
+	</div>
+	{{/eachProperty}}
+</div>

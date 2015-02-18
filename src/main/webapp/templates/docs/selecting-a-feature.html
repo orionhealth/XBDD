@@ -1,0 +1,39 @@
+<!--
+
+    Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<h1>How to view a feature</h1>
+<h2>Preparatory steps</h2>
+<ul>
+	<li>In order to view a feature you must first locate the build that this feature resides in.</li>
+	<li>For help on how to access a build please read the help for <span class="help-link" data-doc="#viewing-builds">selecting a build</span>.</li>
+</ul>
+<h2>Choosing a view to suit you</h2>
+<img class="help-doc-image" src="{{getContext}}templates/docs/image/view-select.png">
+<h3>1. List view</h3>
+<img class="help-doc-image" src="{{getContext}}templates/docs/image/list-view.png">
+<p>List view provides a vertical list of all the features that are tested in the current build. Clicking on a feature causes the information about the feature and a list of its scenarios to be displayed to the right of the list. Deselecting a selected feature will cause the feature and scenario information to disappear and be replaced by the build statistics.</p>
+<h3>2. Tag view</h3>
+<img class="help-doc-image" src="{{getContext}}templates/docs/image/tag-view.png">
+<p>Tag view displays all of the tags that are currently attached to feature files for the particular build that you are currently viewing. Selecting a tag shows a list of all the features and scenarios that are annotated with that particular tag. The scenarios are indented with a vertical line to their left.</p>
+<p>The status of the scenario or feature is colour coded into the view, for more information read <span class="help-link" data-doc="#statuses">status of scenarios and features</span>. Note that for a scenario to appear it must be individually annotated with the tag. The feature containing that scenario is then show regardless of if the feature is annotated with that tag or not. Clicking on a feature will cause the feature to be displayed to the right of this view. Clicking on a scenario will display the feature to the right, scroll to the scenario and display it.</p>
+<p>Deselecting a selected feature will cause the feature and scenario information to disappear and be replaced by the build statistics.</p>
+<h3>3. Folder view</h3>
+<img class="help-doc-image" src="{{getContext}}templates/docs/image/folder-view.png">
+<p>Folder view displays features structured by the folders in which the feature files are stored in the project repository. Folders can also contain additional folders replicating the nested file structure. These folders can be opened or closed to display or hide the features that they contain. The status of the feature is colour coded into the view, for more information read <span class="help-link" data-doc="#statuses">status of scenarios and features</span>. Clicking on a feature will cause the feature to be displayed to the right of this view.  Deselecting a selected feature will cause the feature and scenario information to disappear and be replaced by the build statistics.</p>
+<h2>Filtering the results</h2>
+<img class="help-doc-image" src="{{getContext}}templates/docs/image/filters.png">
+<p>The colourful panel of buttons above, each representing a status, allows you to filter the features that are displayed. Initially all statuses are selected and therefore all features are visible. Deselecting a filter will remove features with that status. For more information on what each of the buttons mean please read the section on <span class="help-link" data-doc="#statuses">status of scenarios and features</span>.</p>

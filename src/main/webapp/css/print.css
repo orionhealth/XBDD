@@ -1,0 +1,126 @@
+/**
+ * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@media print {
+    .text-muted {
+        color: #999 !important;
+    }
+    .text-primary {
+        color: #428bca !important;
+    }
+    .text-primary:hover {
+        color: #3071a9 !important;
+    }
+    .text-warning {
+        color: #c09853 !important;
+    }
+    .text-warning:hover {
+        color: #a47e3c !important;
+    }
+    .text-danger {
+        color: #b94a48 !important;
+    }
+    .text-danger:hover {
+        color: #953b39 !important;
+    }
+    .text-success {
+        color: #468847 !important;
+    }
+    .text-success:hover {
+        color: #356635 !important;
+    }
+    .text-info {
+        color: #3a87ad !important;
+    }
+    .text-info:hover {
+        color: #2d6987 !important;
+    }
+    .label[href]:hover,
+    .label[href]:focus {
+        text-decoration: none !important;
+        color: #fff !important;
+        cursor: pointer !important;
+    }
+    .label:empty {
+        display: none;
+    }
+    .label-default {
+        background-color: #999 !important;
+    }
+    .label-default[href]:hover,
+    .label-default[href]:focus {
+        background-color: #808080 !important;
+    }
+    .label-primary {
+        background-color: #428bca !important;
+    }
+    .label-primary[href]:hover,
+    .label-primary[href]:focus {
+        background-color: #3071a9 !important;
+    }
+    .label-success {
+        background-color: #5cb85c !important;
+    }
+    .label-success[href]:hover,
+    .label-success[href]:focus {
+        background-color: #449d44 !important;
+    }
+    .label-info {
+        background-color: #5bc0de !important;
+    }
+    .label-info[href]:hover,
+    .label-info[href]:focus {
+        background-color: #31b0d5 !important;
+    }
+    .label-warning {
+        background-color: #f0ad4e !important;
+    }
+    .label-warning[href]:hover,
+    .label-warning[href]:focus {
+        background-color: #ec971f !important;
+    }
+    .label-danger {
+        background-color: #d9534f !important;
+    }
+    .label-danger[href]:hover,
+    .label-danger[href]:focus {
+        background-color: #c9302c !important;
+    }
+    .label {
+        display: inline !important;
+        border: 0 solid #fff !important;
+        border-color: #fff !important;
+        padding: 0.2em 0.6em 0.3em !important;
+        font-size: 75% !important;
+        line-height: 1 !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        vertical-align: baseline !important;
+        color: #fff !important;
+        border-radius: 0.25em !important;
+    }
+    /* Temporary solution for hiding the broken link with attachment*/
+    a {
+        text-decoration: none !important;
+        color: #428bca !important;
+    }
+    a[href]:after {
+        content: none !important;
+    }
+    .glyphicon-paperclip {
+        color: #428bca !important;
+    }
+}

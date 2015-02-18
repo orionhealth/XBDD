@@ -1,0 +1,36 @@
+<!--
+
+    Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<h1>Viewing the combined status of multiple builds</h1>
+<h2>Preparatory steps</h2>
+<p>In order to view multiple builds you must open up the build navigation. For details on how to do this please read the <span class="help-link" data-doc="#viewing-builds">Viewing Builds</span> section.</p>
+<h2>The Selection Process</h2>
+<img class="help-doc-image" src="{{getContext}}templates/docs/image/selecting-builds.png">
+<p>To enter the multiple build section view, press the build button in the top left of the build navigator. The builds will all fade out until they are selected. The selected builds are also emphasised with a green tick to the right of the selected build. Initially the blue "Merge View" button at the bottom will be disabled until a minimum of two builds have been selected. Once the builds that you want to view the merged status of have all been selected press the "Merge View" button.</p>
+<h2>Loading the View</h2>
+<p>The preparation and rendering of this view can take some time depending on the number of builds selected and the number of scenarios and features present in each build. You will be presented with a message saying "loading, please wait". If an error does occur attempting to merge the builds the message will change to notify you.</p>
+<h2>What this view means</h2>
+<img class="help-doc-image" src="{{getContext}}templates/docs/image/multiple-builds.png">
+<p>The ordering of builds is based on the current ordering of builds for that product. For more details on build ordering refer to the <span class="help-link" data-doc="#re-order-builds">reordering builds</span> page. Only features and scenarios that are present in the most recent build selected are displayed in this view even if they are present in a previous build. The name of the features and scenarios are displayed in the left most column of the merge build table. A row representing a feature is highlighted with the colour of the merged status of the feature. Scenarios are sightly indented. The merged statuses are displayed as the second column on the left, with larger icons and text than the other builds.</p>
+<p>The merge status of a scenario is calculated by looking back from the most recent build at the status of the  scenario in previous builds. The fist occurrence of a passed, failed or empty scenario is given the merge status scenario. If none of these statuses are present then the merged scenario receives the status of the most recent build. The status of a merged feature is calculated by in the normal way by reducing the status of the features scenarios. For more information on how feature status is calculated please refer to the section to <span class="help-link" data-doc="#statuses">status of scenario and features</span>. For information on what each of the icons mean also refer to <span class="help-link" data-doc="#statuses">status of scenario and features</span>.</p>
+<p>The "Show All" and "Hide All" buttons located on the top left of the page can be used to show or hide all of the scenarios leaving only the features. The feature names are clickable to collapse and expand the view of the scenarios that belong to that feature.</p>
+<h2>Printing the merge view</h2>
+<p>You can print this page using</p>
+<pre>File -> Print</pre>
+<p>Or the relevant keyboard shortcut (<i>Cmd + p</i> or <i>Ctrl + p</i>)</p>
+<p>We suggest for a better result that when printing this page set the page orientation to landscape.</p>
+<p>If there are a large number of builds in the merge they may not all show up when printing however the merge result and most recent builds should appear.</p>

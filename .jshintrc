@@ -1,0 +1,18 @@
+{
+	"maxparams": 5,
+  "indent": true,
+  "eqeqeq": true,
+  "forin": true,
+  "immed": true,
+  "latedef": true,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "undef": true,
+  "unused": true,
+  "jquery": true,
+  "browser": true,
+  "devel": true,
+  "immed": true,
+	"predef": ["builds", "indexViewManager", "Morris", "admin", "marked", "phantom", "require","moment","product","version","build","Y","YUI","contextPath","featureFocus"]
+}
