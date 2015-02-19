@@ -24,7 +24,8 @@ grunt.loadNpmTasks('grunt-file-creator');
 grunt.loadNpmTasks('grunt-contrib-copy');
 
 var target = grunt.option('cwd') || '.',
-	phantom = grunt.option('phantom') || '/opt/phantom/bin/phantomjs',
+	pjs = require('phantomjs'),
+	phantom = pjs.path,
 	isWin = /^win/.test(process.platform),
 	fileCreatorOpts = {};
 
@@ -165,7 +166,7 @@ grunt.initConfig({
 	shell: {
 		grover: {
 			command: ['node_modules' + delim + '.bin' + delim + 'istanbul instrument src' + delim + 'main' + delim + 'webapp -o target' + delim + 'coverage',
-			'node_modules' + delim + '.bin' + delim + 'grover --phantom-bin node_modules' + delim + 'phantomjs' + delim + 'lib' + delim + 'phantom' + delim + 'bin' + delim + 'phantomjs src' + delim + 'test' + delim + 'grover' + delim + '*.html -o target' + delim + 'yui-reports' + delim + 'report.xml --junit --coverage --istanbul-report target' + delim + 'coverage-report'].join("&&"),
+			'node_modules' + delim + '.bin' + delim + 'grover --phantom-bin ' + phantom + ' src' + delim + 'test' + delim + 'grover' + delim + '*.html -o target' + delim + 'yui-reports' + delim + 'report.xml --junit --coverage --istanbul-report target' + delim + 'coverage-report'].join("&&"),
 			options: {
 				callback: function (err, stdout, stderr, cb) {
 					var fs = require('fs'),

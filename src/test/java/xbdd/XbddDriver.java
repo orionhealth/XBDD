@@ -74,7 +74,7 @@ public class XbddDriver extends EventFiringWebDriver {
 		final DesiredCapabilities caps = DesiredCapabilities.phantomjs();
 
 		caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS,
-				new String[] { "--ignore-ssl-errors=true" });
+				new String[] { "--ignore-ssl-errors=true", "--ssl-protocol=tlsv1", "--web-security=false" });
 
 		final PhantomJSDriver phantomJSDriver = new PhantomJSDriver(caps);
 		phantomJSDriver.manage().window().setSize(new Dimension(1280, 800));
