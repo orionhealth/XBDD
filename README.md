@@ -4,7 +4,7 @@ XBDD
 Installation
 ------------
 
-1. See [INTSALL.md](http://stash/projects/XBDD/repos/xbdd/browse/docs/INTSALL.md) for details on Tomcat configuration
+1. See [INSTALL.md](/docs/INSTALL.md) for details on Tomcat configuration
 2. Navigate to https://localhost:8443/xbdd/  (or whichever port you have specified during your tomcat configuration)
 
 For performance / production
@@ -15,12 +15,12 @@ For performance / production
 Usage
 =====
 
-See the [user guide](http://stash/projects/XBDD/repos/xbdd/browse/docs/usage/user-guide.md) for an overview of XBDD functionality.
+See the [user guide](/docs/usage/user-guide.md) for an overview of XBDD functionality.
 
 Upload
 ------
 
-Cucumber json reports can be uploaded manually from the XBDD main page. See [UPLOAD.md](http://stash/projects/XBDD/repos/xbdd/browse/docs/UPLOAD.md) for instructions on automating the upload with maven.
+Cucumber json reports can be uploaded manually from the XBDD main page. See [UPLOAD.md](/docs/UPLOAD.md) for instructions on automating the upload with maven.
 
 Contributing
 =====
