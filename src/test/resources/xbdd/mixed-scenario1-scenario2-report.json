@@ -1,0 +1,148 @@
+[
+  {
+    "line": 2,
+    "elements": [
+      {
+        "line": 4,
+        "name": "Scenario three",
+        "description": "",
+        "id": "another-feature;scenario-three",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 5869180,
+              "status": "passed"
+            },
+            "line": 5,
+            "name": "A scenario",
+            "match": {
+              "location": "MixedStepdefs.a_scenario()"
+            },
+            "keyword": "Given "
+          }
+        ]
+      },
+      {
+        "line": 7,
+        "name": "Scenario four",
+        "description": "",
+        "id": "another-feature;scenario-four",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 325154,
+              "error_message": "java.lang.AssertionError\r\n\tat org.junit.Assert.fail(Assert.java:86)\r\n\tat org.junit.Assert.fail(Assert.java:95)\r\n\tat example.stepdefs.MixedStepdefs.A_scneario(MixedStepdefs.java:25)\r\n\tat ✽.And A failed scenario(example/mixed-three.feature:8)\r\n",
+              "status": "failed"
+            },
+            "line": 8,
+            "name": "A failed scenario",
+            "match": {
+              "location": "MixedStepdefs.A_scneario()"
+            },
+            "keyword": "And "
+          }
+        ]
+      }
+    ],
+    "name": "Another feature",
+    "description": "",
+    "id": "another-feature",
+    "keyword": "Feature",
+    "uri": "example/mixed-three.feature",
+    "tags": [
+      {
+        "line": 1,
+        "name": "@mixed"
+      },
+      {
+        "line": 1,
+        "name": "@two"
+      },
+      {
+        "line": 1,
+        "name": "@one"
+      }
+    ]
+  },
+  {
+    "line": 2,
+    "elements": [
+      {
+        "line": 7,
+        "name": "scenario1",
+        "description": "",
+        "id": "merging-reports-for-single-feature;scenario1",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 73898,
+              "status": "passed"
+            },
+            "line": 8,
+            "name": "A scenario",
+            "match": {
+              "location": "MixedStepdefs.a_scenario()"
+            },
+            "keyword": "Given "
+          }
+        ],
+        "tags": [
+          {
+            "line": 6,
+            "name": "@one"
+          },
+          {
+            "line": 6,
+            "name": "@two"
+          }
+        ]
+      },
+      {
+        "line": 11,
+        "name": "scenario2",
+        "description": "",
+        "id": "merging-reports-for-single-feature;scenario2",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 196652,
+              "error_message": "java.lang.AssertionError\r\n\tat org.junit.Assert.fail(Assert.java:86)\r\n\tat org.junit.Assert.fail(Assert.java:95)\r\n\tat example.stepdefs.MixedStepdefs.A_scneario(MixedStepdefs.java:25)\r\n\tat ✽.Given A failed scenario(example/mixed.feature:12)\r\n",
+              "status": "failed"
+            },
+            "line": 12,
+            "name": "A failed scenario",
+            "match": {
+              "location": "MixedStepdefs.A_scneario()"
+            },
+            "keyword": "Given "
+          }
+        ],
+        "tags": [
+          {
+            "line": 10,
+            "name": "@two"
+          }
+        ]
+      }
+    ],
+    "name": "Merging reports for single feature",
+    "description": "\r\nExample feature containing three scenarios that are run by separate runners and merged in XBDD",
+    "id": "merging-reports-for-single-feature",
+    "keyword": "Feature",
+    "uri": "example/mixed.feature",
+    "tags": [
+      {
+        "line": 1,
+        "name": "@mixed"
+      }
+    ]
+  }
+]

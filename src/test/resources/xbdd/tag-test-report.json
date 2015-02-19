@@ -1,0 +1,534 @@
+[
+  {
+    "id": "scenarios-can-have-attachments",
+    "tags": [
+      {
+        "name": "@such-test",
+        "line": 1
+      },
+      {
+        "name": "@wow",
+        "line": 1
+      }
+    ],
+    "description": "",
+    "name": "Scenarios can have attachments",
+    "keyword": "Feature",
+    "line": 1,
+    "elements": [
+      {
+        "id": "scenarios-can-have-attachments;a-scenario-with-an-attachment",
+        "description": "",
+        "name": "A scenario with an attachment",
+        "keyword": "Scenario",
+        "line": 3,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "a scenario",
+            "keyword": "Given ",
+            "line": 4,
+            "match": {}
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "it includes an attachment",
+            "keyword": "And ",
+            "line": 5,
+            "match": {}
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "uri": "example/attachment.feature"
+  },
+  {
+    "id": "passing-background-sample",
+    "description": "\nExample from https://github.com/cucumber/cucumber/blob/master/features/docs/gherkin",
+    "name": "Passing background sample",
+    "keyword": "Feature",
+    "line": 1,
+    "elements": [
+      {
+        "description": "",
+        "name": "",
+        "keyword": "Background",
+        "line": 5,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "\u002710\u0027 cukes",
+            "keyword": "Given ",
+            "line": 6,
+            "match": {}
+          }
+        ],
+        "type": "background"
+      },
+      {
+        "id": "passing-background-sample;passing-background",
+        "description": "",
+        "name": "passing background",
+        "keyword": "Scenario",
+        "line": 8,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "I should have \u002710\u0027 cukes",
+            "keyword": "Then ",
+            "line": 9,
+            "match": {}
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "name": "",
+        "keyword": "Background",
+        "line": 5,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "\u002710\u0027 cukes",
+            "keyword": "Given ",
+            "line": 6,
+            "match": {}
+          }
+        ],
+        "type": "background"
+      },
+      {
+        "id": "passing-background-sample;another-passing-background",
+        "description": "",
+        "name": "another passing background",
+        "keyword": "Scenario",
+        "line": 11,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "I should have \u002710\u0027 cukes",
+            "keyword": "Then ",
+            "line": 12,
+            "match": {}
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "uri": "example/background.feature"
+  },
+  {
+    "id": "descriptions-everywhere",
+    "description": "\nExample from https://github.com/cucumber/cucumber/blob/master/features/docs/gherkin\n\nWe can put a useful description here of the feature, which can\nspan multiple lines.",
+    "name": "Descriptions everywhere",
+    "keyword": "Feature",
+    "line": 1,
+    "elements": [
+      {
+        "description": "\nWe can also put in descriptions showing what the background is\ndoing.",
+        "name": "",
+        "keyword": "Background",
+        "line": 8,
+        "steps": [
+          {
+            "result": {
+              "duration": 198424000,
+              "status": "passed"
+            },
+            "name": "this step passes",
+            "keyword": "Given ",
+            "line": 13,
+            "match": {
+              "location": "BasicStepdefs.this_step_passes()"
+            }
+          }
+        ],
+        "type": "background"
+      },
+      {
+        "id": "descriptions-everywhere;i\u0027m-a-scenario-with-a-description",
+        "description": "\nYou can also put descriptions in front of individual scenarios.",
+        "name": "I\u0027m a scenario with a description",
+        "keyword": "Scenario",
+        "line": 15,
+        "steps": [
+          {
+            "result": {
+              "duration": 53000,
+              "status": "passed"
+            },
+            "name": "this step passes",
+            "keyword": "Given ",
+            "line": 19,
+            "match": {
+              "location": "BasicStepdefs.this_step_passes()"
+            }
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "\nWe can also put in descriptions showing what the background is\ndoing.",
+        "name": "",
+        "keyword": "Background",
+        "line": 8,
+        "steps": [
+          {
+            "result": {
+              "duration": 162000,
+              "status": "passed"
+            },
+            "name": "this step passes",
+            "keyword": "Given ",
+            "line": 13,
+            "match": {
+              "location": "BasicStepdefs.this_step_passes()"
+            }
+          }
+        ],
+        "type": "background"
+      },
+      {
+        "id": "descriptions-everywhere;i\u0027m-a-scenario-outline-with-a-description;examples;2",
+        "description": "",
+        "name": "I\u0027m a scenario outline with a description",
+        "keyword": "Scenario Outline",
+        "line": 32,
+        "steps": [
+          {
+            "result": {
+              "duration": 48000,
+              "status": "passed"
+            },
+            "name": "this step passes",
+            "keyword": "Given ",
+            "line": 25,
+            "match": {
+              "location": "BasicStepdefs.this_step_passes()"
+            },
+            "matchedColumns": [
+              0
+            ]
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "uri": "example/description.feature"
+  },
+  {
+    "id": "failing-feature",
+    "description": "",
+    "name": "Failing feature",
+    "keyword": "Feature",
+    "line": 1,
+    "elements": [
+      {
+        "id": "feature-with-tags;this-scenario-has-a-tag",
+        "tags": [
+          {
+            "name": "@much-automation",
+            "line": 4
+          }
+        ],
+        "description": "",
+        "name": "This scenario has a tag",
+        "keyword": "Scenario",
+        "line": 5,
+        "steps": [
+          {
+            "result": {
+              "duration": 87000,
+              "status": "passed"
+            },
+            "name": "this step passes",
+            "keyword": "Given ",
+            "line": 6,
+            "match": {
+              "location": "BasicStepdefs.this_step_passes()"
+            }
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "uri": "example/failed.feature"
+  },
+  {
+    "id": "a-basic-cucumber-example",
+    "description": "\nExample from https://github.com/cucumber/cucumber/blob/master/features/docs/gherkin",
+    "name": "A basic cucumber example",
+    "keyword": "Feature",
+    "line": 1,
+    "elements": [
+      {
+        "id": "a-basic-cucumber-example;i-have-no-steps",
+        "description": "",
+        "name": "I have no steps",
+        "keyword": "Scenario",
+        "line": 5,
+        "type": "scenario"
+      },
+      {
+        "id": "a-basic-cucumber-example;test-state;rainbow-colours;2",
+        "description": "",
+        "name": "Test state",
+        "keyword": "Scenario Outline",
+        "line": 12,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "missing without a table",
+            "keyword": "Given ",
+            "line": 8,
+            "match": {},
+            "matchedColumns": [
+              0
+            ]
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "passing without a table",
+            "keyword": "Given ",
+            "line": 9,
+            "match": {},
+            "matchedColumns": [
+              1
+            ]
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "id": "a-basic-cucumber-example;test-state;rainbow-colours;3",
+        "description": "",
+        "name": "Test state",
+        "keyword": "Scenario Outline",
+        "line": 13,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "passing without a table",
+            "keyword": "Given ",
+            "line": 8,
+            "match": {},
+            "matchedColumns": [
+              0
+            ]
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "passing without a table",
+            "keyword": "Given ",
+            "line": 9,
+            "match": {},
+            "matchedColumns": [
+              1
+            ]
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "id": "a-basic-cucumber-example;test-state;rainbow-colours;4",
+        "description": "",
+        "name": "Test state",
+        "keyword": "Scenario Outline",
+        "line": 14,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "failing without a table",
+            "keyword": "Given ",
+            "line": 8,
+            "match": {},
+            "matchedColumns": [
+              0
+            ]
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "passing without a table",
+            "keyword": "Given ",
+            "line": 9,
+            "match": {},
+            "matchedColumns": [
+              1
+            ]
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "id": "a-basic-cucumber-example;test-state;only-passing;2",
+        "description": "",
+        "name": "Test state",
+        "keyword": "Scenario Outline",
+        "line": 17,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "passing without a table",
+            "keyword": "Given ",
+            "line": 8,
+            "match": {},
+            "matchedColumns": [
+              0
+            ]
+          },
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "passing without a table",
+            "keyword": "Given ",
+            "line": 9,
+            "match": {},
+            "matchedColumns": [
+              1
+            ]
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "uri": "example/outline.feature"
+  },
+  {
+    "id": "passing-feature",
+    "description": "",
+    "name": "Passing feature",
+    "keyword": "Feature",
+    "line": 1,
+    "elements": [
+      {
+        "id": "passing-feature;this-feature-passes",
+        "description": "",
+        "name": "This feature passes",
+        "keyword": "Scenario",
+        "line": 3,
+        "steps": [
+          {
+            "result": {
+              "duration": 151000,
+              "status": "passed"
+            },
+            "name": "this step passes",
+            "keyword": "Given ",
+            "line": 4,
+            "match": {
+              "location": "BasicStepdefs.this_step_passes()"
+            }
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "uri": "example/passed.feature"
+  },
+  {
+    "id": "star-notation-feature",
+    "description": "\nExample from https://github.com/cucumber/cucumber/blob/master/features/docs/gherkin",
+    "name": "Star-notation feature",
+    "keyword": "Feature",
+    "line": 1,
+    "elements": [
+      {
+        "id": "star-notation-feature;s",
+        "description": "",
+        "name": "S",
+        "keyword": "Scenario",
+        "line": 5,
+        "steps": [
+          {
+            "result": {
+              "status": "undefined"
+            },
+            "name": "I have some cukes",
+            "keyword": "* ",
+            "line": 6,
+            "match": {}
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "uri": "example/star.feature"
+  },
+  {
+    "id": "feature-with-tags",
+    "tags": [
+      {
+        "name": "@such-test",
+        "line": 1
+      },
+      {
+        "name": "@wow",
+        "line": 1
+      }
+    ],
+    "description": "",
+    "name": "Feature with tags",
+    "keyword": "Feature",
+    "line": 2,
+    "elements": [
+      {
+        "id": "feature-with-tags;this-scenario-has-a-tag",
+        "tags": [
+          {
+            "name": "@much-automation",
+            "line": 4
+          }
+        ],
+        "description": "",
+        "name": "This scenario has a tag",
+        "keyword": "Scenario",
+        "line": 5,
+        "steps": [
+          {
+            "result": {
+              "duration": 87000,
+              "status": "passed"
+            },
+            "name": "this step passes",
+            "keyword": "Given ",
+            "line": 6,
+            "match": {
+              "location": "BasicStepdefs.this_step_passes()"
+            }
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "uri": "example/tags.feature"
+  }
+]
