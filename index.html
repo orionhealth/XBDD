@@ -37,34 +37,110 @@
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<ol>
-<li>See <a href="/docs/INSTALL.md">INSTALL.md</a> for details on Tomcat configuration</li>
-<li>Navigate to https://localhost:8443/xbdd/  (or whichever port you have specified during your tomcat configuration)</li>
-</ol>
+<p>Download and install the appropriate version of Apache Tomcat 7 from the <a href="http://tomcat.apache.org/download-70.cgi">apache tomcat website</a></p>
+
+<p><code>$CATALINE_BASE</code> refers to the tomcat installation directory.</p>
 
 <h2>
-<a id="for-performance--production" class="anchor" href="#for-performance--production" aria-hidden="true"><span class="octicon octicon-link"></span></a>For performance / production</h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<h3>
+<a id="ssltls" class="anchor" href="#ssltls" aria-hidden="true"><span class="octicon octicon-link"></span></a>SSL/TLS</h3>
+
+<p>The XBDD application requires a confidential connection. This is usually achieved through the Tomcat ssl connector.</p>
+
+<p>Open <code>$CATALINA_BASE/conf/server.xml</code> and uncomment the following:</p>
+
+<div class="highlight highlight-xml"><pre>&lt;<span class="pl-ent">Connector</span> <span class="pl-e">port</span>=<span class="pl-s1"><span class="pl-pds">"</span>8443<span class="pl-pds">"</span></span> <span class="pl-e">protocol</span>=<span class="pl-s1"><span class="pl-pds">"</span>HTTP/1.1<span class="pl-pds">"</span></span> <span class="pl-e">SSLEnabled</span>=<span class="pl-s1"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
+    <span class="pl-e">maxThreads</span>=<span class="pl-s1"><span class="pl-pds">"</span>150<span class="pl-pds">"</span></span> <span class="pl-e">scheme</span>=<span class="pl-s1"><span class="pl-pds">"</span>https<span class="pl-pds">"</span></span> <span class="pl-e">secure</span>=<span class="pl-s1"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span> <span class="pl-e">clientAuth</span>=<span class="pl-s1"><span class="pl-pds">"</span>false<span class="pl-pds">"</span></span>
+    <span class="pl-e">sslProtocol</span>=<span class="pl-s1"><span class="pl-pds">"</span>TLS<span class="pl-pds">"</span></span>
+    <span class="pl-e">keystoreFile</span>=<span class="pl-s1"><span class="pl-pds">"</span>FILE_LOCATION<span class="pl-pds">"</span></span>
+    <span class="pl-e">keystorePass</span>=<span class="pl-s1"><span class="pl-pds">"</span>PASSWORD_HERE<span class="pl-pds">"</span></span> /&gt;</pre></div>
+
+<p>Replace FILE_LOCATION with the location of your security certificate (you may need to <a href="http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes">create one</a> first) and PASSWORD_HERE with the related password.</p>
+
+<h3>
+<a id="enable-ldap-authentication" class="anchor" href="#enable-ldap-authentication" aria-hidden="true"><span class="octicon octicon-link"></span></a>Enable LDAP Authentication</h3>
+
+<p>Configure the realm in the server.xml or context.xml with the JNDIRealm. See the <a href="https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm">documentation</a> for details on the required fields. For example:</p>
+
+<div class="highlight highlight-xml"><pre>&lt;<span class="pl-ent">Realm</span> <span class="pl-e">className</span>=<span class="pl-s1"><span class="pl-pds">"</span>org.apache.catalina.realm.LockOutRealm<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">Realm</span> <span class="pl-e">allRolesMode</span>=<span class="pl-s1"><span class="pl-pds">"</span>authOnly<span class="pl-pds">"</span></span> <span class="pl-e">className</span>=<span class="pl-s1"><span class="pl-pds">"</span>org.apache.catalina.realm.JNDIRealm<span class="pl-pds">"</span></span> 
+    <span class="pl-e">connectionName</span>=<span class="pl-s1"><span class="pl-pds">"</span>USERNAME<span class="pl-pds">"</span></span> <span class="pl-e">connectionPassword</span>=<span class="pl-s1"><span class="pl-pds">"</span>PASSWORD<span class="pl-pds">"</span></span> <span class="pl-e">connectionURL</span>=<span class="pl-s1"><span class="pl-pds">"</span>ldap://LDAP_HOST:389<span class="pl-pds">"</span></span> 
+    <span class="pl-e">referrals</span>=<span class="pl-s1"><span class="pl-pds">"</span>follow<span class="pl-pds">"</span></span> <span class="pl-e">roleBase</span>=<span class="pl-s1"><span class="pl-pds">"</span>ou=Groups,ou=Employees,dc=Example,dc=Internal<span class="pl-pds">"</span></span> <span class="pl-e">roleName</span>=<span class="pl-s1"><span class="pl-pds">"</span>cn<span class="pl-pds">"</span></span> 
+    <span class="pl-e">roleSearch</span>=<span class="pl-s1"><span class="pl-pds">"</span>(member={0})<span class="pl-pds">"</span></span> <span class="pl-e">roleSubtree</span>=<span class="pl-s1"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span> <span class="pl-e">userBase</span>=<span class="pl-s1"><span class="pl-pds">"</span>ou=Employees,dc=Example,dc=Internal<span class="pl-pds">"</span></span> 
+    <span class="pl-e">userRoleName</span>=<span class="pl-s1"><span class="pl-pds">"</span>memberOf<span class="pl-pds">"</span></span> <span class="pl-e">userSearch</span>=<span class="pl-s1"><span class="pl-pds">"</span>(sAMAccountName={0})<span class="pl-pds">"</span></span> <span class="pl-e">userSubtree</span>=<span class="pl-s1"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>/&gt;
+&lt;/<span class="pl-ent">Realm</span>&gt;</pre></div>
+
+<h3>
+<a id="configure-mongo-server-connection" class="anchor" href="#configure-mongo-server-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configure Mongo Server Connection</h3>
+
+<p>By default XBDD will connect to mongo at the default address <code>localhost:27017</code></p>
+
+<p>To configure an alternative server or authentication add the following parameters to the tomcat <code>context.xml</code></p>
+
+<div class="highlight highlight-xml"><pre>    &lt;<span class="pl-ent">Parameter</span> <span class="pl-e">name</span>=<span class="pl-s1"><span class="pl-pds">"</span>xbdd.mongo.hostname<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>&lt;hostname&gt;<span class="pl-pds">"</span></span>/&gt;
+    &lt;<span class="pl-ent">Parameter</span> <span class="pl-e">name</span>=<span class="pl-s1"><span class="pl-pds">"</span>xbdd.mongo.port<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>&lt;port&gt;<span class="pl-pds">"</span></span>/&gt;
+    &lt;<span class="pl-ent">Parameter</span> <span class="pl-e">name</span>=<span class="pl-s1"><span class="pl-pds">"</span>xbdd.mongo.username<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>&lt;username&gt;<span class="pl-pds">"</span></span>/&gt;
+    &lt;<span class="pl-ent">Parameter</span> <span class="pl-e">name</span>=<span class="pl-s1"><span class="pl-pds">"</span>xbdd.mongo.password<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>&lt;password&gt;<span class="pl-pds">"</span></span>/&gt;</pre></div>
+
+<h3>
+<a id="a-word-on-securing-the-connection-to-mongodb" class="anchor" href="#a-word-on-securing-the-connection-to-mongodb" aria-hidden="true"><span class="octicon octicon-link"></span></a>A word on securing the connection to MongoDB</h3>
+
+<p>MongoDB provides user access on a per-DB basis. XBDD uses two databases, "bdd" and "grid". The user needs read/write permissions for both.</p>
+
+<h2>
+<a id="running" class="anchor" href="#running" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running</h2>
+
+<p>The xbdd application can be run as a standalone webapp in Tomcat or with Eclipse.
+It can also be run from command line using an embedded Tomcat instance.</p>
+
+<h3>
+<a id="standalone" class="anchor" href="#standalone" aria-hidden="true"><span class="octicon octicon-link"></span></a>Standalone</h3>
+
+<p>Create a war from an existing project and install in to tomcat webapps dir.</p>
 
 <ol>
-<li>Run the script contained within mongoIndexes.txt to create compound indexes required for search/sort.</li>
+<li>Download <code>xbdd.war</code> or build from source with <code>mvn clean package</code>
+</li>
+<li>Copy <code>xbdd.war</code> into the <code>$CATALINA_BASE/webapps</code> folder of the Tomcat installation</li>
+<li>Start Tomcat with <code>$CATALINA_BASE/bin/startup.sh</code>
+</li>
+<li>Open <a href="http://localhost:8443/xbdd">http://localhost:8443/xbdd</a>
+</li>
+</ol>
+
+<h3>
+<a id="embedded" class="anchor" href="#embedded" aria-hidden="true"><span class="octicon octicon-link"></span></a>Embedded</h3>
+
+<p>Use maven to launch an embedded tomcat.</p>
+
+<ol>
+<li>From eclipse or the command line run <code>mvn tomcat7:run</code>
+</li>
+<li>Open <a href="http://localhost:8443/xbdd">http://localhost:8443/xbdd</a>
+</li>
 </ol>
 
 <h1>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+<a id="xbdd---printing" class="anchor" href="#xbdd---printing" aria-hidden="true"><span class="octicon octicon-link"></span></a>XBDD - Printing</h1>
 
-<p>See the <a href="/docs/usage/user-guide.md">user guide</a> for an overview of XBDD functionality.</p>
+<p>To enable PDF downloading for printing, PhantomJS must be installed. </p>
 
 <h2>
-<a id="upload" class="anchor" href="#upload" aria-hidden="true"><span class="octicon octicon-link"></span></a>Upload</h2>
+<a id="installation-1" class="anchor" href="#installation-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>Cucumber json reports can be uploaded manually from the XBDD main page. See <a href="/docs/UPLOAD.md">UPLOAD.md</a> for instructions on automating the upload with maven.</p>
+<ol>
+<li>Download PhantomJS from <a href="http://phantomjs.org/download.html">http://phantomjs.org/download.html</a>
+</li>
+<li>Extract PhantomJS to a directory, e.g. <code>/opt/phantomJS</code>
+</li>
+<li>Add context variables for the PhantomJS install dir and the user to use for printing to <code>context.xml</code>:</li>
+</ol>
 
-<h1>
-<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h1>
-
-<p>For all those wishing to contribute to XBDD please fork the repository, and submit your changes via a pull request.
-Please ensure your pull request follows the pre-existing coding style and that <code>mvn clean verify</code> passes.  You can use <code>grunt pretty</code> to format your CSS and JS correctly.
-If the build is failing due to licenses missing, please run <code>mvn licence:format</code></p>
+<div class="highlight highlight-xml"><pre>    &lt;<span class="pl-ent">Parameter</span> <span class="pl-e">name</span>=<span class="pl-s1"><span class="pl-pds">"</span>xbdd.phantomjs.home<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>/opt/phantomjs/bin<span class="pl-pds">"</span></span>/&gt;
+    &lt;<span class="pl-ent">Parameter</span> <span class="pl-e">name</span>=<span class="pl-s1"><span class="pl-pds">"</span>xbdd.phantomjs.username<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>xbdd-print<span class="pl-pds">"</span></span>/&gt;
+    &lt;<span class="pl-ent">Parameter</span> <span class="pl-e">name</span>=<span class="pl-s1"><span class="pl-pds">"</span>xbdd.phantomjs.password<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>secret<span class="pl-pds">"</span></span>/&gt;</pre></div>
       </section>
     </div>
 
