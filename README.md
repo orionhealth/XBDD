@@ -1,4 +1,4 @@
-XBDD
+XBDD [![Build Status](https://travis-ci.org/MarshallOfSound/XBDD.svg)](https://travis-ci.org/MarshallOfSound/XBDD)
 ====
 
 Installation
