@@ -93,7 +93,7 @@ YUI.add('build-nav', function (Y) {
 			//Listen for reorder request
 			Y.all('.reorder-trigger').on('click', function (e) {
 				var version = Y.one('.nav-in.active select').get('value');
-				window.location = Y.statusHelpers.getContext() + '/build-order/' + e.currentTarget.getData('product') + '/' + version;
+				window.location = Y.statusHelpers.getContext() + 'build-order/' + e.currentTarget.getData('product') + '/' + version;
 			});
 		},
 		navSlideOut: function (e) {
