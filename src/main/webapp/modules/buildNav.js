@@ -71,7 +71,7 @@ YUI.add('build-nav', function (Y) {
 
 			Y.all(".build-search").on('keyup', function (e) {
 				var scan = this.get('value').join("");
-				e.target.ancestor().all("ul li").each(function () {
+				e.target.ancestor().all("ul li.build-nav-item").each(function () {
 					if (this.get('text').split(scan).length > 1) {
 						this.setStyle("display", "block");
 					} else {
