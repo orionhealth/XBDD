@@ -44,7 +44,7 @@ YUI().use('node', 'io', 'xbdd', 'statusHelpers', 'handlebars', 'build-reordering
 							i;
 
 						for (i = 0; i < builds.size(); i++) {
-							buildArray.push(builds.item(i).get('text').trim());
+							buildArray.push(builds.item(i).one('.title').get('text').trim());
 						}
 
 						Y.io(contextPath + 'rest/build-reorder/' + product + '/' + version, {
