@@ -190,7 +190,7 @@ YUI.add('build-nav', function (Y) {
 				productMenu.addClass('hidden');
 
 				Y.all('.btn-group-justified.up-new .combine-builds').on('click', Y.bind(function () {
-					var form = Y.Node.create('<form action="' + Y.statusHelpers.getContext() + 'reports/multiple" method="post"></form>'),
+					var form = Y.Node.create('<form id="merge-view-form" action="' + Y.statusHelpers.getContext() + 'reports/multiple" method="post"></form>'),
 						activeNav = Y.one('.nav-in.active'),
 						versionSelector = activeNav.one('#build-nav-vselect'),
 						productName = activeNav.one('.open-upload').getAttribute('name');
@@ -203,7 +203,9 @@ YUI.add('build-nav', function (Y) {
 						form.append(Y.Node.create('<input name="version" />').set('value', versionSelector.get('value')));
 						//append product
 						form.append(Y.Node.create('<input name="product" />').set('value', productName));
-						form.submit();
+						form.append(Y.Node.create('<input type="submit" />'));
+						Y.one('body').append(form);
+						document.getElementById("merge-view-form").submit();
 					}
 				}, this));
 
