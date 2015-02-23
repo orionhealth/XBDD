@@ -71,7 +71,7 @@ public class DryRunCukesIT{}
             <arg value="-d" />
             <arg value="@./target/cucumber-report.json" />
             <arg
-              value="https://ohp-xbdd:8443/xbdd/rest/reports/${project.artifactId}/${version.major}.${version.minor}.${version.servicepack}/${buildNumber}" />
+              value="https://\{{YOUR-XBDD-CONTEXT-ROOT}}/rest/reports/${project.artifactId}/${version.major}.${version.minor}.${version.servicepack}/${buildNumber}" />
             <arg value="--header" />
             <arg value="Content-Type:application/json" />
             <arg value="-u" />
@@ -85,7 +85,7 @@ public class DryRunCukesIT{}
             <arg value="-d" />
             <arg value="@./target/cucumber-manual-report.json" />
             <arg
-              value="https://ohp-xbdd:8443/xbdd/rest/reports/${project.artifactId}/${version.major}.${version.minor}.${version.servicepack}/${buildNumber}" />
+              value="https://\{{YOUR-XBDD-CONTEXT-ROOT}}/rest/reports/${project.artifactId}/${version.major}.${version.minor}.${version.servicepack}/${buildNumber}" />
             <arg value="--header" />
             <arg value="Content-Type:application/json" />
             <arg value="-u" />
