@@ -86,6 +86,13 @@
 	<!-- /.navbar -->
 	<div class="container" role="main">
 		<div class="row row-offcanvas row-offcanvas-right">
+			<noscript>
+				<div class="alert alert-danger" role="alert">
+					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					<span class="sr-only">Error:</span>
+					Enable JavaScript to use XBDD
+				</div>
+			</noscript>
 			<div class="jumbotron">
 				<h1>Welcome to XBDD</h1>
 				<p class="lead">
