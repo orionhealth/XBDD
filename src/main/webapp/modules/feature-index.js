@@ -529,7 +529,7 @@ YUI.add('feature-index', function (Y) {
 		},
 		setFeatureInFocus: function (featureId, notHide) {
 			if (this.get('featureInFocus') === featureId && typeof notHide === 'undefined') {
-				this._renderBuildStats();
+                Y.Global.fire('render.build.stats', this);
 			} else {
 				Y.one("#buildStats").setHTML('');
 				this.set('featureInFocus', featureId);
