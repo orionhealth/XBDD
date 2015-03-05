@@ -78,6 +78,13 @@
 			<div class="col-sm-12" >
 				<div class="row">
 					<div class="col-xs-12 hidden-print" id="controls">
+						<noscript>
+							<div class="alert alert-danger" role="alert">
+								<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+								<span class="sr-only">Error:</span>
+								Enable JavaScript to use XBDD
+							</div>
+						</noscript>
 						<div class="btn-group btn-group-justified">
 							<a class="btn btn-success" data-status="passed"><span class="glyphicon glyphicon-ok-sign"></span> Passed</a>
 							<a class="btn btn-danger" data-status="failed"><span class="glyphicon glyphicon-remove-sign"></span> Failed</a>
