@@ -165,7 +165,15 @@ YUI.add('feature-test', function (Y) {
 		initializer: function (cfg) {
 			this.set('expandedScenarios', {}); //tracks expanded scenarios so on a re-render they can be re-opened.
 			var model = this.get('model'),
-				that = this;
+                editInProgress = function() {
+                    var i = 0;
+                    for (var property in model.changed) {
+                        if (model.changed.hasOwnProperty(property)) {
+                            i++;
+                        }
+                    }
+                    return i>0;
+                };
 
 			this.template = Y.Handlebars.compile(Y.xbdd.getTemplate(cfg.printable ? 'feature-printable' : 'feature'));
 			if (cfg.printable) {
@@ -179,17 +187,19 @@ YUI.add('feature-test', function (Y) {
 
 			window.onbeforeunload = (function () {
 				return function () {
-					var i = 0;
-					for (var property in model.changed) {
-						if (model.changed.hasOwnProperty(property)) {
-							i++;
-						}
-					}
-					if (i > 0) {
+					if (editInProgress()) {
 						return "You have unsaved changes!";
 					}
 				};
 			}());
+            Y.Global.detach("render.build.stats");
+            Y.Global.on('render.build.stats', function(viewManager) {
+                if (editInProgress()) {
+                    alert("You have unsaved changes, please save or discard before continuing");
+                } else {
+                    viewManager._renderBuildStats();
+                }
+            });
 		},
 		changeMode: function (e) {
 			var container = e.target.ancestor('.form-group');
