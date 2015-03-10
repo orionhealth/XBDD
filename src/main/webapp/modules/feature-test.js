@@ -228,6 +228,25 @@ YUI.add('feature-test', function (Y) {
 		},
 		_addClickListeners: function () {
 			Y.all('.upload-attachment').each(Y.bind(function (item) {
+                item.ancestor().on('click', Y.bind(function(e) {
+                    var editInProgress = function(model) {
+                            var i = 0;
+                            for (var property in model.changed) {
+                                if (model.changed.hasOwnProperty(property)) {
+                                    i++;
+                                }
+                            }
+                            return i>0;
+                        },
+                        model = this.get('model');
+
+                    if (editInProgress(model)) {
+                        alert('Please save or discard your changes before uploading attachments');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }, this));
 				item.on('change', Y.bind(function () {
 					var model = this.get('model'),
 						formgroup = item.ancestor(".image-form"),
