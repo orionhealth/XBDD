@@ -8,11 +8,10 @@
     "grover": "~0.1.13",
     "phantomjs": "~1.9.8",
     "grunt-shell": "~1.1.1",
+    "grunt-grover": "~0.2.2",
     "istanbul": "~0.3.5",
     "grunt-contrib-connect": "^0.9.0",
-    "jshint-junit-reporter": "^0.1.0",
-    "grunt-contrib-copy": "^0.7.0",
-    "grunt-file-creator": "^0.1.2"
+    "jshint-junit-reporter": "^0.1.0"
   },
   "devDependencies": {
     "grunt-cssbeautifier": "^0.1.2",

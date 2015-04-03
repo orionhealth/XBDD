@@ -20,25 +20,10 @@ grunt.loadNpmTasks('grunt-csscomb');
 grunt.loadNpmTasks('grunt-jsbeautifier');
 grunt.loadNpmTasks('grunt-contrib-connect');
 grunt.loadNpmTasks('grunt-cssbeautifier');
-grunt.loadNpmTasks('grunt-file-creator');
-grunt.loadNpmTasks('grunt-contrib-copy');
+grunt.loadNpmTasks('grunt-grover');
 
 var target = grunt.option('cwd') || '.',
-	pjs = require('phantomjs'),
-	phantom = pjs.path,
-	isWin = /^win/.test(process.platform),
-	fileCreatorOpts = {};
-
-if (isWin) {
-	delim = '\\';
-} else {
-	delim = '/';
-}
-
-fileCreatorOpts["target" + delim + "yui-reports" + delim + "report.xml"] = function(fs, fd, done) {
-	fs.writeSync(fd, '');
-	done();
-};
+    path = require('path');
 
 grunt.initConfig({
 	connect: {
@@ -145,45 +130,28 @@ grunt.initConfig({
 			}
 		}
 	},
-	"file-creator": {
-		"basic": fileCreatorOpts
-	},
-	copy: {
-		phantom: {
-			files: [
-				{
-					expand: true,
-					src: ['phantomjs.exe'],
-					dest: 'node_modules/phantomjs/lib/phantom/bin/',
-					cwd: 'node_modules/phantomjs/lib/phantom/',
-					rename: function(dest, src) {
-						return dest + src.replace('.exe', '');
-					}
-				}
-			]
-		}
-	},
+    grover: {
+        run: {
+            options: {
+                path: 'src/test/grover/*.html',
+                logLevel: 2,
+                concurrent: 15,
+                outfile: 'target/yui-reports/report.xml',
+                outtype: 'junit',
+                coverage: {
+                    on: true,
+                    istanbul: 'target/coverage-report'
+                }
+            }
+        }
+    },
 	shell: {
-		grover: {
-			command: ['node_modules' + delim + '.bin' + delim + 'istanbul instrument src' + delim + 'main' + delim + 'webapp -o target' + delim + 'coverage',
-			'node_modules' + delim + '.bin' + delim + 'grover --phantom-bin ' + phantom + ' src' + delim + 'test' + delim + 'grover' + delim + '*.html -o target' + delim + 'yui-reports' + delim + 'report.xml --junit --coverage --istanbul-report target' + delim + 'coverage-report'].join("&&"),
-			options: {
-				callback: function (err, stdout, stderr, cb) {
-					var fs = require('fs'),
-						data;
-
-					data = fs.readFileSync('target' + delim + 'yui-reports' + delim + 'report.xml').toString();
-
-					if (data.split("<failure message=").length !== 1 || data.split("testsuite").length <= 1 || err !== null) {
-						cb(false);
-					}
-
-					cb(true);
-				}
-			}
+		istanbul: {
+			command: path.normalize('node_modules/.bin/istanbul') + ' instrument ' + path.normalize('src/main/webapp') + ' -o ' + path.normalize('target/coverage')
 		}
 	}
 });
-grunt.registerTask('default',['jshint', 'connect', 'file-creator', 'copy', 'shell:grover']);
+
+grunt.registerTask('default',['jshint', 'connect', 'shell:istanbul', 'grover']);
 grunt.registerTask('pretty', ['cssbeautifier', 'csscomb', 'jsbeautifier', 'jshint']);
 };
