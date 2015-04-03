@@ -12,7 +12,7 @@ Configuration
 
 ### SSL/TLS
 
-The XBDD application requires a confidential connection. This is usually achieved through the Tomcat ssl connector.
+The XBDD application requires a confidential connection. This is usually achieved through the Tomcat SSL connector.
 
 Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
 
@@ -26,15 +26,26 @@ Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
 
 Replace FILE_LOCATION with the location of your security certificate (you may need to [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) first) and PASSWORD_HERE with the related password.
 
-### Enable LDAP Authentication
+### Enable Authentication
+
+#### Local Authentication
+To get started quickly without configuring enterprise authentication, it is possible to use Tomcat's default local UserDatabaseRealm with XBDD.
+
+Configure a user by editing ``$CATALINA_BASE/conf/tomcat-users.xml` and adding a "user" element within the "tomcat-users" element, e.g.:
+
+```xml
+<user username="xbdd" password="xbdd" roles="xbdd"/>
+```
+
+#### LDAP
 Configure the realm in the server.xml or context.xml with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields. For example:
 
 ```	xml
 <Realm className="org.apache.catalina.realm.LockOutRealm">
-    <Realm allRolesMode="authOnly" className="org.apache.catalina.realm.JNDIRealm" 
-    connectionName="USERNAME" connectionPassword="PASSWORD" connectionURL="ldap://LDAP_HOST:389" 
-    referrals="follow" roleBase="ou=Groups,ou=Employees,dc=Example,dc=Internal" roleName="cn" 
-    roleSearch="(member={0})" roleSubtree="true" userBase="ou=Employees,dc=Example,dc=Internal" 
+    <Realm allRolesMode="authOnly" className="org.apache.catalina.realm.JNDIRealm"
+    connectionName="USERNAME" connectionPassword="PASSWORD" connectionURL="ldap://LDAP_HOST:389"
+    referrals="follow" roleBase="ou=Groups,ou=Employees,dc=Example,dc=Internal" roleName="cn"
+    roleSearch="(member={0})" roleSubtree="true" userBase="ou=Employees,dc=Example,dc=Internal"
     userRoleName="memberOf" userSearch="(sAMAccountName={0})" userSubtree="true"/>
 </Realm>
 ```
@@ -80,7 +91,7 @@ Use maven to launch an embedded tomcat.
 XBDD - Printing
 ================
 
-To enable PDF downloading for printing, PhantomJS must be installed. 
+To enable PDF downloading for printing, PhantomJS must be installed.
 
 Installation
 ------------
@@ -88,7 +99,7 @@ Installation
 1. Download PhantomJS from <http://phantomjs.org/download.html>
 2. Extract PhantomJS to a directory, e.g. ```/opt/phantomJS```
 3. Add context variables for the PhantomJS install dir and the user to use for printing to ```context.xml```:
-  
+
 ```xml  
     <Parameter name="xbdd.phantomjs.home" value="/opt/phantomjs/bin"/>
     <Parameter name="xbdd.phantomjs.username" value="xbdd-print"/>
