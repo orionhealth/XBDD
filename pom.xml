@@ -214,6 +214,7 @@
 						</goals>
 						<configuration>
 							<port>${mongo.port}</port>
+                            <version>2.4.0</version>
 						</configuration>
 					</execution>
 					<execution>
