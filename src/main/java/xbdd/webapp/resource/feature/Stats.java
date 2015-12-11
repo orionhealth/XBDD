@@ -25,16 +25,18 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import xbdd.webapp.factory.MongoDBAccessor;
-import xbdd.webapp.util.Coordinates;
-import xbdd.webapp.util.Field;
-
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+
+import xbdd.util.StatusHelper;
+import xbdd.webapp.factory.MongoDBAccessor;
+import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.DatabaseUtilities;
+import xbdd.webapp.util.Field;
 
 @Path("/rest/stats")
 public class Stats {
@@ -58,6 +60,49 @@ public class Stats {
 			ret.put(state.substring(0, 1), getNumberOfState(collection, query, state));
 		}
 		return ret;
+	}
+
+	private static BasicDBObject getNumberOfAllStatesPerScenario(final BasicDBList features, final boolean separateManualAndAutomated) {
+		final String manualTag = "@manual";
+		final List<String> states = Arrays.asList("passed", "failed", "skipped", "undefined");
+		final BasicDBObject counts = new BasicDBObject(); // if `separateManualAndAutomated`, `counts` does not include manual scenarios
+		final BasicDBObject manualCounts = new BasicDBObject(); // if _not_ `separateManualAndAutomated`, `manualCounts` is not used
+		for (final String state : states) {
+			counts.append(state.substring(0, 1), 0);
+			manualCounts.append(state.substring(0, 1), 0);
+		}
+
+		for (final Object ob : features) {
+			final BasicDBList scenarios = (BasicDBList) ((DBObject) ob).get("elements");
+			if (scenarios != null) {
+				for (final Object o : scenarios) {
+					boolean isManual = false;
+					if (separateManualAndAutomated) {
+						// determine whether this scenario is marked @manual
+						final BasicDBList tags = (BasicDBList) ((DBObject) o).get("tags");
+						if (tags != null) {
+							for (final Object b : tags) {
+								if (((BasicDBObject) b).get("name").equals(manualTag)) {
+									isManual = true;
+									break;
+								}
+							}
+						}
+					}
+					final BasicDBObject category = isManual ? manualCounts : counts;
+					final String status = StatusHelper.getFinalScenarioStatus((DBObject) o, true).getTextName().substring(0, 1);
+					category.put(status, ((Integer) category.get(status)) + 1);
+				}
+			}
+		}
+		if (separateManualAndAutomated) {
+			final BasicDBObject ret = new BasicDBObject();
+			ret.put("automated", counts);
+			ret.put("manual", manualCounts);
+			return ret;
+		} else {
+			return counts;
+		}
 	}
 
 	@GET
@@ -88,6 +133,15 @@ public class Stats {
 		return ret;
 	}
 
+	@GET
+	@Path("/build/per_scenario/{product}/{major}.{minor}.{servicePack}/{build}")
+	@Produces("application/json")
+	public BasicDBObject getBuildStatsPerScenario(@BeanParam final Coordinates coordinates) {
+		final DB db = this.client.getDB("bdd");
+		final BasicDBList features = DatabaseUtilities.extractList(db.getCollection("features").find(coordinates.getQueryObject()));
+		return getNumberOfAllStatesPerScenario(features, true);
+	}
+
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/product/{product}/{major}.{minor}.{servicePack}/{build}")
@@ -115,6 +169,43 @@ public class Stats {
 			buildObj.put("failed", getNumberOfState(featureCollection, buildQuery, "failed"));
 			buildObj.put("skipped", getNumberOfState(featureCollection, buildQuery, "skipped"));
 			buildObj.put("undefined", getNumberOfState(featureCollection, buildQuery, "undefined"));
+			buildObj.put("name", build);
+			buildDBObjectList.add(buildObj);
+		}
+
+		return buildDBObjectList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("/product/per_scenario/{product}/{major}.{minor}.{servicePack}/{build}")
+	@Produces("application/json")
+	public List<BasicDBObject> getProductHistoryPerScenario(@BeanParam final Coordinates coordinates) {
+		List<String> buildList = new ArrayList<String>();
+		final DB db = this.client.getDB("bdd");
+		final DBCollection collection = db.getCollection("summary");
+		final DBObject productQuery = coordinates.getQueryObject(Field.PRODUCT, Field.MAJOR, Field.MINOR, Field.SERVICEPACK);
+		final DBCursor results = collection.find(productQuery);
+
+		while (results.hasNext()) {
+			buildList = (List<String>) results.next().get("builds");
+		}
+
+		final DBCollection featureCollection = db.getCollection("features");
+
+		final List<BasicDBObject> buildDBObjectList = new ArrayList<BasicDBObject>();
+		for (final String build : buildList) {
+			coordinates.setBuild(build);
+
+			final BasicDBObject counts = getNumberOfAllStatesPerScenario(
+					DatabaseUtilities.extractList(featureCollection.find(coordinates.getQueryObject())),
+					false);
+
+			final BasicDBObject buildObj = new BasicDBObject();
+			buildObj.put("passed", counts.get("p"));
+			buildObj.put("failed", counts.get("f"));
+			buildObj.put("skipped", counts.get("s"));
+			buildObj.put("undefined", counts.get("u"));
 			buildObj.put("name", build);
 			buildDBObjectList.add(buildObj);
 		}

@@ -38,11 +38,6 @@ import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import xbdd.util.StatusHelper;
-import xbdd.webapp.factory.MongoDBAccessor;
-import xbdd.webapp.util.Coordinates;
-import xbdd.webapp.util.Field;
-
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -53,6 +48,12 @@ import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
+
+import xbdd.util.StatusHelper;
+import xbdd.webapp.factory.MongoDBAccessor;
+import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.DatabaseUtilities;
+import xbdd.webapp.util.Field;
 
 @Path("/rest/reports")
 public class Report {
@@ -364,18 +365,9 @@ public class Report {
 			this.log.trace("Adding feature:" + JSON.serialize(feature));
 			features.save(feature);
 		}
-		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the "version"
-																						// field
-		final List<DBObject> returns = new ArrayList<DBObject>();
-		try {
-			while (cursor.hasNext()) {
-				returns.add(cursor.next());
-			}
-		} finally {
-			cursor.close();
-		}
-		final BasicDBList list = new BasicDBList();
-		list.addAll(returns);
+		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the
+																								// "version"
+		final BasicDBList list = DatabaseUtilities.extractList(cursor);
 		updateStatsDocument(bdd, coordinates, list);
 		return list;
 	}
