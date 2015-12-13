@@ -15,10 +15,8 @@
  */
 package xbdd.webapp.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
@@ -27,18 +25,41 @@ public final class DatabaseUtilities {
 
 	}
 
+	/**
+	 * Collects the items available to the cursor into a list.
+	 *
+	 * @param cursor
+	 * @return list of all items available to the cursor
+	 */
 	public static BasicDBList extractList(final DBCursor cursor) {
-		// field
-		final List<DBObject> returns = new ArrayList<DBObject>();
+		final BasicDBList list = new BasicDBList();
 		try {
 			while (cursor.hasNext()) {
-				returns.add(cursor.next());
+				list.add(cursor.next());
 			}
 		} finally {
 			cursor.close();
 		}
-		final BasicDBList list = new BasicDBList();
-		list.addAll(returns);
 		return list;
+	}
+
+	/**
+	 * Determines whether this scenario has a "@manual" tag in the Cucumber feature file.
+	 *
+	 * @param scenario
+	 * @return true if this scenario is tagged "@manual"
+	 */
+	public static boolean scenarioHasTag(final DBObject scenario, final String tag) {
+		boolean isManual = false;
+		final BasicDBList tags = (BasicDBList) scenario.get("tags");
+		if (tags != null) {
+			for (final Object b : tags) {
+				if (((BasicDBObject) b).get("name").equals(tag)) {
+					isManual = true;
+					break;
+				}
+			}
+		}
+		return isManual;
 	}
 }

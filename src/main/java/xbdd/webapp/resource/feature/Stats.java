@@ -63,7 +63,7 @@ public class Stats {
 	}
 
 	private static BasicDBObject getNumberOfAllStatesPerScenario(final BasicDBList features, final boolean separateManualAndAutomated) {
-		final String manualTag = "@manual";
+		final String manualTag = "@manual"; // cucumber tag
 		final List<String> states = Arrays.asList("passed", "failed", "skipped", "undefined");
 		final BasicDBObject counts = new BasicDBObject(); // if `separateManualAndAutomated`, `counts` does not include manual scenarios
 		final BasicDBObject manualCounts = new BasicDBObject(); // if _not_ `separateManualAndAutomated`, `manualCounts` is not used
@@ -73,24 +73,19 @@ public class Stats {
 		}
 
 		for (final Object ob : features) {
-			final BasicDBList scenarios = (BasicDBList) ((DBObject) ob).get("elements");
+			final DBObject feature = (DBObject) ob;
+			final BasicDBList scenarios = (BasicDBList) feature.get("elements");
 			if (scenarios != null) {
 				for (final Object o : scenarios) {
-					boolean isManual = false;
+					final DBObject scenario = (DBObject) o;
+
+					final BasicDBObject category;
 					if (separateManualAndAutomated) {
-						// determine whether this scenario is marked @manual
-						final BasicDBList tags = (BasicDBList) ((DBObject) o).get("tags");
-						if (tags != null) {
-							for (final Object b : tags) {
-								if (((BasicDBObject) b).get("name").equals(manualTag)) {
-									isManual = true;
-									break;
-								}
-							}
-						}
+						category = DatabaseUtilities.scenarioHasTag(scenario, manualTag) ? manualCounts : counts;
+					} else {
+						category = counts;
 					}
-					final BasicDBObject category = isManual ? manualCounts : counts;
-					final String status = StatusHelper.getFinalScenarioStatus((DBObject) o, true).getTextName().substring(0, 1);
+					final String status = StatusHelper.getFinalScenarioStatus(scenario, true).getTextName().substring(0, 1);
 					category.put(status, ((Integer) category.get(status)) + 1);
 				}
 			}
@@ -106,10 +101,9 @@ public class Stats {
 	}
 
 	@GET
-	@Path("/build/{product}/{major}.{minor}.{servicePack}/{build}")
+	@Path("/build/{product}/{major}.{minor}.{servicePack}/{build}/features")
 	@Produces("application/json")
-	public BasicDBObject getBuildStats(@BeanParam final Coordinates coordinates) {
-
+	public BasicDBObject getBuildStatsPerFeature(@BeanParam final Coordinates coordinates) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("features");
 		final String manualTag = "undefined";
@@ -134,7 +128,7 @@ public class Stats {
 	}
 
 	@GET
-	@Path("/build/per_scenario/{product}/{major}.{minor}.{servicePack}/{build}")
+	@Path("/build/{product}/{major}.{minor}.{servicePack}/{build}/scenarios")
 	@Produces("application/json")
 	public BasicDBObject getBuildStatsPerScenario(@BeanParam final Coordinates coordinates) {
 		final DB db = this.client.getDB("bdd");
@@ -144,9 +138,9 @@ public class Stats {
 
 	@SuppressWarnings("unchecked")
 	@GET
-	@Path("/product/{product}/{major}.{minor}.{servicePack}/{build}")
+	@Path("/product/{product}/{major}.{minor}.{servicePack}/{build}/features")
 	@Produces("application/json")
-	public List<BasicDBObject> getProductHistory(@BeanParam final Coordinates coordinates) {
+	public List<BasicDBObject> getProductHistoryPerFeature(@BeanParam final Coordinates coordinates) {
 		List<String> buildList = new ArrayList<String>();
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("summary");
@@ -178,7 +172,7 @@ public class Stats {
 
 	@SuppressWarnings("unchecked")
 	@GET
-	@Path("/product/per_scenario/{product}/{major}.{minor}.{servicePack}/{build}")
+	@Path("/product/{product}/{major}.{minor}.{servicePack}/{build}/scenarios")
 	@Produces("application/json")
 	public List<BasicDBObject> getProductHistoryPerScenario(@BeanParam final Coordinates coordinates) {
 		List<String> buildList = new ArrayList<String>();
