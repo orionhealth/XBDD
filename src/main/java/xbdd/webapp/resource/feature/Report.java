@@ -52,7 +52,6 @@ import com.mongodb.util.JSON;
 import xbdd.util.StatusHelper;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
-import xbdd.webapp.util.DatabaseUtilities;
 import xbdd.webapp.util.Field;
 
 @Path("/rest/reports")
@@ -265,15 +264,13 @@ public class Report {
 				summary.update(summaryQuery,
 						new BasicDBObject("$push", new BasicDBObject("builds", coordinates.getBuild())),
 						true,
-						false
-						);
+						false);
 			}
 		} else {// if the report doesn't already exist... then add it.
 			summary.update(summaryQuery,
 					new BasicDBObject("$push", new BasicDBObject("builds", coordinates.getBuild())),
 					true,
-					false
-					);
+					false);
 		}
 	}
 
@@ -307,7 +304,7 @@ public class Report {
 		return returns;
 	}
 
-	protected void updateStatsDocument(final DB bdd, final Coordinates coordinates, final BasicDBList features) {
+	protected void updateStatsDocument(final DB bdd, final Coordinates coordinates, final DBCursor features) {
 		// product and version are redundant for search, but ensure they're populated if the upsert results in an insert.
 		final DBCollection statsCollection = bdd.getCollection("reportStats");
 		final String id = coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates.getBuild();
@@ -337,7 +334,7 @@ public class Report {
 
 	@PUT
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
-	public DBObject putReport(@BeanParam final Coordinates coordinates, final DBObject root) throws IOException {
+	public DBObject putReport(@BeanParam final Coordinates coordinates, final DBObject root) {
 		final BasicDBList doc = (BasicDBList) root;
 		final DB grid = this.client.getDB("grid");
 		final GridFS gridFS = new GridFS(grid);
@@ -367,8 +364,26 @@ public class Report {
 		}
 		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the
 																								// "version"
-		final BasicDBList list = DatabaseUtilities.extractList(cursor);
-		updateStatsDocument(bdd, coordinates, list);
+		updateStatsDocument(bdd, coordinates, cursor);
+		return extractList(cursor);
+	}
+
+	/**
+	 * Collects the items available to the cursor into a list.
+	 *
+	 * @param cursor The cursor information to use. Iteration is performed on a copy of this cursor so there are no side effects.
+	 * @return list of all items available to the cursor
+	 */
+	private static BasicDBList extractList(final DBCursor cursor) {
+		final DBCursor cursorCopy = cursor.copy(); // no side effects please
+		final BasicDBList list = new BasicDBList();
+		try {
+			while (cursorCopy.hasNext()) {
+				list.add(cursorCopy.next());
+			}
+		} finally {
+			cursorCopy.close();
+		}
 		return list;
 	}
 

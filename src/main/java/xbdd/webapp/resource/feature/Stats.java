@@ -62,7 +62,7 @@ public class Stats {
 		return ret;
 	}
 
-	private static BasicDBObject getNumberOfAllStatesPerScenario(final BasicDBList features, final boolean separateManualAndAutomated) {
+	private static BasicDBObject getNumberOfAllStatesPerScenario(final DBCursor featureCursor, final boolean separateManualAndAutomated) {
 		final String manualTag = "@manual"; // cucumber tag
 		final List<String> states = Arrays.asList("passed", "failed", "skipped", "undefined");
 		final BasicDBObject counts = new BasicDBObject(); // if `separateManualAndAutomated`, `counts` does not include manual scenarios
@@ -72,7 +72,7 @@ public class Stats {
 			manualCounts.append(state.substring(0, 1), 0);
 		}
 
-		for (final Object ob : features) {
+		for (final Object ob : featureCursor) {
 			final DBObject feature = (DBObject) ob;
 			final BasicDBList scenarios = (BasicDBList) feature.get("elements");
 			if (scenarios != null) {
@@ -81,7 +81,7 @@ public class Stats {
 
 					final BasicDBObject category;
 					if (separateManualAndAutomated) {
-						category = DatabaseUtilities.scenarioHasTag(scenario, manualTag) ? manualCounts : counts;
+						category = DatabaseUtilities.hasTag(scenario, manualTag) ? manualCounts : counts;
 					} else {
 						category = counts;
 					}
@@ -132,8 +132,7 @@ public class Stats {
 	@Produces("application/json")
 	public BasicDBObject getBuildStatsPerScenario(@BeanParam final Coordinates coordinates) {
 		final DB db = this.client.getDB("bdd");
-		final BasicDBList features = DatabaseUtilities.extractList(db.getCollection("features").find(coordinates.getQueryObject()));
-		return getNumberOfAllStatesPerScenario(features, true);
+		return getNumberOfAllStatesPerScenario(db.getCollection("features").find(coordinates.getQueryObject()), true);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -192,7 +191,7 @@ public class Stats {
 			coordinates.setBuild(build);
 
 			final BasicDBObject counts = getNumberOfAllStatesPerScenario(
-					DatabaseUtilities.extractList(featureCollection.find(coordinates.getQueryObject())),
+					featureCollection.find(coordinates.getQueryObject()),
 					false);
 
 			final BasicDBObject buildObj = new BasicDBObject();
