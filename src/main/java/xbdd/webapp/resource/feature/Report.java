@@ -362,8 +362,8 @@ public class Report {
 			this.log.trace("Adding feature:" + JSON.serialize(feature));
 			features.save(feature);
 		}
-		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the
-																								// "version"
+		// get new co-ordinates to exclude the "version" field
+		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); 
 		updateStatsDocument(bdd, coordinates, cursor);
 		return extractList(cursor);
 	}

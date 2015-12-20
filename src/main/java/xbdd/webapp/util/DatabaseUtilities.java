@@ -25,10 +25,14 @@ public final class DatabaseUtilities {
 	}
 
 	/**
-	 * Determines whether this scenario has a "@manual" tag in the Cucumber feature file.
+	 * Determines whether this scenario has a matching tag in the Cucumber 
+	 * feature file. This method only inspects the direct tags of the subject, 
+	 * so it will not find tags that have been inherited from a parent (e.g. 
+	 * tags inherited from a feature by a scenario). 
 	 *
-	 * @param subject
-	 * @return true if this scenario is tagged "@manual"
+	 * @param subject feature or scenario to inspect
+	 * @param tag Cucumber tag to match e.g. "@manual"
+	 * @return true if the subject is tagged with the specified tag
 	 */
 	public static boolean hasTag(final DBObject subject, final String tag) {
 		boolean hasTag = false;
