@@ -38,11 +38,6 @@ import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import xbdd.util.StatusHelper;
-import xbdd.webapp.factory.MongoDBAccessor;
-import xbdd.webapp.util.Coordinates;
-import xbdd.webapp.util.Field;
-
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -53,6 +48,11 @@ import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
+
+import xbdd.util.StatusHelper;
+import xbdd.webapp.factory.MongoDBAccessor;
+import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.Field;
 
 @Path("/rest/reports")
 public class Report {
@@ -264,15 +264,13 @@ public class Report {
 				summary.update(summaryQuery,
 						new BasicDBObject("$push", new BasicDBObject("builds", coordinates.getBuild())),
 						true,
-						false
-						);
+						false);
 			}
 		} else {// if the report doesn't already exist... then add it.
 			summary.update(summaryQuery,
 					new BasicDBObject("$push", new BasicDBObject("builds", coordinates.getBuild())),
 					true,
-					false
-					);
+					false);
 		}
 	}
 
@@ -306,7 +304,7 @@ public class Report {
 		return returns;
 	}
 
-	protected void updateStatsDocument(final DB bdd, final Coordinates coordinates, final BasicDBList features) {
+	protected void updateStatsDocument(final DB bdd, final Coordinates coordinates, final DBCursor features) {
 		// product and version are redundant for search, but ensure they're populated if the upsert results in an insert.
 		final DBCollection statsCollection = bdd.getCollection("reportStats");
 		final String id = coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates.getBuild();
@@ -336,7 +334,7 @@ public class Report {
 
 	@PUT
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
-	public DBObject putReport(@BeanParam final Coordinates coordinates, final DBObject root) throws IOException {
+	public DBObject putReport(@BeanParam final Coordinates coordinates, final DBObject root) {
 		final BasicDBList doc = (BasicDBList) root;
 		final DB grid = this.client.getDB("grid");
 		final GridFS gridFS = new GridFS(grid);
@@ -364,19 +362,28 @@ public class Report {
 			this.log.trace("Adding feature:" + JSON.serialize(feature));
 			features.save(feature);
 		}
-		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the "version"
-																						// field
-		final List<DBObject> returns = new ArrayList<DBObject>();
+		// get new co-ordinates to exclude the "version" field
+		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); 
+		updateStatsDocument(bdd, coordinates, cursor);
+		return extractList(cursor);
+	}
+
+	/**
+	 * Collects the items available to the cursor into a list.
+	 *
+	 * @param cursor The cursor information to use. Iteration is performed on a copy of this cursor so there are no side effects.
+	 * @return list of all items available to the cursor
+	 */
+	private static BasicDBList extractList(final DBCursor cursor) {
+		final DBCursor cursorCopy = cursor.copy(); // no side effects please
+		final BasicDBList list = new BasicDBList();
 		try {
-			while (cursor.hasNext()) {
-				returns.add(cursor.next());
+			while (cursorCopy.hasNext()) {
+				list.add(cursorCopy.next());
 			}
 		} finally {
-			cursor.close();
+			cursorCopy.close();
 		}
-		final BasicDBList list = new BasicDBList();
-		list.addAll(returns);
-		updateStatsDocument(bdd, coordinates, list);
 		return list;
 	}
 
