@@ -36,7 +36,7 @@ YUI.add('xbdd-build-stats', function (Y) {
 			}
 		},
 		_getBuildStats: function () {
-			Y.io(Y.statusHelpers.getContext() + 'rest/stats/build/' + product + '/' + version + '/' + build, {
+			Y.io(Y.statusHelpers.getContext() + 'rest/stats/build/' + product + '/' + version + '/' + build + '/scenarios', {
 				method: "GET",
 				on: {
 					success: Y.bind(function (tId, response) {
@@ -141,7 +141,7 @@ YUI.add('xbdd-build-stats', function (Y) {
 			});
 		},
 		_renderProductStats: function () {
-			Y.io(Y.statusHelpers.getContext() + 'rest/stats/product/' + product + '/' + version + '/' + build, {
+			Y.io(Y.statusHelpers.getContext() + 'rest/stats/product/' + product + '/' + version + '/' + build + '/scenarios', {
 				method: "GET",
 				on: {
 					success: Y.bind(function (tId, response) {
