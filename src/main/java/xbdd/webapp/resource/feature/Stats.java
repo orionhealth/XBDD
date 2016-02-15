@@ -18,10 +18,6 @@ package xbdd.webapp.resource.feature;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
@@ -29,7 +25,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import xbdd.util.StatusHelper;
-import xbdd.util.Statuses;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
