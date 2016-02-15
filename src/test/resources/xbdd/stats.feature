@@ -1,4 +1,3 @@
-@now
 Feature: View results summary
   
   In order to coordinate testing effort
