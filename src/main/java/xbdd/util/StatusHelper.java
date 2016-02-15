@@ -40,7 +40,7 @@ public class StatusHelper {
 		}
 	}
 
-	// go through all the steps in a scenario and reduce to a status for the scenario.
+	// go through all the original (as-uploaded) steps in a scenario and reduce to a status for the scenario.
 	public static String getOriginalScenarioStatusName(final DBObject scenario) {
 		final List<String> allStatuses = new ArrayList<String>();
 		final BasicDBList steps = (BasicDBList) scenario.get("steps");

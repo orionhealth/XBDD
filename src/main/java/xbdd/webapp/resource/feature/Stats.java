@@ -137,8 +137,8 @@ public class Stats {
 		}
 		
 		final BasicDBObject ret = new BasicDBObject();
-		ret.put("manual", manualCounts);
 		ret.put("automated", autoCounts);
+		ret.put("manual", manualCounts);
 		return ret;
 	}
 

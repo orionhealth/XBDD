@@ -16,6 +16,8 @@
 package xbdd.stepdefs;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.junit.Assert.assertThat;
 import static xbdd.report.assertions.Assertions.assertThat;
 
 import java.io.IOException;
@@ -26,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang3.StringUtils;
 
 import xbdd.report.FeatureSummary;
@@ -33,6 +38,7 @@ import xbdd.report.ReportContext;
 import xbdd.report.ReportManager;
 import xbdd.report.ScenarioSummary;
 import xbdd.report.StepSummary;
+import xbdd.utils.JerseyClientFactory;
 import xbdd.utils.XBDDInstance;
 
 import com.mongodb.DBObject;
@@ -253,5 +259,31 @@ public class ReportStepdefs {
 		final ScenarioSummary scenario = this.reportManager.openScenario(this.reportContext, "merging-reports-for-single-feature",
 				"scenario1");
 		assertThat(scenario).hasResult("passed");
+	}
+
+	@Then("^accurate summary stats are returned$")
+	public void accurate_summary_stats_are_returned() {
+		accurate_summary_stats_per_scope_are_returned("feature");
+	}
+	
+	@Then("^accurate summary stats per (.+)? are returned$")
+	public void accurate_summary_stats_per_scope_are_returned(String scope) {
+		Client userClient = JerseyClientFactory.getInstance().createAuthenticatingClient();
+		final Response resp = userClient.target(this.xbddInstance.getBaseURL() + "rest/stats/build/"
+				+ this.reportContext.getProduct() + "/" 
+				+ this.reportContext.getMajorVersion() + "." 
+				+ this.reportContext.getMinorVersion() + "."
+				+ this.reportContext.getServicePackVersion() + "/"
+				+ this.reportContext.getBuild()
+				+ "/" + scope + "s").request().get();
+		
+		final String jsonTemplate = "{ \"automated\" : { \"p\" : %d , \"f\" : %d , \"s\" : %d , \"u\" : %d} , \"manual\" : { \"p\" : %d , \"f\" : %d , \"s\" : %d , \"u\" : %d}}";
+		if (scope != null && scope.equals("scenario")) {
+			assertThat(resp.readEntity(String.class), equalToIgnoringWhiteSpace(
+					String.format(jsonTemplate, 4, 1, 0, 1, 0, 0, 0, 8)));
+		} else {
+			assertThat(resp.readEntity(String.class), equalToIgnoringWhiteSpace(
+					String.format(jsonTemplate, 3, 1, 0, 0, 0, 0, 0, 4)));
+		}
 	}
 }
