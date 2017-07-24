@@ -1,18 +1,25 @@
 XBDD
 ====
 
+Pre-requisites
+--------------
+
+* MongoDB 2.6. See https://docs.mongodb.com/v2.6
+* Tomcat 7. See http://tomcat.apache.org/download-70.cgi
+
 Installation
 ------------
-Download and install the appropriate version of Apache Tomcat 7 from the [apache tomcat website](http://tomcat.apache.org/download-70.cgi)
 
-`$CATALINE_BASE` refers to the tomcat installation directory.
 
 Configuration
 -------------
 
+In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory.
+
+
 ### SSL/TLS
 
-The XBDD application requires a confidential connection. This is usually achieved through the Tomcat SSL connector.
+The XBDD application requires a secure connection. This can be achieved through the Tomcat SSL connector.
 
 Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
 
@@ -24,7 +31,7 @@ Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
     keystorePass="PASSWORD_HERE" />
 ```
 
-Replace FILE_LOCATION with the location of your security certificate (you may need to [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) first) and PASSWORD_HERE with the related password.
+Replace `FILE_LOCATION` with the location of your security certificate (you may need to [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) first) and `PASSWORD_HERE` with the related password.
 
 ### Enable Authentication
 
