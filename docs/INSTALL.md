@@ -20,7 +20,7 @@ The XBDD application requires a secure connection. This can be achieved through 
 
 You must first have configured a keystore. You can [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) or skip ahead if you have an existing one.
 
-Open `$CATALINA_BASE/conf/server.xml` and uncomment the 8443 connector block. Add the `keystoreFile` and `keystorePass` attributes like so:
+Open `$CATALINA_BASE/conf/server.xml` and uncomment the 8443 connector block. Add the `keystoreFile` and `keystorePass` attributes, e.g.:
 
 ```xml
 <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
@@ -37,11 +37,12 @@ Replace `FILE_LOCATION` with the location of your security certificate and `PASS
 #### Local Authentication
 To get started quickly without configuring enterprise authentication, it is possible to use Tomcat's default local UserDatabaseRealm with XBDD.
 
-Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a "user" element within the "tomcat-users" element, e.g.:
+Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a `user` element within the 'tomcat-users element, e.g.:
 
 ```xml
 <user username="xbdd" password="xbdd" roles="xbdd"/>
 ```
+This user must have the `xbdd` role.
 
 #### LDAP
 If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields. 
