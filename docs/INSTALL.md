@@ -6,9 +6,8 @@ Pre-requisites
 
 * MongoDB 2.6. See https://docs.mongodb.com/v2.6
 * Tomcat 7. See http://tomcat.apache.org/download-70.cgi
+* Maven 3+. See https://maven.apache.org/
 
-Installation
-------------
 
 
 Configuration
@@ -16,10 +15,10 @@ Configuration
 
 In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory.
 
-
 ### SSL/TLS
-
 The XBDD application requires a secure connection. This can be achieved through the Tomcat SSL connector.
+
+You must first have configured a keystore. You can [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) or skip ahead if you have an existing one.
 
 Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
 
@@ -31,22 +30,23 @@ Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
     keystorePass="PASSWORD_HERE" />
 ```
 
-Replace `FILE_LOCATION` with the location of your security certificate (you may need to [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) first) and `PASSWORD_HERE` with the related password.
+Replace `FILE_LOCATION` with the location of your security certificate and `PASSWORD_HERE` with the password.
 
-### Enable Authentication
+### Authentication
 
 #### Local Authentication
 To get started quickly without configuring enterprise authentication, it is possible to use Tomcat's default local UserDatabaseRealm with XBDD.
 
-Configure a user by editing ``$CATALINA_BASE/conf/tomcat-users.xml` and adding a "user" element within the "tomcat-users" element, e.g.:
+Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a "user" element within the "tomcat-users" element, e.g.:
 
 ```xml
 <user username="xbdd" password="xbdd" roles="xbdd"/>
 ```
 
 #### LDAP
-Configure the realm in the server.xml or context.xml with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields. For example:
+If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields. 
 
+For example:
 ```	xml
 <Realm className="org.apache.catalina.realm.LockOutRealm">
     <Realm allRolesMode="authOnly" className="org.apache.catalina.realm.JNDIRealm"
@@ -59,9 +59,9 @@ Configure the realm in the server.xml or context.xml with the JNDIRealm. See the
 
 ### Configure Mongo Server Connection
 
-By default XBDD will connect to mongo at the default address `localhost:27017`
+By default XBDD will connect to MongoDB at its default address of `localhost:27017`.
 
-To configure an alternative server or authentication add the following parameters to the tomcat `context.xml`
+To configure an alternative server or to add authentication, add the following parameters to `$CATALINA_BASE/conf/context.xml`
 
 ```xml
     <Parameter name="xbdd.mongo.hostname" value="<hostname>"/>
@@ -73,30 +73,26 @@ To configure an alternative server or authentication add the following parameter
 ### A word on securing the connection to MongoDB
 MongoDB provides user access on a per-DB basis. XBDD uses two databases, "bdd" and "grid". The user needs read/write permissions for both.
 
-Running
--------
+Installation
+------------
 
-The xbdd application can be run as a standalone webapp in Tomcat or with Eclipse.
-It can also be run from command line using an embedded Tomcat instance.
+XBDD can be run as a standalone webapp in Tomcat (recommended) or via Eclipse.
+It can also be run with an embedded Tomcat instance however the above configuration will not be applied if using this mode. This may be useful for development purposes though.
 
-### Standalone
+### Standalone mode
 
-Create a war from an existing project and install in to tomcat webapps dir.
+1. From the top level directory run `mvn clean package`.
+2. Copy xbdd.war into the $CATALINA_BASE/webapps folder of your Tomcat installation
+3. Start Tomcat with $CATALINA_BASE/bin/startup.sh
+4. Open http://localhost:8443/xbdd
 
-1. Download `xbdd.war` or build from source with `mvn clean package`
-3. Copy `xbdd.war` into the `$CATALINA_BASE/webapps` folder of the Tomcat installation
-4. Start Tomcat with `$CATALINA_BASE/bin/startup.sh`
-5. Open <http://localhost:8443/xbdd>
+### Embedded mode
 
-### Embedded
-
-Use maven to launch an embedded tomcat.
-
-1. From eclipse or the command line run `mvn tomcat7:run`
+1. From the top level directory (or within an IDE) run `mvn tomcat7:run`
 2. Open <http://localhost:8443/xbdd>
 
-XBDD - Printing
-================
+Printing
+========
 
 To enable PDF downloading for printing, PhantomJS must be installed.
 
