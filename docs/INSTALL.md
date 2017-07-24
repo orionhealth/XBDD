@@ -20,7 +20,7 @@ The XBDD application requires a secure connection. This can be achieved through 
 
 You must first have configured a keystore. You can [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) or skip ahead if you have an existing one.
 
-Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
+Open `$CATALINA_BASE/conf/server.xml` and uncomment the 8443 connector block. Add the `keystoreFile` and `keystorePass` attributes like so:
 
 ```xml
 <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
