@@ -1,7 +1,7 @@
 XBDD [![Build Status](https://travis-ci.org/orionhealth/XBDD.svg)](https://travis-ci.org/orionhealth/XBDD)
 ====
 
-XBDD
+XBDD lets you use Cucumber feature files for your automated and manual testing. Test reports can be uploaded to XBDD manually or via a continuous integration server, giving you an information radiator on how many tests are passing, how many failed and how many can be run manually. Pin a report and get your team to walk through the manual feature files and check off each step to perform a full regression test.
 
 Installation
 ------------
