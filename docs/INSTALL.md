@@ -72,10 +72,10 @@ To configure an alternative server or to add authentication, add the following p
 ```
 
 ### A word on securing the connection to MongoDB
-MongoDB provides user access on a per-DB basis. XBDD uses two databases, "bdd" and "grid". The user needs read/write permissions for both.
+MongoDB provides user access on a per-DB basis. XBDD uses two databases, `bdd` and `grid`. The user needs read/write permissions for both.
 
 Installation
-------------
+============
 
 XBDD can be run as a standalone webapp in Tomcat (recommended) or via Eclipse.
 It can also be run with an embedded Tomcat instance however the above configuration will not be applied if using this mode. This may be useful for development purposes though.
@@ -97,12 +97,9 @@ Printing
 
 To enable PDF downloading for printing, PhantomJS must be installed.
 
-Installation
-------------
-
 1. Download PhantomJS from <http://phantomjs.org/download.html>
-2. Extract PhantomJS to a directory, e.g. ```/opt/phantomJS```
-3. Add context variables for the PhantomJS install dir and the user to use for printing to ```context.xml```:
+2. Extract PhantomJS to a directory, e.g. `/opt/phantomJS`
+3. Add context variables for the PhantomJS install dir and the user to use for printing to `$CATALINA_BASE/conf/context.xml`:
 
 ```xml  
     <Parameter name="xbdd.phantomjs.home" value="/opt/phantomjs/bin"/>
