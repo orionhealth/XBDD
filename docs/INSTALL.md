@@ -120,4 +120,4 @@ If you don't have an active profile or a settings.xml file, add this:
 		<activeProfile>global</activeProfile>
 	</activeProfiles>
 </settings>
-
+```
