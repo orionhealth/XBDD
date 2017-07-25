@@ -95,5 +95,29 @@ It can also be run with an embedded Tomcat instance however the above configurat
 Running the tests
 =================
 
-You will need to set `-Dwebdriver.gecko.driver=/path/to/your/gecko/webdriver` as either a Maven command or a system property, in order for the tests to pass.
+You need to have the Gecko Web Driver installed and the system property `webdriver.gecko.driver=/path/to/your/gecko/webdriver` set, in order for the tests to pass. The easiest way to do this is via your `~/.m2/settings.xml` file. Add the following snippet to an active profile:
+
+```
+<properties>
+    <webdriver.gecko.driver>/usr/local/Cellar/geckodriver/0.18.0</webdriver.gecko.driver>
+</properties>
+
+```
+
+If you don't have an active profile or a settings.xml file, add this:
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<profiles>
+		<profile>
+			<id>global</id>
+			<properties>
+   				<webdriver.gecko.driver>/usr/local/Cellar/geckodriver/0.18.0</webdriver.gecko.driver>
+   			</properties>
+   		</profile>
+	</profiles>
+	<activeProfiles>
+		<activeProfile>global</activeProfile>
+	</activeProfiles>
+</settings>
 
