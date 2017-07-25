@@ -7,7 +7,7 @@ Pre-requisites
 * MongoDB 2.6. See https://docs.mongodb.com/v2.6
 * Tomcat 7. See http://tomcat.apache.org/download-70.cgi
 * Maven 3+. See https://maven.apache.org/
-* Gecko Driver (for running the tests). See 
+* Gecko Driver (for running the tests). See https://github.com/mozilla/geckodriver
 
 
 Configuration
