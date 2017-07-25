@@ -7,7 +7,7 @@ Pre-requisites
 * MongoDB 2.6. See https://docs.mongodb.com/v2.6
 * Tomcat 7. See http://tomcat.apache.org/download-70.cgi
 * Maven 3+. See https://maven.apache.org/
-
+* Gecko Driver (for running the tests). See 
 
 
 Configuration
@@ -92,17 +92,8 @@ It can also be run with an embedded Tomcat instance however the above configurat
 1. From the top level directory (or within an IDE) run `mvn tomcat7:run`
 2. Open <http://localhost:8443/xbdd>
 
-Printing
-========
+Running the tests
+=================
 
-To enable PDF downloading for printing, PhantomJS must be installed.
+You will need to set `-Dwebdriver.gecko.driver=/path/to/your/gecko/webdriver` as either a Maven command or a system property, in order for the tests to pass.
 
-1. Download PhantomJS from <http://phantomjs.org/download.html>
-2. Extract PhantomJS to a directory, e.g. `/opt/phantomJS`
-3. Add context variables for the PhantomJS install dir and the user to use for printing to `$CATALINA_BASE/conf/context.xml`:
-
-```xml  
-    <Parameter name="xbdd.phantomjs.home" value="/opt/phantomjs/bin"/>
-    <Parameter name="xbdd.phantomjs.username" value="xbdd-print"/>
-    <Parameter name="xbdd.phantomjs.password" value="secret"/>
-```
