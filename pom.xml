@@ -21,16 +21,17 @@
 	<groupId>xbdd</groupId>
 	<artifactId>xbdd</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0-SNAPSHOT</version>
-	<name>xbdd Jersey Webapp</name>
+	<version>1.1.0-SNAPSHOT</version>
+	<name>XBDD</name>
     <inceptionYear>2015</inceptionYear>
 	<properties>
 		<version.major>1</version.major>
-		<version.minor>0</version.minor>
+		<version.minor>1</version.minor>
 		<version.servicepack>0</version.servicepack>
 		<cucumberJvmVersion>1.1.8</cucumberJvmVersion>
 		<jersey-version>2.4.1</jersey-version>
 		<xbdd.mongo.hostname></xbdd.mongo.hostname>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 	<build>
 		<finalName>xbdd</finalName>
@@ -262,11 +263,10 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- We need to depend on an old version of this plugin as our CI server is stuck on maven 3.0.x -->
 			<plugin>
 				<groupId>com.github.klieber</groupId>
 				<artifactId>phantomjs-maven-plugin</artifactId>
-				<version>0.2</version>
+				<version>0.7</version>
 				<executions>
 					<execution>
 						<goals>
@@ -323,7 +323,7 @@
 			<plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>0.0.22</version>
+                <version>0.0.23</version>
                 <executions>
                     <execution>
                         <id>install node and npm</id>
@@ -428,11 +428,55 @@
 								</pluginExecution>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId></groupId>
-										<artifactId></artifactId>
-										<versionRange>[,)</versionRange>
+										<groupId>
+											com.github.klieber
+										</groupId>
+										<artifactId>
+											phantomjs-maven-plugin
+										</artifactId>
+										<versionRange>
+											[0.7,)
+										</versionRange>
 										<goals>
 											<goal></goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											keytool-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.5,)
+										</versionRange>
+										<goals>
+											<goal>generateKeyPair</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.github.klieber
+										</groupId>
+										<artifactId>
+											phantomjs-maven-plugin
+										</artifactId>
+										<versionRange>
+											[0.7,)
+										</versionRange>
+										<goals>
+											<goal>install</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -450,7 +494,7 @@
 		<dependency>
 			<groupId>com.github.eirslett</groupId>
 			<artifactId>frontend-maven-plugin</artifactId>
-			<version>0.0.22</version>
+			<version>0.0.23</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.wagon</groupId>
