@@ -9,7 +9,6 @@ Pre-requisites
 * Maven 3+. See https://maven.apache.org/
 * Gecko Driver (for running the tests). See https://github.com/mozilla/geckodriver
 
-
 Configuration
 -------------
 
@@ -37,12 +36,11 @@ Replace `FILE_LOCATION` with the location of your security certificate and `PASS
 #### Local Authentication
 To get started quickly without configuring enterprise authentication, it is possible to use Tomcat's default local UserDatabaseRealm with XBDD.
 
-Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a `user` element within the 'tomcat-users element, e.g.:
+Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a `user` element within the `tomcat-users` element, e.g.:
 
 ```xml
-<user username="xbdd" password="xbdd" roles="xbdd"/>
+<user username="xbdd" password="xbdd"/>
 ```
-This user must have the `xbdd` role.
 
 #### LDAP
 If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields. 
@@ -83,8 +81,8 @@ It can also be run with an embedded Tomcat instance however the above configurat
 ### Standalone mode
 
 1. From the top level directory run `mvn clean package`.
-2. Copy xbdd.war into the $CATALINA_BASE/webapps folder of your Tomcat installation
-3. Start Tomcat with $CATALINA_BASE/bin/startup.sh
+2. Copy `target/xbdd.war` into `$CATALINA_BASE/webapps`.
+3. Start Tomcat with `$CATALINA_BASE/bin/startup.sh`.
 4. Open http://localhost:8443/xbdd
 
 ### Embedded mode
@@ -104,7 +102,7 @@ You need to have the Gecko Web Driver installed and the system property `webdriv
 
 ```
 
-If you don't have an active profile or a settings.xml file, add this:
+If you don't have an active profile, or a settings.xml file, add this:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
