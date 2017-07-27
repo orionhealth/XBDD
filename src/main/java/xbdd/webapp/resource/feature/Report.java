@@ -38,11 +38,6 @@ import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import xbdd.util.StatusHelper;
-import xbdd.webapp.factory.MongoDBAccessor;
-import xbdd.webapp.util.Coordinates;
-import xbdd.webapp.util.Field;
-
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -53,6 +48,11 @@ import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
+
+import xbdd.util.StatusHelper;
+import xbdd.webapp.factory.MongoDBAccessor;
+import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.Field;
 
 @Path("/rest/reports")
 public class Report {
@@ -250,6 +250,19 @@ public class Report {
 		}
 	}
 
+	protected void setOriginalScenarioStatuses(DBObject feature) {
+		final BasicDBList elements = (BasicDBList) feature.get("elements");
+		if (elements != null) {
+			for (int i = 0; i < elements.size(); i++) {
+				final DBObject element = (DBObject) elements.get(i);
+				String type = (String) element.get("type");
+				if (type.equalsIgnoreCase("scenario") || type.equalsIgnoreCase("scenario outline")) {
+					element.put("originalAutomatedStatus", StatusHelper.getOriginalScenarioStatusName(element));
+				}
+			}
+		}
+	}
+
 	protected void updateSummaryDocument(final DB bdd, final Coordinates coordinates) {
 		// product and version are redundant for search, but ensure they're populated if the upsert results in an insert.
 		final DBObject summaryQuery = new BasicDBObject("_id", coordinates.getProduct() + "/" + coordinates.getVersionString())
@@ -321,7 +334,8 @@ public class Report {
 			final BasicDBList scenarios = (BasicDBList) ((DBObject) ob).get("elements");
 			if (scenarios != null) {
 				for (final Object o : scenarios) {
-					final String status = StatusHelper.getFinalScenarioStatus((DBObject) o, false).getTextName();
+					// TODO use existing scenario status attribute
+					final String status = StatusHelper.getOriginalScenarioStatusName((DBObject) o);
 					final Integer statusCounter = (Integer) summary.get(status);
 					if (statusCounter == null) {
 						summary.put(status, 1);
@@ -351,6 +365,7 @@ public class Report {
 			feature.put("_id", _id);
 			embedSteps(feature, gridFS, coordinates); // extract embedded content and hyperlink to it.
 			packBackgroundsInToScenarios(feature); // nest background elements within their scenarios
+			setOriginalScenarioStatuses(feature);
 			final BasicDBObject featureCo = coordinates.getReportCoordinates();
 			feature.put("coordinates", featureCo);
 

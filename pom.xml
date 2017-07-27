@@ -430,7 +430,7 @@
 									<pluginExecutionFilter>
 										<groupId></groupId>
 										<artifactId></artifactId>
-										<versionRange>[,)</versionRange>
+										<versionRange></versionRange>
 										<goals>
 											<goal></goal>
 										</goals>

@@ -100,7 +100,7 @@ public class MultipleBuildsFeatureMergeHelper {
 		final String scenarioId = getScenarioId(feature, scenario);
 		for (final String build : this.orderedBuildList) {
 			if (this.scenarios.containsKey(scenarioId, build)) {
-				final Statuses scenarioStatus = StatusHelper.getFinalScenarioStatus(this.scenarios.get(scenarioId, build), true);
+				final Statuses scenarioStatus = StatusHelper.getScenarioStatus(this.scenarios.get(scenarioId, build));
 
 				this.scenarioStatusMap.put(feature, scenario, build, scenarioStatus.getTextName());
 
@@ -121,7 +121,7 @@ public class MultipleBuildsFeatureMergeHelper {
 		}
 		this.scenarioStatusMap.put(feature, scenario, MERGE, this.scenarioStatusMap.get(feature, scenario, getLatestBuild()));
 		final Scenario recentScenario = this.scenarios.get(scenarioId, getLatestBuild());
-		return StatusHelper.getFinalScenarioStatus(recentScenario, true).getTextName();
+		return StatusHelper.getScenarioStatus(recentScenario).getTextName();
 	}
 
 	private String getFeatureMergeStatus(final String featureId) {
@@ -145,8 +145,8 @@ public class MultipleBuildsFeatureMergeHelper {
 					scenarioStatuses.add(this.scenarioStatusMap.get(feature, scenario, build));
 				} else {
 					if (this.scenarios.containsKey(getScenarioId(feature, scenario), build)) {
-						scenarioStatuses.add(StatusHelper.getFinalScenarioStatus(
-								this.scenarios.get(getScenarioId(feature, scenario), build), true).getTextName());
+						scenarioStatuses.add(StatusHelper.getScenarioStatus(
+								this.scenarios.get(getScenarioId(feature, scenario), build)).getTextName());
 					} else {
 						scenarioStatuses.add(Statuses.DONT_EXIST.getTextName());
 					}
