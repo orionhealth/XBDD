@@ -1,20 +1,25 @@
 XBDD
 ====
 
-Installation
-------------
-Download and install the appropriate version of Apache Tomcat 7 from the [apache tomcat website](http://tomcat.apache.org/download-70.cgi)
+Pre-requisites
+--------------
 
-`$CATALINE_BASE` refers to the tomcat installation directory.
+* MongoDB 2.6. See https://docs.mongodb.com/v2.6
+* Tomcat 7. See http://tomcat.apache.org/download-70.cgi
+* Maven 3+. See https://maven.apache.org/
+* Gecko Driver (for running the tests). See https://github.com/mozilla/geckodriver
 
 Configuration
 -------------
 
+In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory.
+
 ### SSL/TLS
+The XBDD application requires a secure connection. This can be achieved through the Tomcat SSL connector.
 
-The XBDD application requires a confidential connection. This is usually achieved through the Tomcat SSL connector.
+You must first have configured a keystore. You can [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) or skip ahead if you have an existing one.
 
-Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
+Open `$CATALINA_BASE/conf/server.xml` and uncomment the 8443 connector block. Add the `keystoreFile` and `keystorePass` attributes, e.g.:
 
 ```xml
 <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
@@ -24,22 +29,23 @@ Open `$CATALINA_BASE/conf/server.xml` and uncomment the following:
     keystorePass="PASSWORD_HERE" />
 ```
 
-Replace FILE_LOCATION with the location of your security certificate (you may need to [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) first) and PASSWORD_HERE with the related password.
+Replace `FILE_LOCATION` with the location of your security certificate and `PASSWORD_HERE` with the password.
 
-### Enable Authentication
+### Authentication
 
 #### Local Authentication
 To get started quickly without configuring enterprise authentication, it is possible to use Tomcat's default local UserDatabaseRealm with XBDD.
 
-Configure a user by editing ``$CATALINA_BASE/conf/tomcat-users.xml` and adding a "user" element within the "tomcat-users" element, e.g.:
+Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a `user` element within the `tomcat-users` element, e.g.:
 
 ```xml
-<user username="xbdd" password="xbdd" roles="xbdd"/>
+<user username="xbdd" password="xbdd"/>
 ```
 
 #### LDAP
-Configure the realm in the server.xml or context.xml with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields. For example:
+If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields. 
 
+For example:
 ```	xml
 <Realm className="org.apache.catalina.realm.LockOutRealm">
     <Realm allRolesMode="authOnly" className="org.apache.catalina.realm.JNDIRealm"
@@ -52,9 +58,9 @@ Configure the realm in the server.xml or context.xml with the JNDIRealm. See the
 
 ### Configure Mongo Server Connection
 
-By default XBDD will connect to mongo at the default address `localhost:27017`
+By default XBDD will connect to MongoDB at its default address of `localhost:27017`.
 
-To configure an alternative server or authentication add the following parameters to the tomcat `context.xml`
+To configure an alternative server or to add authentication, add the following parameters to `$CATALINA_BASE/conf/context.xml`
 
 ```xml
     <Parameter name="xbdd.mongo.hostname" value="<hostname>"/>
@@ -64,44 +70,52 @@ To configure an alternative server or authentication add the following parameter
 ```
 
 ### A word on securing the connection to MongoDB
-MongoDB provides user access on a per-DB basis. XBDD uses two databases, "bdd" and "grid". The user needs read/write permissions for both.
-
-Running
--------
-
-The xbdd application can be run as a standalone webapp in Tomcat or with Eclipse.
-It can also be run from command line using an embedded Tomcat instance.
-
-### Standalone
-
-Create a war from an existing project and install in to tomcat webapps dir.
-
-1. Download `xbdd.war` or build from source with `mvn clean package`
-3. Copy `xbdd.war` into the `$CATALINA_BASE/webapps` folder of the Tomcat installation
-4. Start Tomcat with `$CATALINA_BASE/bin/startup.sh`
-5. Open <http://localhost:8443/xbdd>
-
-### Embedded
-
-Use maven to launch an embedded tomcat.
-
-1. From eclipse or the command line run `mvn tomcat7:run`
-2. Open <http://localhost:8443/xbdd>
-
-XBDD - Printing
-================
-
-To enable PDF downloading for printing, PhantomJS must be installed.
+MongoDB provides user access on a per-DB basis. XBDD uses two databases, `bdd` and `grid`. The user needs read/write permissions for both.
 
 Installation
-------------
+============
 
-1. Download PhantomJS from <http://phantomjs.org/download.html>
-2. Extract PhantomJS to a directory, e.g. ```/opt/phantomJS```
-3. Add context variables for the PhantomJS install dir and the user to use for printing to ```context.xml```:
+XBDD can be run as a standalone webapp in Tomcat (recommended) or via Eclipse.
+It can also be run with an embedded Tomcat instance however the above configuration will not be applied if using this mode. This may be useful for development purposes though.
 
-```xml  
-    <Parameter name="xbdd.phantomjs.home" value="/opt/phantomjs/bin"/>
-    <Parameter name="xbdd.phantomjs.username" value="xbdd-print"/>
-    <Parameter name="xbdd.phantomjs.password" value="secret"/>
+### Standalone mode
+
+1. From the top level directory run `mvn clean package`.
+2. Copy `target/xbdd.war` into `$CATALINA_BASE/webapps`.
+3. Start Tomcat with `$CATALINA_BASE/bin/startup.sh`.
+4. Open http://localhost:8443/xbdd
+
+### Embedded mode
+
+1. From the top level directory (or within an IDE) run `mvn tomcat7:run`
+2. Open <http://localhost:8443/xbdd>
+
+Running the tests
+=================
+
+You need to have the Gecko Web Driver installed and the system property `webdriver.gecko.driver=/path/to/your/gecko/webdriver` set, in order for the tests to pass. The easiest way to do this is via your `~/.m2/settings.xml` file. Add the following snippet to an active profile:
+
+```
+<properties>
+    <webdriver.gecko.driver>/usr/local/Cellar/geckodriver/0.18.0</webdriver.gecko.driver>
+</properties>
+
+```
+
+If you don't have an active profile, or a settings.xml file, add this:
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<profiles>
+		<profile>
+			<id>global</id>
+			<properties>
+   				<webdriver.gecko.driver>/usr/local/Cellar/geckodriver/0.18.0</webdriver.gecko.driver>
+   			</properties>
+   		</profile>
+	</profiles>
+	<activeProfiles>
+		<activeProfile>global</activeProfile>
+	</activeProfiles>
+</settings>
 ```
