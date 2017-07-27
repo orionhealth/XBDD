@@ -7,7 +7,16 @@ Pre-requisites
 * MongoDB 2.6. See https://docs.mongodb.com/v2.6
 * Tomcat 7. See http://tomcat.apache.org/download-70.cgi
 * Maven 3+. See https://maven.apache.org/
-* Gecko Driver (for running the tests). See https://github.com/mozilla/geckodriver
+
+Optional requirements
+---------------------
+
+A driver for running the automated tests is required. By default, the automated tests run against the Firefox Web Driver. 
+See https://github.com/mozilla/geckodriver for details. 
+
+This can be overridden with the `selenium-profile` property and the CI server runs with `phantom-js`.
+Other supported values are `selenium-grid` and `chrome`. These have their own requirements.
+See [XbddDriver.java](https://github.com/orionhealth/XBDD/blob/master/src/test/java/xbdd/XbddDriver.java) for more details.
 
 Configuration
 -------------
