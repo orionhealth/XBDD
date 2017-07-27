@@ -1,6 +1,4 @@
 language: java
 jdk:
-  - openjdk7
-  - oraclejdk7
   - oraclejdk8
 script: "mvn clean verify -Dselenium.profile=phantom-js -Dmaven.test.skip"
