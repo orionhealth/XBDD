@@ -204,7 +204,7 @@
 			<plugin>
 				<groupId>com.github.joelittlejohn.embedmongo</groupId>
 				<artifactId>embedmongo-maven-plugin</artifactId>
-				<version>0.1.12</version>
+				<version>0.3.4</version>
 				<executions>
 					<execution>
 						<id>start</id>
@@ -213,7 +213,7 @@
 						</goals>
 						<configuration>
 							<port>${mongo.port}</port>
-							<version>2.4.0</version>
+							<version>3.4.3</version>
 						</configuration>
 					</execution>
 					<execution>
@@ -321,7 +321,7 @@
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>0.0.23</version>
+				<version>1.5</version>
 				<executions>
 					<execution>
 						<id>install node and npm</id>
@@ -580,7 +580,7 @@
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>2.12.4</version>
+			<version>3.4.3</version>
 		</dependency>
 
 		<dependency>
@@ -740,7 +740,7 @@
 		<dependency>
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
-			<version>1.46.4</version>
+			<version>1.50.5</version>
 			<scope>test</scope>
 		</dependency>
 

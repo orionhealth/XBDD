@@ -48,7 +48,7 @@ public class Scenario implements DBObject {
 
 	@Override
 	public boolean containsKey(final String arg0) {
-		return this.scenarioObject.containsKey(arg0);
+		return this.scenarioObject.containsField(arg0);
 	}
 
 	@Override
@@ -71,6 +71,7 @@ public class Scenario implements DBObject {
 		this.scenarioObject.putAll(arg0);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void putAll(final Map arg0) {
 		this.scenarioObject.putAll(arg0);
@@ -81,6 +82,7 @@ public class Scenario implements DBObject {
 		return this.scenarioObject.removeField(arg0);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Map toMap() {
 		return this.scenarioObject.toMap();
