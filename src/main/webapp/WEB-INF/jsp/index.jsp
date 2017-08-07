@@ -23,7 +23,7 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII" pageEncoding="US-ASCII"%>
 <%@ taglib
     prefix="c"
-    uri="http://java.sun.com/jsp/jstl/core" 
+    uri="http://java.sun.com/jsp/jstl/core"
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -152,7 +152,7 @@
 				</div>
 				<div class="modal-body" style="overflow: auto">
 					<div class="help-nav">
-						
+
 					</div>
 					<div class="help-content">
 						<div id="help-content"></div>

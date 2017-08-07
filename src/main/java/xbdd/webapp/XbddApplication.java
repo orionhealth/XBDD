@@ -41,7 +41,7 @@ public class XbddApplication extends ResourceConfig {
 		// register(LoggingFilter.class);
 
 		property(ServerProperties.TRACING, TracingConfig.ON_DEMAND.name());
-		property(JspProperties.TEMPLATES_BASE_PATH, "WEB-INF/jsp");
+		property(JspProperties.TEMPLATES_BASE_PATH, "/WEB-INF/jsp");
 
 		register(new AbstractBinder() {
 			@Override
