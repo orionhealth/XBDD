@@ -106,7 +106,7 @@ It can also be run with an embedded Tomcat instance however the above configurat
 ### Embedded mode
 
 1. From the top level directory (or within an IDE) run `mvn tomcat7:run`
-2. Open <http://localhost:8443/xbdd>
+2. Open <http://localhost:28443/xbdd>
 
 Running the tests
 =================
