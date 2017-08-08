@@ -43,16 +43,16 @@ import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
 
-import com.mongodb.AggregationOutput;
+import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
-import com.mongodb.util.JSON;
 
 @Path("/rest/reports")
 public class Report {
@@ -96,7 +96,6 @@ public class Report {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Produces("application/json")
 	public DBObject getSummaryOfAllReports(@Context final HttpServletRequest req) {
@@ -282,26 +281,28 @@ public class Report {
 	public DBObject getTagList(@BeanParam final Coordinates coordinates) {
 		final DB bdd = this.client.getDB("bdd");
 		final DBCollection features = bdd.getCollection("features");
+		List<BasicDBObject> objectList = new ArrayList<BasicDBObject>();
 		// Build objects for aggregation pipeline
 		// id option: returns each tag with a list of associated feature ids
-		final DBObject match = new BasicDBObject("$match", coordinates.getReportCoordinatesQueryObject());
+		objectList.add(new BasicDBObject("$match", coordinates.getReportCoordinatesQueryObject()));
 		final DBObject fields = new BasicDBObject("tags.name", 1);
 		fields.put("_id", 0); // comment out for id option
-		final DBObject project = new BasicDBObject("$project", fields);
-		final DBObject unwind = new BasicDBObject("$unwind", "$tags");
+		objectList.add(new BasicDBObject("$project", fields));
+		objectList.add(new BasicDBObject("$unwind", "$tags"));
 		final DBObject groupFields = new BasicDBObject("_id", "$tags.name");
 		// groupFields.put("features", new BasicDBObject("$addToSet", "$_id")); //comment in for id option
 		groupFields.put("amount", new BasicDBObject("$sum", 1));
-		final DBObject group = new BasicDBObject("$group", groupFields);
-		final DBObject sort = new BasicDBObject("$sort", new BasicDBObject("amount", -1));
+		objectList.add(new BasicDBObject("$group", groupFields));
+		objectList.add(new BasicDBObject("$sort", new BasicDBObject("amount", -1)));
+		
+		AggregationOptions options = AggregationOptions.builder().build();
 
-		final AggregationOutput output = features.aggregate(match, project, unwind, group, sort);
+		final Cursor output = features.aggregate(objectList, options);
 
 		// get _ids from each entry of output.result
 		final BasicDBList returns = new BasicDBList();
-		for (final DBObject obj : output.results()) {
-			final String id = obj.get("_id").toString();
-			returns.add(id);
+		while(output.hasNext()) {
+			returns.add(output.next().get("_id").toString());
 		}
 		return returns;
 	}
@@ -346,7 +347,7 @@ public class Report {
 
 		for (int i = 0; i < doc.size(); i++) {
 			// take each feature and give it a unique id.
-			final DBObject feature = (DBObject) doc.get(i);
+			final BasicDBObject feature = (BasicDBObject) doc.get(i);
 			final String _id = coordinates.getFeature_Id((String) feature.get("id"));
 			feature.put("_id", _id);
 			embedSteps(feature, gridFS, coordinates); // extract embedded content and hyperlink to it.
@@ -361,7 +362,7 @@ public class Report {
 			feature.put("calculatedStatus", originalStatus);
 			feature.put("originalAutomatedStatus", originalStatus);
 			this.log.info("Saving: " + feature.get("name") + " - " + feature.get("calculatedStatus"));
-			this.log.trace("Adding feature:" + JSON.serialize(feature));
+			this.log.trace("Adding feature:" + feature.toJson());
 			features.save(feature);
 		}
 		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the "version"
