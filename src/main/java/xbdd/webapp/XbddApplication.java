@@ -33,7 +33,7 @@ public class XbddApplication extends ResourceConfig {
 		packages(getClass().getPackage().getName());
 
 		// MVC feature
-		property(JspMvcFeature.TEMPLATES_BASE_PATH, "/WEB-INF/jsp");
+		property(JspMvcFeature.TEMPLATE_BASE_PATH, "/WEB-INF/jsp");
 		register(JspMvcFeature.class);
 		register(MultiPartFeature.class);
 

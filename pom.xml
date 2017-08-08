@@ -29,7 +29,7 @@
 		<version.minor>1</version.minor>
 		<version.servicepack>0</version.servicepack>
 		<cucumberJvmVersion>1.1.8</cucumberJvmVersion>
-		<jersey-version>2.5.2</jersey-version>
+		<jersey-version>2.25.1</jersey-version>
 		<xbdd.mongo.hostname></xbdd.mongo.hostname>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -492,7 +492,7 @@
 		<dependency>
 			<groupId>com.github.eirslett</groupId>
 			<artifactId>frontend-maven-plugin</artifactId>
-			<version>0.0.23</version>
+			<version>1.5</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.google.guava</groupId>
@@ -743,6 +743,11 @@
 			<version>1.50.5</version>
 			<scope>test</scope>
 		</dependency>
+    <dependency>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.4</version>
+    </dependency>
 
 		<!-- override guava version across the board, see https://stackoverflow.com/questions/42421148/wait-untilexpectedconditions-doesnt-work-any-more-in-selenium -->
 		<dependency>
