@@ -71,7 +71,8 @@ public class JerseyClientFactory {
 	/**
 	 * Create a {@link Client} with the given options.
 	 *
-	 * @param options The options to customize the construction of the client
+	 * @param options
+	 *            The options to customize the construction of the client
 	 * @return The constructed client
 	 */
 	public Client createClient(final JerseyClientOptions options) {
@@ -105,13 +106,9 @@ public class JerseyClientFactory {
 				}
 			};
 
-			final Client client = ClientBuilder.newBuilder()
-					.sslContext(sc)
-					.hostnameVerifier(allHostsValid)
-					.build();
-      final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basicBuilder()
-                                        .credentials(options.getUsername(), options.getPassword())
-                                        .build();
+			final Client client = ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier(allHostsValid).build();
+			final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basicBuilder()
+					.credentials(options.getUsername(), options.getPassword()).build();
 			client.register(feature);
 			client.register(BasicDBReader.class);
 			return client;
