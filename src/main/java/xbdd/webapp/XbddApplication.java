@@ -23,7 +23,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.TracingConfig;
 import org.glassfish.jersey.server.mvc.jsp.JspMvcFeature;
-import org.glassfish.jersey.server.mvc.jsp.JspProperties;
 
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.factory.ServletContextMongoClientFactory;
@@ -34,6 +33,7 @@ public class XbddApplication extends ResourceConfig {
 		packages(getClass().getPackage().getName());
 
 		// MVC feature
+		property(JspMvcFeature.TEMPLATE_BASE_PATH, "/WEB-INF/jsp");
 		register(JspMvcFeature.class);
 		register(MultiPartFeature.class);
 
@@ -41,7 +41,6 @@ public class XbddApplication extends ResourceConfig {
 		// register(LoggingFilter.class);
 
 		property(ServerProperties.TRACING, TracingConfig.ON_DEMAND.name());
-		property(JspProperties.TEMPLATES_BASE_PATH, "WEB-INF/jsp");
 
 		register(new AbstractBinder() {
 			@Override

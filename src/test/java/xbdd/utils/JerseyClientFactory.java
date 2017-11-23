@@ -27,7 +27,7 @@ import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
-import org.glassfish.jersey.client.filter.HttpBasicAuthFilter;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
 import xbdd.webapp.util.BasicDBReader;
 
@@ -39,7 +39,7 @@ public class JerseyClientFactory {
 
 	/**
 	 * Get the factory for creating Jersey {@link Client}s from XBDD
-	 * 
+	 *
 	 * @return The factory for creating jersey clients
 	 */
 	public static JerseyClientFactory getInstance() {
@@ -52,7 +52,7 @@ public class JerseyClientFactory {
 
 	/**
 	 * Create a {@link Client} which authenticates with Basic Authentication.
-	 * 
+	 *
 	 * @return The constructed client
 	 */
 	public Client createAuthenticatingClient() {
@@ -61,7 +61,7 @@ public class JerseyClientFactory {
 
 	/**
 	 * Create a {@link Client} which authenticates with Admin Authentication.
-	 * 
+	 *
 	 * @return The constructed client
 	 */
 	public Client createAdminAuthenticatingClient() {
@@ -70,8 +70,9 @@ public class JerseyClientFactory {
 
 	/**
 	 * Create a {@link Client} with the given options.
-	 * 
-	 * @param options The options to customize the construction of the client
+	 *
+	 * @param options
+	 *            The options to customize the construction of the client
 	 * @return The constructed client
 	 */
 	public Client createClient(final JerseyClientOptions options) {
@@ -105,11 +106,10 @@ public class JerseyClientFactory {
 				}
 			};
 
-			final Client client = ClientBuilder.newBuilder()
-					.sslContext(sc)
-					.hostnameVerifier(allHostsValid)
-					.build();
-			client.register(new HttpBasicAuthFilter(options.getUsername(), options.getPassword()));
+			final Client client = ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier(allHostsValid).build();
+			final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basicBuilder()
+					.credentials(options.getUsername(), options.getPassword()).build();
+			client.register(feature);
 			client.register(BasicDBReader.class);
 			return client;
 		} catch (final Exception e) {

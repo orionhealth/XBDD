@@ -11,8 +11,8 @@ Pre-requisites
 Optional requirements
 ---------------------
 
-A driver for running the automated tests is required. By default, the automated tests run against the Firefox Web Driver. 
-See https://github.com/mozilla/geckodriver for details. 
+A driver for running the automated tests is required. By default, the automated tests run against the Firefox Web Driver.
+See https://github.com/mozilla/geckodriver for details.
 
 This can be overridden with the `selenium-profile` property and the CI server runs with `phantom-js`.
 Other supported values are `selenium-grid` and `chrome`. These have their own requirements.
@@ -52,7 +52,7 @@ Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a 
 ```
 
 #### LDAP
-If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields. 
+If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields.
 
 For example:
 ```	xml
@@ -81,6 +81,15 @@ To configure an alternative server or to add authentication, add the following p
 ### A word on securing the connection to MongoDB
 MongoDB provides user access on a per-DB basis. XBDD uses two databases, `bdd` and `grid`. The user needs read/write permissions for both.
 
+### Running Mongo in a docker container.
+1. Install docker on your system. You can download it [here](https://docs.docker.com/engine/installation/).
+2. Pull the docker container in using `docker pull mongo`
+3. Start the docker container with the command
+`docker run -p=27017:27017 --name mongo -d mongo`
+
+This will give you a docker container named mongo which is accessible at
+[localhost:27017](http://localhost:27017)
+
 Installation
 ============
 
@@ -97,7 +106,7 @@ It can also be run with an embedded Tomcat instance however the above configurat
 ### Embedded mode
 
 1. From the top level directory (or within an IDE) run `mvn tomcat7:run`
-2. Open <http://localhost:8443/xbdd>
+2. Open <http://localhost:28443/xbdd>
 
 Running the tests
 =================
