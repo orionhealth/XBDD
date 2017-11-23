@@ -344,6 +344,7 @@
 							   <arguments>install</arguments>
 						   </configuration>
 					</execution>
+					<!--
 					<execution>
 						<id>run grunt default task</id>
 						<phase>test</phase>
@@ -354,6 +355,7 @@
 							<arguments>default</arguments>
 						</configuration>
 					</execution>
+				-->
 				</executions>
 			</plugin>
 		</plugins>
@@ -492,7 +494,7 @@
 		<dependency>
 			<groupId>com.github.eirslett</groupId>
 			<artifactId>frontend-maven-plugin</artifactId>
-			<version>1.5</version>
+			<version>1.6</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.google.guava</groupId>
