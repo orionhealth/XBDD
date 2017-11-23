@@ -101,12 +101,12 @@ It can also be run with an embedded Tomcat instance however the above configurat
 1. From the top level directory run `mvn clean package`.
 2. Copy `target/xbdd.war` into `$CATALINA_BASE/webapps`.
 3. Start Tomcat with `$CATALINA_BASE/bin/startup.sh`.
-4. Open http://localhost:8443/xbdd
+4. Open https://localhost:8443/xbdd
 
 ### Embedded mode
 
 1. From the top level directory (or within an IDE) run `mvn tomcat7:run`
-2. Open <http://localhost:28443/xbdd>
+2. Open <https://localhost:28443/xbdd>
 
 Running the tests
 =================
