@@ -39,7 +39,6 @@ public class JerseyClientOptions {
 	 * @param password The password to use with Basic Authentication
 	 * @return JerseyClientOptions - used to chain calls.
 	 */
-	@SuppressWarnings("hiding")
 	public JerseyClientOptions withBasicAuthentication(final String username, final String password) {
 		this.username = username;
 		this.password = password;

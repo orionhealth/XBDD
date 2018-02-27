@@ -236,7 +236,7 @@
 					<keystoreFile>../keys/.keystore</keystoreFile>
 					<keystorePass>ih8Passwords</keystorePass>
 					<tomcatUsers>src/main/tomcatconf/tomcat-users.xml</tomcatUsers>
-					<contextFile>src/test/resources/conf/contextFile.xml</contextFile>
+					<contextFile>src/main/tomcatconf/context.xml</contextFile>
 				</configuration>
 				<executions>
 					<execution>
