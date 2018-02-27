@@ -206,19 +206,28 @@ public class Report {
 						final BasicDBList embeddings = (BasicDBList) step.get("embeddings");
 						if (embeddings != null) {
 							for (int l = 0; l < embeddings.size(); l++) {
-								final DBObject embedding = (DBObject) embeddings.get(l);
-								final GridFSInputFile image = gridFS
-										.createFile(Base64.decodeBase64(((String) embedding.get("data")).getBytes()));
-								image.setFilename(guid());
-								final BasicDBObject metadata = new BasicDBObject().append("product", coordinates.getProduct())
-										.append("major", coordinates.getMajor()).append("minor", coordinates.getMinor())
-										.append("servicePack", coordinates.getServicePack()).append("build", coordinates.getBuild())
-										.append("feature", featureId)
-										.append("scenario", scenarioId);
-								image.setMetaData(metadata);
-								image.setContentType((String) embedding.get("mime_type"));
-								image.save();
-								embeddings.put(l, image.getFilename());
+								
+								//handle a malformatted 'embedding' better.
+								//https://github.com/orionhealth/XBDD/issues/46
+								try {
+									final DBObject embedding = (DBObject) embeddings.get(l);
+									final GridFSInputFile image = gridFS
+											.createFile(Base64.decodeBase64(((String) embedding.get("data")).getBytes()));
+									image.setFilename(guid());
+									final BasicDBObject metadata = new BasicDBObject().append("product", coordinates.getProduct())
+											.append("major", coordinates.getMajor()).append("minor", coordinates.getMinor())
+											.append("servicePack", coordinates.getServicePack()).append("build", coordinates.getBuild())
+											.append("feature", featureId)
+											.append("scenario", scenarioId);
+									image.setMetaData(metadata);
+									image.setContentType((String) embedding.get("mime_type"));
+									image.save();
+									embeddings.put(l, image.getFilename());
+								} catch (ClassCastException e) {
+									log.warn("Embedding was malformatted and will be skipped");
+									continue;
+								}
+								
 							}
 						}
 					}
