@@ -60,7 +60,6 @@
 				</form>		
 			</div>			
 			<div class="footer">
-				<p>&copy; William Bath 2013</p>
 			</div>
 		</div>
 	</div>
