@@ -115,7 +115,7 @@ public class Feature {
 	public DBObject getFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection tips = db.getCollection("features");
-		final BasicDBObject example = new BasicDBObject().append("id", featureId).append("coordinates", coordinates.getReportCoordinates());
+		final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 		final DBObject feature = tips.findOne(example);
 		if (feature != null) {
 			Feature.embedTestingTips(feature, coordinates, db);
