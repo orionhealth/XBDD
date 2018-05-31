@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import green from '@material-ui/core/colors/green';
 import blue from '@material-ui/core/colors/blue';
 import amber from '@material-ui/core/colors/amber';
 import red from '@material-ui/core/colors/red';
 import grey from '@material-ui/core/colors/grey';
+import DoneIcon from '@material-ui/icons/Done';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import BlockIcon from '@material-ui/icons/Block';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 const styles = theme => ({
     xbddTagListFilterButtons: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
+        marginBottom: '15px',
     },
     xbddFilterButton: {
         width: 88,
@@ -42,28 +48,32 @@ class TagListFilterButtons extends Component {
         this.variants = {
             passed: {
                 theme: buttonTheme(green),
-                text: 'Passed',
+                icon: <DoneIcon />,
+                tooltip: 'Passed',
                 stateAttribute: 'passedSelected',
                 handler: this.props.onFilterButtonClick.bind(this, 'passedSelected'),
                 className: `${this.props.classes.xbddFilterButton} ${this.props.classes.xbddFilterButtonFirst}`,
             },
-            undefined: {
-                theme: buttonTheme(amber),
-                text: 'Undefined',
-                stateAttribute: 'undefinedSelected',
-                handler: this.props.onFilterButtonClick.bind(this, 'undefinedSelected'),
-                className: `${this.props.classes.xbddFilterButton}`,
-            },
             failed: {
                 theme: buttonTheme(red),
-                text: 'Failed',
+                icon: <ErrorOutlineIcon />,
+                tooltip: 'Failed',
                 stateAttribute: 'failedSelected',
                 handler: this.props.onFilterButtonClick.bind(this, 'failedSelected'),
                 className: `${this.props.classes.xbddFilterButton}`,
             },
+            undefined: {
+                theme: buttonTheme(amber),
+                icon: <HelpOutlineIcon />,
+                tooltip: 'Undefined',
+                stateAttribute: 'undefinedSelected',
+                handler: this.props.onFilterButtonClick.bind(this, 'undefinedSelected'),
+                className: `${this.props.classes.xbddFilterButton}`,
+            },
             skipped: {
                 theme: buttonTheme(blue),
-                text: 'Skipped',
+                icon: <BlockIcon />,
+                tooltip: 'Skipped',
                 stateAttribute: 'skippedSelected',
                 handler: this.props.onFilterButtonClick.bind(this, 'skippedSelected'),
                 className: `${this.props.classes.xbddFilterButton} ${this.props.classes.xbddFilterButtonLast}`,
@@ -74,14 +84,16 @@ class TagListFilterButtons extends Component {
     createButton(variant) {
         return (
             <MuiThemeProvider theme={variant.theme}>
-                <Button
-                    className={variant.className}
-                    onClick={variant.handler}
-                    variant="outlined"
-                    color={this.props.state[variant.stateAttribute] ? 'primary' : 'secondary'}
-                >
-                    {variant.text}
-                </Button>
+                <Tooltip title={variant.tooltip} placement="top">
+                    <IconButton
+                        className={variant.className}
+                        onClick={variant.handler}
+                        variant="outlined"
+                        color={this.props.state[variant.stateAttribute] ? 'primary' : 'secondary'}
+                    >
+                        {variant.icon}
+                    </IconButton>
+                </Tooltip>
             </MuiThemeProvider>
         );
     }
@@ -90,8 +102,8 @@ class TagListFilterButtons extends Component {
         return (
             <div className={this.props.classes.xbddTagListFilterButtons}>
                 {this.createButton(this.variants.passed)}
-                {this.createButton(this.variants.undefined)}
                 {this.createButton(this.variants.failed)}
+                {this.createButton(this.variants.undefined)}
                 {this.createButton(this.variants.skipped)}
             </div>
         );
