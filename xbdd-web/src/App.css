@@ -1,24 +1,24 @@
-.App {
+.xbdd-app {
   text-align: center;
 }
 
-.App-logo {
+.xbdd-app-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
 }
 
-.App-header {
+.xbdd-app-header {
   background-color: #222;
   height: 150px;
   padding: 20px;
   color: white;
 }
 
-.App-title {
+.xbdd-app-title {
   font-size: 1.5em;
 }
 
-.App-intro {
+.xbdd-app-intro {
   font-size: large;
 }
 
