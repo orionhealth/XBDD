@@ -15,6 +15,7 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 const styles = theme => ({
     xbddTagListFilterButtons: {
+        height: '48px',
         width: '100%',
         backgroundColor: theme.palette.background.paper,
         marginBottom: '15px',

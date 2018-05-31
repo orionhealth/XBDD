@@ -8,11 +8,21 @@ import TagListFilterButtons from './TagListFilterButtons';
 
 const styles = theme => ({
     xbddTagListContainer: {
+        height: 'calc(100vh - 280px)',
         width: '100%',
         maxWidth: 360,
         backgroundColor: theme.palette.background.paper,
     },
+    xbddTagList: {
+        position: 'relative',
+        width: '100%',
+        maxWidth: 360,
+        height: 'calc(100% - 50px)',
+        overflowY: 'scroll',
+        backgroundColor: theme.palette.background.paper,
+    },
     xbddTagListFilterButtons: {
+        height: '50px',
         width: '100%',
     },
     xbddFilterButton: {
@@ -59,12 +69,14 @@ class TagList extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.xbddTagListContainer}>
+            <div className={`${classes.xbddTagListContainer} xbdd-tab-list-container`}>
                 <TagListFilterButtons
                     state={this.state}
                     onFilterButtonClick={this.onFilterButtonClick}
                 />
-                {this.renderList()}
+                <div className={classes.xbddTagList}>
+                    {this.renderList()}
+                </div>
             </div>
         );
     }
