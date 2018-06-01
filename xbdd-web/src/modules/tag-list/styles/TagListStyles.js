@@ -1,19 +1,19 @@
 const tagListStyles = theme => ({
     xbddTagListContainer: {
+        backgroundColor: theme.palette.background.paper,
         height: 'calc(100vh - 300px)',
-        width: '100%',
         maxWidth: 308,
         padding: '20px',
-        backgroundColor: theme.palette.background.paper,
+        width: '100%',
     },
     xbddTagList: {
-        position: 'relative',
-        width: 'calc(100% - 2px)',
-        height: 'calc(100% - 50px)',
-        overflowY: 'scroll',
         backgroundColor: theme.palette.background.paper,
         border: '1px solid rgba(0, 0, 0, 0.23)',
         borderRadius: '3px',
+        height: 'calc(100% - 50px)',
+        overflowY: 'scroll',
+        position: 'relative',
+        width: 'calc(100% - 2px)',
     },
     xbddTagListFilterButtons: {
         height: '50px',
@@ -26,23 +26,23 @@ const tagListStyles = theme => ({
 
 const tagListFilterButtonStyles = theme => ({
     xbddTagListFilterButtons: {
-        height: '48px',
-        width: '100%',
         backgroundColor: theme.palette.background.paper,
+        height: '48px',
         marginBottom: '15px',
+        width: '100%',
     },
     xbddFilterButton: {
-        width: 77,
         border: '1px solid rgba(0, 0, 0, 0.23)',
         borderRadius: 0,
         borderRight: 0,
+        width: 77,
     },
     xbddFilterButtonFirst: {
         borderRadius: '3px 0 0 3px',
     },
     xbddFilterButtonLast: {
-        borderRight: '1px solid rgba(0, 0, 0, 0.23)',
         borderRadius: '0 3px 3px 0',
+        borderRight: '1px solid rgba(0, 0, 0, 0.23)',
     },
 });
 
@@ -51,8 +51,8 @@ const tagListItemStyles = {
         width: '100%',
     },
     xbddTagListItemContainerSelected: {
-        width: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        width: '100%',
     },
 };
 
