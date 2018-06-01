@@ -5,30 +5,7 @@ import List from '@material-ui/core/List';
 import Report from '../../models/Report';
 import TagListItem from './TagListItem';
 import TagListFilterButtons from './TagListFilterButtons';
-
-const styles = theme => ({
-    xbddTagListContainer: {
-        height: 'calc(100vh - 280px)',
-        width: '100%',
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
-    },
-    xbddTagList: {
-        position: 'relative',
-        width: '100%',
-        maxWidth: 360,
-        height: 'calc(100% - 50px)',
-        overflowY: 'scroll',
-        backgroundColor: theme.palette.background.paper,
-    },
-    xbddTagListFilterButtons: {
-        height: '50px',
-        width: '100%',
-    },
-    xbddFilterButton: {
-        width: 90,
-    },
-});
+import { tagListStyles } from './TagListStyles';
 
 class TagList extends Component {
     constructor(props) {
@@ -39,8 +16,10 @@ class TagList extends Component {
             undefinedSelected: true,
             failedSelected: true,
             skippedSelected: true,
+            selectedTag: null,
         };
         this.onFilterButtonClick = this.onFilterButtonClick.bind(this);
+        this.onSelectTag = this.onSelectTag.bind(this);
     }
 
     onFilterButtonClick(stateAttribute) {
@@ -49,19 +28,37 @@ class TagList extends Component {
         }));
     }
 
-    filteredTags() {
+    onSelectTag(tag) {
+        this.setState({
+            selectedTag: tag,
+        });
+    }
+
+    filterTags() {
         const tags = this.props.report.tagList;
+
         return tags.filter(tag => (this.state.passedSelected && tag.containsPassed)
             || (this.state.undefinedSelected && tag.containsUndefined)
             || (this.state.failedSelected && tag.containsFailed)
             || (this.state.skippedSelected && tag.containsSkipped));
     }
 
+    mapTagToTagListItem(tag) {
+        const isSelected = tag === this.state.selectedTag;
+
+        return (
+            <TagListItem
+                tag={tag}
+                key={tag.name}
+                onSelectTag={this.onSelectTag}
+                isSelected={isSelected}
+            />);
+    }
+
     renderList() {
-        const tags = this.filteredTags();
         return (
             <List component="ul" >
-                {tags.map(tag => <TagListItem tag={tag} key={tag.name} />)}
+                {this.filterTags().map(tag => this.mapTagToTagListItem(tag))}
             </List>
         );
     }
@@ -87,4 +84,4 @@ TagList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TagList);
+export default withStyles(tagListStyles)(TagList);

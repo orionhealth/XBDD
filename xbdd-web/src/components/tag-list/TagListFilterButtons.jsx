@@ -3,42 +3,16 @@ import { PropTypes } from 'prop-types';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import green from '@material-ui/core/colors/green';
-import blue from '@material-ui/core/colors/blue';
-import amber from '@material-ui/core/colors/amber';
-import red from '@material-ui/core/colors/red';
-import grey from '@material-ui/core/colors/grey';
 import DoneIcon from '@material-ui/icons/Done';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import BlockIcon from '@material-ui/icons/Block';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-
-const styles = theme => ({
-    xbddTagListFilterButtons: {
-        height: '48px',
-        width: '100%',
-        backgroundColor: theme.palette.background.paper,
-        marginBottom: '15px',
-    },
-    xbddFilterButton: {
-        width: 88,
-        border: '1px solid rgba(0, 0, 0, 0.23)',
-        borderRadius: 0,
-        borderRight: 0,
-    },
-    xbddFilterButtonFirst: {
-        borderRadius: '2px 0 0 2px',
-    },
-    xbddFilterButtonLast: {
-        borderRight: '1px solid rgba(0, 0, 0, 0.23)',
-        borderRadius: '0 2px 2px 0',
-    },
-});
+import { tagListFilterButtonStyles } from './TagListStyles';
 
 const buttonTheme = color => createMuiTheme({
     palette: {
-        primary: color,
-        secondary: grey,
+        primary: { main: color },
+        secondary: { main: '#E0E0E0' },
     },
 });
 
@@ -48,7 +22,7 @@ class TagListFilterButtons extends Component {
 
         this.variants = {
             passed: {
-                theme: buttonTheme(green),
+                theme: buttonTheme('#1d3557'),
                 icon: <DoneIcon />,
                 tooltip: 'Passed',
                 stateAttribute: 'passedSelected',
@@ -56,7 +30,7 @@ class TagListFilterButtons extends Component {
                 className: `${this.props.classes.xbddFilterButton} ${this.props.classes.xbddFilterButtonFirst}`,
             },
             failed: {
-                theme: buttonTheme(red),
+                theme: buttonTheme('#E63946'),
                 icon: <ErrorOutlineIcon />,
                 tooltip: 'Failed',
                 stateAttribute: 'failedSelected',
@@ -64,7 +38,7 @@ class TagListFilterButtons extends Component {
                 className: `${this.props.classes.xbddFilterButton}`,
             },
             undefined: {
-                theme: buttonTheme(amber),
+                theme: buttonTheme('#A8DADC'),
                 icon: <HelpOutlineIcon />,
                 tooltip: 'Undefined',
                 stateAttribute: 'undefinedSelected',
@@ -72,7 +46,7 @@ class TagListFilterButtons extends Component {
                 className: `${this.props.classes.xbddFilterButton}`,
             },
             skipped: {
-                theme: buttonTheme(blue),
+                theme: buttonTheme('#457B9D'),
                 icon: <BlockIcon />,
                 tooltip: 'Skipped',
                 stateAttribute: 'skippedSelected',
@@ -90,6 +64,7 @@ class TagListFilterButtons extends Component {
                         className={variant.className}
                         onClick={variant.handler}
                         variant="outlined"
+                        size="small"
                         color={this.props.state[variant.stateAttribute] ? 'primary' : 'secondary'}
                     >
                         {variant.icon}
@@ -117,4 +92,4 @@ TagListFilterButtons.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TagListFilterButtons);
+export default withStyles(tagListFilterButtonStyles)(TagListFilterButtons);
