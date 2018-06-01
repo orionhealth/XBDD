@@ -4,7 +4,8 @@
         "indent": ["error", 4],
         "react/jsx-indent": [4],
         "react/jsx-indent-props": [4],
-        "react/forbid-prop-types": ["array"]
+        "react/forbid-prop-types": ["array"],
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*-test.js", "**/*-test.jsx"], "optionalDependencies": false, "peerDependencies": false}]
     },
     "env": {
         "jest": true

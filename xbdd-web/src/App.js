@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TagList from './components/tag-list/TagList';
+import TagListContainer from './modules/tag-list/containers/TagListContainer';
 import Report from './models/Report';
 import logo from './logo.svg';
 import './App.css';
@@ -17,7 +17,7 @@ class App extends Component {
                 <p className="xbdd-app-intro">
                     To get started, edit <code>src/App.js</code> and save to reload.
                 </p>
-                <TagList report={dummyReport} />
+                <TagListContainer report={dummyReport} />
             </div>
         );
     }
