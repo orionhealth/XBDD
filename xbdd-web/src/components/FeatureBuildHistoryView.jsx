@@ -15,7 +15,7 @@ import FeatureHistory from '../models/FeatureHistory';
 const styles = theme => ({
     buildHistoryViewContainer: {
         width: '100%',
-        maxWidth: 450,
+        maxWidth: 570,
         backgroundColor: theme.palette.background.paper,
     },
 });
@@ -35,7 +35,7 @@ const getIcon = (status, lastEditedBy) => {
     return <Tooltip title={`Status: Unknown${lastEditedByText}`} placement="bottom-end"><HelpOutlineIcon /></Tooltip>;
 };
 
-class BuildHistoryViewContainer extends Component {
+class FeatureBuildHistoryViewContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -61,9 +61,9 @@ class BuildHistoryViewContainer extends Component {
     }
 }
 
-BuildHistoryViewContainer.propTypes = {
+FeatureBuildHistoryViewContainer.propTypes = {
     classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     featureRollupData: PropTypes.instanceOf(FeatureHistory).isRequired,
 };
 
-export default withStyles(styles)(BuildHistoryViewContainer);
+export default withStyles(styles)(FeatureBuildHistoryViewContainer);
