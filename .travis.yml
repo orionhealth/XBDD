@@ -1,4 +1,10 @@
 language: java
 jdk:
   - oraclejdk8
-script: "mvn clean verify -Dselenium.profile=phantom-js -Dmaven.test.skip"
+
+addons:
+  sonarcloud:
+    organization: default
+  token:
+    secure: "Xde2mEJxSuMMhyHHf/P4YxVjs6VPoHS6G5YNHC4ambauIu3Xn2LXoqaCZpjnqwOxW28hVQICTkL9E8YTQuFetn0vxu5s+YDHOTC19OxWkvZ+y8e2WZZUywZZGsQHDQ168fLQ23MUgTB4Jaa9mHWrYJOzVDgVl4Vv5B5LrFsEJHI="
+script: "mvn clean verify org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -Dselenium.profile=phantom-js -Dmaven.test.skip"
