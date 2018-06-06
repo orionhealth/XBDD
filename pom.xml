@@ -403,7 +403,6 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${jersey.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -484,11 +483,6 @@
 			<version>1.50.5</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>versions-maven-plugin</artifactId>
-			<version>2.4</version>
-		</dependency>
 
 		<!-- override guava version across the board, see https://stackoverflow.com/questions/42421148/wait-untilexpectedconditions-doesnt-work-any-more-in-selenium -->
 		<dependency>
@@ -496,6 +490,9 @@
 			<artifactId>guava</artifactId>
 			<version>22.0</version>
 		</dependency>
+		
+
+
 
 	</dependencies>
 
