@@ -33,16 +33,24 @@ const TagListView = props => (
 );
 
 TagListView.propTypes = {
-    tags: PropTypes.arrayOf(PropTypes.instanceOf(Tag)).isRequired,
+    tags: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
     selectedTag: PropTypes.instanceOf(Tag),
-    filterStates: PropTypes.object.isRequired,
-    onSelectTag: PropTypes.func.isRequired,
-    onFilterButtonClick: PropTypes.func.isRequired,
+    filterStates: PropTypes.shape({
+        passedSelected: PropTypes.bool,
+        undefinedSelected: PropTypes.bool,
+        failedSelected: PropTypes.bool,
+        skippedSelected: PropTypes.bool,
+    }).isRequired,
+    onSelectTag: PropTypes.func,
+    onFilterButtonClick: PropTypes.func,
     classes: PropTypes.object.isRequired,
 };
 
 TagListView.defaultProps = {
+    tags: [],
     selectedTag: null,
+    onSelectTag: () => {},
+    onFilterButtonClick: () => {},
 };
 
 export default withStyles(tagListStyles)(TagListView);
