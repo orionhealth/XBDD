@@ -469,7 +469,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>[2.34,)</version>
+			<version>3.12.0</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -479,9 +479,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.github.detro</groupId>
+			<groupId>com.codeborne</groupId>
 			<artifactId>phantomjsdriver</artifactId>
-			<version>1.2.0</version>
+			<version>1.4.4</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- Needed for selenium https://code.google.com/p/selenium/issues/detail?id=5245 -->
