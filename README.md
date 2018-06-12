@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/aa4b05b0d1a3437f925a4ff5dc85e8b3)](https://app.codacy.com/app/orionhealth/XBDD?utm_source=github.com&utm_medium=referral&utm_content=orionhealth/XBDD&utm_campaign=badger)
 XBDD [![Build Status](https://travis-ci.org/orionhealth/XBDD.svg)](https://travis-ci.org/orionhealth/XBDD)
 ====
 
