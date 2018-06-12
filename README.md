@@ -1,5 +1,8 @@
-XBDD [![Build Status](https://travis-ci.org/orionhealth/XBDD.svg)](https://travis-ci.org/orionhealth/XBDD)
+XBDD 
 ====
+
+[![Build Status](https://travis-ci.org/orionhealth/XBDD.svg)](https://travis-ci.org/orionhealth/XBDD)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4e302179ece414aba739157ff82c222)](https://www.codacy.com/app/orionhealth/XBDD?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=orionhealth/XBDD&amp;utm_campaign=Badge_Grade)
 
 XBDD is a tool to unite automated and manual testing efforts using Cucumber feature files. Test reports can be uploaded to XBDD manually or via a continuous integration server, giving you an information radiator on how many tests are passing, how many failed and how many can be run manually. Pin a report and get your team to walk through the manual feature files and check off each step to perform a full regression test.
 
@@ -29,4 +32,3 @@ Contributing
 ============
 For all those wishing to contribute to XBDD please fork the repository, and submit your changes via a pull request.
 Please ensure your pull request follows the pre-existing coding style and that `mvn clean verify` passes.  You can use `grunt pretty` to format your CSS and JS correctly.
-If the build is failing due to licenses missing, please run `mvn licence:format`
