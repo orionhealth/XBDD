@@ -25,7 +25,7 @@ test('TagListButtonsView renders 4 buttons', () => {
     expect(buttonView.find('button')).toHaveLength(4);
 });
 
-test('TagListButtonsView renders button with primary color', () => {
+test('TagListButtonsView renders button with primary color when selected', () => {
     const buttonView = mount(<TagListFilterButtonsView
         filterStates={filterStates}
         onFilterButtonClick={() => {}}
@@ -33,7 +33,7 @@ test('TagListButtonsView renders button with primary color', () => {
     expect(buttonView.find('button').get(0).props.className).toContain('Primary');
 });
 
-test('TagListButtonsView renders button with primary color', () => {
+test('TagListButtonsView renders button with secondary color when not selected', () => {
     const filterStatesFalse = {
         passedSelected: false,
         undefinedSelected: false,
