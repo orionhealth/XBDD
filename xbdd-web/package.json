@@ -16,10 +16,11 @@
     "popper.js": "^1.14.3",
     "react-scripts": "1.1.4",
     "sinon": "^5.1.0"
+    "react-test-renderer": "^16.4.0"
   },
   "dependencies": {
     "@material-ui/core": "^1.1.0",
-    "@material-ui/icons": "^1.0.0",
+    "@material-ui/icons": "^1.1.0",
     "prop-types": "^15.6.1",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
