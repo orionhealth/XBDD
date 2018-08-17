@@ -1,7 +1,7 @@
 const tagListStyles = theme => ({
     xbddTagListContainer: {
         backgroundColor: theme.palette.background.paper,
-        height: "calc(100vh - 300px)",
+        height: "calc(100vh - 80px)",
         maxWidth: 308,
         padding: "20px",
         width: "100%",

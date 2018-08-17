@@ -1,29 +1,4 @@
 .xbdd-app {
-  text-align: center;
-  height: 100vh;
-}
-
-.xbdd-app-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
-.xbdd-app-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.xbdd-app-title {
-  font-size: 1.5em;
-}
-
-.xbdd-app-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+    text-align: center;
+    height: 100vh;
 }
