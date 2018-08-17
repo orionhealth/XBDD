@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import FeatureHistory from '../models/FeatureHistory';
-import FeatureBuildHistoryViewContainer from '../components/FeatureBuildHistoryView';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import FeatureHistory from "../models/FeatureHistory";
+import FeatureBuildHistoryViewContainer from "../components/FeatureBuildHistoryView";
 
 const styles = theme => ({
     featureSummaryViewContainer: {
-        width: '100%',
+        width: "100%",
         maxWidth: 770,
         backgroundColor: theme.palette.background.paper,
     },
@@ -15,14 +15,15 @@ const styles = theme => ({
 class FeatureSummaryViewContainer extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
+        this.state = {};
     }
 
     render() {
         return (
             <div className="featureSummaryViewContainer">
-                <FeatureBuildHistoryViewContainer featureRollupData={this.props.featureRollupData} />
+                <FeatureBuildHistoryViewContainer
+                    featureRollupData={this.props.featureRollupData}
+                />
             </div>
         );
     }

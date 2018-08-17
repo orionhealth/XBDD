@@ -1,11 +1,11 @@
-import React from 'react';
-import { PropTypes } from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import Tag from '../../../models/Tag';
-import TagListItemView from './TagListItemView';
-import TagListFilterButtonsView from './TagListFilterButtonsView';
-import { tagListStyles } from '../styles/TagListStyles';
+import React from "react";
+import { PropTypes } from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import Tag from "../../../models/Tag";
+import TagListItemView from "./TagListItemView";
+import TagListFilterButtonsView from "./TagListFilterButtonsView";
+import { tagListStyles } from "../styles/TagListStyles";
 
 const mapTagToTagListItem = (tag, selectedTag, onSelectTag) => (
     <TagListItemView
@@ -13,12 +13,14 @@ const mapTagToTagListItem = (tag, selectedTag, onSelectTag) => (
         key={tag.name}
         onSelectTag={onSelectTag}
         isSelected={tag === selectedTag}
-    />);
+    />
+);
 
 const renderList = (tags, selectedTag, onSelectTag) => (
-    <List component="ul" >
+    <List component="ul">
         {tags.map(tag => mapTagToTagListItem(tag, selectedTag, onSelectTag))}
-    </List>);
+    </List>
+);
 
 const TagListView = props => (
     <div className={props.classes.xbddTagListContainer}>

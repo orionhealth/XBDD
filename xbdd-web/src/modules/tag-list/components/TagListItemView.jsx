@@ -1,21 +1,22 @@
-import React from 'react';
-import { PropTypes } from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import ListItem from '@material-ui/core/ListItem';
-import Tag from '../../../models/Tag';
-import { tagListItemStyles } from '../styles/TagListStyles';
+import React from "react";
+import { PropTypes } from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import ListItem from "@material-ui/core/ListItem";
+import Tag from "../../../models/Tag";
+import { tagListItemStyles } from "../styles/TagListStyles";
 
-const TagListItemView = (props) => {
-    const className = props.isSelected ? `${props.classes.xbddTagListItemContainer} ${props.classes.xbddTagListItemContainerSelected}` : props.classes.xbddTagListItemContainer;
-    const onSelectTag = () => props.onSelectTag(props.tag);
+const TagListItemView = props => {
+    const { tag, classes, onSelectTag, isSelected } = props;
+    let className = classes.xbddTagListItemContainer;
+
+    if (isSelected) {
+        className += ` ${classes.xbddTagListItemContainerSelected}`;
+    }
+    const onClick = () => onSelectTag(props.tag);
 
     return (
-        <ListItem
-            button
-            onClick={onSelectTag}
-            className={className}
-        >
-            {props.tag.name}
+        <ListItem button onClick={onClick} className={className}>
+            {tag.name}
         </ListItem>
     );
 };

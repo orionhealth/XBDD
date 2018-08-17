@@ -1,13 +1,19 @@
 {
     "parser": "babel-eslint",
-    "extends": "airbnb",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "extends": ["prettier", "prettier/react"],
+    "plugins": ["prettier", "react"],
     "rules": {
-        "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*-test.js", "**/*-test.jsx", "**/setupTests.js", "__mocks__/*"], "optionalDependencies": false, "peerDependencies": false}],
         "indent": ["error", 4],
-        "react/forbid-prop-types": ["array"],
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "react/jsx-indent-props": [4],
-        "react/jsx-indent": [4]
+        "react/jsx-indent-props": [2, 4],
+        "react/jsx-indent": [2, 4],
+        "prettier/prettier": "error"
     },
     "env": {
         "jest": true

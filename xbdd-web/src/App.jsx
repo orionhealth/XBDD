@@ -1,9 +1,9 @@
-import React from 'react';
-import TagListContainer from './modules/tag-list/containers/TagListContainer';
-import Report from './models/Report';
-import logo from './logo.svg';
-import './App.css';
-import tagListData from './resources/tag-response.json';
+import React from "react";
+import TagListContainer from "./modules/tag-list/containers/TagListContainer";
+import Report from "./models/Report";
+import logo from "./logo.svg";
+import "./App.css";
+import tagListData from "./resources/tag-response.json";
 
 const App = () => {
     const dummyReport = new Report(tagListData);

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
-import Report from '../../../models/Report';
-import TagListView from '../components/TagListView';
+import React, { Component } from "react";
+import { PropTypes } from "prop-types";
+import Report from "../../../models/Report";
+import TagListView from "../components/TagListView";
 
 class TagListContainer extends Component {
     constructor(props) {
@@ -21,9 +21,11 @@ class TagListContainer extends Component {
     }
 
     onFilterButtonClick(stateAttribute) {
-        this.setState(prevState => (Object.assign(prevState.filterStates, {
-            [stateAttribute]: !prevState.filterStates[stateAttribute],
-        })));
+        this.setState(prevState =>
+            Object.assign(prevState.filterStates, {
+                [stateAttribute]: !prevState.filterStates[stateAttribute],
+            })
+        );
     }
 
     onSelectTag(tag) {
@@ -35,10 +37,13 @@ class TagListContainer extends Component {
     filterTags() {
         const tags = this.props.report.tagList;
 
-        return tags.filter(tag => (this.state.filterStates.passedSelected && tag.containsPassed)
-            || (this.state.filterStates.undefinedSelected && tag.containsUndefined)
-            || (this.state.filterStates.failedSelected && tag.containsFailed)
-            || (this.state.filterStates.skippedSelected && tag.containsSkipped));
+        return tags.filter(
+            tag =>
+                (this.state.filterStates.passedSelected && tag.containsPassed) ||
+                (this.state.filterStates.undefinedSelected && tag.containsUndefined) ||
+                (this.state.filterStates.failedSelected && tag.containsFailed) ||
+                (this.state.filterStates.skippedSelected && tag.containsSkipped)
+        );
     }
 
     render() {
@@ -49,7 +54,8 @@ class TagListContainer extends Component {
                 filterStates={this.state.filterStates}
                 onSelectTag={this.onSelectTag}
                 onFilterButtonClick={this.onFilterButtonClick}
-            />);
+            />
+        );
     }
 }
 
