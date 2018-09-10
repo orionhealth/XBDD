@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import FeatureHistory from "../models/FeatureHistory";
-import FeatureBuildHistoryViewContainer from "../components/FeatureBuildHistoryView";
+import FeatureHistory from "../../models/FeatureHistory";
+import FeatureBuildHistoryViewContainer from "./FeatureBuildHistoryView";
 
 const styles = theme => ({
     featureSummaryViewContainer: {
