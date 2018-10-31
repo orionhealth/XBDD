@@ -51,6 +51,16 @@ Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a 
 <user username="xbdd" password="xbdd"/>
 ```
 
+To make a user an administrator, in `$CATALINA_BASE/conf/tomcat-users.xml` first add the admin role:
+```xml
+<role rolename="admin"/>
+```
+
+Then assign a user that role, e.g.:
+```xml
+<user username="xbdd-admin" password="something" roles="admin" />
+```
+
 #### LDAP
 If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields.
 
