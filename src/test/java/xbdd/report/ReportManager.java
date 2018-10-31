@@ -26,20 +26,20 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.codehaus.jackson.map.JsonMappingException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import xbdd.XbddDriver;
-import xbdd.utils.JerseyClientFactory;
-import xbdd.utils.XBDDInstance;
-
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.mongodb.DBObject;
+
+import xbdd.XbddDriver;
+import xbdd.utils.JerseyClientFactory;
+import xbdd.utils.XBDDInstance;
 
 public class ReportManager {
 
