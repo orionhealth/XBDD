@@ -1,24 +1,29 @@
 {
-    "parser": "babel-eslint",
-    "parserOptions": {
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "jsx": true
-        }
-    },
-    "extends": ["prettier", "prettier/react"],
-    "plugins": ["prettier", "react"],
-    "rules": {
-        "indent": ["error", 4],
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "react/jsx-indent-props": [2, 4],
-        "react/jsx-indent": [2, 4],
-        "prettier/prettier": "error"
-    },
-    "env": {
-        "jest": true
-    },
-    "globals": {
-        "document": true
+  "extends": ["eslint-config-orionhealth"],
+  "plugins": ["react", "import"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
     }
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "globals": {
+    "window": true,
+    "document": true
+  },
+  "rules": {
+    "import/no-named-as-default": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "no-console": ["error", { "allow": ["warn", "error", "debug"] }],
+    "no-plusplus": 0,
+    "no-underscore-dangle": ["error", { "allow": ["_t", "_raw"] }],
+    "react/sort-comp": ["error", { "order": ["static-methods", "lifecycle", "/^on.+$/", "everything-else", "/^render.+$/", "render"] }],
+    "class-methods-use-this": 0
+  },
+  "function-paren-newline": "consistent"
 }
