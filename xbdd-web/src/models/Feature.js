@@ -1,4 +1,4 @@
-import Scenario from "./Scenario";
+import Scenario from './Scenario';
 
 export default class Feature {
   constructor(feature) {

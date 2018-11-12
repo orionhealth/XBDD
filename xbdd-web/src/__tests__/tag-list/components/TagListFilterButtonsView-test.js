@@ -1,6 +1,6 @@
-import React from "react";
-import { shallow, mount } from "enzyme";
-import TagListFilterButtonsView from "../../../modules/tag-list/widgets/TagListFilterButtonsView";
+import React from 'react';
+import { shallow, mount } from 'enzyme';
+import TagListFilterButtonsView from '../../../modules/tag-list/widgets/TagListFilterButtonsView';
 
 const filterStates = {
   passedSelected: true,
@@ -9,23 +9,23 @@ const filterStates = {
   skippedSelected: true,
 };
 
-describe("TagListFilterButtonView", () => {
-  test("renders", () => {
+describe('TagListFilterButtonView', () => {
+  test('renders', () => {
     const buttonView = shallow(<TagListFilterButtonsView filterStates={filterStates} onFilterButtonClick={() => {}} />);
     expect(buttonView).toMatchSnapshot();
   });
 
-  test("renders 4 buttons", () => {
+  test('renders 4 buttons', () => {
     const buttonView = mount(<TagListFilterButtonsView filterStates={filterStates} onFilterButtonClick={() => {}} />);
-    expect(buttonView.find("button")).toHaveLength(4);
+    expect(buttonView.find('button')).toHaveLength(4);
   });
 
-  test("renders button with primary color when selected", () => {
+  test('renders button with primary color when selected', () => {
     const buttonView = mount(<TagListFilterButtonsView filterStates={filterStates} onFilterButtonClick={() => {}} />);
-    expect(buttonView.find("button").get(0).props.className).toContain("Primary");
+    expect(buttonView.find('button').get(0).props.className).toContain('Primary');
   });
 
-  test("renders button with secondary color when not selected", () => {
+  test('renders button with secondary color when not selected', () => {
     const filterStatesFalse = {
       passedSelected: false,
       undefinedSelected: false,
@@ -33,6 +33,6 @@ describe("TagListFilterButtonView", () => {
       skippedSelected: false,
     };
     const buttonView = mount(<TagListFilterButtonsView filterStates={filterStatesFalse} onFilterButtonClick={() => {}} />);
-    expect(buttonView.find("button").get(0).props.className).toContain("Secondary");
+    expect(buttonView.find('button').get(0).props.className).toContain('Secondary');
   });
 });
