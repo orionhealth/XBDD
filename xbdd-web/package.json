@@ -1,0 +1,38 @@
+{
+  "name": "xbdd-web",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "babel-jest": "^23.0.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "eslint": "^3.19.0",
+    "eslint-config-orionhealth": "^3.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-react": "^6.10.3",
+    "popper.js": "^1.14.3",
+    "prettier": "^1.14.2",
+    "react-scripts": "1.1.4",
+    "react-test-renderer": "^16.4.0",
+    "sinon": "^5.1.0"
+  },
+  "dependencies": {
+    "@material-ui/core": "^1.1.0",
+    "@material-ui/icons": "^1.1.0",
+    "prop-types": "^15.6.1",
+    "react": "^16.6.1",
+    "react-dom": "^16.4.0",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.2.0",
+    "redux": "^4.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

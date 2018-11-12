@@ -11,20 +11,20 @@ Pre-requisites
 Optional requirements
 ---------------------
 
-A driver for running the automated tests is required. By default, the automated tests run against the Firefox Web Driver.
+To run the automated tests, a driver is required. By default, the automated tests run against the Firefox Web Driver.
 See https://github.com/mozilla/geckodriver for details.
 
 This can be overridden with the `selenium-profile` property and the CI server runs with `phantom-js`.
 Other supported values are `selenium-grid` and `chrome`. These have their own requirements.
 See [XbddDriver.java](https://github.com/orionhealth/XBDD/blob/master/src/test/java/xbdd/XbddDriver.java) for more details.
 
-Configuration
--------------
+Pre-installation
+----------------
 
 In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory.
 
 ### SSL/TLS
-The XBDD application requires a secure connection. This can be achieved through the Tomcat SSL connector.
+The XBDD application requires a secure connection. This can be setup using the Tomcat SSL connector.
 
 You must first have configured a keystore. You can [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) or skip ahead if you have an existing one.
 
@@ -40,7 +40,7 @@ Open `$CATALINA_BASE/conf/server.xml` and uncomment the 8443 connector block. Ad
 
 Replace `FILE_LOCATION` with the location of your security certificate and `PASSWORD_HERE` with the password.
 
-### Authentication
+### User Authentication
 
 #### Local Authentication
 To get started quickly without configuring enterprise authentication, it is possible to use Tomcat's default local UserDatabaseRealm with XBDD.
@@ -49,6 +49,16 @@ Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a 
 
 ```xml
 <user username="xbdd" password="xbdd"/>
+```
+
+To make a user an administrator, in `$CATALINA_BASE/conf/tomcat-users.xml` first add the admin role:
+```xml
+<role rolename="admin"/>
+```
+
+Then assign a user that role, e.g.:
+```xml
+<user username="xbdd-admin" password="something" roles="admin" />
 ```
 
 #### LDAP
@@ -65,6 +75,18 @@ For example:
 </Realm>
 ```
 
+### Setup MongoDB
+
+If you don't already have a MongoDB server, you can install MongoDB in a Docker container.
+
+1. Install docker on your system. You can download it [here](https://docs.docker.com/engine/installation/).
+2. Pull the docker container in using `docker pull mongo`
+3. Start the docker container with the command
+`docker run -p=27017:27017 --name mongo -d mongo`
+
+This will give you a docker container named mongo which is accessible at
+[localhost:27017](http://localhost:27017)
+
 ### Configure Mongo Server Connection
 
 By default XBDD will connect to MongoDB at its default address of `localhost:27017`.
@@ -78,20 +100,11 @@ To configure an alternative server or to add authentication, add the following p
     <Parameter name="xbdd.mongo.password" value="<password>"/>
 ```
 
-### A word on securing the connection to MongoDB
+#### A word on securing the connection to MongoDB
 MongoDB provides user access on a per-DB basis. XBDD uses two databases, `bdd` and `grid`. The user needs read/write permissions for both.
 
-### Running Mongo in a docker container.
-1. Install docker on your system. You can download it [here](https://docs.docker.com/engine/installation/).
-2. Pull the docker container in using `docker pull mongo`
-3. Start the docker container with the command
-`docker run -p=27017:27017 --name mongo -d mongo`
-
-This will give you a docker container named mongo which is accessible at
-[localhost:27017](http://localhost:27017)
-
-Installation
-============
+Install and start XBDD
+======================
 
 XBDD can be run as a standalone webapp in Tomcat (recommended) or via Eclipse.
 It can also be run with an embedded Tomcat instance however the above configuration will not be applied if using this mode. This may be useful for development purposes though.
