@@ -1,42 +1,42 @@
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Tooltip from '@material-ui/core/Tooltip';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import BlockIcon from '@material-ui/icons/Block';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import { Card } from '@material-ui/core';
-import FeatureHistory from '../../models/FeatureHistory';
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import Tooltip from "@material-ui/core/Tooltip";
+import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+import BlockIcon from "@material-ui/icons/Block";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import { Card } from "@material-ui/core";
+import FeatureHistory from "../../models/FeatureHistory";
 
 const styles = theme => ({
   buildHistoryViewContainer: {
-    width: '100%',
+    width: "100%",
     maxWidth: 570,
     backgroundColor: theme.palette.background.paper,
   },
 });
 
 const getIcon = (status, lastEditedBy) => {
-  let lastEditedByText = '';
+  let lastEditedByText = "";
   if (lastEditedBy) {
     lastEditedByText = `, Last Edited By: ${lastEditedBy}`;
   }
-  if (status === 'passed') {
+  if (status === "passed") {
     return (
       <Tooltip title={`Status: Passed${lastEditedByText}`} placement="bottom-end">
         <CheckBoxIcon />
       </Tooltip>
     );
-  } else if (status === 'failed') {
+  } else if (status === "failed") {
     return (
       <Tooltip title={`Status: Failed${lastEditedByText}`} placement="bottom-end">
         <ErrorOutlineIcon />
       </Tooltip>
     );
-  } else if (status === 'skipped') {
+  } else if (status === "skipped") {
     return (
       <Tooltip title={`Status: Skipped${lastEditedByText}`} placement="bottom-end">
         <BlockIcon />

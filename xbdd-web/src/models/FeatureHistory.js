@@ -1,4 +1,4 @@
-import BuildResult from './BuildResult';
+import BuildResult from "./BuildResult";
 
 export default class FeatureHistory {
   constructor(featureHistory) {

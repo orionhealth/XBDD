@@ -1,9 +1,9 @@
-import React from 'react';
-import { PropTypes } from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import ListItem from '@material-ui/core/ListItem';
-import Tag from '../../../models/Tag';
-import { tagListItemStyles } from '../styles/TagListStyles';
+import React from "react";
+import { PropTypes } from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import ListItem from "@material-ui/core/ListItem";
+import Tag from "../../../models/Tag";
+import { tagListItemStyles } from "../styles/TagListStyles";
 
 const TagListItemView = (props) => {
   const { tag, classes, onSelectTag, isSelected } = props;

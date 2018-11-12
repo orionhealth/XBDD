@@ -17,6 +17,7 @@
     "document": true
   },
   "rules": {
+    "quotes": ["error", "double"],
     "import/no-named-as-default": "off",
     "jsx-a11y/no-static-element-interactions": "off",
     "no-console": ["error", { "allow": ["warn", "error", "debug"] }],

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import FeatureHistory from '../../models/FeatureHistory';
-import FeatureBuildHistoryViewContainer from './FeatureBuildHistoryView';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import FeatureHistory from "../../models/FeatureHistory";
+import FeatureBuildHistoryViewContainer from "./FeatureBuildHistoryView";
 
 const styles = theme => ({
   featureSummaryViewContainer: {
-    width: '100%',
+    width: "100%",
     maxWidth: 770,
     backgroundColor: theme.palette.background.paper,
   },
