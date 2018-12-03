@@ -31,43 +31,44 @@ const createButton = variant => (
 );
 
 const TagListFilterButtonsView = (props) => {
+  const { classes, filterStates, onFilterButtonClick } = props;
   const variants = {
     passed: {
       theme: buttonTheme('#1d3557'),
-      icon: <DoneIcon />,
+      icon: <DoneIcon className={classes.xbddFilterButtonIcon} />,
       tooltip: 'Passed',
-      color: props.filterStates.passedSelected ? 'primary' : 'secondary',
-      handler: () => props.onFilterButtonClick('passedSelected'),
-      className: `${props.classes.xbddFilterButton} ${props.classes.xbddFilterButtonFirst}`,
+      color: filterStates.passedSelected ? 'primary' : 'secondary',
+      handler: () => onFilterButtonClick('passedSelected'),
+      className: `${classes.xbddFilterButton} ${classes.xbddFilterButtonFirst}`,
     },
     failed: {
       theme: buttonTheme('#E63946'),
-      icon: <ErrorOutlineIcon />,
+      icon: <ErrorOutlineIcon className={classes.xbddFilterButtonIcon} />,
       tooltip: 'Failed',
-      color: props.filterStates.failedSelected ? 'primary' : 'secondary',
-      handler: () => props.onFilterButtonClick('failedSelected'),
-      className: `${props.classes.xbddFilterButton}`,
+      color: filterStates.failedSelected ? 'primary' : 'secondary',
+      handler: () => onFilterButtonClick('failedSelected'),
+      className: `${classes.xbddFilterButton}`,
     },
     undefined: {
       theme: buttonTheme('#A8DADC'),
-      icon: <HelpOutlineIcon />,
+      icon: <HelpOutlineIcon className={classes.xbddFilterButtonIcon} />,
       tooltip: 'Undefined',
-      color: props.filterStates.undefinedSelected ? 'primary' : 'secondary',
-      handler: () => props.onFilterButtonClick('undefinedSelected'),
-      className: `${props.classes.xbddFilterButton}`,
+      color: filterStates.undefinedSelected ? 'primary' : 'secondary',
+      handler: () => onFilterButtonClick('undefinedSelected'),
+      className: `${classes.xbddFilterButton}`,
     },
     skipped: {
       theme: buttonTheme('#457B9D'),
-      icon: <BlockIcon />,
+      icon: <BlockIcon className={classes.xbddFilterButtonIcon} />,
       tooltip: 'Skipped',
-      color: props.filterStates.skippedSelected ? 'primary' : 'secondary',
-      handler: () => props.onFilterButtonClick('skippedSelected'),
-      className: `${props.classes.xbddFilterButton} ${props.classes.xbddFilterButtonLast}`,
+      color: filterStates.skippedSelected ? 'primary' : 'secondary',
+      handler: () => onFilterButtonClick('skippedSelected'),
+      className: `${classes.xbddFilterButton} ${classes.xbddFilterButtonLast}`,
     },
   };
 
   return (
-    <div className={props.classes.xbddTagListFilterButtons}>
+    <div className={classes.xbddTagListFilterButtons}>
       {createButton(variants.passed)}
       {createButton(variants.failed)}
       {createButton(variants.undefined)}
@@ -77,19 +78,9 @@ const TagListFilterButtonsView = (props) => {
 };
 
 TagListFilterButtonsView.propTypes = {
-  filterStates: PropTypes.shape({
-    passedSelected: PropTypes.bool,
-    failedSelected: PropTypes.bool,
-    skippedSelected: PropTypes.bool,
-    undefinedSelected: PropTypes.bool,
-  }).isRequired,
+  filterStates: PropTypes.shape({}).isRequired,
   onFilterButtonClick: PropTypes.func.isRequired,
-  classes: PropTypes.shape({
-    xbddFilterButton: PropTypes.string,
-    xbddFilterButtonFirst: PropTypes.string,
-    xbddFilterButtonLast: PropTypes.string,
-    xbddTagListFilterButtons: PropTypes.string,
-  }).isRequired,
+  classes: PropTypes.shape({}).isRequired,
 };
 
 export default withStyles(tagListFilterButtonStyles)(TagListFilterButtonsView);

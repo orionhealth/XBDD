@@ -26,6 +26,9 @@ const tagListStyles = theme => ({
 });
 
 const tagListFilterButtonStyles = theme => ({
+  xbddFilterButtonIcon: {
+    fontSize: 20,
+  },
   xbddTagListFilterButtons: {
     backgroundColor: theme.palette.background.paper,
     height: '48px',
