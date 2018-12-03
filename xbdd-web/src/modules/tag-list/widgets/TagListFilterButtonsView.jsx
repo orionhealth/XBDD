@@ -15,6 +15,9 @@ const buttonTheme = color =>
       primary: { main: color },
       secondary: { main: '#E0E0E0' },
     },
+    typography: {
+      useNextVariants: true,
+    },
   });
 
 const createButton = variant => (
