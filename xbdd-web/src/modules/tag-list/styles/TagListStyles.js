@@ -39,7 +39,7 @@ const tagListFilterButtonStyles = theme => ({
     border: '1px solid rgba(0, 0, 0, 0.23)',
     borderRadius: 0,
     borderRight: 0,
-    width: 77,
+    width: '25%',
   },
   xbddFilterButtonFirst: {
     borderRadius: '3px 0 0 3px',
