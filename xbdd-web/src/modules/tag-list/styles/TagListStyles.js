@@ -1,16 +1,17 @@
 const tagListStyles = theme => ({
   xbddTagListContainer: {
     backgroundColor: theme.palette.background.paper,
-    height: 'calc(100vh - 80px)',
     maxWidth: 308,
-    padding: '20px',
+    overflowY: 'scroll',
+    padding: '24px',
+    position: 'relative',
     width: '100%',
   },
   xbddTagList: {
     backgroundColor: theme.palette.background.paper,
     border: '1px solid rgba(0, 0, 0, 0.23)',
     borderRadius: '3px',
-    height: 'calc(100% - 50px)',
+    maxHeight: 'calc(100vh - 180px)', // 64px for navbar, 5px navbar margin, 48px in padding, 48px buttons, 15px button margins
     overflowY: 'scroll',
     position: 'relative',
     width: 'calc(100% - 2px)',
@@ -25,6 +26,9 @@ const tagListStyles = theme => ({
 });
 
 const tagListFilterButtonStyles = theme => ({
+  xbddFilterButtonIcon: {
+    fontSize: 20,
+  },
   xbddTagListFilterButtons: {
     backgroundColor: theme.palette.background.paper,
     height: '48px',
@@ -35,7 +39,7 @@ const tagListFilterButtonStyles = theme => ({
     border: '1px solid rgba(0, 0, 0, 0.23)',
     borderRadius: 0,
     borderRight: 0,
-    width: 77,
+    width: '25%',
   },
   xbddFilterButtonFirst: {
     borderRadius: '3px 0 0 3px',
