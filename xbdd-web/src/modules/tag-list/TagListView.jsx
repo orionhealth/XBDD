@@ -11,14 +11,21 @@ const mapTagToTagListItem = (tag, selectedTag, onSelectTag) => (
   <TagListItemView tag={tag} key={tag.name} onSelectTag={onSelectTag} isSelected={tag === selectedTag} />
 );
 
-const renderList = (tags, selectedTag, onSelectTag) => (
-  <List component="ul">{tags.map(tag => mapTagToTagListItem(tag, selectedTag, onSelectTag))}</List>
-);
+const renderList = (className, tags, selectedTag, onSelectTag) => {
+  if (!tags.length) {
+    return null;
+  }
+  return (
+    <div className={className}>
+      <List component="ul">{tags.map(tag => mapTagToTagListItem(tag, selectedTag, onSelectTag))}</List>
+    </div>
+  );
+};
 
 const TagListView = props => (
   <div className={props.classes.xbddTagListContainer}>
     <TagListFilterButtonsView filterStates={props.filterStates} onFilterButtonClick={props.onFilterButtonClick} />
-    <div className={props.classes.xbddTagList}>{renderList(props.tags, props.selectedTag, props.onSelectTag)}</div>
+    {renderList(props.classes.xbddTagList, props.tags, props.selectedTag, props.onSelectTag)}
   </div>
 );
 
