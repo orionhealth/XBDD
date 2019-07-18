@@ -9,3 +9,5 @@ node/
 node_modules/
 ivysettings.xml
 ivy_ivy_id_dsa
+/.apt_generated/
+/.apt_generated_tests/

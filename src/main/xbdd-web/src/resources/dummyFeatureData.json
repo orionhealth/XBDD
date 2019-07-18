@@ -1,0 +1,1352 @@
+{
+    "_id": "medman/3.0.0/emie-34/associate-encounter-with-a-full-review",
+    "coordinates": {
+        "product": "medman",
+        "major": 3,
+        "minor": 0,
+        "servicePack": 0,
+        "build": "emie-34",
+        "version": "3.0.0"
+    },
+    "id": "associate-encounter-with-a-full-review",
+    "line": 3,
+    "elements": [
+        {
+            "before": [
+                {
+                    "result": {
+                        "duration": 372301002,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 1776235549621,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.maximiseBrowser()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 37029,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 33507267,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.setUp(Scenario)"
+                    }
+                }
+            ],
+            "line": 15,
+            "name": "Associate an encounter to a full review",
+            "description": "",
+            "id": "associate-encounter-with-a-full-review;associate-an-encounter-to-a-full-review",
+            "after": [
+                {
+                    "result": {
+                        "duration": 13768,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 71306,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 158265,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 1481825475,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.quitBrowser(Scenario)"
+                    }
+                }
+            ],
+            "type": "scenario",
+            "keyword": "Scenario",
+            "steps": [
+                {
+                    "result": {
+                        "duration": 276453729,
+                        "status": "passed"
+                    },
+                    "line": 16,
+                    "name": "the patient has an 'Outpatient' encounter",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "an",
+                                "offset": 16
+                            },
+                            {
+                                "val": "Outpatient",
+                                "offset": 20
+                            }
+                        ],
+                        "location": "EncounterStepdefs.the_patient_has_an_encounter(String,String)"
+                    },
+                    "keyword": "Given "
+                },
+                {
+                    "result": {
+                        "duration": 7305516889,
+                        "status": "passed"
+                    },
+                    "line": 17,
+                    "name": "I select an 'Inpatient' encounter to associate with the review",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Inpatient",
+                                "offset": 13
+                            }
+                        ],
+                        "location": "EncounterStepdefs.associate_an_encounter_with_review(String)"
+                    },
+                    "keyword": "When "
+                },
+                {
+                    "result": {
+                        "duration": 9075294343,
+                        "status": "passed"
+                    },
+                    "line": 18,
+                    "name": "I save the draft",
+                    "match": {
+                        "arguments": [{}],
+                        "location": "FullReviewPageStepdefs.I_save_the_draft(String)"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "duration": 267125372,
+                        "status": "passed"
+                    },
+                    "output": ["\n"],
+                    "embeddings": [
+                        "x1.e14fp16x1.200bp16-x1.1e12p16-x1.9fb9p16-x1.40ebp16-x1.9e2bp16x1.902bp16x1.a7adp16"
+                    ],
+                    "line": 19,
+                    "name": "an encounter is associated",
+                    "match": {
+                        "location": "EncounterStepdefs.encounter_associated()"
+                    },
+                    "keyword": "Then "
+                }
+            ],
+            "background": {
+                "line": 9,
+                "name": "",
+                "description": "",
+                "type": "background",
+                "keyword": "Background",
+                "steps": [
+                    {
+                        "result": {
+                            "duration": 254724261,
+                            "status": "passed"
+                        },
+                        "line": 10,
+                        "name": "I am a clinician",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "clinician",
+                                    "offset": 7
+                                }
+                            ],
+                            "location": "AuthenticationStepdefs.I_am_a_user(String)"
+                        },
+                        "keyword": "Given "
+                    },
+                    {
+                        "result": {
+                            "duration": 7317903759,
+                            "status": "passed"
+                        },
+                        "line": 11,
+                        "name": "I put patient 'A' in context",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "A",
+                                    "offset": 15
+                                }
+                            ],
+                            "location": "MergeStepdefs.i_put_patient_x_in_context(String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "duration": 440631898,
+                            "status": "passed"
+                        },
+                        "line": 12,
+                        "name": "the patient has an 'Inpatient' encounter",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "an",
+                                    "offset": 16
+                                },
+                                {
+                                    "val": "Inpatient",
+                                    "offset": 20
+                                }
+                            ],
+                            "location": "EncounterStepdefs.the_patient_has_an_encounter(String,String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "duration": 3826927918,
+                            "status": "passed"
+                        },
+                        "line": 13,
+                        "name": "I navigate to the Full Review page",
+                        "match": {
+                            "arguments": [
+                                {},
+                                {
+                                    "val": "Full Review",
+                                    "offset": 18
+                                }
+                            ],
+                            "location": "MedmanNavigationStepdefs.i_navigate_to_a_medman_page(String,String)"
+                        },
+                        "keyword": "And "
+                    }
+                ]
+            }
+        },
+        {
+            "before": [
+                {
+                    "result": {
+                        "duration": 363876575,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 1769102112775,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.maximiseBrowser()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 44782,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 34582160,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.setUp(Scenario)"
+                    }
+                }
+            ],
+            "line": 21,
+            "name": "An encounter can be automatically associated to full review",
+            "description": "",
+            "id": "associate-encounter-with-a-full-review;an-encounter-can-be-automatically-associated-to-full-review",
+            "after": [
+                {
+                    "result": {
+                        "duration": 16192,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 60463,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 188780,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 1459093229,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.quitBrowser(Scenario)"
+                    }
+                }
+            ],
+            "type": "scenario",
+            "keyword": "Scenario",
+            "steps": [
+                {
+                    "result": {
+                        "duration": 752346050,
+                        "status": "passed"
+                    },
+                    "line": 22,
+                    "name": "I set the review type to 'Inpatient'",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Inpatient",
+                                "offset": 26
+                            }
+                        ],
+                        "location": "FullReviewPageStepdefs.i_set_the_review_type_to(String)"
+                    },
+                    "keyword": "Given "
+                },
+                {
+                    "result": {
+                        "duration": 8633931065,
+                        "status": "passed"
+                    },
+                    "line": 23,
+                    "name": "I save the draft",
+                    "match": {
+                        "arguments": [{}],
+                        "location": "FullReviewPageStepdefs.I_save_the_draft(String)"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "duration": 208203274,
+                        "status": "passed"
+                    },
+                    "output": ["\n"],
+                    "embeddings": [
+                        "x1.702p16x1.849ap16-x1.bc9dp16-x1.87d1p16-x1.9c6bp16-x1.d6p16x1.bf7p16x1.a37fp16"
+                    ],
+                    "line": 24,
+                    "name": "an encounter is associated",
+                    "match": {
+                        "location": "EncounterStepdefs.encounter_associated()"
+                    },
+                    "keyword": "Then "
+                }
+            ],
+            "background": {
+                "line": 9,
+                "name": "",
+                "description": "",
+                "type": "background",
+                "keyword": "Background",
+                "steps": [
+                    {
+                        "result": {
+                            "duration": 335737538,
+                            "status": "passed"
+                        },
+                        "line": 10,
+                        "name": "I am a clinician",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "clinician",
+                                    "offset": 7
+                                }
+                            ],
+                            "location": "AuthenticationStepdefs.I_am_a_user(String)"
+                        },
+                        "keyword": "Given "
+                    },
+                    {
+                        "result": {
+                            "duration": 7500588831,
+                            "status": "passed"
+                        },
+                        "line": 11,
+                        "name": "I put patient 'A' in context",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "A",
+                                    "offset": 15
+                                }
+                            ],
+                            "location": "MergeStepdefs.i_put_patient_x_in_context(String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "duration": 353754032,
+                            "status": "passed"
+                        },
+                        "line": 12,
+                        "name": "the patient has an 'Inpatient' encounter",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "an",
+                                    "offset": 16
+                                },
+                                {
+                                    "val": "Inpatient",
+                                    "offset": 20
+                                }
+                            ],
+                            "location": "EncounterStepdefs.the_patient_has_an_encounter(String,String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "duration": 3130250023,
+                            "status": "passed"
+                        },
+                        "line": 13,
+                        "name": "I navigate to the Full Review page",
+                        "match": {
+                            "arguments": [
+                                {},
+                                {
+                                    "val": "Full Review",
+                                    "offset": 18
+                                }
+                            ],
+                            "location": "MedmanNavigationStepdefs.i_navigate_to_a_medman_page(String,String)"
+                        },
+                        "keyword": "And "
+                    }
+                ]
+            }
+        },
+        {
+            "before": [
+                {
+                    "result": {
+                        "duration": 499495965,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 3388375735173,
+                        "error_message": "org.openqa.selenium.WebDriverException: Session [98c0ee9c-f518-4dcc-87ac-ff91a526dc37] not available and is not among the last 1000 terminated sessions.\nActive sessions are[cdf86c8f-f654-4424-ad97-3c159d1e421c (int. key, remote not contacted yet.)]\nCommand duration or timeout: 34 milliseconds\nBuild info: version: '2.53.1', revision: 'a36b8b1cd5757287168e54b817830adce9b0158d', time: '2016-06-30 19:26:09'\nSystem info: host: 'akl-build2.orion.internal', ip: '172.20.64.24', os.name: 'Linux', os.arch: 'amd64', os.version: '3.10.0-693.17.1.el7.x86_64', java.version: '1.8.0_60'\nDriver info: org.openqa.selenium.remote.RemoteWebDriver\nCapabilities [{browserAttachTimeout=0, ie.enableFullPageScreenshot=true, enablePersistentHover=true, ie.forceCreateProcessApi=false, ie.forceShellWindowsApi=false, pageLoadStrategy=normal, ignoreZoomSetting=false, ie.fileUploadDialogTimeout=3000, version=11, platform=WINDOWS, nativeEvents=true, ie.ensureCleanSession=false, elementScrollBehavior=0, ie.browserCommandLineSwitches=, webdriver.remote.sessionid=98c0ee9c-f518-4dcc-87ac-ff91a526dc37, requireWindowFocus=false, browserName=internet explorer, initialBrowserUrl=http://localhost:46369/, takesScreenshot=true, javascriptEnabled=true, ignoreProtectedModeSettings=false, enableElementCacheCleanup=true, cssSelectorsEnabled=true, unexpectedAlertBehaviour=dismiss}]\nSession ID: 98c0ee9c-f518-4dcc-87ac-ff91a526dc37\n\tat sun.reflect.GeneratedConstructorAccessor189.newInstance(Unknown Source)\n\tat sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)\n\tat java.lang.reflect.Constructor.newInstance(Constructor.java:422)\n\tat org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:206)\n\tat org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:158)\n\tat org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:678)\n\tat org.openqa.selenium.remote.RemoteWebDriver$RemoteWebDriverOptions$RemoteWindow.maximize(RemoteWebDriver.java:945)\n\tat org.openqa.selenium.support.events.EventFiringWebDriver$EventFiringWindow.maximize(EventFiringWebDriver.java:644)\n\tat com.orchestral.medman.acceptance.hooks.WebDriverHooks.maximiseBrowser(WebDriverHooks.java:26)\n\tat sun.reflect.GeneratedMethodAccessor126.invoke(Unknown Source)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:497)\n\tat cucumber.runtime.Utils$1.call(Utils.java:34)\n\tat cucumber.runtime.Timeout.timeout(Timeout.java:13)\n\tat cucumber.runtime.Utils.invoke(Utils.java:30)\n\tat cucumber.runtime.java.JavaHookDefinition.execute(JavaHookDefinition.java:59)\n\tat cucumber.runtime.Runtime.runHookIfTagsMatch(Runtime.java:222)\n\tat cucumber.runtime.Runtime.runHooks(Runtime.java:210)\n\tat cucumber.runtime.Runtime.runBeforeHooks(Runtime.java:200)\n\tat cucumber.runtime.model.CucumberScenario.run(CucumberScenario.java:44)\n\tat cucumber.runtime.junit.ExecutionUnitRunner.run(ExecutionUnitRunner.java:91)\n\tat cucumber.runtime.junit.FeatureRunner.runChild(FeatureRunner.java:63)\n\tat cucumber.runtime.junit.FeatureRunner.runChild(FeatureRunner.java:18)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat cucumber.runtime.junit.FeatureRunner.run(FeatureRunner.java:70)\n\tat cucumber.api.junit.Cucumber.runChild(Cucumber.java:89)\n\tat cucumber.api.junit.Cucumber.runChild(Cucumber.java:40)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.apache.maven.surefire.junitcore.pc.Scheduler$1.run(Scheduler.java:410)\n\tat org.apache.maven.surefire.junitcore.pc.InvokerStrategy.schedule(InvokerStrategy.java:54)\n\tat org.apache.maven.surefire.junitcore.pc.Scheduler.schedule(Scheduler.java:367)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat cucumber.api.junit.Cucumber.run(Cucumber.java:94)\n\tat org.junit.runners.Suite.runChild(Suite.java:127)\n\tat org.junit.runners.Suite.runChild(Suite.java:26)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.apache.maven.surefire.junitcore.pc.Scheduler$1.run(Scheduler.java:410)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\n\tat java.lang.Thread.run(Thread.java:745)\nCaused by: org.openqa.selenium.WebDriverException: Session [98c0ee9c-f518-4dcc-87ac-ff91a526dc37] not available and is not among the last 1000 terminated sessions.\nActive sessions are[cdf86c8f-f654-4424-ad97-3c159d1e421c (int. key, remote not contacted yet.)]\nBuild info: version: '2.53.1', revision: 'a36b8b1cd5757287168e54b817830adce9b0158d', time: '2016-06-30 19:26:09'\nSystem info: host: 'akl-build2.orion.internal', ip: '172.20.64.24', os.name: 'Linux', os.arch: 'amd64', os.version: '3.10.0-693.17.1.el7.x86_64', java.version: '1.8.0_60'\nDriver info: driver.version: unknown\n\tat org.openqa.grid.internal.ActiveTestSessions.getExistingSession(ActiveTestSessions.java:110)\n\tat org.openqa.grid.internal.Registry.getExistingSession(Registry.java:425)\n\tat org.openqa.grid.web.servlet.handler.RequestHandler.getSession(RequestHandler.java:240)\n\tat org.openqa.grid.web.servlet.handler.RequestHandler.process(RequestHandler.java:120)\n\tat org.openqa.grid.web.servlet.DriverServlet.process(DriverServlet.java:83)\n\tat org.openqa.grid.web.servlet.DriverServlet.doPost(DriverServlet.java:67)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:707)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:790)\n\tat org.seleniumhq.jetty9.servlet.ServletHolder.handle(ServletHolder.java:808)\n\tat org.seleniumhq.jetty9.servlet.ServletHandler.doHandle(ServletHandler.java:587)\n\tat org.seleniumhq.jetty9.server.session.SessionHandler.doHandle(SessionHandler.java:221)\n\tat org.seleniumhq.jetty9.server.handler.ContextHandler.doHandle(ContextHandler.java:1127)\n\tat org.seleniumhq.jetty9.servlet.ServletHandler.doScope(ServletHandler.java:515)\n\tat org.seleniumhq.jetty9.server.session.SessionHandler.doScope(SessionHandler.java:185)\n\tat org.seleniumhq.jetty9.server.handler.ContextHandler.doScope(ContextHandler.java:1061)\n\tat org.seleniumhq.jetty9.server.handler.ScopedHandler.handle(ScopedHandler.java:141)\n\tat org.seleniumhq.jetty9.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)\n\tat org.seleniumhq.jetty9.server.Server.handle(Server.java:499)\n\tat org.seleniumhq.jetty9.server.HttpChannel.handle(HttpChannel.java:310)\n\tat org.seleniumhq.jetty9.server.HttpConnection.onFillable(HttpConnection.java:257)\n\tat org.seleniumhq.jetty9.io.AbstractConnection$2.run(AbstractConnection.java:540)\n\tat org.seleniumhq.jetty9.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:635)\n\tat org.seleniumhq.jetty9.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:555)\n\tat java.lang.Thread.run(Unknown Source)\n",
+                        "status": "failed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.maximiseBrowser()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 62230,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 34270786,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.setUp(Scenario)"
+                    }
+                }
+            ],
+            "line": 26,
+            "name": "Change an encounter associated with full review",
+            "description": "",
+            "id": "associate-encounter-with-a-full-review;change-an-encounter-associated-with-full-review",
+            "after": [
+                {
+                    "result": {
+                        "duration": 20841,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 63774,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 187968,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 36793850,
+                        "error_message": "org.openqa.selenium.WebDriverException: Session [98c0ee9c-f518-4dcc-87ac-ff91a526dc37] not available and is not among the last 1000 terminated sessions.\nActive sessions are[cdf86c8f-f654-4424-ad97-3c159d1e421c (int. key, remote not contacted yet.)]\nCommand duration or timeout: 37 milliseconds\nBuild info: version: '2.53.1', revision: 'a36b8b1cd5757287168e54b817830adce9b0158d', time: '2016-06-30 19:26:09'\nSystem info: host: 'akl-build2.orion.internal', ip: '172.20.64.24', os.name: 'Linux', os.arch: 'amd64', os.version: '3.10.0-693.17.1.el7.x86_64', java.version: '1.8.0_60'\nDriver info: org.openqa.selenium.remote.RemoteWebDriver\nCapabilities [{browserAttachTimeout=0, ie.enableFullPageScreenshot=true, enablePersistentHover=true, ie.forceCreateProcessApi=false, ie.forceShellWindowsApi=false, pageLoadStrategy=normal, ignoreZoomSetting=false, ie.fileUploadDialogTimeout=3000, version=11, platform=WINDOWS, nativeEvents=true, ie.ensureCleanSession=false, elementScrollBehavior=0, ie.browserCommandLineSwitches=, webdriver.remote.sessionid=98c0ee9c-f518-4dcc-87ac-ff91a526dc37, requireWindowFocus=false, browserName=internet explorer, initialBrowserUrl=http://localhost:46369/, takesScreenshot=true, javascriptEnabled=true, ignoreProtectedModeSettings=false, enableElementCacheCleanup=true, cssSelectorsEnabled=true, unexpectedAlertBehaviour=dismiss}]\nSession ID: 98c0ee9c-f518-4dcc-87ac-ff91a526dc37\n\tat sun.reflect.GeneratedConstructorAccessor189.newInstance(Unknown Source)\n\tat sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)\n\tat java.lang.reflect.Constructor.newInstance(Constructor.java:422)\n\tat org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:206)\n\tat org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:158)\n\tat org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:678)\n\tat org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:701)\n\tat org.openqa.selenium.remote.RemoteWebDriver.getScreenshotAs(RemoteWebDriver.java:335)\n\tat sun.reflect.GeneratedMethodAccessor136.invoke(Unknown Source)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:497)\n\tat org.openqa.selenium.remote.Augmenter$CompoundHandler.intercept(Augmenter.java:191)\n\tat org.openqa.selenium.remote.RemoteWebDriver$$EnhancerByCGLIB$$a8df0df2.getScreenshotAs(<generated>)\n\tat sun.reflect.GeneratedMethodAccessor135.invoke(Unknown Source)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:497)\n\tat org.openqa.selenium.support.events.EventFiringWebDriver$2.invoke(EventFiringWebDriver.java:103)\n\tat com.sun.proxy.$Proxy38.getScreenshotAs(Unknown Source)\n\tat org.openqa.selenium.support.events.EventFiringWebDriver.getScreenshotAs(EventFiringWebDriver.java:270)\n\tat com.orchestral.medman.acceptance.hooks.WebDriverHooks.embedScreenshot(WebDriverHooks.java:43)\n\tat com.orchestral.medman.acceptance.hooks.WebDriverHooks.quitBrowser(WebDriverHooks.java:36)\n\tat sun.reflect.GeneratedMethodAccessor134.invoke(Unknown Source)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:497)\n\tat cucumber.runtime.Utils$1.call(Utils.java:34)\n\tat cucumber.runtime.Timeout.timeout(Timeout.java:13)\n\tat cucumber.runtime.Utils.invoke(Utils.java:30)\n\tat cucumber.runtime.java.JavaHookDefinition.execute(JavaHookDefinition.java:59)\n\tat cucumber.runtime.Runtime.runHookIfTagsMatch(Runtime.java:222)\n\tat cucumber.runtime.Runtime.runHooks(Runtime.java:210)\n\tat cucumber.runtime.Runtime.runAfterHooks(Runtime.java:204)\n\tat cucumber.runtime.model.CucumberScenario.run(CucumberScenario.java:50)\n\tat cucumber.runtime.junit.ExecutionUnitRunner.run(ExecutionUnitRunner.java:91)\n\tat cucumber.runtime.junit.FeatureRunner.runChild(FeatureRunner.java:63)\n\tat cucumber.runtime.junit.FeatureRunner.runChild(FeatureRunner.java:18)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat cucumber.runtime.junit.FeatureRunner.run(FeatureRunner.java:70)\n\tat cucumber.api.junit.Cucumber.runChild(Cucumber.java:89)\n\tat cucumber.api.junit.Cucumber.runChild(Cucumber.java:40)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.apache.maven.surefire.junitcore.pc.Scheduler$1.run(Scheduler.java:410)\n\tat org.apache.maven.surefire.junitcore.pc.InvokerStrategy.schedule(InvokerStrategy.java:54)\n\tat org.apache.maven.surefire.junitcore.pc.Scheduler.schedule(Scheduler.java:367)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat cucumber.api.junit.Cucumber.run(Cucumber.java:94)\n\tat org.junit.runners.Suite.runChild(Suite.java:127)\n\tat org.junit.runners.Suite.runChild(Suite.java:26)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.apache.maven.surefire.junitcore.pc.Scheduler$1.run(Scheduler.java:410)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\n\tat java.lang.Thread.run(Thread.java:745)\nCaused by: org.openqa.selenium.WebDriverException: Session [98c0ee9c-f518-4dcc-87ac-ff91a526dc37] not available and is not among the last 1000 terminated sessions.\nActive sessions are[cdf86c8f-f654-4424-ad97-3c159d1e421c (int. key, remote not contacted yet.)]\nBuild info: version: '2.53.1', revision: 'a36b8b1cd5757287168e54b817830adce9b0158d', time: '2016-06-30 19:26:09'\nSystem info: host: 'akl-build2.orion.internal', ip: '172.20.64.24', os.name: 'Linux', os.arch: 'amd64', os.version: '3.10.0-693.17.1.el7.x86_64', java.version: '1.8.0_60'\nDriver info: driver.version: unknown\n\tat org.openqa.grid.internal.ActiveTestSessions.getExistingSession(ActiveTestSessions.java:110)\n\tat org.openqa.grid.internal.Registry.getExistingSession(Registry.java:425)\n\tat org.openqa.grid.web.servlet.handler.RequestHandler.getSession(RequestHandler.java:240)\n\tat org.openqa.grid.web.servlet.handler.RequestHandler.process(RequestHandler.java:120)\n\tat org.openqa.grid.web.servlet.DriverServlet.process(DriverServlet.java:83)\n\tat org.openqa.grid.web.servlet.DriverServlet.doGet(DriverServlet.java:61)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:687)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:790)\n\tat org.seleniumhq.jetty9.servlet.ServletHolder.handle(ServletHolder.java:808)\n\tat org.seleniumhq.jetty9.servlet.ServletHandler.doHandle(ServletHandler.java:587)\n\tat org.seleniumhq.jetty9.server.session.SessionHandler.doHandle(SessionHandler.java:221)\n\tat org.seleniumhq.jetty9.server.handler.ContextHandler.doHandle(ContextHandler.java:1127)\n\tat org.seleniumhq.jetty9.servlet.ServletHandler.doScope(ServletHandler.java:515)\n\tat org.seleniumhq.jetty9.server.session.SessionHandler.doScope(SessionHandler.java:185)\n\tat org.seleniumhq.jetty9.server.handler.ContextHandler.doScope(ContextHandler.java:1061)\n\tat org.seleniumhq.jetty9.server.handler.ScopedHandler.handle(ScopedHandler.java:141)\n\tat org.seleniumhq.jetty9.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)\n\tat org.seleniumhq.jetty9.server.Server.handle(Server.java:499)\n\tat org.seleniumhq.jetty9.server.HttpChannel.handle(HttpChannel.java:310)\n\tat org.seleniumhq.jetty9.server.HttpConnection.onFillable(HttpConnection.java:257)\n\tat org.seleniumhq.jetty9.io.AbstractConnection$2.run(AbstractConnection.java:540)\n\tat org.seleniumhq.jetty9.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:635)\n\tat org.seleniumhq.jetty9.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:555)\n\tat java.lang.Thread.run(Unknown Source)\n",
+                        "status": "failed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.quitBrowser(Scenario)"
+                    }
+                }
+            ],
+            "type": "scenario",
+            "keyword": "Scenario",
+            "steps": [
+                {
+                    "result": {
+                        "status": "skipped",
+                        "manualStatus": "passed"
+                    },
+                    "line": 27,
+                    "name": "the patient has an 'Outpatient' encounter",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "an",
+                                "offset": 16
+                            },
+                            {
+                                "val": "Outpatient",
+                                "offset": 20
+                            }
+                        ],
+                        "location": "EncounterStepdefs.the_patient_has_an_encounter(String,String)"
+                    },
+                    "keyword": "Given "
+                },
+                {
+                    "result": {
+                        "status": "skipped",
+                        "manualStatus": "passed"
+                    },
+                    "line": 28,
+                    "name": "I select an 'Outpatient' encounter to associate with the review",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Outpatient",
+                                "offset": 13
+                            }
+                        ],
+                        "location": "EncounterStepdefs.associate_an_encounter_with_review(String)"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "status": "skipped",
+                        "manualStatus": "passed"
+                    },
+                    "line": 29,
+                    "name": "I save the draft",
+                    "match": {
+                        "arguments": [{}],
+                        "location": "FullReviewPageStepdefs.I_save_the_draft(String)"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "status": "skipped",
+                        "manualStatus": "passed"
+                    },
+                    "line": 30,
+                    "name": "I change to an 'Inpatient' encounter to associate with the review",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Inpatient",
+                                "offset": 16
+                            }
+                        ],
+                        "location": "EncounterStepdefs.re_associate_an_encounter_with_review(String)"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "status": "skipped",
+                        "manualStatus": "passed"
+                    },
+                    "line": 31,
+                    "name": "the 'Inpatient' encounter is associated",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Inpatient",
+                                "offset": 5
+                            }
+                        ],
+                        "location": "EncounterStepdefs.encounter_of_type_associated(String)"
+                    },
+                    "keyword": "Then "
+                },
+                {
+                    "result": {
+                        "status": "skipped",
+                        "manualStatus": "passed"
+                    },
+                    "line": 32,
+                    "name": "I save the draft",
+                    "match": {
+                        "arguments": [{}],
+                        "location": "FullReviewPageStepdefs.I_save_the_draft(String)"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "status": "skipped",
+                        "manualStatus": "passed"
+                    },
+                    "output": ["\n"],
+                    "line": 33,
+                    "name": "the 'Inpatient' encounter is associated",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Inpatient",
+                                "offset": 5
+                            }
+                        ],
+                        "location": "EncounterStepdefs.encounter_of_type_associated(String)"
+                    },
+                    "keyword": "And "
+                }
+            ],
+            "background": {
+                "line": 9,
+                "name": "",
+                "description": "",
+                "type": "background",
+                "keyword": "Background",
+                "steps": [
+                    {
+                        "result": {
+                            "status": "skipped",
+                            "manualStatus": "passed"
+                        },
+                        "line": 10,
+                        "name": "I am a clinician",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "clinician",
+                                    "offset": 7
+                                }
+                            ],
+                            "location": "AuthenticationStepdefs.I_am_a_user(String)"
+                        },
+                        "keyword": "Given "
+                    },
+                    {
+                        "result": {
+                            "status": "skipped",
+                            "manualStatus": "passed"
+                        },
+                        "line": 11,
+                        "name": "I put patient 'A' in context",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "A",
+                                    "offset": 15
+                                }
+                            ],
+                            "location": "MergeStepdefs.i_put_patient_x_in_context(String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "status": "skipped",
+                            "manualStatus": "passed"
+                        },
+                        "line": 12,
+                        "name": "the patient has an 'Inpatient' encounter",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "an",
+                                    "offset": 16
+                                },
+                                {
+                                    "val": "Inpatient",
+                                    "offset": 20
+                                }
+                            ],
+                            "location": "EncounterStepdefs.the_patient_has_an_encounter(String,String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "status": "skipped",
+                            "manualStatus": "passed"
+                        },
+                        "line": 13,
+                        "name": "I navigate to the Full Review page",
+                        "match": {
+                            "arguments": [
+                                {},
+                                {
+                                    "val": "Full Review",
+                                    "offset": 18
+                                }
+                            ],
+                            "location": "MedmanNavigationStepdefs.i_navigate_to_a_medman_page(String,String)"
+                        },
+                        "keyword": "And "
+                    }
+                ]
+            }
+        },
+        {
+            "before": [
+                {
+                    "result": {
+                        "duration": 248301660,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 4173525642379,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.maximiseBrowser()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 58664,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 33308624,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.setUp(Scenario)"
+                    }
+                }
+            ],
+            "line": 35,
+            "name": "Remove an encounter associated with full review",
+            "description": "",
+            "id": "associate-encounter-with-a-full-review;remove-an-encounter-associated-with-full-review",
+            "after": [
+                {
+                    "result": {
+                        "duration": 48805,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 88948,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 188401,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 1637861921,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.quitBrowser(Scenario)"
+                    }
+                }
+            ],
+            "type": "scenario",
+            "keyword": "Scenario",
+            "steps": [
+                {
+                    "result": {
+                        "duration": 574279654,
+                        "status": "passed"
+                    },
+                    "line": 36,
+                    "name": "I set the review type to 'Inpatient'",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Inpatient",
+                                "offset": 26
+                            }
+                        ],
+                        "location": "FullReviewPageStepdefs.i_set_the_review_type_to(String)"
+                    },
+                    "keyword": "Given "
+                },
+                {
+                    "result": {
+                        "duration": 8330159120,
+                        "status": "passed"
+                    },
+                    "line": 37,
+                    "name": "I save the draft",
+                    "match": {
+                        "arguments": [{}],
+                        "location": "FullReviewPageStepdefs.I_save_the_draft(String)"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "duration": 1503066594,
+                        "status": "passed"
+                    },
+                    "line": 38,
+                    "name": "I remove the encounter",
+                    "match": {
+                        "location": "EncounterStepdefs.remove_encounte()"
+                    },
+                    "keyword": "When "
+                },
+                {
+                    "result": {
+                        "duration": 8741530710,
+                        "status": "passed"
+                    },
+                    "line": 39,
+                    "name": "I save the draft",
+                    "match": {
+                        "arguments": [{}],
+                        "location": "FullReviewPageStepdefs.I_save_the_draft(String)"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "duration": 172871113,
+                        "status": "passed"
+                    },
+                    "output": ["\n"],
+                    "embeddings": [
+                        "x1.d536p16x1.b23ap16-x1.4466p16-x1.a9d8p16-x1.030fp16-x1.41c2p16x1.c586p16x1.ebb2p16"
+                    ],
+                    "line": 40,
+                    "name": "no encounter is associated",
+                    "match": {
+                        "location": "EncounterStepdefs.no_encounter_associated()"
+                    },
+                    "keyword": "Then "
+                }
+            ],
+            "background": {
+                "line": 9,
+                "name": "",
+                "description": "",
+                "type": "background",
+                "keyword": "Background",
+                "steps": [
+                    {
+                        "result": {
+                            "duration": 324261016,
+                            "status": "passed"
+                        },
+                        "line": 10,
+                        "name": "I am a clinician",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "clinician",
+                                    "offset": 7
+                                }
+                            ],
+                            "location": "AuthenticationStepdefs.I_am_a_user(String)"
+                        },
+                        "keyword": "Given "
+                    },
+                    {
+                        "result": {
+                            "duration": 7800066228,
+                            "status": "passed"
+                        },
+                        "line": 11,
+                        "name": "I put patient 'A' in context",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "A",
+                                    "offset": 15
+                                }
+                            ],
+                            "location": "MergeStepdefs.i_put_patient_x_in_context(String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "duration": 1019237906,
+                            "status": "passed"
+                        },
+                        "line": 12,
+                        "name": "the patient has an 'Inpatient' encounter",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "an",
+                                    "offset": 16
+                                },
+                                {
+                                    "val": "Inpatient",
+                                    "offset": 20
+                                }
+                            ],
+                            "location": "EncounterStepdefs.the_patient_has_an_encounter(String,String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "duration": 2973516499,
+                            "status": "passed"
+                        },
+                        "line": 13,
+                        "name": "I navigate to the Full Review page",
+                        "match": {
+                            "arguments": [
+                                {},
+                                {
+                                    "val": "Full Review",
+                                    "offset": 18
+                                }
+                            ],
+                            "location": "MedmanNavigationStepdefs.i_navigate_to_a_medman_page(String,String)"
+                        },
+                        "keyword": "And "
+                    }
+                ]
+            }
+        },
+        {
+            "before": [
+                {
+                    "result": {
+                        "duration": 380409498,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 5284052184704,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.maximiseBrowser()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 21003,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.setUp(Scenario)"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 34322456,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.setUp(Scenario)"
+                    }
+                }
+            ],
+            "line": 42,
+            "name": "Filter the list of encounters to associate with a full review",
+            "description": "",
+            "id": "associate-encounter-with-a-full-review;filter-the-list-of-encounters-to-associate-with-a-full-review",
+            "after": [
+                {
+                    "result": {
+                        "duration": 14547,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MedicationFactoryHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 40011,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "TimingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 87904,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "MessagingHook.cleanUp()"
+                    }
+                },
+                {
+                    "result": {
+                        "duration": 1852693449,
+                        "status": "passed"
+                    },
+                    "match": {
+                        "location": "WebDriverHooks.quitBrowser(Scenario)"
+                    }
+                }
+            ],
+            "type": "scenario",
+            "keyword": "Scenario",
+            "steps": [
+                {
+                    "result": {
+                        "duration": 275717098,
+                        "status": "passed"
+                    },
+                    "line": 43,
+                    "name": "the patient has an 'Outpatient' encounter",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "an",
+                                "offset": 16
+                            },
+                            {
+                                "val": "Outpatient",
+                                "offset": 20
+                            }
+                        ],
+                        "location": "EncounterStepdefs.the_patient_has_an_encounter(String,String)"
+                    },
+                    "keyword": "Given "
+                },
+                {
+                    "result": {
+                        "duration": 3014666152,
+                        "status": "passed"
+                    },
+                    "line": 44,
+                    "name": "I open the encounter search",
+                    "match": {
+                        "location": "EncounterStepdefs.open_encounter_search()"
+                    },
+                    "keyword": "And "
+                },
+                {
+                    "result": {
+                        "duration": 6700501904,
+                        "status": "passed"
+                    },
+                    "line": 45,
+                    "name": "I filter the list to show those with status 'Discharged'",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Discharged",
+                                "offset": 45
+                            }
+                        ],
+                        "location": "EncounterStepdefs.filter_encounter_search(String)"
+                    },
+                    "keyword": "When "
+                },
+                {
+                    "result": {
+                        "duration": 1536568308,
+                        "status": "passed"
+                    },
+                    "output": ["\n"],
+                    "embeddings": [
+                        "x1.5492p16x1.8da7p16-x1.a56ep16-x1.7864p16-x1.95bbp16-x1.bbb4p16x1.e446p16x1.2017p16"
+                    ],
+                    "line": 46,
+                    "name": "the list does not contain encounters with status 'Admitted'",
+                    "match": {
+                        "arguments": [
+                            {
+                                "val": "Admitted",
+                                "offset": 50
+                            }
+                        ],
+                        "location": "EncounterStepdefs.encounter_search_filtered(String)"
+                    },
+                    "keyword": "Then "
+                }
+            ],
+            "background": {
+                "line": 9,
+                "name": "",
+                "description": "",
+                "type": "background",
+                "keyword": "Background",
+                "steps": [
+                    {
+                        "result": {
+                            "duration": 318073836,
+                            "status": "passed"
+                        },
+                        "line": 10,
+                        "name": "I am a clinician",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "clinician",
+                                    "offset": 7
+                                }
+                            ],
+                            "location": "AuthenticationStepdefs.I_am_a_user(String)"
+                        },
+                        "keyword": "Given "
+                    },
+                    {
+                        "result": {
+                            "duration": 6103555231,
+                            "status": "passed"
+                        },
+                        "line": 11,
+                        "name": "I put patient 'A' in context",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "A",
+                                    "offset": 15
+                                }
+                            ],
+                            "location": "MergeStepdefs.i_put_patient_x_in_context(String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "duration": 261730093,
+                            "status": "passed"
+                        },
+                        "line": 12,
+                        "name": "the patient has an 'Inpatient' encounter",
+                        "match": {
+                            "arguments": [
+                                {
+                                    "val": "an",
+                                    "offset": 16
+                                },
+                                {
+                                    "val": "Inpatient",
+                                    "offset": 20
+                                }
+                            ],
+                            "location": "EncounterStepdefs.the_patient_has_an_encounter(String,String)"
+                        },
+                        "keyword": "And "
+                    },
+                    {
+                        "result": {
+                            "duration": 2888673893,
+                            "status": "passed"
+                        },
+                        "line": 13,
+                        "name": "I navigate to the Full Review page",
+                        "match": {
+                            "arguments": [
+                                {},
+                                {
+                                    "val": "Full Review",
+                                    "offset": 18
+                                }
+                            ],
+                            "location": "MedmanNavigationStepdefs.i_navigate_to_a_medman_page(String,String)"
+                        },
+                        "keyword": "And "
+                    }
+                ]
+            }
+        }
+    ],
+    "name": "Associate encounter with a Full Review",
+    "description": "\r\nIn order to record the clinical context or care setting where a full review was undertaken\r\nAs a clinician\r\nI want to choose an encounter to associate with a full review",
+    "keyword": "Feature",
+    "uri": "associate_encounter.feature",
+    "tags": [
+        {
+            "line": 1,
+            "name": "@FullReview"
+        },
+        {
+            "line": 2,
+            "name": "@Automate"
+        }
+    ],
+    "calculatedStatus": "passed",
+    "originalAutomatedStatus": "skipped",
+    "statusLastEditedBy": "teighep",
+    "lastEditOn": {
+        "$date": "2018-05-25T00:31:08.067Z"
+    },
+    "edits": [
+        {
+            "name": "teighep",
+            "date": {
+                "$date": "2018-05-25T00:31:08.067Z"
+            },
+            "prev": "skipped",
+            "curr": "passed",
+            "stepChanges": [
+                {
+                    "scenario": "Change an encounter associated with full review",
+                    "changes": [
+                        {
+                            "id": "Given I am a clinician",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "And I put patient 'A' in context",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "And the patient has an 'Inpatient' encounter",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "And I navigate to the Full Review page",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "Given the patient has an 'Outpatient' encounter",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "And I select an 'Outpatient' encounter to associate with the review",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "And I save the draft",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "And I change to an 'Inpatient' encounter to associate with the review",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "Then the 'Inpatient' encounter is associated",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "And I save the draft",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        },
+                        {
+                            "id": "And the 'Inpatient' encounter is associated",
+                            "curr": "passed",
+                            "prev": "skipped"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

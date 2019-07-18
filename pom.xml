@@ -21,26 +21,18 @@
 		<finalName>xbdd</finalName>
 		<plugins>
 			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
-				<version>1.5.1</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compress</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<excludes>
-						<exclude>js/*.js</exclude>
-						<exclude>**/rasterize.js</exclude>
-					</excludes>
-					<nosuffix>true</nosuffix>
-					<force>true</force>
-					<jswarn>false</jswarn>
-				</configuration>
-			</plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/xbdd-web/build/</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -59,17 +51,6 @@
 				<artifactId>maven-glassfish-plugin</artifactId>
 				<version>2.1</version>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<warSourceExcludes>modules/**, css/**, **/index.js,
-						**/listFeaturesForReport.js, **/printableReport.js,
-						**/stats-recentVersions.js</warSourceExcludes>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -154,21 +135,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>com.github.klieber</groupId>
-				<artifactId>phantomjs-maven-plugin</artifactId>
-				<version>0.7</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>install</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<version>1.9.2</version>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.17</version>
@@ -213,7 +179,7 @@
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.6</version>
 				<executions>
 					<execution>
 						<id>install node and npm</id>
@@ -222,17 +188,30 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v6.14.4</nodeVersion>
+						    <workingDirectory>src/main/xbdd-web</workingDirectory>
+							<nodeVersion>v8.15.1</nodeVersion>
 						</configuration>
 					</execution>
 					<execution>
 						<id>install node dependencies</id>
-						<phase>generate-test-resources</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
+						    <workingDirectory>src/main/xbdd-web</workingDirectory>
 							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create react build</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+						    <workingDirectory>src/main/xbdd-web</workingDirectory>
+							<arguments>run build</arguments>
 						</configuration>
 					</execution>
 				</executions>
@@ -297,23 +276,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
-			<artifactId>marked</artifactId>
-			<version>0.3.2-1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>jquery</artifactId>
-			<version>1.9.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>yui</artifactId>
-			<version>3.18.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
