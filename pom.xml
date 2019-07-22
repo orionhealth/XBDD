@@ -26,11 +26,6 @@
                 <version>2.4</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webResources>
-                        <resource>
-                            <directory>src/main/xbdd-web/build/</directory>
-                        </resource>
-                    </webResources>
                 </configuration>
             </plugin>
 			<plugin>
@@ -177,46 +172,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<id>install node and npm</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<configuration>
-						    <workingDirectory>src/main/xbdd-web</workingDirectory>
-							<nodeVersion>v8.15.1</nodeVersion>
-						</configuration>
-					</execution>
-					<execution>
-						<id>install node dependencies</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-						    <workingDirectory>src/main/xbdd-web</workingDirectory>
-							<arguments>install</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create react build</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-						    <workingDirectory>src/main/xbdd-web</workingDirectory>
-							<arguments>run build</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<version>2.7</version>
@@ -308,7 +263,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- dependency to fix JSPServletException -->
@@ -478,10 +433,5 @@
 			<artifactId>guava</artifactId>
 			<version>22.0</version>
 		</dependency>
-
-
-
-
 	</dependencies>
-
 </project>

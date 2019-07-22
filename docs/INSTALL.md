@@ -87,6 +87,28 @@ If you don't already have a MongoDB server, you can install MongoDB in a Docker 
 This will give you a docker container named mongo which is accessible at
 [localhost:27017](http://localhost:27017)
 
+#### Using MongoDB version 2 in a dev environment
+
+If you are using version 3 for your development environment the authenticaion schema needs to be downgraded. Once you have brought up your Mongo Docker container do the following,
+```bash
+# log into the docker container and open a bash terminal
+docker exec -it <mongo-container-name> bash
+
+# start the mongo command line
+mongo
+```
+```js
+// select and create the admin db
+use admin
+
+// create an admin user with read/write and dbAdmin permissions
+db.createUser({ user: "admin", pwd: "password", roles: [ "readWrite", "dbAdmin" ] } )
+
+// create the bdd and grid db's
+use bdd
+use grid
+```
+
 #### Using MongoDB version 3
 
 If you are using version 3 for your development environment the authenticaion schema needs to be downgraded. Once you have brought up your Mongo Docker container do the following,
@@ -96,19 +118,20 @@ docker exec -it <mongo-container-name> bash
 
 # start the mongo command line
 mongo
-
-# select and create the admin db
+```
+```js
+// select and create the admin db
 use admin
 
-# update the auth schema
+// update the auth schema
 var schema = db.system.version.findOne({"_id" : "authSchema"})
 schema.currentVersion = 3
 db.system.version.save(schema)
 
-# create an admin user with read/write and dbAdmin permissions
+// create an admin user with read/write and dbAdmin permissions
 db.createUser({ user: "admin", pwd: "password", roles: [ "readWrite", "dbAdmin" ] } )
 
-# create the bdd and grid db's
+// create the bdd and grid db's
 use bdd
 use grid
 ```
