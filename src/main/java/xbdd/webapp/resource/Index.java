@@ -35,7 +35,7 @@ public class Index {
 	private static final String VIEW_ID = "/index";
 
 	@GET
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getIt(@Context final ServletContext context,
 			@Context final HttpServletRequest req) {
 		final Map<String, Object> map = new HashMap<String, Object>();

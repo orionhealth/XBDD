@@ -21,26 +21,13 @@
 		<finalName>xbdd</finalName>
 		<plugins>
 			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
-				<version>1.5.1</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compress</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<excludes>
-						<exclude>js/*.js</exclude>
-						<exclude>**/rasterize.js</exclude>
-					</excludes>
-					<nosuffix>true</nosuffix>
-					<force>true</force>
-					<jswarn>false</jswarn>
-				</configuration>
-			</plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -59,17 +46,6 @@
 				<artifactId>maven-glassfish-plugin</artifactId>
 				<version>2.1</version>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<warSourceExcludes>modules/**, css/**, **/index.js,
-						**/listFeaturesForReport.js, **/printableReport.js,
-						**/stats-recentVersions.js</warSourceExcludes>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -154,21 +130,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>com.github.klieber</groupId>
-				<artifactId>phantomjs-maven-plugin</artifactId>
-				<version>0.7</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>install</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<version>1.9.2</version>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.17</version>
@@ -207,33 +168,6 @@
 							<goal>integration-test</goal>
 							<goal>verify</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-						<id>install node and npm</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<configuration>
-							<nodeVersion>v6.14.4</nodeVersion>
-						</configuration>
-					</execution>
-					<execution>
-						<id>install node dependencies</id>
-						<phase>generate-test-resources</phase>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>install</arguments>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -297,23 +231,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
-			<artifactId>marked</artifactId>
-			<version>0.3.2-1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>jquery</artifactId>
-			<version>1.9.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>yui</artifactId>
-			<version>3.18.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -344,7 +263,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- dependency to fix JSPServletException -->
@@ -514,10 +433,5 @@
 			<artifactId>guava</artifactId>
 			<version>22.0</version>
 		</dependency>
-
-
-
-
 	</dependencies>
-
 </project>
