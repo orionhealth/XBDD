@@ -1,7 +1,9 @@
 const navbarStyles = () => ({
+  appBarBorder: {
+    borderRadius: "10px 10px 0 0",
+  },
   xbddNavbarStyles: {
-    flexGrow: 1,
-    marginBottom: '5px',
+    flexGrow:1, 
   },
   xbddLogoFlex: {
     color: 'inherit',

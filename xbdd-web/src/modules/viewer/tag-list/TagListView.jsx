@@ -2,7 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import Tag from '../../models/Tag';
+import Tag from '../../../models/Tag';
 import TagListItemView from './widgets/TagListItemView';
 import TagListFilterButtonsView from './widgets/TagListFilterButtonsView';
 import { tagListStyles } from './styles/TagListStyles';

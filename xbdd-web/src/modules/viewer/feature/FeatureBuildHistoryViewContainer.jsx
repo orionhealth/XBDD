@@ -8,16 +8,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import { Card } from '@material-ui/core';
-import FeatureHistory from '../../models/FeatureHistory';
-
-const styles = theme => ({
-  buildHistoryViewContainer: {
-    width: '100%',
-    maxWidth: 570,
-    backgroundColor: theme.palette.background.paper,
-  },
-});
+import { Card, Typography } from '@material-ui/core';
+import FeatureHistory from '../../../models/FeatureHistory';
+import { featureSummaryStyles } from './styles/FeatureSummaryStyles';
 
 const getIcon = (status, lastEditedBy) => {
   let lastEditedByText = '';
@@ -60,10 +53,17 @@ class FeatureBuildHistoryViewContainer extends Component {
     const { classes } = this.props;
     return (
       <Card raised className={classes.buildHistoryViewContainer}>
-        <div className="xbdd-feature-history-view-title">Execution History</div>
+        <h1>Execution History</h1>
         <GridList className={classes.gridList} cols={20} spacing={0} cellHeight="auto">
           {this.props.featureRollupData.builds.map(build => (
-            <GridListTile key={build.buildNumber}>{getIcon(build.calculatedStatus, build.statusLastEditedBy)}</GridListTile>
+            <div>
+              <Typography variant="body1" noWrap={true}>
+                {build.buildNumber}
+              </Typography>
+              <GridListTile key={build.buildNumber}>
+                {getIcon(build.calculatedStatus, build.statusLastEditedBy)}
+              </GridListTile>
+            </div>
           ))}
         </GridList>
       </Card>
@@ -76,4 +76,4 @@ FeatureBuildHistoryViewContainer.propTypes = {
   featureRollupData: PropTypes.instanceOf(FeatureHistory).isRequired,
 };
 
-export default withStyles(styles)(FeatureBuildHistoryViewContainer);
+export default withStyles(featureSummaryStyles)(FeatureBuildHistoryViewContainer);

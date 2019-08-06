@@ -1,22 +1,21 @@
 const tagListStyles = theme => ({
   xbddTagListContainer: {
     backgroundColor: theme.palette.background.paper,
-    maxWidth: 308,
-    overflowY: 'scroll',
+    borderRadius: "0 0 0 10px",
     padding: '24px',
     position: 'relative',
-    width: '100%',
   },
   xbddTagList: {
     backgroundColor: theme.palette.background.paper,
     border: '1px solid rgba(0, 0, 0, 0.23)',
-    borderRadius: '3px',
+    borderRadius: '5px',
     maxHeight: 'calc(100vh - 180px)', // 64px for navbar, 5px navbar margin, 48px in padding, 48px buttons, 15px button margins
     overflowY: 'scroll',
     position: 'relative',
     width: 'calc(100% - 2px)',
   },
   xbddTagListFilterButtons: {
+    borderRadius: '5px',
     height: '50px',
     width: '100%',
   },

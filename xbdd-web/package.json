@@ -9,7 +9,6 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^3.19.0",
-    "eslint-config-orionhealth": "^3.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-react": "^6.10.3",
     "popper.js": "^1.14.3",

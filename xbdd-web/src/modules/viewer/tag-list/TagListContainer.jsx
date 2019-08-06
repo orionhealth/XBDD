@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import Report from '../../models/Report';
+import Report from '../../../models/Report';
 import TagListView from './TagListView';
 
 class TagListContainer extends Component {

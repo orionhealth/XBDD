@@ -1,2 +1,2 @@
-src/registerServiceWorker.js
-src/setupTests.js
+src/util/registerServiceWorker.js
+src/util/setupTests.js
