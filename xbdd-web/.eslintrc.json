@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint-config-orionhealth"],
+  "extends": ["react-app"],
   "plugins": ["react", "import"],
   "parserOptions": {
     "sourceType": "module",
@@ -14,7 +14,10 @@
   },
   "globals": {
     "window": true,
-    "document": true
+    "document": true,
+    "fetch": true,
+    "Headers": true,
+    "btoa": true
   },
   "rules": {
     "import/no-named-as-default": "off",
@@ -23,7 +26,7 @@
     "no-plusplus": 0,
     "no-underscore-dangle": ["error", { "allow": ["_t", "_raw"] }],
     "react/sort-comp": ["error", { "order": ["static-methods", "lifecycle", "/^on.+$/", "everything-else", "/^render.+$/", "render"] }],
-    "class-methods-use-this": 0
-  },
-  "function-paren-newline": "consistent"
+    "class-methods-use-this": 0,
+    "function-paren-newline": ["error", "consistent"]
+  }
 }

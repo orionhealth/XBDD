@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
-import Report from '../../models/Report';
-import TagListView from './TagListView';
+import React, { Component } from "react";
+import { PropTypes } from "prop-types";
+import Report from "../../models/Report";
+import TagListView from "./TagListView";
 
 class TagListContainer extends Component {
   constructor(props) {
@@ -20,12 +20,15 @@ class TagListContainer extends Component {
     this.onSelectTag = this.onSelectTag.bind(this);
   }
 
+  componentDidCatch(error, info) {
+    console.error(error, info);
+  }
+
   onFilterButtonClick(stateAttribute) {
     this.setState(prevState =>
       Object.assign(prevState.filterStates, {
         [stateAttribute]: !prevState.filterStates[stateAttribute],
-      })
-    );
+      }));
   }
 
   onSelectTag(tag) {
