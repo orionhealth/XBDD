@@ -6,6 +6,7 @@ import Tag from '../../../models/Tag';
 import TagListItemView from './widgets/TagListItemView';
 import TagListFilterButtonsView from './widgets/TagListFilterButtonsView';
 import { tagListStyles } from './styles/TagListStyles';
+import { Card } from '@material-ui/core';
 
 const mapTagToTagListItem = (tag, selectedTag, onSelectTag) => (
   <TagListItemView tag={tag} key={tag.name} onSelectTag={onSelectTag} isSelected={tag === selectedTag} />
@@ -16,9 +17,9 @@ const renderList = (className, tags, selectedTag, onSelectTag) => {
     return null;
   }
   return (
-    <div className={className}>
+    <Card raised className={className}>
       <List component="ul">{tags.map(tag => mapTagToTagListItem(tag, selectedTag, onSelectTag))}</List>
-    </div>
+    </Card>
   );
 };
 

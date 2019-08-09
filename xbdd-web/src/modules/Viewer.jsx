@@ -1,5 +1,6 @@
 import React from "react";
 import TagListContainer from "./viewer/tag-list/TagListContainer";
+import ReportViewerContainer from './viewer/reportViewer/ReportViewerContainer'
 import FeatureSummaryViewContainer from "./viewer/feature/FeatureSummaryViewContainer";
 import { Grid } from "@material-ui/core";
 
@@ -19,7 +20,8 @@ const Viewer = () => (
       <TagListContainer report={dummyReport} />
     </Grid>
     <Grid item xs={9}>
-      <FeatureSummaryViewContainer featureRollupData={dummyFeatureData} />
+      {/* <ReportViewerContainer report={dummyReport} /> */}
+      {/* <FeatureSummaryViewContainer featureRollupData={dummyFeatureData} /> */}
     </Grid>
   </Grid>
 );

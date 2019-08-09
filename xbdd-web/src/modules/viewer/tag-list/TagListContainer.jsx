@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { PropTypes } from "prop-types";
-import Report from "../../models/Report";
+import Report from "../../../models/Report";
 import TagListView from "./TagListView";
 
 class TagListContainer extends Component {
@@ -28,8 +28,7 @@ class TagListContainer extends Component {
     this.setState(prevState =>
       Object.assign(prevState.filterStates, {
         [stateAttribute]: !prevState.filterStates[stateAttribute],
-      })
-    );
+      }));
   }
 
   onSelectTag(tag) {
@@ -40,7 +39,7 @@ class TagListContainer extends Component {
 
   filterTags() {
     const tags = this.props.report.tagList;
-
+    
     return tags.filter(
       tag =>
         (this.state.filterStates.passedSelected && tag.containsPassed) ||

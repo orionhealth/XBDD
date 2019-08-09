@@ -8,6 +8,7 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import BlockIcon from '@material-ui/icons/Block';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { tagListFilterButtonStyles } from '../styles/TagListStyles';
+import { Card } from '@material-ui/core';
 
 const buttonTheme = color =>
   createMuiTheme({
@@ -68,12 +69,12 @@ const TagListFilterButtonsView = (props) => {
   };
 
   return (
-    <div className={classes.xbddTagListFilterButtons}>
+    <Card raised className={classes.xbddTagListFilterButtons}>
       {createButton(variants.passed)}
       {createButton(variants.failed)}
       {createButton(variants.undefined)}
       {createButton(variants.skipped)}
-    </div>
+    </Card>
   );
 };
 

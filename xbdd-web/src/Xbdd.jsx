@@ -1,7 +1,10 @@
 import React from "react";
-import Navbar from "./modules/navbar/Navbar";
+import Navbar from "./modules/Navbar";
+import Viewer from "./modules/Viewer"
 import "./Xbdd.css";
 import { getSummaryOfReports, getBuild } from "./lib/rest/Rest";
+import Report from "./models/Report";
+import Welcome from "./modules/Welcome";
 
 class Xbdd extends React.Component {
   constructor(props) {
@@ -15,11 +18,11 @@ class Xbdd extends React.Component {
   }
 
   componentDidUpdate() {
-    console.debug(`State is ${JSON.stringify(this.state, null, 2)}`);
+    // console.debug(`State is ${JSON.stringify(this.state, null, 2)}`);
   }
 
   fetchAndStoreBuildData(product, version, build) {
-    getBuild(product, version, build).then(buildData => this.setState({ buildData }));
+    getBuild(product, version, build).then(buildData => this.setState({ buildData: new Report(buildData) }));
   }
 
   renderButton(product, version, build) {
@@ -52,7 +55,9 @@ class Xbdd extends React.Component {
     return (
       <div className="xbdd-app">
         <Navbar />
-        {this.renderProjectLinks()}
+        <Welcome summaryData={this.state.summaryData}/>
+        {/* <Viewer /> */}
+        {/* {this.renderProjectLinks()} */}
       </div>
     );
   }
