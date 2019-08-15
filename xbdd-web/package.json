@@ -30,6 +30,7 @@
   },
   "scripts": {
     "start": "concurrently \"react-scripts start\" \"npm run start-server\"",
+    "start:debug": "concurrently \"react-scripts --inspect start --no-cache --runInBand\" \"npm run start-server\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "test:debug": "react-scripts --inspect-brk test --runInBand --env=jsdom",
