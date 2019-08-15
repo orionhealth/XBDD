@@ -37,10 +37,10 @@ class Welcome extends Component {
       });
       if (flag) {
         if (!isFavouriteList) {
-          list.push(Object.assign({}, element));
+          list.push(Object.assign({}, element, { expanded: false }));
         } else {
           if (element.favourite) {
-            list.push(Object.assign({}, element));
+            list.push(Object.assign({}, element, { expanded: false }));
           }
         }
       }

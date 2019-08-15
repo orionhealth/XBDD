@@ -23,18 +23,17 @@ class ProductListContainer extends Component {
     }
   }
 
-  handleExpanded(productList) {
-    return productList;
-  }
-
   handleProductClicked(product) {
-    var list = [];
-    if (product.favourite) {
-      list = this.state.favouriteProductList;
-    } else {
-      list = this.state.allProductList;
-    }
-    list.forEach(item => {});
+    var newList = this.state.list;
+    const isExpanded = product.expanded;
+    newList.forEach(element => {
+      if (element === product) {
+        element.expanded = !isExpanded;
+      }
+    });
+    this.setState({
+      list: newList,
+    });
   }
 
   render() {
@@ -44,7 +43,6 @@ class ProductListContainer extends Component {
           {this.props.isFavouriteList ? "Favourite" : "Product List"}
         </Typography>
         <ProductList
-          expandedProducts={this.expandedProducts}
           list={this.state.list}
           handleFavouriteChange={this.props.handleFavouriteChange}
           handleProductClicked={this.handleProductClicked}

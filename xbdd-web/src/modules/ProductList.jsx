@@ -15,7 +15,6 @@ const ProductList = props => {
             <ProductListItem
               product={product}
               key={product.name}
-              expandedProducts={props.expandedProducts}
               handleFavouriteChange={props.handleFavouriteChange}
               handleProductClicked={props.handleProductClicked}
             />

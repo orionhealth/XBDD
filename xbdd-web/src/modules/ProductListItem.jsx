@@ -10,22 +10,43 @@ import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
-const ProductListItem = props => {
-  return (
-    <div>
-      <ListItem button divider className={props.classes.productListItem}>
-        <ListItemIcon>
-          <Checkbox
-            icon={<FavoriteBorder />}
-            checkedIcon={<Favorite />}
-            checked={props.product.favourite}
-            onClick={() => props.handleFavouriteChange(props.product)}
-          />
-        </ListItemIcon>
-        <ListItemText onClick={() => props.handleProductClicked(props.product)}>{props.product.name}</ListItemText>
-      </ListItem>
-    </div>
-  );
-};
+class ProductListItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.clickEventWrapper = this.clickEventWrapper.bind(this);
+  }
+
+  clickEventWrapper(event) {
+    let node = event.target;
+
+    while (node) {
+      if (node.className === "MuiIconButton-label") {
+        this.props.handleFavouriteChange(this.props.product);
+        return;
+      }
+      node = node.parentNode;
+    }
+    this.props.handleProductClicked(this.props.product);
+  }
+
+  render() {
+    return (
+      <div onClick={this.clickEventWrapper}>
+        <ListItem button divider className={this.props.classes.productListItem}>
+          <ListItemIcon>
+            <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={this.props.product.favourite} />
+          </ListItemIcon>
+          <ListItemText>{this.props.product.name}</ListItemText>
+          {this.props.product.expanded ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={this.props.product.expanded} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <div>yeah</div>
+          </List>
+        </Collapse>
+      </div>
+    );
+  }
+}
 
 export default withStyles(welcomeStyles)(ProductListItem);
