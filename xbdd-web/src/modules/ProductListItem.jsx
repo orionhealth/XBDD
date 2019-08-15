@@ -1,36 +1,31 @@
-import React, { Component } from 'react'
-import {Checkbox, ListItem, FormControlLabel} from "@material-ui/core";
+import React from "react";
+import { Checkbox, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import { setProductFavouriteOn, setProductFavouriteOff } from "../lib/rest/Rest";
 import { withStyles } from "@material-ui/core/styles";
 import welcomeStyles from "./WelcomeStyles";
 
-const ProductListItem = props => {
-    // handleFavouriteChange() {
-    //     if(this.product.favourite) {
-    //       setProductFavouriteOff(this.product.name).then(response => {
-    //           if (response.status === 200) {
-    //             this.props.onFavouriteChange();
-    //           }
-    //       });
-    //     } else {
-    //       setProductFavouriteOn(this.product.name).then(response => {
-    //         if (response.status === 200) {
-    //             this.props.onFavouriteChange();
-    //           }
-    //       });
-    //     }
-    //   }
+import List from "@material-ui/core/List";
+import Collapse from "@material-ui/core/Collapse";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
 
-    return (
-        <ListItem button divider className={props.classes.productListItem}> 
-        <FormControlLabel
-            control={<Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={props.product.favourite} onChange={()=>props.onFavouriteChange(props.product)}/>}
-            label={props.product.name}
-        />
-        </ListItem>
-    )
-}
+const ProductListItem = props => {
+  return (
+    <div>
+      <ListItem button divider className={props.classes.productListItem}>
+        <ListItemIcon>
+          <Checkbox
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite />}
+            checked={props.product.favourite}
+            onClick={() => props.handleFavouriteChange(props.product)}
+          />
+        </ListItemIcon>
+        <ListItemText onClick={() => props.handleProductClicked(props.product)}>{props.product.name}</ListItemText>
+      </ListItem>
+    </div>
+  );
+};
 
 export default withStyles(welcomeStyles)(ProductListItem);

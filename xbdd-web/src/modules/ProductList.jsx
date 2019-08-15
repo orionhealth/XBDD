@@ -3,15 +3,23 @@ import { List } from "@material-ui/core";
 import ProductListItem from "./ProductListItem";
 
 const ProductList = props => {
-  const { productList } = props;
+  const { list } = props;
 
-  if (!productList) {
+  if (!list) {
     return null;
   } else {
     return (
       <List>
-        {productList.map(product => {
-          return <ProductListItem product={product} key={product.name} onFavouriteChange={props.onFavouriteChange}/>;
+        {list.map(product => {
+          return (
+            <ProductListItem
+              product={product}
+              key={product.name}
+              expandedProducts={props.expandedProducts}
+              handleFavouriteChange={props.handleFavouriteChange}
+              handleProductClicked={props.handleProductClicked}
+            />
+          );
         })}
       </List>
     );
