@@ -21,6 +21,32 @@ const doGetRequest = path => {
     .catch(error => console.error(error));
 };
 
+const doPutRequest = path => {
+  const options = {
+    method: "PUT",
+    headers: getHeaders(),
+  };
+
+  return fetch(`${url}${path}`, { ...options })
+    .catch(error => console.error(error));
+};
+
+
+const doDeleteRequest = path => {
+  const options = {
+    method: "DELETE",
+    headers: getHeaders(),
+  };
+
+  return fetch(`${url}${path}`, { ...options })
+    .catch(error => console.error(error));
+};
+
+
 export const getSummaryOfReports = () => doGetRequest("/rest/reports");
 
 export const getBuild = (project, version, build) => doGetRequest(`/rest/reports/${project}/${version}/${build}`);
+
+export const setProductFavouriteOn = (project) => doPutRequest(`/rest/favourites/${project}/`);
+
+export const setProductFavouriteOff = (project) => doDeleteRequest(`/rest/favourites/${project}/`);
