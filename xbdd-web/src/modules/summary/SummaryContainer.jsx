@@ -27,15 +27,26 @@ class SummaryContainer extends Component {
 
   processList(productList, isFavouriteList) {
     const list = [];
-    productList.forEach(element => {
-      const hasBeenAdded = list.some(product => product.name === element.name);
-      const shouldBeAdded = isFavouriteList ? !hasBeenAdded && element.favourite : !hasBeenAdded;
-      if (shouldBeAdded) {
-        list.push(element.clone());
+    productList.forEach(product => {
+      if (isFavouriteList && !product.favourite) {
+        return;
       }
+      list.push(product.clone());
     });
     return list;
   }
+
+  // processList(productList, isFavouriteList) {
+  //   const list = [];
+  //   productList.forEach(product => {
+  //     const hasBeenAdded = list.some(element => product.name === element.name);
+  //     const shouldBeAdded = isFavouriteList ? !hasBeenAdded && product.favourite : !hasBeenAdded;
+  //     if (shouldBeAdded) {
+  //       list.push(product.clone());
+  //     }
+  //   });
+  //   return list;
+  // }
 
   handleFavouriteChange(product) {
     const isFavourite = product.favourite;

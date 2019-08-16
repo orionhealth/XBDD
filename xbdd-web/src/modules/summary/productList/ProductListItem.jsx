@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { List, Checkbox, ListItem, ListItemText, ListItemIcon, Collapse } from "@material-ui/core";
+import { Checkbox, ListItem, ListItemText, ListItemIcon, Collapse } from "@material-ui/core";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -8,6 +8,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { withStyles } from "@material-ui/core/styles";
 import ProductListStyles from "./styles/ProductListStyles";
 import Product from "../../../models/Product";
+import BuildSummaryContainer from "./buildSummary/BuildSummaryContainer";
 
 const clickEventWrapper = (event, product, handleFavouriteChange, handleProductClicked) => {
   let node = event.target;
@@ -38,9 +39,7 @@ const ProductListItem = props => {
         {props.product.expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={props.product.expanded} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <div>Here should be a list of build data</div>
-        </List>
+        <BuildSummaryContainer product={props.product} />
       </Collapse>
     </>
   );

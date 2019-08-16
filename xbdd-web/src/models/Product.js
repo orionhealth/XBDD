@@ -1,25 +1,35 @@
 class Product {
   constructor(data) {
     if (data) {
-      this.id = data.id;
       this.name = data.coordinates.product;
-      this.major = data.coordinates.major;
-      this.minor = data.coordinates.minor;
-      this.servicePack = data.coordinates.servicePack;
-      this.buildList = data.coordinates.builds;
+      this.versionList = [
+        {
+          id: data["_id"],
+          major: data.coordinates.major,
+          minor: data.coordinates.major,
+          servicePack: data.coordinates.servicePack,
+          buildList: data.builds,
+        },
+      ];
       this.favourite = data.favourite;
       this.expanded = false;
     }
   }
 
+  addVersion(data) {
+    this.versionList.push({
+      id: data["_id"],
+      major: data.coordinates.major,
+      minor: data.coordinates.major,
+      servicePack: data.coordinates.servicePack,
+      buildList: data.builds,
+    });
+  }
+
   clone() {
     const rtn = new Product();
-    rtn.id = this.id;
     rtn.name = this.name;
-    rtn.major = this.major;
-    rtn.minor = this.minor;
-    rtn.servicePack = this.servicePack;
-    rtn.buildList = this.buildList;
+    rtn.versionList = this.versionList;
     rtn.favourite = this.favourite;
     rtn.expanded = this.expanded;
 
