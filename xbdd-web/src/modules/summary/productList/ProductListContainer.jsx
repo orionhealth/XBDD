@@ -1,9 +1,8 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Card } from "@material-ui/core";
 import ProductList from "./ProductList";
-import { Card, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import welcomeStyles from "./WelcomeStyles";
-import {} from "../lib/rest/Rest";
+import Product from "../../../models/Product";
 
 class ProductListContainer extends Component {
   constructor(props) {
@@ -15,12 +14,13 @@ class ProductListContainer extends Component {
     this.handleProductClicked = this.handleProductClicked.bind(this);
   }
 
-  componentWillReceiveProps(props) {
-    if (props.list !== this.state.list) {
-      this.setState({
+  static getDerivedStateFromProps(props, state) {
+    if (props.list !== state.list) {
+      return {
         list: props.list,
-      });
+      };
     }
+    return null;
   }
 
   handleProductClicked(product) {
@@ -39,11 +39,9 @@ class ProductListContainer extends Component {
   render() {
     return (
       <Card raised>
-        <Typography variant="h5" className={this.props.classes.productListTitle}>
-          {this.props.isFavouriteList ? "Favourite" : "Product List"}
-        </Typography>
         <ProductList
           list={this.state.list}
+          isFavouriteList={this.props.isFavouriteList}
           handleFavouriteChange={this.props.handleFavouriteChange}
           handleProductClicked={this.handleProductClicked}
         />
@@ -52,4 +50,10 @@ class ProductListContainer extends Component {
   }
 }
 
-export default withStyles(welcomeStyles)(ProductListContainer);
+ProductListContainer.propTypes = {
+  list: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
+  isFavouriteList: PropTypes.bool.isRequired,
+  handleFavouriteChange: PropTypes.func.isRequired,
+};
+
+export default ProductListContainer;

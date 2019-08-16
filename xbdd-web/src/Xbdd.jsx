@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "./modules/Navbar";
 import "./Xbdd.css";
-import Welcome from "./modules/Welcome";
+import Navbar from "./modules/navbar/Navbar";
+import SummaryContainer from "./modules/summary/SummaryContainer";
 
 class Xbdd extends React.Component {
   constructor(props) {
@@ -13,8 +13,7 @@ class Xbdd extends React.Component {
     return (
       <div className="xbdd-app">
         <Navbar />
-        <Welcome />
-        {/* <Viewer /> */}
+        <SummaryContainer />
       </div>
     );
   }

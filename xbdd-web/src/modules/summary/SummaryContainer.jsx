@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import ProductListContainer from "./ProductListContainer";
+import PropTypes from "prop-types";
 import { Grid, Card, Typography } from "@material-ui/core";
-import welcomeStyles from "./WelcomeStyles";
 import { withStyles } from "@material-ui/core/styles";
+import ProductListContainer from "./productList/ProductListContainer";
+import SummaryStyles from "./styles/SummaryStyles";
+import ProductSummary from "../../models/ProductSummary";
+import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff } from "../../lib/rest/Rest";
 
-import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff } from "../lib/rest/Rest";
-import ProductSummary from "../models/ProductSummary";
-
-class Welcome extends Component {
+class SummaryContainer extends Component {
   constructor(props) {
     super(props);
     this.state = { productList: null, favouriteList: null };
@@ -25,7 +25,6 @@ class Welcome extends Component {
     });
   }
 
-  // Remove the duplicate product and filter by favourtite
   processList(productList, isFavouriteList) {
     const list = [];
     productList.forEach(element => {
@@ -37,10 +36,10 @@ class Welcome extends Component {
       });
       if (flag) {
         if (!isFavouriteList) {
-          list.push(Object.assign({}, element, { expanded: false }));
+          list.push(element.clone());
         } else {
           if (element.favourite) {
-            list.push(Object.assign({}, element, { expanded: false }));
+            list.push(element.clone());
           }
         }
       }
@@ -67,43 +66,17 @@ class Welcome extends Component {
     });
   }
 
-  // componentDidUpdate() {
-  //   // console.debug(`State is ${JSON.stringify(this.state, null, 2)}`);
-  // }
-
-  // fetchAndStoreBuildData(product, version, build) {
-  //   getBuild(product, version, build).then(buildData => this.setState({ buildData: new Report(buildData) }));
-  // }
-
-  // renderButton(product, version, build) {
-  //   const text = `${product} v${version} build ${build}`;
-  //   const onClick = () => this.fetchAndStoreBuildData(product, version, build);
-
-  //   return (
-  //     <button key={`${product}:${version}:${build}`} onClick={onClick}>
-  //       {text}
-  //     </button>
-  //   );
-  // }
-
-  // renderBuildButtons(project) {
-  //   const { product, major, minor, servicePack } = project.coordinates;
-  //   const version = `${major}.${minor}.${servicePack}`;
-
-  //   return project.builds.map(build => this.renderButton(product, version, build));
-  // }
-
   render() {
     if (this.state.productList && this.state.favouriteList) {
       return (
         <Card>
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant="h3" className={this.props.classes.title}>
+              <Typography variant="h3" className={this.props.classes.summaryTitle}>
                 G'day Mate
               </Typography>
             </Grid>
-            <Grid item xs={6} className={this.props.classes.productList}>
+            <Grid item xs={6} className={this.props.classes.productListContainer}>
               <Card raised>
                 <ProductListContainer
                   list={this.state.productList}
@@ -112,7 +85,7 @@ class Welcome extends Component {
                 />
               </Card>
             </Grid>
-            <Grid item xs={6} className={this.props.classes.productList}>
+            <Grid item xs={6} className={this.props.classes.productListContainer}>
               <Card raised>
                 <ProductListContainer
                   list={this.state.favouriteList}
@@ -129,4 +102,8 @@ class Welcome extends Component {
   }
 }
 
-export default withStyles(welcomeStyles)(Welcome);
+SummaryContainer.propTypes = {
+  classes: PropTypes.shape({}),
+};
+
+export default withStyles(SummaryStyles)(SummaryContainer);
