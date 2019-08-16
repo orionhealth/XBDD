@@ -28,20 +28,10 @@ class SummaryContainer extends Component {
   processList(productList, isFavouriteList) {
     const list = [];
     productList.forEach(element => {
-      var flag = true;
-      list.forEach(product => {
-        if (product.name === element.name) {
-          flag = false;
-        }
-      });
-      if (flag) {
-        if (!isFavouriteList) {
-          list.push(element.clone());
-        } else {
-          if (element.favourite) {
-            list.push(element.clone());
-          }
-        }
+      const hasBeenAdded = list.some(product => product.name === element.name);
+      const shouldBeAdded = isFavouriteList ? !hasBeenAdded && element.favourite : !hasBeenAdded;
+      if (shouldBeAdded) {
+        list.push(element.clone());
       }
     });
     return list;

@@ -9,23 +9,28 @@ import { withStyles } from "@material-ui/core/styles";
 import ProductListStyles from "./styles/ProductListStyles";
 import Product from "../../../models/Product";
 
-const ProductListItem = props => {
-  function clickEventWrapper(event) {
-    let node = event.target;
+const clickEventWrapper = (event, product, handleFavouriteChange, handleProductClicked) => {
+  let node = event.target;
 
-    while (node) {
-      if (node.className === "MuiIconButton-label") {
-        props.handleFavouriteChange(props.product);
-        return;
-      }
-      node = node.parentNode;
+  while (node) {
+    if (node.className === "MuiIconButton-label") {
+      handleFavouriteChange(product);
+      return;
     }
-    props.handleProductClicked(props.product);
+    node = node.parentNode;
   }
+  handleProductClicked(product);
+};
 
+const ProductListItem = props => {
   return (
-    <div onClick={e => clickEventWrapper(e)}>
-      <ListItem button divider className={props.classes.productListItem}>
+    <>
+      <ListItem
+        button
+        divider
+        className={props.classes.productListItem}
+        onClick={e => clickEventWrapper(e, props.product, props.handleFavouriteChange, props.handleProductClicked)}
+      >
         <ListItemIcon>
           <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={props.product.favourite} />
         </ListItemIcon>
@@ -37,11 +42,13 @@ const ProductListItem = props => {
           <div>Here should be a list of build data</div>
         </List>
       </Collapse>
-    </div>
+    </>
   );
 };
 
 ProductListItem.propTypes = {
+  handleFavouriteChange: PropTypes.func.isRequired,
+  handleProductClicked: PropTypes.func.isRequired,
   product: PropTypes.instanceOf(Product),
   classes: PropTypes.shape({}),
 };

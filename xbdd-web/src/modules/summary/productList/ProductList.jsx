@@ -8,27 +8,26 @@ import ProductListItem from "./ProductListItem";
 const ProductList = props => {
   if (!props.list) {
     return null;
-  } else {
-    return (
-      <>
-        <Typography variant="h5" className={props.classes.productListTitle}>
-          {props.isFavouriteList ? "Favourite" : "Product List"}
-        </Typography>
-        <List>
-          {props.list.map(product => {
-            return (
-              <ProductListItem
-                product={product}
-                key={product.name}
-                handleFavouriteChange={props.handleFavouriteChange}
-                handleProductClicked={props.handleProductClicked}
-              />
-            );
-          })}
-        </List>
-      </>
-    );
   }
+  return (
+    <>
+      <Typography variant="h5" className={props.classes.productListTitle}>
+        {props.isFavouriteList ? "Favourite" : "Product List"}
+      </Typography>
+      <List>
+        {props.list.map(product => {
+          return (
+            <ProductListItem
+              product={product}
+              key={product.name}
+              handleFavouriteChange={props.handleFavouriteChange}
+              handleProductClicked={props.handleProductClicked}
+            />
+          );
+        })}
+      </List>
+    </>
+  );
 };
 
 ProductList.propTypes = {
