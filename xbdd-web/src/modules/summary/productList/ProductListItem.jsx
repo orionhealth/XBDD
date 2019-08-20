@@ -36,10 +36,15 @@ const ProductListItem = props => {
           <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={props.product.favourite} />
         </ListItemIcon>
         <ListItemText>{props.product.name}</ListItemText>
-        {props.product.expanded ? <ExpandLess /> : <ExpandMore />}
+        {props.itemUIState.expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
-      <Collapse in={props.product.expanded} timeout="auto" unmountOnExit>
-        <BuildSummaryContainer product={props.product} />
+      <Collapse in={props.itemUIState.expanded} timeout="auto" unmountOnExit>
+        <BuildSummaryContainer
+          product={props.product}
+          version={props.itemUIState.selectedVersion}
+          handleVersionSelected={props.handleVersionSelected}
+          handlePinChange={props.handlePinChange}
+        />
       </Collapse>
     </>
   );
@@ -48,6 +53,7 @@ const ProductListItem = props => {
 ProductListItem.propTypes = {
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
+  handleVersionSelected: PropTypes.func.isRequired,
   product: PropTypes.instanceOf(Product),
   classes: PropTypes.shape({}),
 };

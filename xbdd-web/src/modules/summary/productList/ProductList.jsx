@@ -19,9 +19,13 @@ const ProductList = props => {
           return (
             <ProductListItem
               product={product}
+              itemUIState={props.itemsUIState[product.name]}
               key={product.name}
+              version={props.version}
+              handleVersionSelected={props.handleVersionSelected}
               handleFavouriteChange={props.handleFavouriteChange}
               handleProductClicked={props.handleProductClicked}
+              handlePinChange={props.handlePinChange}
             />
           );
         })}
@@ -33,6 +37,7 @@ const ProductList = props => {
 ProductList.propTypes = {
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
+  handleVersionSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 export default withStyles(ProductListStyles)(ProductList);
