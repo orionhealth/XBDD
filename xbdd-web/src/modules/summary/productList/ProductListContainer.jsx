@@ -4,10 +4,6 @@ import { Card } from "@material-ui/core";
 import ProductList from "./ProductList";
 import Product from "../../../models/Product";
 
-const getVersionString = version => {
-  return `${version.major}.${version.minor}.${version.servicePack}`;
-};
-
 class ProductListContainer extends Component {
   constructor(props) {
     super(props);
@@ -37,47 +33,19 @@ class ProductListContainer extends Component {
   }
 
   handleProductClicked(product) {
-    // var newList = this.state.list;
-    // const isExpanded = product.expanded;
-    // newList.forEach(element => {
-    //   if (element === product) {
-    //     element.expanded = !isExpanded;
-    //   }
-    // });
-    // this.setState({
-    //   list: newList,
-    // });
-
-    this.setState(oldState => {
-      const newState = Object.assign({}, oldState);
+    this.setState(prevState => {
+      const newState = Object.assign({}, prevState);
       const storedItem = newState.itemsUIState[product.name];
       storedItem.expanded = !storedItem.expanded;
       return newState;
     });
   }
 
-  getVersionFromString(versionString, productName) {
-    const correctProduct = this.state.list.find(product => product.name === productName);
-    return correctProduct.versionList.find(version => versionString === getVersionString(version));
-  }
-
-  handleVersionSelected(event, productNeededToUpdate) {
-    // const newList = this.state.list;
-    // const product = newList.find(item => item === productNeededToUpdate);
-    // const newSelectedVersion = event.target.value;
-    // product.versionList.forEach(version => {
-    //   if (newSelectedVersion === `${version.major}.${version.minor}.${version.servicePack}`) {
-    //     product.selectedVersion = version;
-    //   }
-    // });
-    // this.setState({
-    //   list: newList,
-    // });
-
-    this.setState(oldState => {
-      const newState = Object.assign({}, oldState);
-      const storedItem = newState.itemsUIState[productNeededToUpdate.name];
-      storedItem.selectedVersion = this.getVersionFromString(event.target.value, productNeededToUpdate.name);
+  handleVersionSelected(event, product) {
+    this.setState(prevState => {
+      const newState = Object.assign({}, prevState);
+      const storedItem = newState.itemsUIState[product.name];
+      storedItem.selectedVersion = product.getVersionFromString(event.target.value);
       return newState;
     });
   }
@@ -88,7 +56,7 @@ class ProductListContainer extends Component {
         <ProductList
           list={this.state.list}
           itemsUIState={this.state.itemsUIState}
-          isFavouriteList={this.props.isFavouriteList}
+          title={this.props.title}
           handleFavouriteChange={this.props.handleFavouriteChange}
           handlePinChange={this.props.handlePinChange}
           handleProductClicked={this.handleProductClicked}
@@ -101,8 +69,9 @@ class ProductListContainer extends Component {
 
 ProductListContainer.propTypes = {
   list: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
-  isFavouriteList: PropTypes.bool.isRequired,
+  title: PropTypes.string,
   handleFavouriteChange: PropTypes.func.isRequired,
+  handlePinChange: PropTypes.func.isRequired,
 };
 
 export default ProductListContainer;

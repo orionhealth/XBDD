@@ -4,6 +4,8 @@ import { List, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import ProductListStyles from "./styles/ProductListStyles";
 import ProductListItem from "./ProductListItem";
+import Product from "../../../models/Product";
+import Version from "../../../models/Version";
 
 const ProductList = props => {
   if (!props.list) {
@@ -12,7 +14,7 @@ const ProductList = props => {
   return (
     <>
       <Typography variant="h5" className={props.classes.productListTitle}>
-        {props.isFavouriteList ? "Favourite" : "Product List"}
+        {props.title}
       </Typography>
       <List>
         {props.list.map(product => {
@@ -22,9 +24,9 @@ const ProductList = props => {
               itemUIState={props.itemsUIState[product.name]}
               key={product.name}
               version={props.version}
-              handleVersionSelected={props.handleVersionSelected}
               handleFavouriteChange={props.handleFavouriteChange}
               handleProductClicked={props.handleProductClicked}
+              handleVersionSelected={props.handleVersionSelected}
               handlePinChange={props.handlePinChange}
             />
           );
@@ -35,9 +37,19 @@ const ProductList = props => {
 };
 
 ProductList.propTypes = {
+  list: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
+  title: PropTypes.string,
+  version: PropTypes.instanceOf(Version),
+  itemUIState: PropTypes.arrayOf(
+    PropTypes.shape({
+      expanded: PropTypes.bool,
+      selectedVersion: PropTypes.instanceOf(Version),
+    })
+  ),
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
+  handlePinChange: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 export default withStyles(ProductListStyles)(ProductList);

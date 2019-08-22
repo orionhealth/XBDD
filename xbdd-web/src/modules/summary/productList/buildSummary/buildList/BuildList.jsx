@@ -1,84 +1,51 @@
 import React from "react";
+import PropTypes from "prop-types";
 import clsx from "clsx";
 import { loadCSS } from "fg-loadcss";
 import { List, ListItem, Icon, ListItemIcon, ListItemText, Checkbox } from "@material-ui/core";
+import Product from "../../../../../models/Product";
+import Version from "../../../../../models/Version";
 
-const getVersionString = version => {
-  return `${version.major}.${version.minor}.${version.servicePack}`;
-};
-
-const getBuildListByVersion = (versionList, versionString) => {
-  var selectedVersion = versionList.find(item => versionString === getVersionString(item));
-  if (selectedVersion) {
-    return selectedVersion.buildList;
-  }
-  return selectedVersion;
-};
-
-const getPinnedBuildList = (versionList, versionString) => {
-  var selectedVersion = versionList.find(item => versionString === getVersionString(item));
-  if (selectedVersion) {
-    return selectedVersion.pinnedBuildList;
-  }
-  return null;
-};
-
-const checkBuildPinStatus = (pinnedBuildList, build) =>
-  pinnedBuildList &&
-  pinnedBuildList.some(pinnedBuild => {
-    return pinnedBuild === build;
-  });
-
-const getOtherBuildList = (buildList, pinnedBuildList) => buildList.filter(build => !checkBuildPinStatus(pinnedBuildList, build));
+const renderBuildListByPin = (buildList, handlePinChange, product, version, isPinned) => (
+  <List>
+    {buildList.map(build => (
+      <ListItem button divider key={build}>
+        <ListItemText>Build {build}</ListItemText>
+        <ListItemIcon>
+          <Checkbox
+            icon={<Icon className={clsx("fas fa-thumbtack")} />}
+            checkedIcon={<Icon className={clsx("fas fa-thumbtack")} />}
+            checked={isPinned}
+            onClick={e => handlePinChange(e, product, version, build, isPinned)}
+          />
+        </ListItemIcon>
+      </ListItem>
+    ))}
+  </List>
+);
 
 const BuildList = props => {
   React.useEffect(() => {
     loadCSS("https://use.fontawesome.com/releases/v5.1.0/css/all.css", document.querySelector("#font-awesome-css"));
   }, []);
 
-  const product = props.product;
-  const versionString = getVersionString(props.version);
-  const buildList = getBuildListByVersion(props.versionList, versionString);
-  const pinnedBuildList = getPinnedBuildList(props.versionList, versionString);
-  const otherBuildList = getOtherBuildList(buildList, pinnedBuildList);
+  const { product, version } = props;
+  const pinnedBuildList = version.pinnedBuildList;
+  const otherBuildList = version.getUnpinnedBuildList();
 
   return (
     <>
-      <List>
-        {pinnedBuildList &&
-          pinnedBuildList.map(build => (
-            <ListItem button divider key={build}>
-              <ListItemText>Build {build}</ListItemText>
-              <ListItemIcon>
-                <Checkbox
-                  icon={<Icon className={clsx("fas fa-thumbtack")} />}
-                  checkedIcon={<Icon className={clsx("fas fa-thumbtack")} />}
-                  checked={true}
-                  onClick={e => props.handlePinChange(e, product, build, true, props.version)}
-                />
-              </ListItemIcon>
-            </ListItem>
-          ))}
-      </List>
-
-      <List>
-        {otherBuildList &&
-          otherBuildList.map(build => (
-            <ListItem button divider key={build}>
-              <ListItemText>Build {build}</ListItemText>
-              <ListItemIcon>
-                <Checkbox
-                  icon={<Icon className={clsx("fas fa-thumbtack")} />}
-                  checkedIcon={<Icon className={clsx("fas fa-thumbtack")} />}
-                  checked={false}
-                  onClick={e => props.handlePinChange(e, product, build, false, props.version)}
-                />
-              </ListItemIcon>
-            </ListItem>
-          ))}
-      </List>
+      {renderBuildListByPin(pinnedBuildList, props.handlePinChange, product, version, true)}
+      {renderBuildListByPin(otherBuildList, props.handlePinChange, product, version, false)}
     </>
   );
+};
+
+BuildList.propTypes = {
+  product: PropTypes.instanceOf(Product),
+  version: PropTypes.instanceOf(Version),
+  handlePinChange: PropTypes.func.isRequired,
+  classes: PropTypes.shape({}),
 };
 
 export default BuildList;

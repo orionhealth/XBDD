@@ -8,6 +8,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { withStyles } from "@material-ui/core/styles";
 import ProductListStyles from "./styles/ProductListStyles";
 import Product from "../../../models/Product";
+import Version from "../../../models/Version";
 import BuildSummaryContainer from "./buildSummary/BuildSummaryContainer";
 
 const clickEventWrapper = (event, product, handleFavouriteChange, handleProductClicked) => {
@@ -51,10 +52,15 @@ const ProductListItem = props => {
 };
 
 ProductListItem.propTypes = {
+  product: PropTypes.instanceOf(Product),
+  itemUIState: PropTypes.shape({
+    expanded: PropTypes.bool,
+    selectedVersion: PropTypes.instanceOf(Version),
+  }),
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
-  product: PropTypes.instanceOf(Product),
+  handlePinChange: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 
