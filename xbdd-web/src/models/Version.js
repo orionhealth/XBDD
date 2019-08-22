@@ -22,6 +22,9 @@ class Version {
     if (isPinned) {
       this.pinnedBuildList = this.pinnedBuildList.filter(item => item !== build);
     } else {
+      if (this.pinnedBuildList.some(item => item === build)) {
+        return;
+      }
       this.pinnedBuildList.push(build);
       this.pinnedBuildList = this.pinnedBuildList.sort().reverse();
     }

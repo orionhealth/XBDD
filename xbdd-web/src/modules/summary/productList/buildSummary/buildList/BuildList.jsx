@@ -1,20 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
-import clsx from "clsx";
-import { loadCSS } from "fg-loadcss";
-import { List, ListItem, Icon, ListItemIcon, ListItemText, Checkbox } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, Checkbox } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faThumbtack } from "@fortawesome/free-solid-svg-icons";
+import { withStyles } from "@material-ui/core/styles";
+import BuildListStyles from "./styles/BuildListStyles";
 import Product from "../../../../../models/Product";
 import Version from "../../../../../models/Version";
 
-const renderBuildListByPin = (buildList, handlePinChange, product, version, isPinned) => (
+const renderBuildListByPin = (buildList, handlePinChange, product, version, isPinned, classes) => (
   <List>
     {buildList.map(build => (
-      <ListItem button divider key={build}>
+      <ListItem button divider key={build} className={classes.buildListItem}>
         <ListItemText>Build {build}</ListItemText>
-        <ListItemIcon>
+        <ListItemIcon className={classes.listItemIcon}>
           <Checkbox
-            icon={<Icon className={clsx("fas fa-thumbtack")} />}
-            checkedIcon={<Icon className={clsx("fas fa-thumbtack")} />}
+            icon={<FontAwesomeIcon icon={faThumbtack} />}
+            checkedIcon={<FontAwesomeIcon icon={faThumbtack} />}
             checked={isPinned}
             onClick={e => handlePinChange(e, product, version, build, isPinned)}
           />
@@ -25,19 +27,19 @@ const renderBuildListByPin = (buildList, handlePinChange, product, version, isPi
 );
 
 const BuildList = props => {
-  React.useEffect(() => {
-    loadCSS("https://use.fontawesome.com/releases/v5.1.0/css/all.css", document.querySelector("#font-awesome-css"));
-  }, []);
-
   const { product, version } = props;
   const pinnedBuildList = version.pinnedBuildList;
   const otherBuildList = version.getUnpinnedBuildList();
 
   return (
-    <>
-      {renderBuildListByPin(pinnedBuildList, props.handlePinChange, product, version, true)}
-      {renderBuildListByPin(otherBuildList, props.handlePinChange, product, version, false)}
-    </>
+    <div className={props.classes.buildListContainer}>
+      {pinnedBuildList.length !== 0
+        ? renderBuildListByPin(pinnedBuildList, props.handlePinChange, product, version, true, props.classes)
+        : null}
+      {otherBuildList.length !== 0
+        ? renderBuildListByPin(otherBuildList, props.handlePinChange, product, version, false, props.classes)
+        : null}
+    </div>
   );
 };
 
@@ -48,4 +50,4 @@ BuildList.propTypes = {
   classes: PropTypes.shape({}),
 };
 
-export default BuildList;
+export default withStyles(BuildListStyles)(BuildList);

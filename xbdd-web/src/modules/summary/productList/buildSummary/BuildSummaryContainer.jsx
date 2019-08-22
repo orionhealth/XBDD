@@ -19,7 +19,7 @@ const buildVersionList = version => {
 const BuildSummaryContainer = props => {
   return (
     <Grid container>
-      <Grid item xs={3} className={props.classes.buildSummaryContainer}>
+      <Grid item xs={3} className={props.classes.versionsSelector}>
         <FormControl variant="outlined" style={{ paddingBottom: "10px" }}>
           <InputLabel>Versions</InputLabel>
           <Select

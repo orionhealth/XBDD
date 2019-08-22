@@ -1,6 +1,6 @@
 const BuildSummaryStyles = () => ({
-  buildSummaryContainer: {
-    padding: "3%",
+  versionsSelector: {
+    paddingTop: "16px",
   },
 });
 

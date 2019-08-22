@@ -8,10 +8,10 @@ class ProductListContainer extends Component {
   constructor(props) {
     super(props);
     const itemsUIState = {};
-    props.list.forEach(item => {
-      itemsUIState[item.name] = {
+    props.list.forEach(product => {
+      itemsUIState[product.name] = {
         expanded: false,
-        selectedVersion: item.versionList[0],
+        selectedVersion: product.versionList[0],
       };
     });
     this.state = {
@@ -25,8 +25,16 @@ class ProductListContainer extends Component {
 
   static getDerivedStateFromProps(props, state) {
     if (props.list !== state.list) {
+      const itemsUIState = {};
+      props.list.forEach(product => {
+        itemsUIState[product.name] = {
+          expanded: false,
+          selectedVersion: product.versionList[0],
+        };
+      });
       return {
         list: props.list,
+        itemsUIState,
       };
     }
     return null;
