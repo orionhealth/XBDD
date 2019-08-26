@@ -25,11 +25,18 @@ class SummaryContainer extends Component {
     });
   }
 
+  changeFavouriteStatus(isFavourite, product) {
+    if (isFavourite) {
+      return setProductFavouriteOff(product.name);
+    }
+    return setProductFavouriteOn(product.name);
+  }
+
   handleFavouriteChange(product) {
     const isFavourite = product.favourite;
     const newProductList = this.state.productList;
 
-    (isFavourite ? setProductFavouriteOff(product.name) : setProductFavouriteOn(product.name)).then(response => {
+    this.changeFavouriteStatus(isFavourite, product).then(response => {
       if (response.status === 200) {
         const newProduct = newProductList.find(item => item.name === product.name);
         newProduct.setFavouriteStatus(!isFavourite);
@@ -40,13 +47,17 @@ class SummaryContainer extends Component {
     });
   }
 
+  changePinStatus(product, version, build, isPinned) {
+    if (isPinned) {
+      return unPinABuild(product.name, version.major, version.minor, version.servicePack, build);
+    }
+    return pinABuild(product.name, version.major, version.minor, version.servicePack, build);
+  }
+
   handlePinChange(event, product, version, build, isPinned) {
     const newProductList = this.state.productList;
 
-    (isPinned
-      ? unPinABuild(product.name, version.major, version.minor, version.servicePack, build)
-      : pinABuild(product.name, version.major, version.minor, version.servicePack, build)
-    ).then(response => {
+    this.changePinStatus(product, version, build, isPinned).then(response => {
       if (response.status === 200) {
         const newProduct = newProductList.find(item => item.name === product.name);
         newProduct.updatePinnedBuildList(version, build, isPinned);

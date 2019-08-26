@@ -6,7 +6,7 @@ class Version {
       this.minor = data.coordinates.minor;
       this.servicePack = data.coordinates.servicePack;
       this.pinnedBuildList = data.pinned ? data.pinned : [];
-      this.buildList = data.builds.reverse();
+      this.buildList = data.builds.slice().reverse();
     }
   }
 
@@ -26,7 +26,7 @@ class Version {
         return;
       }
       this.pinnedBuildList.push(build);
-      this.pinnedBuildList = this.pinnedBuildList.sort().reverse();
+      this.pinnedBuildList.sort().reverse();
     }
   }
 }

@@ -10,7 +10,7 @@ class Product {
     }
   }
 
-  updateExistedProduct(data) {
+  addVersion(data) {
     this.versionList.push(new Version(data));
     this.versionList.sort(this.compareVersions);
   }

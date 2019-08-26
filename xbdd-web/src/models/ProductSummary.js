@@ -9,11 +9,15 @@ class ProductSummary {
     const products = {};
     data.forEach(element => {
       const productName = element.coordinates.product;
-      products[productName] ? products[productName].updateExistedProduct(element) : (products[productName] = new Product(element));
+      if (products[productName]) {
+        products[productName].addVersion(element);
+      } else {
+        products[productName] = new Product(element);
+      }
     });
     return Object.values(products);
   }
 
-  compareListByName = (a, b) => (a.name > b.name ? 1 : -1);
+  compareListByName = (a, b) => a.name.localeCompare(b.name);
 }
 export default ProductSummary;
