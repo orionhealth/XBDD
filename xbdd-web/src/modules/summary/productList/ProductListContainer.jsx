@@ -16,7 +16,7 @@ class ProductListContainer extends Component {
     });
     this.state = {
       list: props.list,
-      filteredList: props.list,
+      searchContent: null,
       itemsUIState,
     };
 
@@ -36,7 +36,6 @@ class ProductListContainer extends Component {
       });
       return {
         list: props.list,
-        filteredList: props.list,
         itemsUIState,
       };
     }
@@ -44,10 +43,7 @@ class ProductListContainer extends Component {
   }
 
   handleSearchProduct(event) {
-    const newList = this.state.list;
-    const filteredList = newList.filter(product => product.name.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1);
-
-    this.setState({ filteredList: filteredList });
+    this.setState({ searchContent: event.target.value });
   }
 
   handleProductClicked(product) {
@@ -69,10 +65,15 @@ class ProductListContainer extends Component {
   }
 
   render() {
+    var filteredList = this.state.list;
+    if (this.state.searchContent) {
+      const searchContent = this.state.searchContent.toLowerCase();
+      filteredList = filteredList.filter(product => product.name.toLowerCase().indexOf(searchContent) !== -1);
+    }
     return (
       <Card raised>
         <ProductList
-          list={this.state.filteredList}
+          list={filteredList}
           itemsUIState={this.state.itemsUIState}
           title={this.props.title}
           handleSearchProduct={this.handleSearchProduct}
