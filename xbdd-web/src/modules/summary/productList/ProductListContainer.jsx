@@ -7,32 +7,54 @@ import Product from "../../../models/Product";
 class ProductListContainer extends Component {
   constructor(props) {
     super(props);
+    const itemsUIState = {};
+    props.list.forEach(product => {
+      itemsUIState[product.name] = {
+        expanded: false,
+        selectedVersion: product.versionList[0],
+      };
+    });
     this.state = {
       list: props.list,
+      itemsUIState,
     };
 
     this.handleProductClicked = this.handleProductClicked.bind(this);
+    this.handleVersionSelected = this.handleVersionSelected.bind(this);
   }
 
   static getDerivedStateFromProps(props, state) {
     if (props.list !== state.list) {
+      const itemsUIState = {};
+      props.list.forEach(product => {
+        itemsUIState[product.name] = {
+          expanded: false,
+          selectedVersion: product.versionList[0],
+        };
+      });
       return {
         list: props.list,
+        itemsUIState,
       };
     }
     return null;
   }
 
   handleProductClicked(product) {
-    var newList = this.state.list;
-    const isExpanded = product.expanded;
-    newList.forEach(element => {
-      if (element === product) {
-        element.expanded = !isExpanded;
-      }
+    this.setState(prevState => {
+      const newState = Object.assign({}, prevState);
+      const storedItem = newState.itemsUIState[product.name];
+      storedItem.expanded = !storedItem.expanded;
+      return newState;
     });
-    this.setState({
-      list: newList,
+  }
+
+  handleVersionSelected(event, product) {
+    this.setState(prevState => {
+      const newState = Object.assign({}, prevState);
+      const storedItem = newState.itemsUIState[product.name];
+      storedItem.selectedVersion = product.getVersionFromString(event.target.value);
+      return newState;
     });
   }
 
@@ -41,9 +63,12 @@ class ProductListContainer extends Component {
       <Card raised>
         <ProductList
           list={this.state.list}
-          isFavouriteList={this.props.isFavouriteList}
+          itemsUIState={this.state.itemsUIState}
+          title={this.props.title}
           handleFavouriteChange={this.props.handleFavouriteChange}
+          handlePinChange={this.props.handlePinChange}
           handleProductClicked={this.handleProductClicked}
+          handleVersionSelected={this.handleVersionSelected}
         />
       </Card>
     );
@@ -52,8 +77,9 @@ class ProductListContainer extends Component {
 
 ProductListContainer.propTypes = {
   list: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
-  isFavouriteList: PropTypes.bool.isRequired,
+  title: PropTypes.string,
   handleFavouriteChange: PropTypes.func.isRequired,
+  handlePinChange: PropTypes.func.isRequired,
 };
 
 export default ProductListContainer;

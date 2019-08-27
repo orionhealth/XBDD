@@ -1,29 +1,41 @@
+import Version from "./Version";
+
 class Product {
   constructor(data) {
     if (data) {
-      this.id = data.id;
       this.name = data.coordinates.product;
-      this.major = data.coordinates.major;
-      this.minor = data.coordinates.minor;
-      this.servicePack = data.coordinates.servicePack;
-      this.buildList = data.coordinates.builds;
+      this.versionList = [];
+      this.versionList.push(new Version(data));
       this.favourite = data.favourite;
-      this.expanded = false;
     }
   }
 
-  clone() {
-    const rtn = new Product();
-    rtn.id = this.id;
-    rtn.name = this.name;
-    rtn.major = this.major;
-    rtn.minor = this.minor;
-    rtn.servicePack = this.servicePack;
-    rtn.buildList = this.buildList;
-    rtn.favourite = this.favourite;
-    rtn.expanded = this.expanded;
+  addVersion(data) {
+    this.versionList.push(new Version(data));
+    this.versionList.sort(this.compareVersions);
+  }
 
-    return rtn;
+  compareVersions(a, b) {
+    if (a.major !== b.major) {
+      return b.major - a.major;
+    } else if (a.minor !== b.minor) {
+      return b.minor - a.minor;
+    } else {
+      return b.servicePack - a.servicePack;
+    }
+  }
+
+  getVersionFromString(versionString) {
+    return this.versionList.find(version => version.getString() === versionString);
+  }
+
+  setFavouriteStatus(favourite) {
+    this.favourite = favourite;
+  }
+
+  updatePinnedBuildList(version, build, isPinned) {
+    const newVersion = this.versionList.find(item => item.id === version.id);
+    newVersion.updatePinnedBuildList(build, isPinned);
   }
 }
 

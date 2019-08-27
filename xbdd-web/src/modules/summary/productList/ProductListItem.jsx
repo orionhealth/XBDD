@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { List, Checkbox, ListItem, ListItemText, ListItemIcon, Collapse } from "@material-ui/core";
+import { Checkbox, ListItem, ListItemText, ListItemIcon, Collapse } from "@material-ui/core";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -8,6 +8,8 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { withStyles } from "@material-ui/core/styles";
 import ProductListStyles from "./styles/ProductListStyles";
 import Product from "../../../models/Product";
+import Version from "../../../models/Version";
+import BuildSummaryContainer from "./buildSummary/BuildSummaryContainer";
 
 const clickEventWrapper = (event, product, handleFavouriteChange, handleProductClicked) => {
   let node = event.target;
@@ -35,21 +37,30 @@ const ProductListItem = props => {
           <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={props.product.favourite} />
         </ListItemIcon>
         <ListItemText>{props.product.name}</ListItemText>
-        {props.product.expanded ? <ExpandLess /> : <ExpandMore />}
+        {props.itemUIState.expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
-      <Collapse in={props.product.expanded} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <div>Here should be a list of build data</div>
-        </List>
+      <Collapse in={props.itemUIState.expanded} timeout="auto" unmountOnExit>
+        <BuildSummaryContainer
+          product={props.product}
+          version={props.itemUIState.selectedVersion}
+          handleVersionSelected={props.handleVersionSelected}
+          handlePinChange={props.handlePinChange}
+        />
       </Collapse>
     </>
   );
 };
 
 ProductListItem.propTypes = {
+  product: PropTypes.instanceOf(Product),
+  itemUIState: PropTypes.shape({
+    expanded: PropTypes.bool,
+    selectedVersion: PropTypes.instanceOf(Version),
+  }),
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
-  product: PropTypes.instanceOf(Product),
+  handleVersionSelected: PropTypes.func.isRequired,
+  handlePinChange: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 
