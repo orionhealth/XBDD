@@ -16,9 +16,11 @@ class ProductListContainer extends Component {
     });
     this.state = {
       list: props.list,
+      searchContent: null,
       itemsUIState,
     };
 
+    this.handleSearchProduct = this.handleSearchProduct.bind(this);
     this.handleProductClicked = this.handleProductClicked.bind(this);
     this.handleVersionSelected = this.handleVersionSelected.bind(this);
   }
@@ -40,6 +42,10 @@ class ProductListContainer extends Component {
     return null;
   }
 
+  handleSearchProduct(event) {
+    this.setState({ searchContent: event.target.value });
+  }
+
   handleProductClicked(product) {
     this.setState(prevState => {
       const newState = Object.assign({}, prevState);
@@ -59,12 +65,18 @@ class ProductListContainer extends Component {
   }
 
   render() {
+    var filteredList = this.state.list;
+    if (this.state.searchContent) {
+      const searchContent = this.state.searchContent.toLowerCase();
+      filteredList = filteredList.filter(product => product.name.toLowerCase().indexOf(searchContent) !== -1);
+    }
     return (
       <Card raised>
         <ProductList
-          list={this.state.list}
+          list={filteredList}
           itemsUIState={this.state.itemsUIState}
           title={this.props.title}
+          handleSearchProduct={this.handleSearchProduct}
           handleFavouriteChange={this.props.handleFavouriteChange}
           handlePinChange={this.props.handlePinChange}
           handleProductClicked={this.handleProductClicked}

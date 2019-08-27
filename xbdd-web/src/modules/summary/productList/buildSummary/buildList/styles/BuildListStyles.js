@@ -8,7 +8,6 @@ const BuildListStyles = () => ({
   },
   buildListItem: {
     padding: "0px",
-    paddingBottom: "0px",
   },
 });
 

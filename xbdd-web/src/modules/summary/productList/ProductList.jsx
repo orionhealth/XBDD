@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { List, Typography } from "@material-ui/core";
+import { List, Typography, TextField, Grid } from "@material-ui/core";
+import Search from "@material-ui/icons/Search";
 import { withStyles } from "@material-ui/core/styles";
 import ProductListStyles from "./styles/ProductListStyles";
 import ProductListItem from "./ProductListItem";
@@ -16,6 +17,15 @@ const ProductList = props => {
       <Typography variant="h5" className={props.classes.productListTitle}>
         {props.title}
       </Typography>
+      <Grid container spacing={1} alignItems="flex-end" className={props.classes.searchBar}>
+        <Grid item>
+          <Search />
+        </Grid>
+        <Grid item>
+          <TextField label="Search" onChange={e => props.handleSearchProduct(e)} />
+        </Grid>
+      </Grid>
+
       <List>
         {props.list.map(product => {
           return (

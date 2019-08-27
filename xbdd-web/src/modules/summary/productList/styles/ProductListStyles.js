@@ -2,7 +2,15 @@ const ProductListStyles = () => ({
   productListTitle: {
     paddingTop: "10px",
     paddingBottom: "10px",
-    borderBottom: "3px solid rgba(0, 0, 0, 0.23)",
+    backgroundColor: "#457B9D",
+    color: "white",
+  },
+  titleText: {
+    color: "white",
+    marginLeft: "20px",
+  },
+  searchBar: {
+    justifyContent: "center",
   },
   productListItem: {
     paddingTop: "2px",
