@@ -32,7 +32,12 @@ const BuildSummaryContainer = props => {
         </FormControl>
       </Grid>
       <Grid item xs={9}>
-        <BuildList product={props.product} version={props.version} handlePinChange={props.handlePinChange} />
+        <BuildList
+          product={props.product}
+          version={props.version}
+          handlePinChange={props.handlePinChange}
+          handleBuildSelected={props.handleBuildSelected}
+        />
       </Grid>
     </Grid>
   );
@@ -43,6 +48,7 @@ BuildSummaryContainer.propTypes = {
   version: PropTypes.instanceOf(Version),
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
+  handleBuildSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

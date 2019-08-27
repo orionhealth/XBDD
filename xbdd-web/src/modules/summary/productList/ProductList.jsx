@@ -38,6 +38,7 @@ const ProductList = props => {
               handleProductClicked={props.handleProductClicked}
               handleVersionSelected={props.handleVersionSelected}
               handlePinChange={props.handlePinChange}
+              handleBuildSelected={props.handleBuildSelected}
             />
           );
         })}
@@ -60,6 +61,7 @@ ProductList.propTypes = {
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
+  handleBuildSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 export default withStyles(ProductListStyles)(ProductList);
