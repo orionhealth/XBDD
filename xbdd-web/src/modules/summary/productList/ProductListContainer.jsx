@@ -16,9 +16,11 @@ class ProductListContainer extends Component {
     });
     this.state = {
       list: props.list,
+      filteredList: props.list,
       itemsUIState,
     };
 
+    this.handleSearchProduct = this.handleSearchProduct.bind(this);
     this.handleProductClicked = this.handleProductClicked.bind(this);
     this.handleVersionSelected = this.handleVersionSelected.bind(this);
   }
@@ -34,10 +36,18 @@ class ProductListContainer extends Component {
       });
       return {
         list: props.list,
+        filteredList: props.list,
         itemsUIState,
       };
     }
     return null;
+  }
+
+  handleSearchProduct(event) {
+    const newList = this.state.list;
+    const filteredList = newList.filter(product => product.name.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1);
+
+    this.setState({ filteredList: filteredList });
   }
 
   handleProductClicked(product) {
@@ -62,9 +72,10 @@ class ProductListContainer extends Component {
     return (
       <Card raised>
         <ProductList
-          list={this.state.list}
+          list={this.state.filteredList}
           itemsUIState={this.state.itemsUIState}
           title={this.props.title}
+          handleSearchProduct={this.handleSearchProduct}
           handleFavouriteChange={this.props.handleFavouriteChange}
           handlePinChange={this.props.handlePinChange}
           handleProductClicked={this.handleProductClicked}
