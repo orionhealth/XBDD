@@ -39,7 +39,7 @@ class TagListContainer extends Component {
 
   filterTags() {
     const tags = this.props.report.tagList;
-    
+
     return tags.filter(
       tag =>
         (this.state.filterStates.passedSelected && tag.containsPassed) ||

@@ -1,11 +1,11 @@
-import React from 'react';
-import { PropTypes } from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import ListItem from '@material-ui/core/ListItem';
-import Tag from '../../../../models/Tag';
-import { tagListItemStyles } from '../styles/TagListStyles';
+import React from "react";
+import { PropTypes } from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import ListItem from "@material-ui/core/ListItem";
+import Tag from "../../../../models/Tag";
+import { tagListItemStyles } from "../styles/TagListStyles";
 
-const TagListItemView = (props) => {
+const TagListItemView = props => {
   const { tag, classes, onSelectTag, isSelected } = props;
   let className = classes.xbddTagListItemContainer;
 
@@ -15,7 +15,7 @@ const TagListItemView = (props) => {
   const onClick = () => onSelectTag(props.tag);
 
   return (
-    <ListItem button onClick={onClick} className={className}>
+    <ListItem button divider onClick={onClick} className={className}>
       {tag.name}
     </ListItem>
   );

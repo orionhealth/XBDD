@@ -1,6 +1,6 @@
 import React from "react";
 import { PropTypes } from "prop-types";
-import { withStyles, MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import DoneIcon from "@material-ui/icons/Done";
@@ -10,61 +10,44 @@ import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import { tagListFilterButtonStyles } from "../styles/TagListStyles";
 import { Card } from "@material-ui/core";
 
-const buttonTheme = color =>
-  createMuiTheme({
-    palette: {
-      primary: { main: color },
-      secondary: { main: "#E0E0E0" },
-    },
-    typography: {
-      useNextVariants: true,
-    },
-  });
-
 const createButton = variant => (
-  <MuiThemeProvider theme={variant.theme}>
-    <Tooltip title={variant.tooltip} placement="top">
-      <IconButton className={variant.className} onClick={variant.handler} variant="outlined" size="small" color={variant.color}>
-        {variant.icon}
-      </IconButton>
-    </Tooltip>
-  </MuiThemeProvider>
+  <Tooltip title={variant.tooltip} placement="top">
+    <IconButton className={`${variant.colorClass} ${variant.buttonClass}`} onClick={variant.handler} variant="outlined">
+      {variant.icon}
+    </IconButton>
+  </Tooltip>
 );
 
 const TagListFilterButtonsView = props => {
   const { classes, filterStates, onFilterButtonClick } = props;
   const variants = {
     passed: {
-      theme: buttonTheme("#1d3557"),
-      icon: <DoneIcon className={classes.xbddFilterButtonIcon} />,
+      icon: <DoneIcon />,
       tooltip: "Passed",
-      color: filterStates.passedSelected ? "primary" : "secondary",
+      colorClass: filterStates.passedSelected ? classes.xbddFilterButtonPassed : classes.xbddFilterButtonUnselected,
       handler: () => onFilterButtonClick("passedSelected"),
-      className: `${classes.xbddFilterButton} ${classes.xbddFilterButtonFirst}`,
+      buttonClass: `${classes.xbddFilterButton}`,
     },
     failed: {
-      theme: buttonTheme("#E63946"),
-      icon: <ErrorOutlineIcon className={classes.xbddFilterButtonIcon} />,
+      icon: <ErrorOutlineIcon />,
       tooltip: "Failed",
-      color: filterStates.failedSelected ? "primary" : "secondary",
+      colorClass: filterStates.failedSelected ? classes.xbddFilterButtonFailed : classes.xbddFilterButtonUnselected,
       handler: () => onFilterButtonClick("failedSelected"),
-      className: `${classes.xbddFilterButton}`,
+      buttonClass: `${classes.xbddFilterButton}`,
     },
     undefined: {
-      theme: buttonTheme("#A8DADC"),
-      icon: <HelpOutlineIcon className={classes.xbddFilterButtonIcon} />,
+      icon: <HelpOutlineIcon />,
       tooltip: "Undefined",
-      color: filterStates.undefinedSelected ? "primary" : "secondary",
+      colorClass: filterStates.undefinedSelected ? classes.xbddFilterButtonUndefined : classes.xbddFilterButtonUnselected,
       handler: () => onFilterButtonClick("undefinedSelected"),
-      className: `${classes.xbddFilterButton}`,
+      buttonClass: `${classes.xbddFilterButton}`,
     },
     skipped: {
-      theme: buttonTheme("#457B9D"),
-      icon: <BlockIcon className={classes.xbddFilterButtonIcon} />,
+      icon: <BlockIcon />,
       tooltip: "Skipped",
-      color: filterStates.skippedSelected ? "primary" : "secondary",
+      colorClass: filterStates.skippedSelected ? classes.xbddFilterButtonSkipped : classes.xbddFilterButtonUnselected,
       handler: () => onFilterButtonClick("skippedSelected"),
-      className: `${classes.xbddFilterButton} ${classes.xbddFilterButtonLast}`,
+      buttonClass: `${classes.xbddFilterButton}`,
     },
   };
 
