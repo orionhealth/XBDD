@@ -42,13 +42,13 @@ const tagListFilterButtonStyles = theme => ({
     borderRight: "1px solid rgba(0, 0, 0, 0.23)",
   },
   xbddFilterButtonPassed: {
-    color: "#1d3557",
+    color: "#576E5D",
   },
   xbddFilterButtonFailed: {
-    color: "#E63946",
+    color: "#AC534F",
   },
   xbddFilterButtonUndefined: {
-    color: "#A8DADC",
+    color: "#C39575",
   },
   xbddFilterButtonSkipped: {
     color: "#457B9D",
@@ -63,9 +63,24 @@ const tagListItemStyles = {
   xbddTagListItemContainer: {
     width: "100%",
   },
-  xbddTagListItemContainerSelected: {
+  xbddTagListItemContainerExpanded: {
     backgroundColor: "rgba(0, 0, 0, 0.1)",
     width: "100%",
+  },
+  xbddFeatureListContainer: {
+    paddingLeft: "30px",
+  },
+  xbddFeatureListItemPassed: {
+    color: "#576E5D",
+  },
+  xbddFeatureListItemFailed: {
+    color: "#AC534F",
+  },
+  xbddFeatureListItemUndefined: {
+    color: "#C39575",
+  },
+  xbddFeatureListItemSkipped: {
+    color: "#457B9D",
   },
 };
 
