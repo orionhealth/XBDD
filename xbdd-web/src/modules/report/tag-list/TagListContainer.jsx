@@ -1,79 +1,79 @@
 import React, { Component } from "react";
 import { PropTypes } from "prop-types";
-import Report from "../../../models/Report";
+import Tag from "../../../models/Tag";
 import TagListView from "./TagListView";
 
 class TagListContainer extends Component {
   constructor(props) {
     super(props);
 
-    const itemsUIState = {};
-    props.report.tagList.forEach(tag => {
-      itemsUIState[tag.name] = {
-        expanded: false,
-      };
+    const selectedTags = {};
+    props.tagList.forEach(tag => {
+      selectedTags[tag.name] = false;
     });
 
     this.state = {
-      filterStates: {
-        passedSelected: true,
-        undefinedSelected: true,
-        failedSelected: true,
-        skippedSelected: true,
+      selectedStatus: {
+        passed: true,
+        failed: true,
+        undefined: true,
+        skipped: true,
       },
-      itemsUIState: itemsUIState,
+      selectedTags: selectedTags,
     };
-    this.onFilterButtonClick = this.onFilterButtonClick.bind(this);
-    this.onSelectTag = this.onSelectTag.bind(this);
+    this.handleFilterButtonClick = this.handleFilterButtonClick.bind(this);
+    this.handleTagSelect = this.handleTagSelect.bind(this);
   }
 
   componentDidCatch(error, info) {
     console.error(error, info);
   }
 
-  onFilterButtonClick(stateAttribute) {
+  handleFilterButtonClick(status) {
     this.setState(prevState =>
-      Object.assign(prevState.filterStates, {
-        [stateAttribute]: !prevState.filterStates[stateAttribute],
+      Object.assign({}, prevState, {
+        selectedStatus: Object.assign({}, prevState.selectedStatus, {
+          [status]: !prevState.selectedStatus[status],
+        }),
       }));
   }
 
-  onSelectTag(tag) {
-    this.setState(prevState => {
-      const newState = Object.assign({}, prevState);
-      const storedItem = newState.itemsUIState[tag.name];
-      storedItem.expanded = !storedItem.expanded;
-      return newState;
-    });
+  handleTagSelect(tag) {
+    this.setState(prevState =>
+      Object.assign({}, prevState, {
+        selectedTags: Object.assign({}, prevState.selectedTags, {
+          [tag]: !prevState.selectedTags[tag],
+        }),
+      }));
   }
 
   filterTags() {
-    const tags = this.props.report.tagList;
+    const tagList = this.props.tagList;
 
-    return tags.filter(
+    return tagList.filter(
       tag =>
-        (this.state.filterStates.passedSelected && tag.containsPassed) ||
-        (this.state.filterStates.failedSelected && tag.containsFailed) ||
-        (this.state.filterStates.undefinedSelected && tag.containsUndefined) ||
-        (this.state.filterStates.skippedSelected && tag.containsSkipped)
+        (this.state.selectedStatus.passed && tag.containsPassed) ||
+        (this.state.selectedStatus.failed && tag.containsFailed) ||
+        (this.state.selectedStatus.undefined && tag.containsUndefined) ||
+        (this.state.selectedStatus.skipped && tag.containsSkipped)
     );
   }
 
   render() {
     return (
       <TagListView
-        tags={this.filterTags()}
-        filterStates={this.state.filterStates}
-        itemsUIState={this.state.itemsUIState}
-        onSelectTag={this.onSelectTag}
-        onFilterButtonClick={this.onFilterButtonClick}
+        tagList={this.filterTags()}
+        selectedStatus={this.state.selectedStatus}
+        selectedTags={this.state.selectedTags}
+        handleFilterButtonClick={this.handleFilterButtonClick}
+        handleTagSelect={this.handleTagSelect}
       />
     );
   }
 }
 
 TagListContainer.propTypes = {
-  report: PropTypes.instanceOf(Report).isRequired,
+  tagList: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
 };
 
 export default TagListContainer;

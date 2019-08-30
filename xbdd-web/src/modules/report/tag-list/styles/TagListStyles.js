@@ -1,5 +1,6 @@
 const tagListStyles = theme => ({
   xbddTagListContainer: {
+    height: "calc(100vh - 130px)",
     backgroundColor: theme.palette.background.paper,
     borderRadius: "0 0 0 10px",
     padding: "24px",
@@ -9,7 +10,7 @@ const tagListStyles = theme => ({
     backgroundColor: theme.palette.background.paper,
     // border: '1px solid rgba(0, 0, 0, 0.23)',
     borderRadius: "5px",
-    height: "calc(100vh - 180px)", // 64px for navbar, 5px navbar margin, 48px in padding, 48px buttons, 15px button margins
+    height: "calc(100% - 60px)", // 64px for navbar, 5px navbar margin, 48px in padding, 48px buttons, 15px button margins
     overflow: "scroll",
     position: "relative",
     width: "100%",

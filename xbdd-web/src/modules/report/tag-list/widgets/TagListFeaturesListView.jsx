@@ -1,11 +1,11 @@
 import React from "react";
+import { PropTypes } from "prop-types";
 import { List, ListItem } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { tagListItemStyles } from "../styles/TagListStyles";
 
 const TagListFeaturesListView = props => {
-  const { features, classes } = props;
-
+  const { featureList, classes } = props;
   const classesMap = {
     passed: classes.xbddFeatureListItemPassed,
     failed: classes.xbddFeatureListItemFailed,
@@ -15,7 +15,7 @@ const TagListFeaturesListView = props => {
 
   return (
     <List className={classes.xbddFeatureListContainer}>
-      {features.map(item => {
+      {featureList.map(item => {
         return (
           <ListItem button key={item.id} className={classesMap[item.calculatedStatus]}>
             {item.name}
@@ -24,6 +24,11 @@ const TagListFeaturesListView = props => {
       })}
     </List>
   );
+};
+
+TagListFeaturesListView.propTypes = {
+  featureList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  classes: PropTypes.shape({}).isRequired,
 };
 
 export default withStyles(tagListItemStyles)(TagListFeaturesListView);

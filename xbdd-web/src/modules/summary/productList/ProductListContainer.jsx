@@ -7,39 +7,56 @@ import Product from "../../../models/Product";
 class ProductListContainer extends Component {
   constructor(props) {
     super(props);
-    const itemsUIState = {};
-    props.list.forEach(product => {
-      itemsUIState[product.name] = {
-        expanded: false,
-        selectedVersion: product.versionList[0],
-      };
-    });
+
+    // const itemsUIState = {};
+    // props.list.forEach(product => {
+    //   if (!itemsUIState[product.name]) {
+    //     itemsUIState[product.name] = {
+    //       expanded: false,
+    //       selectedVersion: product.versionList[0],
+    //     };
+    //   }
+    // });
     this.state = {
-      list: props.list,
       searchContent: null,
-      itemsUIState,
+      itemsUIState: {},
     };
 
+    this.getItemsUIState = this.getItemsUIState.bind(this);
     this.handleSearchProduct = this.handleSearchProduct.bind(this);
     this.handleProductClicked = this.handleProductClicked.bind(this);
     this.handleVersionSelected = this.handleVersionSelected.bind(this);
   }
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.list !== state.list) {
-      const itemsUIState = {};
-      props.list.forEach(product => {
-        itemsUIState[product.name] = {
-          expanded: false,
-          selectedVersion: product.versionList[0],
-        };
-      });
-      return {
-        list: props.list,
-        itemsUIState,
+  // static getDerivedStateFromProps(props, state) {
+  //   if (props.list !== state.list) {
+  //     const itemsUIState = {};
+  //     props.list.forEach(product => {
+  //       if (!itemsUIState[product.name]) {
+  //         itemsUIState[product.name] = {
+  //           expanded: false,
+  //           selectedVersion: product.versionList[0],
+  //         };
+  //       }
+  //     });
+  //     return {
+  //       list: props.list,
+  //       itemsUIState,
+  //     };
+  //   }
+  //   return null;
+  // }
+  //
+  getItemsUIState() {
+    const itemsUIState = {};
+    this.props.list.forEach(product => {
+      const itemUIState = this.state.itemsUIState[product.name];
+      itemsUIState[product.name] = {
+        expanded: itemUIState && itemUIState.expanded ? itemUIState.expanded : false,
+        selectedVersion: itemUIState && itemUIState.selectedVersion ? itemUIState.selectedVersion : product.versionList[0],
       };
-    }
-    return null;
+    });
+    return itemsUIState;
   }
 
   handleSearchProduct(event) {
@@ -49,6 +66,9 @@ class ProductListContainer extends Component {
   handleProductClicked(product) {
     this.setState(prevState => {
       const newState = Object.assign({}, prevState);
+      if (!newState.itemsUIState[product.name]) {
+        newState.itemsUIState[product.name] = {};
+      }
       const storedItem = newState.itemsUIState[product.name];
       storedItem.expanded = !storedItem.expanded;
       return newState;
@@ -58,6 +78,9 @@ class ProductListContainer extends Component {
   handleVersionSelected(event, product) {
     this.setState(prevState => {
       const newState = Object.assign({}, prevState);
+      if (!newState.itemsUIState[product.name]) {
+        newState.itemsUIState[product.name] = {};
+      }
       const storedItem = newState.itemsUIState[product.name];
       storedItem.selectedVersion = product.getVersionFromString(event.target.value);
       return newState;
@@ -65,7 +88,7 @@ class ProductListContainer extends Component {
   }
 
   render() {
-    var filteredList = this.state.list;
+    var filteredList = this.props.list;
     if (this.state.searchContent) {
       const searchContent = this.state.searchContent.toLowerCase();
       filteredList = filteredList.filter(product => product.name.toLowerCase().indexOf(searchContent) !== -1);
@@ -74,7 +97,7 @@ class ProductListContainer extends Component {
       <Card raised>
         <ProductList
           list={filteredList}
-          itemsUIState={this.state.itemsUIState}
+          itemsUIState={this.getItemsUIState()}
           title={this.props.title}
           handleSearchProduct={this.handleSearchProduct}
           handleFavouriteChange={this.props.handleFavouriteChange}

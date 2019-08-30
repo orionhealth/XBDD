@@ -7,25 +7,15 @@ import TagListFeaturesListView from "./TagListFeaturesListView";
 import Tag from "../../../../models/Tag";
 import { tagListItemStyles } from "../styles/TagListStyles";
 
-const filterFeaturesByTag = (features, filterStates) => {
-  const filterMap = {
-    passed: filterStates.passedSelected,
-    failed: filterStates.passedSelected,
-    undefined: filterStates.undefinedSelected,
-    skipped: filterStates.skippedSelected,
-  };
-  return features.filter(feature => filterMap[feature.calculatedStatus]);
-};
-
 const TagListItemView = props => {
-  const { tag, classes, itemsUIState, filterStates, onSelectTag } = props;
-  const features = filterFeaturesByTag(tag.features, filterStates);
+  const { tag, isSelected, selectedStatus, handleTagSelect, classes } = props;
+  const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
   let className = classes.xbddTagListItemContainer;
 
-  if (itemsUIState.expanded) {
+  if (isSelected) {
     className += ` ${classes.xbddTagListItemContainerExpanded}`;
   }
-  const onClick = () => onSelectTag(props.tag);
+  const onClick = () => handleTagSelect(tag.name);
 
   return (
     <>
@@ -34,10 +24,10 @@ const TagListItemView = props => {
           <TurnedIn />
         </ListItemIcon>
         <ListItemText>{tag.name}</ListItemText>
-        {itemsUIState.expanded ? <ExpandLess /> : <ExpandMore />}
+        {isSelected ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
-      <Collapse in={itemsUIState.expanded} timeout="auto" unmountOnExit>
-        <TagListFeaturesListView features={features} />
+      <Collapse in={isSelected} timeout="auto" unmountOnExit>
+        <TagListFeaturesListView featureList={featureList} />
       </Collapse>
     </>
   );
@@ -45,8 +35,10 @@ const TagListItemView = props => {
 
 TagListItemView.propTypes = {
   tag: PropTypes.instanceOf(Tag).isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  selectedStatus: PropTypes.shape({}).isRequired,
+  handleTagSelect: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
-  onSelectTag: PropTypes.func.isRequired,
 };
 
 export default withStyles(tagListItemStyles)(TagListItemView);

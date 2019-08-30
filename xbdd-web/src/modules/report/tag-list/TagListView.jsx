@@ -8,33 +8,34 @@ import TagListFilterButtonsView from "./widgets/TagListFilterButtonsView";
 import { tagListStyles } from "./styles/TagListStyles";
 import { Card } from "@material-ui/core";
 
-const mapTagToTagListItem = (tag, itemsUIState, filterStates, onSelectTag) => (
-  <TagListItemView tag={tag} key={tag.name} itemsUIState={itemsUIState} filterStates={filterStates} onSelectTag={onSelectTag} />
+const mapTagToTagListItem = (tag, isSelected, selectedStatus, handleTagSelect) => (
+  <TagListItemView tag={tag} key={tag.name} isSelected={isSelected} selectedStatus={selectedStatus} handleTagSelect={handleTagSelect} />
 );
 
-const renderList = (className, tags, itemsUIState, filterStates, onSelectTag) => {
-  if (!tags.length) {
+const renderList = (className, tagList, selectedTags, selectedStatus, handleTagSelect) => {
+  if (!tagList.length) {
     return null;
   }
   return (
     <Card raised className={className}>
-      <List component="ul">{tags.map(tag => mapTagToTagListItem(tag, itemsUIState[tag.name], filterStates, onSelectTag))}</List>
+      <List component="ul">{tagList.map(tag => mapTagToTagListItem(tag, selectedTags[tag.name], selectedStatus, handleTagSelect))}</List>
     </Card>
   );
 };
 
 const TagListView = props => (
   <div className={props.classes.xbddTagListContainer}>
-    <TagListFilterButtonsView filterStates={props.filterStates} onFilterButtonClick={props.onFilterButtonClick} />
-    {renderList(props.classes.xbddTagList, props.tags, props.itemsUIState, props.filterStates, props.onSelectTag)}
+    <TagListFilterButtonsView selectedStatus={props.selectedStatus} handleFilterButtonClick={props.handleFilterButtonClick} />
+    {renderList(props.classes.xbddTagList, props.tagList, props.selectedTags, props.selectedStatus, props.handleTagSelect)}
   </div>
 );
 
 TagListView.propTypes = {
-  tags: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
-  filterStates: PropTypes.shape({}).isRequired,
-  onSelectTag: PropTypes.func,
-  onFilterButtonClick: PropTypes.func,
+  tagList: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
+  selectedTags: PropTypes.shape({}).isRequired,
+  selectedStatus: PropTypes.shape({}).isRequired,
+  handleFilterButtonClick: PropTypes.func,
+  handleTagSelect: PropTypes.func,
   classes: PropTypes.shape({
     xbddTagListContainer: PropTypes.string,
     xbddTagList: PropTypes.string,
@@ -42,8 +43,8 @@ TagListView.propTypes = {
 };
 
 TagListView.defaultProps = {
-  tags: [],
-  selectedTag: null,
+  tagList: [],
+  selectedStatus: null,
   onSelectTag: () => {},
   onFilterButtonClick: () => {},
 };

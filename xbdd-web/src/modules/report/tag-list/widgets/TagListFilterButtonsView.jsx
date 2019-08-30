@@ -19,34 +19,34 @@ const createButton = variant => (
 );
 
 const TagListFilterButtonsView = props => {
-  const { classes, filterStates, onFilterButtonClick } = props;
+  const { selectedStatus, handleFilterButtonClick, classes } = props;
   const variants = {
     passed: {
       icon: <DoneIcon />,
       tooltip: "Passed",
-      colorClass: filterStates.passedSelected ? classes.xbddFilterButtonPassed : classes.xbddFilterButtonUnselected,
-      handler: () => onFilterButtonClick("passedSelected"),
+      colorClass: selectedStatus.passed ? classes.xbddFilterButtonPassed : classes.xbddFilterButtonUnselected,
+      handler: () => handleFilterButtonClick("passed"),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     failed: {
       icon: <ErrorOutlineIcon />,
       tooltip: "Failed",
-      colorClass: filterStates.failedSelected ? classes.xbddFilterButtonFailed : classes.xbddFilterButtonUnselected,
-      handler: () => onFilterButtonClick("failedSelected"),
+      colorClass: selectedStatus.failed ? classes.xbddFilterButtonFailed : classes.xbddFilterButtonUnselected,
+      handler: () => handleFilterButtonClick("failed"),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     undefined: {
       icon: <HelpOutlineIcon />,
       tooltip: "Undefined",
-      colorClass: filterStates.undefinedSelected ? classes.xbddFilterButtonUndefined : classes.xbddFilterButtonUnselected,
-      handler: () => onFilterButtonClick("undefinedSelected"),
+      colorClass: selectedStatus.undefined ? classes.xbddFilterButtonUndefined : classes.xbddFilterButtonUnselected,
+      handler: () => handleFilterButtonClick("undefined"),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     skipped: {
       icon: <BlockIcon />,
       tooltip: "Skipped",
-      colorClass: filterStates.skippedSelected ? classes.xbddFilterButtonSkipped : classes.xbddFilterButtonUnselected,
-      handler: () => onFilterButtonClick("skippedSelected"),
+      colorClass: selectedStatus.skipped ? classes.xbddFilterButtonSkipped : classes.xbddFilterButtonUnselected,
+      handler: () => handleFilterButtonClick("skipped"),
       buttonClass: `${classes.xbddFilterButton}`,
     },
   };
@@ -62,8 +62,8 @@ const TagListFilterButtonsView = props => {
 };
 
 TagListFilterButtonsView.propTypes = {
-  filterStates: PropTypes.shape({}).isRequired,
-  onFilterButtonClick: PropTypes.func.isRequired,
+  selectedStatus: PropTypes.shape({}).isRequired,
+  handleFilterButtonClick: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
 };
 
