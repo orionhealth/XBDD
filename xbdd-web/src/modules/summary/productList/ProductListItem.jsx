@@ -45,6 +45,7 @@ const ProductListItem = props => {
           version={props.itemUIState.selectedVersion}
           handleVersionSelected={props.handleVersionSelected}
           handlePinChange={props.handlePinChange}
+          handleBuildSelected={props.handleBuildSelected}
         />
       </Collapse>
     </>
@@ -61,6 +62,7 @@ ProductListItem.propTypes = {
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
+  handleBuildSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

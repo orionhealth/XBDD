@@ -86,6 +86,7 @@ class SummaryContainer extends Component {
                     title={"Product List"}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
+                    handleBuildSelected={this.props.handleBuildSelected}
                   />
                 </Card>
               </Grid>
@@ -96,6 +97,7 @@ class SummaryContainer extends Component {
                     title={"Favourite"}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
+                    handleBuildSelected={this.props.handleBuildSelected}
                   />
                 </Card>
               </Grid>
@@ -109,6 +111,7 @@ class SummaryContainer extends Component {
 }
 
 SummaryContainer.propTypes = {
+  handleBuildSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

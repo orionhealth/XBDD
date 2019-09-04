@@ -8,18 +8,32 @@ import BuildListStyles from "./styles/BuildListStyles";
 import Product from "../../../../../models/Product";
 import Version from "../../../../../models/Version";
 
-const renderBuildListByPin = (buildList, handlePinChange, product, version, isPinned, classes) => (
+const clickEventWrapper = (event, product, version, build, isPinned, handlePinChange, handleBuildSelected) => {
+  let node = event.target;
+
+  while (node) {
+    if (node.className === "MuiIconButton-label") {
+      handlePinChange(event, product, version, build, isPinned);
+      return;
+    }
+    node = node.parentNode;
+  }
+  handleBuildSelected(event, product.name, version.getString(), build);
+};
+
+const renderBuildListByPin = (buildList, handlePinChange, handleBuildSelected, product, version, isPinned, classes) => (
   <List>
     {buildList.map(build => (
-      <ListItem button divider key={build} className={classes.buildListItem}>
+      <ListItem
+        button
+        divider
+        key={build}
+        className={classes.buildListItem}
+        onClick={e => clickEventWrapper(e, product, version, build, isPinned, handlePinChange, handleBuildSelected)}
+      >
         <ListItemText>Build {build}</ListItemText>
         <ListItemIcon className={classes.listItemIcon}>
-          <Checkbox
-            icon={<FontAwesomeIcon icon={faThumbtack} />}
-            checkedIcon={<FontAwesomeIcon icon={faThumbtack} />}
-            checked={isPinned}
-            onClick={e => handlePinChange(e, product, version, build, isPinned)}
-          />
+          <Checkbox icon={<FontAwesomeIcon icon={faThumbtack} />} checkedIcon={<FontAwesomeIcon icon={faThumbtack} />} checked={isPinned} />
         </ListItemIcon>
       </ListItem>
     ))}
@@ -34,10 +48,10 @@ const BuildList = props => {
   return (
     <div className={props.classes.buildListContainer}>
       {pinnedBuildList.length !== 0
-        ? renderBuildListByPin(pinnedBuildList, props.handlePinChange, product, version, true, props.classes)
+        ? renderBuildListByPin(pinnedBuildList, props.handlePinChange, props.handleBuildSelected, product, version, true, props.classes)
         : null}
       {otherBuildList.length !== 0
-        ? renderBuildListByPin(otherBuildList, props.handlePinChange, product, version, false, props.classes)
+        ? renderBuildListByPin(otherBuildList, props.handlePinChange, props.handleBuildSelected, product, version, false, props.classes)
         : null}
     </div>
   );
@@ -47,6 +61,7 @@ BuildList.propTypes = {
   product: PropTypes.instanceOf(Product),
   version: PropTypes.instanceOf(Version),
   handlePinChange: PropTypes.func.isRequired,
+  handleBuildSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

@@ -81,6 +81,7 @@ class ProductListContainer extends Component {
           handlePinChange={this.props.handlePinChange}
           handleProductClicked={this.handleProductClicked}
           handleVersionSelected={this.handleVersionSelected}
+          handleBuildSelected={this.props.handleBuildSelected}
         />
       </Card>
     );
@@ -92,6 +93,7 @@ ProductListContainer.propTypes = {
   title: PropTypes.string,
   handleFavouriteChange: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
+  handleBuildSelected: PropTypes.func.isRequired,
 };
 
 export default ProductListContainer;

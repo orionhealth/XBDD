@@ -1,12 +1,11 @@
-const getStatusPresences = (features) => {
-  const findStatus = status =>
-    features.find(feature => feature.elements.find(element => element.steps.find(step => step.result.status === status)));
+const getStatusPresences = features => {
+  const findStatus = status => features.find(feature => feature.calculatedStatus === status);
 
   return {
-    containsPassed: !!findStatus('passed'),
-    containsUndefined: !!findStatus('undefined'),
-    containsFailed: !!findStatus('failed'),
-    containsSkipped: !!findStatus('skipped'),
+    containsPassed: !!findStatus("passed"),
+    containsUndefined: !!findStatus("undefined"),
+    containsFailed: !!findStatus("failed"),
+    containsSkipped: !!findStatus("skipped"),
   };
 };
 
