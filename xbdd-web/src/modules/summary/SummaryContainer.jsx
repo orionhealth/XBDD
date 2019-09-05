@@ -20,7 +20,7 @@ class SummaryContainer extends Component {
     getSummaryOfReports().then(summaryData => {
       const productList = new ProductSummary(summaryData).productList;
       this.setState({
-        productList: productList,
+        productList,
       });
     });
   }
@@ -54,7 +54,7 @@ class SummaryContainer extends Component {
     return pinABuild(product.name, version.major, version.minor, version.servicePack, build);
   }
 
-  handlePinChange(event, product, version, build, isPinned) {
+  handlePinChange(product, version, build, isPinned) {
     const newProductList = this.state.productList;
 
     this.changePinStatus(product, version, build, isPinned).then(response => {

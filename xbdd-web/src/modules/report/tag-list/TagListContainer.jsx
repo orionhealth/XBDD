@@ -7,11 +7,6 @@ class TagListContainer extends Component {
   constructor(props) {
     super(props);
 
-    const selectedTags = {};
-    props.tagList.forEach(tag => {
-      selectedTags[tag.name] = false;
-    });
-
     this.state = {
       selectedStatus: {
         passed: true,
@@ -19,7 +14,7 @@ class TagListContainer extends Component {
         undefined: true,
         skipped: true,
       },
-      selectedTags: selectedTags,
+      expandedTagsList: [],
     };
     this.handleFilterButtonClick = this.handleFilterButtonClick.bind(this);
     this.handleTagSelect = this.handleTagSelect.bind(this);
@@ -39,12 +34,14 @@ class TagListContainer extends Component {
   }
 
   handleTagSelect(tag) {
-    this.setState(prevState =>
-      Object.assign({}, prevState, {
-        selectedTags: Object.assign({}, prevState.selectedTags, {
-          [tag]: !prevState.selectedTags[tag],
-        }),
-      }));
+    if (this.state.expandedTagsList.includes(tag)) {
+      const newExpandTagsList = [...this.state.expandedTagsList];
+      const index = newExpandTagsList.indexOf(tag);
+      newExpandTagsList.splice(index, 1);
+      this.setState({ expandedTagsList: newExpandTagsList });
+    } else {
+      this.setState({ expandedTagsList: [...this.state.expandedTagsList, tag] });
+    }
   }
 
   filterTags() {
@@ -64,7 +61,7 @@ class TagListContainer extends Component {
       <TagListView
         tagList={this.filterTags()}
         selectedStatus={this.state.selectedStatus}
-        selectedTags={this.state.selectedTags}
+        expandedTagsList={this.state.expandedTagsList}
         handleFilterButtonClick={this.handleFilterButtonClick}
         handleTagSelect={this.handleTagSelect}
       />

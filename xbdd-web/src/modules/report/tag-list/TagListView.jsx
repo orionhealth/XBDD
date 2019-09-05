@@ -12,27 +12,33 @@ const mapTagToTagListItem = (tag, isSelected, selectedStatus, handleTagSelect) =
   <TagListItemView tag={tag} key={tag.name} isSelected={isSelected} selectedStatus={selectedStatus} handleTagSelect={handleTagSelect} />
 );
 
-const renderList = (className, tagList, selectedTags, selectedStatus, handleTagSelect) => {
+const renderList = (className, tagList, selectedStatus, expandedTagsList, handleTagSelect) => {
   if (!tagList.length) {
     return null;
   }
   return (
     <Card raised className={className}>
-      <List component="ul">{tagList.map(tag => mapTagToTagListItem(tag, selectedTags[tag.name], selectedStatus, handleTagSelect))}</List>
+      <List component="ul">
+        {tagList.map(tag => mapTagToTagListItem(tag, expandedTagsList.includes(tag.name), selectedStatus, handleTagSelect))}
+      </List>
     </Card>
   );
 };
 
-const TagListView = props => (
-  <div className={props.classes.xbddTagListContainer}>
-    <TagListFilterButtonsView selectedStatus={props.selectedStatus} handleFilterButtonClick={props.handleFilterButtonClick} />
-    {renderList(props.classes.xbddTagList, props.tagList, props.selectedTags, props.selectedStatus, props.handleTagSelect)}
-  </div>
-);
+const TagListView = props => {
+  const { tagList, selectedStatus, expandedTagsList, handleFilterButtonClick, handleTagSelect, classes } = props;
+
+  return (
+    <div className={classes.xbddTagListContainer}>
+      <TagListFilterButtonsView selectedStatus={selectedStatus} handleFilterButtonClick={handleFilterButtonClick} />
+      {renderList(classes.xbddTagList, tagList, selectedStatus, expandedTagsList, handleTagSelect)}
+    </div>
+  );
+};
 
 TagListView.propTypes = {
   tagList: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
-  selectedTags: PropTypes.shape({}).isRequired,
+  expandedTagsList: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedStatus: PropTypes.shape({}).isRequired,
   handleFilterButtonClick: PropTypes.func,
   handleTagSelect: PropTypes.func,
@@ -44,7 +50,7 @@ TagListView.propTypes = {
 
 TagListView.defaultProps = {
   tagList: [],
-  selectedStatus: null,
+  expandedTagsList: null,
   onSelectTag: () => {},
   onFilterButtonClick: () => {},
 };

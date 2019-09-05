@@ -6,39 +6,52 @@ import { withStyles } from "@material-ui/core/styles";
 import ProductListStyles from "./styles/ProductListStyles";
 import ProductListItem from "./ProductListItem";
 import Product from "../../../models/Product";
-import Version from "../../../models/Version";
 
 const ProductList = props => {
+  const {
+    list,
+    title,
+    expandedProductsList,
+    selectedVersionList,
+    handleSearchProduct,
+    handleFavouriteChange,
+    handleProductClicked,
+    handleVersionSelected,
+    handlePinChange,
+    handleBuildSelected,
+    classes,
+  } = props;
+
   if (!props.list) {
     return null;
   }
   return (
     <>
-      <Typography variant="h5" className={props.classes.productListTitle}>
-        {props.title}
+      <Typography variant="h5" className={classes.productListTitle}>
+        {title}
       </Typography>
-      <Grid container spacing={1} alignItems="flex-end" className={props.classes.searchBar}>
+      <Grid container spacing={1} className={classes.searchBar}>
         <Grid item>
           <Search />
         </Grid>
         <Grid item>
-          <TextField label="Search" onChange={e => props.handleSearchProduct(e)} />
+          <TextField label="Search" onChange={e => handleSearchProduct(e)} />
         </Grid>
       </Grid>
 
       <List>
-        {props.list.map(product => {
+        {list.map(product => {
           return (
             <ProductListItem
               product={product}
-              itemUIState={props.itemsUIState[product.name]}
+              expandedProductsList={expandedProductsList}
+              selectedVersionList={selectedVersionList}
               key={product.name}
-              version={props.version}
-              handleFavouriteChange={props.handleFavouriteChange}
-              handleProductClicked={props.handleProductClicked}
-              handleVersionSelected={props.handleVersionSelected}
-              handlePinChange={props.handlePinChange}
-              handleBuildSelected={props.handleBuildSelected}
+              handleFavouriteChange={handleFavouriteChange}
+              handleProductClicked={handleProductClicked}
+              handleVersionSelected={handleVersionSelected}
+              handlePinChange={handlePinChange}
+              handleBuildSelected={handleBuildSelected}
             />
           );
         })}
@@ -50,13 +63,9 @@ const ProductList = props => {
 ProductList.propTypes = {
   list: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
   title: PropTypes.string,
-  version: PropTypes.instanceOf(Version),
-  itemUIState: PropTypes.arrayOf(
-    PropTypes.shape({
-      expanded: PropTypes.bool,
-      selectedVersion: PropTypes.instanceOf(Version),
-    })
-  ),
+  expandedProductsList: PropTypes.arrayOf(PropTypes.string),
+  selectedVersionList: PropTypes.shape({}),
+  handleSearchProduct: PropTypes.func.isRequired,
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
