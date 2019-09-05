@@ -7,17 +7,11 @@ import Product from "../../../models/Product";
 class ProductListContainer extends Component {
   constructor(props) {
     super(props);
-    const itemsUIState = {};
-    props.list.forEach(product => {
-      itemsUIState[product.name] = {
-        expanded: false,
-        selectedVersion: product.versionList[0],
-      };
-    });
+
     this.state = {
-      list: props.list,
       searchContent: null,
-      itemsUIState,
+      expandedProductsList: [],
+      selectedVersionList: {},
     };
 
     this.handleSearchProduct = this.handleSearchProduct.bind(this);
@@ -25,60 +19,48 @@ class ProductListContainer extends Component {
     this.handleVersionSelected = this.handleVersionSelected.bind(this);
   }
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.list !== state.list) {
-      const itemsUIState = {};
-      props.list.forEach(product => {
-        itemsUIState[product.name] = {
-          expanded: false,
-          selectedVersion: product.versionList[0],
-        };
-      });
-      return {
-        list: props.list,
-        itemsUIState,
-      };
-    }
-    return null;
-  }
-
   handleSearchProduct(event) {
     this.setState({ searchContent: event.target.value });
   }
 
   handleProductClicked(product) {
-    this.setState(prevState => {
-      const newState = Object.assign({}, prevState);
-      const storedItem = newState.itemsUIState[product.name];
-      storedItem.expanded = !storedItem.expanded;
-      return newState;
-    });
+    if (this.state.expandedProductsList.includes(product.name)) {
+      const newExpandedProductsList = [...this.state.expandedProductsList];
+      const index = newExpandedProductsList.indexOf(product.name);
+      newExpandedProductsList.splice(index, 1);
+      this.setState({ expandedProductsList: newExpandedProductsList });
+    } else {
+      this.setState({ expandedProductsList: [...this.state.expandedProductsList, product.name] });
+    }
   }
 
   handleVersionSelected(event, product) {
-    this.setState(prevState => {
-      const newState = Object.assign({}, prevState);
-      const storedItem = newState.itemsUIState[product.name];
-      storedItem.selectedVersion = product.getVersionFromString(event.target.value);
-      return newState;
-    });
+    this.setState(prevState =>
+      Object.assign({}, prevState, {
+        selectedVersionList: Object.assign({}, prevState.selectedVersionList, {
+          [product.name]: product.getVersionFromString(event.target.value),
+        }),
+      }));
   }
 
   render() {
-    var filteredList = this.state.list;
+    var filteredList = this.props.list;
+
     if (this.state.searchContent) {
       const searchContent = this.state.searchContent.toLowerCase();
       filteredList = filteredList.filter(product => product.name.toLowerCase().indexOf(searchContent) !== -1);
     }
+
     return (
       <Card raised>
         <ProductList
           list={filteredList}
-          itemsUIState={this.state.itemsUIState}
+          expandedProductsList={this.state.expandedProductsList}
+          selectedVersionList={this.state.selectedVersionList}
           title={this.props.title}
-          handleSearchProduct={this.handleSearchProduct}
           handleFavouriteChange={this.props.handleFavouriteChange}
           handlePinChange={this.props.handlePinChange}
+          handleSearchProduct={this.handleSearchProduct}
           handleProductClicked={this.handleProductClicked}
           handleVersionSelected={this.handleVersionSelected}
           handleBuildSelected={this.props.handleBuildSelected}

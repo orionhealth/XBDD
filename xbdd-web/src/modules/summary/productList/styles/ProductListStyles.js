@@ -10,6 +10,7 @@ const ProductListStyles = () => ({
     marginLeft: "20px",
   },
   searchBar: {
+    alignItems: "flex-end",
     justifyContent: "center",
   },
   productListItem: {

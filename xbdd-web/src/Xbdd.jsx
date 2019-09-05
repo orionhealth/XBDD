@@ -16,7 +16,15 @@ class Xbdd extends React.Component {
     this.handleBuildSelected = this.handleBuildSelected.bind(this);
   }
 
-  handleBuildSelected(event, product, version, build) {
+  switchPage(buildSelected) {
+    if (buildSelected) {
+      return <ReportContainer product={this.state.productSelected} version={this.state.versionSelected} build={this.state.buildSelected} />;
+    } else {
+      return <SummaryContainer handleBuildSelected={this.handleBuildSelected} />;
+    }
+  }
+
+  handleBuildSelected(product, version, build) {
     this.setState({ productSelected: product, versionSelected: version, buildSelected: build });
   }
 
@@ -24,11 +32,7 @@ class Xbdd extends React.Component {
     return (
       <div className="xbdd-app">
         <Navbar />
-        {this.state.buildSelected ? (
-          <ReportContainer product={this.state.productSelected} version={this.state.versionSelected} build={this.state.buildSelected} />
-        ) : (
-          <SummaryContainer handleBuildSelected={this.handleBuildSelected} />
-        )}
+        {this.switchPage(this.state.buildSelected)}
       </div>
     );
   }

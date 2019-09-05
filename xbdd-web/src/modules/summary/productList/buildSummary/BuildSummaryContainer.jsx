@@ -17,27 +17,20 @@ const buildVersionList = version => {
 };
 
 const BuildSummaryContainer = props => {
+  const { product, version, handleVersionSelected, handlePinChange, handleBuildSelected, classes } = props;
+
   return (
     <Grid container>
-      <Grid item xs={3} className={props.classes.versionsSelector}>
-        <FormControl variant="outlined" style={{ paddingBottom: "10px" }}>
+      <Grid item xs={3} className={classes.versionsSelector}>
+        <FormControl variant="outlined">
           <InputLabel>Versions</InputLabel>
-          <Select
-            value={props.version.getString()}
-            onChange={e => props.handleVersionSelected(e, props.product)}
-            input={<OutlinedInput labelWidth={50} />}
-          >
-            {props.product.versionList.map(buildVersionList)}
+          <Select value={version.getString()} onChange={e => handleVersionSelected(e, product)} input={<OutlinedInput labelWidth={65} />}>
+            {product.versionList.map(buildVersionList)}
           </Select>
         </FormControl>
       </Grid>
       <Grid item xs={9}>
-        <BuildList
-          product={props.product}
-          version={props.version}
-          handlePinChange={props.handlePinChange}
-          handleBuildSelected={props.handleBuildSelected}
-        />
+        <BuildList product={product} version={version} handlePinChange={handlePinChange} handleBuildSelected={handleBuildSelected} />
       </Grid>
     </Grid>
   );

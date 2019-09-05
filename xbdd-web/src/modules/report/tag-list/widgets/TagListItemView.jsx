@@ -20,7 +20,7 @@ const TagListItemView = props => {
   return (
     <>
       <ListItem button divider onClick={onClick} className={className}>
-        <ListItemIcon style={{ minWidth: "36px" }}>
+        <ListItemIcon className={classes.listItemIcon}>
           <TurnedIn />
         </ListItemIcon>
         <ListItemText>{tag.name}</ListItemText>

@@ -8,7 +8,6 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { withStyles } from "@material-ui/core/styles";
 import ProductListStyles from "./styles/ProductListStyles";
 import Product from "../../../models/Product";
-import Version from "../../../models/Version";
 import BuildSummaryContainer from "./buildSummary/BuildSummaryContainer";
 
 const clickEventWrapper = (event, product, handleFavouriteChange, handleProductClicked) => {
@@ -25,27 +24,41 @@ const clickEventWrapper = (event, product, handleFavouriteChange, handleProductC
 };
 
 const ProductListItem = props => {
+  const {
+    product,
+    expandedProductsList,
+    selectedVersionList,
+    handleFavouriteChange,
+    handleProductClicked,
+    handleVersionSelected,
+    handlePinChange,
+    handleBuildSelected,
+    classes,
+  } = props;
+
+  const version = selectedVersionList[product.name] ? selectedVersionList[product.name] : product.versionList[0];
+
   return (
     <>
       <ListItem
         button
         divider
-        className={props.classes.productListItem}
-        onClick={e => clickEventWrapper(e, props.product, props.handleFavouriteChange, props.handleProductClicked)}
+        className={classes.productListItem}
+        onClick={e => clickEventWrapper(e, product, handleFavouriteChange, handleProductClicked)}
       >
         <ListItemIcon>
-          <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={props.product.favourite} />
+          <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={product.favourite} />
         </ListItemIcon>
-        <ListItemText>{props.product.name}</ListItemText>
-        {props.itemUIState.expanded ? <ExpandLess /> : <ExpandMore />}
+        <ListItemText>{product.name}</ListItemText>
+        {expandedProductsList.includes(product.name) ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
-      <Collapse in={props.itemUIState.expanded} timeout="auto" unmountOnExit>
+      <Collapse in={expandedProductsList.includes(product.name)} timeout="auto" unmountOnExit>
         <BuildSummaryContainer
-          product={props.product}
-          version={props.itemUIState.selectedVersion}
-          handleVersionSelected={props.handleVersionSelected}
-          handlePinChange={props.handlePinChange}
-          handleBuildSelected={props.handleBuildSelected}
+          product={product}
+          version={version}
+          handleVersionSelected={handleVersionSelected}
+          handlePinChange={handlePinChange}
+          handleBuildSelected={handleBuildSelected}
         />
       </Collapse>
     </>
@@ -54,10 +67,8 @@ const ProductListItem = props => {
 
 ProductListItem.propTypes = {
   product: PropTypes.instanceOf(Product),
-  itemUIState: PropTypes.shape({
-    expanded: PropTypes.bool,
-    selectedVersion: PropTypes.instanceOf(Version),
-  }),
+  expandedProductsList: PropTypes.arrayOf(PropTypes.string),
+  selectedVersionList: PropTypes.shape({}),
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,

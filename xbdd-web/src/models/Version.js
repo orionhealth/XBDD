@@ -5,8 +5,8 @@ class Version {
       this.major = data.coordinates.major;
       this.minor = data.coordinates.minor;
       this.servicePack = data.coordinates.servicePack;
-      this.pinnedBuildList = data.pinned ? data.pinned : [];
       this.buildList = data.builds.slice().reverse();
+      this.pinnedBuildList = data.pinned ? this.buildList.filter(build => data.pinned.includes(build)) : [];
     }
   }
 
@@ -15,18 +15,18 @@ class Version {
   }
 
   getUnpinnedBuildList() {
-    return this.buildList.filter(build => !this.pinnedBuildList.some(pinnedBuild => pinnedBuild === build));
+    return this.buildList.filter(build => !this.pinnedBuildList.includes(build));
   }
 
   updatePinnedBuildList(build, isPinned) {
     if (isPinned) {
       this.pinnedBuildList = this.pinnedBuildList.filter(item => item !== build);
     } else {
-      if (this.pinnedBuildList.some(item => item === build)) {
+      if (this.pinnedBuildList.includes(build)) {
         return;
       }
       this.pinnedBuildList.push(build);
-      this.pinnedBuildList.sort().reverse();
+      this.pinnedBuildList = this.buildList.filter(build => this.pinnedBuildList.includes(build));
     }
   }
 }

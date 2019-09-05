@@ -13,12 +13,12 @@ const clickEventWrapper = (event, product, version, build, isPinned, handlePinCh
 
   while (node) {
     if (node.className === "MuiIconButton-label") {
-      handlePinChange(event, product, version, build, isPinned);
+      handlePinChange(product, version, build, isPinned);
       return;
     }
     node = node.parentNode;
   }
-  handleBuildSelected(event, product.name, version.getString(), build);
+  handleBuildSelected(product.name, version.getString(), build);
 };
 
 const renderBuildListByPin = (buildList, handlePinChange, handleBuildSelected, product, version, isPinned, classes) => (
@@ -41,17 +41,17 @@ const renderBuildListByPin = (buildList, handlePinChange, handleBuildSelected, p
 );
 
 const BuildList = props => {
-  const { product, version } = props;
+  const { product, version, handlePinChange, handleBuildSelected, classes } = props;
   const pinnedBuildList = version.pinnedBuildList;
   const otherBuildList = version.getUnpinnedBuildList();
 
   return (
-    <div className={props.classes.buildListContainer}>
+    <div className={classes.buildListContainer}>
       {pinnedBuildList.length !== 0
-        ? renderBuildListByPin(pinnedBuildList, props.handlePinChange, props.handleBuildSelected, product, version, true, props.classes)
+        ? renderBuildListByPin(pinnedBuildList, handlePinChange, handleBuildSelected, product, version, true, classes)
         : null}
       {otherBuildList.length !== 0
-        ? renderBuildListByPin(otherBuildList, props.handlePinChange, props.handleBuildSelected, product, version, false, props.classes)
+        ? renderBuildListByPin(otherBuildList, handlePinChange, handleBuildSelected, product, version, false, classes)
         : null}
     </div>
   );

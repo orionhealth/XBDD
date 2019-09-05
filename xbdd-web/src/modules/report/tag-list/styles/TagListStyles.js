@@ -61,6 +61,9 @@ const tagListFilterButtonStyles = theme => ({
 });
 
 const tagListItemStyles = {
+  listItemIcon: {
+    minWidth: "36px",
+  },
   xbddTagListItemContainer: {
     width: "100%",
   },
