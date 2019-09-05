@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid, Card } from "@material-ui/core";
-import TagListContainer from "./tag-list/TagListContainer";
-import Report from "../../models/Report";
-import { getBuildReport } from "../../lib/rest/Rest";
+import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
 
 class ReportContainer extends Component {
   constructor(props) {
@@ -12,30 +10,20 @@ class ReportContainer extends Component {
   }
 
   componentDidMount() {
-    getBuildReport(this.props.product, this.props.version, this.props.build).then(data => {
-      this.setState({
-        report: new Report(data),
-      });
-    });
+    // Fetch data for report or stat
   }
 
   render() {
-    if (this.state.report) {
-      const tagList = this.state.report.tagList;
-
+    if (true) {
       return (
         <>
           <Card>
             <Grid container>
               <Grid item xs={3}>
-                <Card raised>
-                  <TagListContainer tagList={tagList} />
-                </Card>
+                <FeatureListContainer product={this.props.product} version={this.props.version} build={this.props.build} />
               </Grid>
               <Grid item xs={9}>
-                <Card raised>
-                  <div style={{ height: "calc(100vh - 82px)" }}>report</div>
-                </Card>
+                <div style={{ height: "calc(100vh - 82px)" }}>report</div>
               </Grid>
             </Grid>
           </Card>

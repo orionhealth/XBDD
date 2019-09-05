@@ -7,7 +7,7 @@ import DoneIcon from "@material-ui/icons/Done";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import BlockIcon from "@material-ui/icons/Block";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import { tagListFilterButtonStyles } from "../styles/TagListStyles";
+import { filterButtonStyles } from "./styles/FeatureListContainerStyles";
 import { Card } from "@material-ui/core";
 
 const createButton = variant => (
@@ -18,7 +18,7 @@ const createButton = variant => (
   </Tooltip>
 );
 
-const TagListFilterButtonsView = props => {
+const FeatureFilterButtons = props => {
   const { selectedStatus, handleFilterButtonClick, classes } = props;
   const variants = {
     passed: {
@@ -52,19 +52,21 @@ const TagListFilterButtonsView = props => {
   };
 
   return (
-    <Card raised className={classes.xbddTagListFilterButtons}>
-      {createButton(variants.passed)}
-      {createButton(variants.failed)}
-      {createButton(variants.undefined)}
-      {createButton(variants.skipped)}
-    </Card>
+    <div className={classes.xbddFilterButtons}>
+      <Card raised>
+        {createButton(variants.passed)}
+        {createButton(variants.failed)}
+        {createButton(variants.undefined)}
+        {createButton(variants.skipped)}
+      </Card>
+    </div>
   );
 };
 
-TagListFilterButtonsView.propTypes = {
+FeatureFilterButtons.propTypes = {
   selectedStatus: PropTypes.shape({}).isRequired,
   handleFilterButtonClick: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
 };
 
-export default withStyles(tagListFilterButtonStyles)(TagListFilterButtonsView);
+export default withStyles(filterButtonStyles)(FeatureFilterButtons);
