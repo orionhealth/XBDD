@@ -1,4 +1,4 @@
-class BriefFeature {
+class SimpleFeature {
   constructor(data) {
     this.id = data.id;
     this.name = data.name;
@@ -9,4 +9,4 @@ class BriefFeature {
   }
 }
 
-export default BriefFeature;
+export default SimpleFeature;
