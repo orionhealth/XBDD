@@ -47,14 +47,12 @@ const FeatureFilterButtons = props => {
   };
 
   return (
-    <div className={classes.xbddFilterButtons}>
-      <Card raised>
-        {createButton(variants.passed)}
-        {createButton(variants.failed)}
-        {createButton(variants.undefined)}
-        {createButton(variants.skipped)}
-      </Card>
-    </div>
+    <Card raised className={classes.xbddFilterButtons}>
+      {createButton(variants.passed)}
+      {createButton(variants.failed)}
+      {createButton(variants.undefined)}
+      {createButton(variants.skipped)}
+    </Card>
   );
 };
 

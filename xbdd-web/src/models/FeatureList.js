@@ -1,5 +1,5 @@
 import Tag from "./Tag";
-import SimpleFeature from "./SimpleFeature";
+import BriefFeature from "./BriefFeature";
 
 class FeatureList {
   constructor() {
@@ -12,7 +12,7 @@ class FeatureList {
   }
 
   setSimpleFeatureList(data) {
-    this.simpleFeatureList = data.map(item => new SimpleFeature(item));
+    this.simpleFeatureList = data.map(item => new BriefFeature(item));
   }
 }
 
