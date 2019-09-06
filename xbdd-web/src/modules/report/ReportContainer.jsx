@@ -6,7 +6,10 @@ import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
 class ReportContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = { report: null };
+    this.state = {
+      selectedFeature: null,
+      report: null,
+    };
   }
 
   componentDidMount() {
@@ -14,15 +17,16 @@ class ReportContainer extends Component {
   }
 
   render() {
+    const { product, version, build } = this.props;
     if (true) {
       return (
         <>
           <Card>
             <Grid container>
-              <Grid item xs={3}>
-                <FeatureListContainer product={this.props.product} version={this.props.version} build={this.props.build} />
+              <Grid item xs={4} lg={3}>
+                <FeatureListContainer product={product} version={version} build={build} />
               </Grid>
-              <Grid item xs={9}>
+              <Grid item xs={8} lg={9}>
                 <div style={{ height: "calc(100vh - 82px)" }}>report</div>
               </Grid>
             </Grid>

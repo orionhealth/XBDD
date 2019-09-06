@@ -1,49 +1,34 @@
 import React from "react";
 import { PropTypes } from "prop-types";
+import { List, ListItem } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import Tag from "../../../../models/Tag";
-import TagViewFeatureListItem from "./TagViewFeatureListItem";
-import { tagListStyles } from "./styles/TagListStyles";
-import { Card } from "@material-ui/core";
-
-const renderListItem = (tagList, selectedStatus, expandedTagsList, handleTagSelect) =>
-  tagList.map(tag => (
-    <TagViewFeatureListItem
-      tag={tag}
-      key={tag.name}
-      isSelected={expandedTagsList.includes(tag.name)}
-      selectedStatus={selectedStatus}
-      handleTagSelect={handleTagSelect}
-    />
-  ));
+import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
 
 const TagViewFeatureList = props => {
-  const { tagList, selectedStatus, expandedTagsList, handleTagSelect, classes } = props;
+  const { featureList, classes } = props;
+  const classesMap = {
+    passed: classes.xbddFeatureListItemPassed,
+    failed: classes.xbddFeatureListItemFailed,
+    undefined: classes.xbddFeatureListItemUndefined,
+    skipped: classes.xbddFeatureListItemSkipped,
+  };
 
   return (
-    <Card raised className={classes.xbddTagList}>
-      <List component="ul">{renderListItem(tagList, selectedStatus, expandedTagsList, handleTagSelect)}</List>
-    </Card>
+    <List className={classes.xbddFeatureListContainer}>
+      {featureList.map(feature => {
+        return (
+          <ListItem button key={feature.id} className={classesMap[feature.calculatedStatus] + " " + classes.xbddTagViewFeatureList}>
+            {feature.name}
+          </ListItem>
+        );
+      })}
+    </List>
   );
 };
 
 TagViewFeatureList.propTypes = {
-  tagList: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
-  expandedTagsList: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedStatus: PropTypes.shape({}).isRequired,
-  handleTagSelect: PropTypes.func,
-  classes: PropTypes.shape({
-    xbddTagListContainer: PropTypes.string,
-    xbddTagList: PropTypes.string,
-  }).isRequired,
+  featureList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  classes: PropTypes.shape({}).isRequired,
 };
 
-TagViewFeatureList.defaultProps = {
-  tagList: [],
-  expandedTagsList: null,
-  onSelectTag: () => {},
-  onFilterButtonClick: () => {},
-};
-
-export default withStyles(tagListStyles)(TagViewFeatureList);
+export default withStyles(featureListItemStyles)(TagViewFeatureList);

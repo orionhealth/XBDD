@@ -1,7 +1,12 @@
 import React from "react";
 import { List, ListItem, Card } from "@material-ui/core";
-import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
+import ForwardIcon from "@material-ui/icons/Forward";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { withStyles } from "@material-ui/styles";
+import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
+
+const renderTags = (tags, classes) => <span className={classes}>{tags.map(tag => tag.name)}</span>;
 
 const ListViewFeatureList = props => {
   const { featureList, selectedStatus, classes } = props;
@@ -14,13 +19,29 @@ const ListViewFeatureList = props => {
     skipped: classes.xbddFeatureListItemSkipped,
   };
 
+  const iconMap = {
+    passed: <FontAwesomeIcon icon={faCheckCircle} className={classesMap["passed"] + " " + classes.xbddFeatureListIcons} />,
+    failed: <FontAwesomeIcon icon={faExclamationCircle} className={classesMap["failed"] + " " + classes.xbddFeatureListIcons} />,
+    undefined: <FontAwesomeIcon icon={faQuestionCircle} className={classesMap["undefined"] + " " + classes.xbddFeatureListIcons} />,
+    skipped: <FontAwesomeIcon icon={faMinusCircle} className={classesMap["skipped"] + " " + classes.xbddFeatureListIcons} />,
+  };
+
+  const renderFeatureStatus = feature => (
+    <span className={classes.xbddFeatureStatus}>
+      {iconMap[feature.originalAutomatedStatus]}
+      <ForwardIcon className={classes.xbddFeatureListItemArrow} />
+      {iconMap[feature.calculatedStatus]}
+    </span>
+  );
+
   return (
     <Card>
       <List>
         {filterFeatureList.map(feature => (
-          <ListItem button divider key={feature.id} className={classes.xbddFeatureListItem + " " + classesMap[feature.calculatedStatus]}>
-            {feature.name}
-            <span style={{ background: "blue" }}>{feature.tags ? feature.tags.map(tag => tag.name) : null}</span>
+          <ListItem button key={feature.id} className={classes.xbddFeatureListItem}>
+            {renderFeatureStatus(feature)}
+            <span className={classesMap[feature.calculatedStatus]}>{" " + feature.name + " "}</span>
+            {feature.tags ? renderTags(feature.tags, classes.tags) : null}
           </ListItem>
         ))}
       </List>

@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { PropTypes } from "prop-types";
-import { Typography, Checkbox, Grid } from "@material-ui/core";
+import { Typography, Checkbox, Grid, Tooltip } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTags } from "@fortawesome/free-solid-svg-icons";
 import { withStyles } from "@material-ui/styles";
 import { featureListContainerStyles } from "./styles/FeatureListContainerStyles";
-import Tag from "../../../models/Tag";
-import ListViewFeatureList from "./ListViewFeatureList/ListViewFeatureList";
-import TagViewFeatureList from "./TagViewFeatureList/TagViewFeatureList";
 import FeatureFilterButtons from "./FeatureFilterButtons";
+import ListViewFeatureList from "./ListViewFeatureList/ListViewFeatureList";
+import TagList from "./TagViewFeatureList/TagList";
 import FeatureList from "../../../models/FeatureList";
 import { getFeatureListByTagData, getSimpleFeatureListData } from "../../../lib/rest/Rest";
 
@@ -86,7 +85,7 @@ class FeatureListContainer extends Component {
   renderFeatureList() {
     if (this.state.isTagView) {
       return (
-        <TagViewFeatureList
+        <TagList
           tagList={this.filterTags()}
           selectedStatus={this.state.selectedStatus}
           expandedTagsList={this.state.expandedTagsList}
@@ -99,23 +98,26 @@ class FeatureListContainer extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     if (this.state.featureList) {
       return (
         <>
           <FeatureFilterButtons selectedStatus={this.state.selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
-          <div className={this.props.classes.xbddTagListContainer}>
-            <Grid container className={this.props.classes.featureListTitle}>
+          <div className={classes.xbddTagListContainer}>
+            <Grid container className={classes.featureListTitle}>
               <Grid item xs={5}>
                 <Typography variant="h6">Features</Typography>
               </Grid>
               <Grid item xs={5} />
-              <Grid item xs={2} style={{ display: "flex" }}>
-                <Checkbox
-                  onChange={this.handleViewSwitch}
-                  icon={<FontAwesomeIcon icon={faTags} className={this.props.classes.unCheckedIcon} />}
-                  checkedIcon={<FontAwesomeIcon icon={faTags} className={this.props.classes.checkedIcon} />}
-                  checked={this.state.isTagView}
-                />
+              <Grid item xs={2} className={classes.tagIcon}>
+                <Tooltip title={this.state.isTagView ? "Switch to List View" : "Switch to Tag View"} placement="top">
+                  <Checkbox
+                    onChange={this.handleViewSwitch}
+                    icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
+                    checkedIcon={<FontAwesomeIcon icon={faTags} className={classes.checkedIcon} />}
+                    checked={this.state.isTagView}
+                  />
+                </Tooltip>
               </Grid>
             </Grid>
             {this.renderFeatureList()}
@@ -128,7 +130,7 @@ class FeatureListContainer extends Component {
 }
 
 FeatureListContainer.propTypes = {
-  tagList: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
+  classes: PropTypes.shape({}),
 };
 
 export default withStyles(featureListContainerStyles)(FeatureListContainer);

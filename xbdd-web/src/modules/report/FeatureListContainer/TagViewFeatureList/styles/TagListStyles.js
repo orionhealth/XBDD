@@ -14,6 +14,8 @@ const tagListStyles = {
 const tagListItemStyles = {
   listItemIcon: {
     minWidth: "36px",
+    fontSize: "20px",
+    color: "#6fc1f5",
   },
   xbddTagListItemContainer: {
     width: "100%",

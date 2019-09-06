@@ -1,21 +1,23 @@
 const featureListContainerStyles = {
   featureListTitle: {
     alignItems: "center",
-    padding: "10px",
+    padding: "10px 10px 10px 20px",
     borderRadius: "4px 4px 0 0",
     backgroundColor: "#457B9D",
     color: "white",
-    textAlign: "center",
+    textAlign: "left",
   },
   xbddTagListContainer: {
     padding: "12px 24px 24px 24px",
   },
+  tagIcon: {
+    textAlign: "right",
+  },
   checkedIcon: {
-    color: "#00ffec",
+    color: "#6ac5ff",
     fontSize: "20px",
   },
   unCheckedIcon: {
-    color: "#000000",
     fontSize: "20px",
   },
 };
@@ -51,8 +53,20 @@ const filterButtonStyles = {
 };
 
 const featureListItemStyles = {
+  tags: {
+    fontSize: "14px",
+    background: "#428bca",
+    color: "white",
+  },
   xbddFeatureListItem: {
+    padding: "12px 16px 12px 16px",
     display: "inline-block",
+  },
+  xbddFeatureStatus: {
+    display: "inline-flex",
+  },
+  xbddFeatureListIcons: {
+    fontSize: "16px",
   },
   xbddFeatureListItemPassed: {
     color: "#576E5D",
@@ -65,6 +79,13 @@ const featureListItemStyles = {
   },
   xbddFeatureListItemSkipped: {
     color: "#457B9D",
+  },
+  xbddFeatureListItemArrow: {
+    fontSize: "16px",
+    color: "#999",
+  },
+  xbddTagViewFeatureList: {
+    paddingLeft: "40px",
   },
 };
 
