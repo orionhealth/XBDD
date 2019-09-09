@@ -6,9 +6,6 @@ const tagListStyles = {
     position: "relative",
     width: "100%",
   },
-  xbddFilterButton: {
-    width: 90,
-  },
 };
 
 const tagListItemStyles = {

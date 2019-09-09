@@ -17,7 +17,7 @@ const TagViewFeatureList = props => {
     <List className={classes.xbddFeatureListContainer}>
       {featureList.map(feature => {
         return (
-          <ListItem button key={feature.id} className={classesMap[feature.calculatedStatus] + " " + classes.xbddTagViewFeatureList}>
+          <ListItem button key={feature.id} className={`${classesMap[feature.calculatedStatus]} ${classes.xbddTagViewFeatureList}`}>
             {feature.name}
           </ListItem>
         );
