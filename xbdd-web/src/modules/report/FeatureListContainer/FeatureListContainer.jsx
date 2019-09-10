@@ -82,7 +82,28 @@ class FeatureListContainer extends Component {
     );
   }
 
-  renderFeatureList() {
+  renderFeatureListTitle(classes) {
+    return (
+      <Grid container className={classes.featureListTitle}>
+        <Grid item xs={5}>
+          <Typography variant="h6">Features</Typography>
+        </Grid>
+        <Grid item xs={5} />
+        <Grid item xs={2} className={classes.tagIcon}>
+          <Tooltip title={this.state.isTagView ? "Switch to List View" : "Switch to Tag View"} placement="top">
+            <Checkbox
+              onChange={this.handleViewSwitch}
+              icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
+              checkedIcon={<FontAwesomeIcon icon={faTags} className={classes.checkedIcon} />}
+              checked={this.state.isTagView}
+            />
+          </Tooltip>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  renderFeatureList(handleFeatureSelected) {
     if (this.state.isTagView) {
       return (
         <TagList
@@ -90,37 +111,29 @@ class FeatureListContainer extends Component {
           selectedStatus={this.state.selectedStatus}
           expandedTagsList={this.state.expandedTagsList}
           handleTagSelect={this.handleTagSelect}
+          handleFeatureSelected={handleFeatureSelected}
         />
       );
     } else {
-      return <ListViewFeatureList featureList={this.state.featureList.simpleFeatureList} selectedStatus={this.state.selectedStatus} />;
+      return (
+        <ListViewFeatureList
+          featureList={this.state.featureList.simpleFeatureList}
+          selectedStatus={this.state.selectedStatus}
+          handleFeatureSelected={handleFeatureSelected}
+        />
+      );
     }
   }
 
   render() {
-    const { classes } = this.props;
+    const { handleFeatureSelected, classes } = this.props;
     if (this.state.featureList) {
       return (
         <>
           <FeatureFilterButtons selectedStatus={this.state.selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
           <div className={classes.xbddTagListContainer}>
-            <Grid container className={classes.featureListTitle}>
-              <Grid item xs={5}>
-                <Typography variant="h6">Features</Typography>
-              </Grid>
-              <Grid item xs={5} />
-              <Grid item xs={2} className={classes.tagIcon}>
-                <Tooltip title={this.state.isTagView ? "Switch to List View" : "Switch to Tag View"} placement="top">
-                  <Checkbox
-                    onChange={this.handleViewSwitch}
-                    icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
-                    checkedIcon={<FontAwesomeIcon icon={faTags} className={classes.checkedIcon} />}
-                    checked={this.state.isTagView}
-                  />
-                </Tooltip>
-              </Grid>
-            </Grid>
-            {this.renderFeatureList()}
+            {this.renderFeatureListTitle(classes)}
+            {this.renderFeatureList(handleFeatureSelected)}
           </div>
         </>
       );
@@ -130,6 +143,7 @@ class FeatureListContainer extends Component {
 }
 
 FeatureListContainer.propTypes = {
+  handleFeatureSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

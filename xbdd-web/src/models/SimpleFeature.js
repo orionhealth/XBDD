@@ -1,11 +1,10 @@
 class SimpleFeature {
   constructor(data) {
-    this.id = data.id;
+    this.id = data._id;
     this.name = data.name;
     this.calculatedStatus = data.calculatedStatus;
-    this.originalAutomatedStatus = data.originalAutomatedStatus;
-    this.tags = data.tags;
-    this.restId = data._id;
+    this.originalAutomatedStatus = data.originalAutomatedStatus ? data.originalAutomatedStatus : null;
+    this.tags = data.tags ? data.tags : null;
   }
 }
 

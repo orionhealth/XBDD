@@ -1,3 +1,5 @@
+import SimpleFeature from "./SimpleFeature";
+
 const getStatusPresences = features => {
   const findStatus = status => features.find(feature => feature.calculatedStatus === status);
 
@@ -12,7 +14,7 @@ const getStatusPresences = features => {
 class Tag {
   constructor(data) {
     this.name = data.tag;
-    this.features = data.features;
+    this.features = data.features.map(data => new SimpleFeature(data));
     Object.assign(this, getStatusPresences(data.features));
   }
 }

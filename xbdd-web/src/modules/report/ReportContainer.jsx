@@ -10,10 +10,16 @@ class ReportContainer extends Component {
       selectedFeature: null,
       report: null,
     };
+
+    this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
   }
 
-  componentDidMount() {
-    // Fetch data for report or stat
+  handleFeatureSelected(feature) {
+    this.setState({ selectedFeature: feature });
+  }
+
+  renderFeatureReport() {
+    return <div style={{ height: "calc(100vh - 82px)" }}>{this.state.selectedFeature.name}</div>;
   }
 
   render() {
@@ -24,10 +30,15 @@ class ReportContainer extends Component {
           <Card>
             <Grid container>
               <Grid item xs={4} lg={3}>
-                <FeatureListContainer product={product} version={version} build={build} />
+                <FeatureListContainer
+                  product={product}
+                  version={version}
+                  build={build}
+                  handleFeatureSelected={this.handleFeatureSelected}
+                />
               </Grid>
               <Grid item xs={8} lg={9}>
-                <div style={{ height: "calc(100vh - 82px)" }}>report</div>
+                {this.state.selectedFeature ? this.renderFeatureReport() : null}
               </Grid>
             </Grid>
           </Card>

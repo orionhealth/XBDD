@@ -10,7 +10,7 @@ import Tag from "../../../../models/Tag";
 import { tagListItemStyles } from "./styles/TagListStyles";
 
 const TagListItem = props => {
-  const { tag, isSelected, selectedStatus, handleTagSelect, classes } = props;
+  const { tag, isSelected, selectedStatus, handleTagSelect, handleFeatureSelected, classes } = props;
   const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
   let className = classes.xbddTagListItemContainer;
 
@@ -29,7 +29,7 @@ const TagListItem = props => {
         {isSelected ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={isSelected} timeout="auto" unmountOnExit>
-        <TagViewFeatureList featureList={featureList} />
+        <TagViewFeatureList featureList={featureList} handleFeatureSelected={handleFeatureSelected} />
       </Collapse>
     </>
   );
@@ -40,6 +40,7 @@ TagListItem.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   selectedStatus: PropTypes.shape({}).isRequired,
   handleTagSelect: PropTypes.func.isRequired,
+  handleFeatureSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
 };
 

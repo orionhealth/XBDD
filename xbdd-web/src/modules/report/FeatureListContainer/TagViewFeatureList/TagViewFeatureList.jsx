@@ -5,7 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
 
 const TagViewFeatureList = props => {
-  const { featureList, classes } = props;
+  const { featureList, handleFeatureSelected, classes } = props;
   const classesMap = {
     passed: classes.xbddFeatureListItemPassed,
     failed: classes.xbddFeatureListItemFailed,
@@ -17,7 +17,12 @@ const TagViewFeatureList = props => {
     <List className={classes.xbddFeatureListContainer}>
       {featureList.map(feature => {
         return (
-          <ListItem button key={feature.id} className={`${classesMap[feature.calculatedStatus]} ${classes.xbddTagViewFeatureList}`}>
+          <ListItem
+            button
+            key={feature.id}
+            className={`${classesMap[feature.calculatedStatus]} ${classes.xbddTagViewFeatureList}`}
+            onClick={() => handleFeatureSelected(feature)}
+          >
             {feature.name}
           </ListItem>
         );
@@ -28,6 +33,7 @@ const TagViewFeatureList = props => {
 
 TagViewFeatureList.propTypes = {
   featureList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  handleFeatureSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
 };
 
