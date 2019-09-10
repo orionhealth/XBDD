@@ -14,14 +14,14 @@ const TagViewFeatureList = props => {
   };
 
   return (
-    <List className={classes.xbddFeatureListContainer}>
+    <List>
       {featureList.map(feature => {
         return (
           <ListItem
             button
             key={feature.id}
             className={`${classesMap[feature.calculatedStatus]} ${classes.xbddTagViewFeatureList}`}
-            onClick={() => handleFeatureSelected(feature)}
+            onClick={() => handleFeatureSelected(feature.id)}
           >
             {feature.name}
           </ListItem>

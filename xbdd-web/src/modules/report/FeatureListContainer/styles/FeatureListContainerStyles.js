@@ -62,12 +62,6 @@ const featureListItemStyles = {
     padding: "12px 16px 12px 16px",
     display: "inline-block",
   },
-  xbddFeatureStatus: {
-    display: "inline-flex",
-  },
-  xbddFeatureListIcons: {
-    fontSize: "16px",
-  },
   xbddFeatureListItemPassed: {
     color: "#576E5D",
   },
@@ -79,10 +73,6 @@ const featureListItemStyles = {
   },
   xbddFeatureListItemSkipped: {
     color: "#457B9D",
-  },
-  xbddFeatureListItemArrow: {
-    fontSize: "16px",
-    color: "#999",
   },
   xbddTagViewFeatureList: {
     paddingLeft: "40px",

@@ -2,24 +2,25 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid, Card } from "@material-ui/core";
 import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
+import FeatureReportContainer from "./FeatureReportContainer/FeatureReportContainer";
+import { getFeatureReport } from "../../lib/rest/Rest";
+import Feature from "../../models/Feature";
 
 class ReportContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedFeature: null,
-      report: null,
     };
 
     this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
   }
 
-  handleFeatureSelected(feature) {
-    this.setState({ selectedFeature: feature });
-  }
-
-  renderFeatureReport() {
-    return <div style={{ height: "calc(100vh - 82px)" }}>{this.state.selectedFeature.name}</div>;
+  handleFeatureSelected(featureId) {
+    getFeatureReport(featureId).then(data =>
+      this.setState({
+        selectedFeature: new Feature(data),
+      }));
   }
 
   render() {
@@ -38,7 +39,7 @@ class ReportContainer extends Component {
                 />
               </Grid>
               <Grid item xs={8} lg={9}>
-                {this.state.selectedFeature ? this.renderFeatureReport() : null}
+                {this.state.selectedFeature ? <FeatureReportContainer feature={this.state.selectedFeature} /> : null}
               </Grid>
             </Grid>
           </Card>
