@@ -1,14 +1,9 @@
 import React from "react";
 import { PropTypes } from "prop-types";
+import { Card, IconButton, Tooltip } from "@material-ui/core";
+import { Done, ErrorOutline, RemoveCircleOutline, HelpOutline } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import DoneIcon from "@material-ui/icons/Done";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-import BlockIcon from "@material-ui/icons/Block";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import { tagListFilterButtonStyles } from "../styles/TagListStyles";
-import { Card } from "@material-ui/core";
+import { filterButtonStyles } from "./styles/FeatureListContainerStyles";
 
 const createButton = variant => (
   <Tooltip title={variant.tooltip} placement="top">
@@ -18,32 +13,32 @@ const createButton = variant => (
   </Tooltip>
 );
 
-const TagListFilterButtonsView = props => {
+const FeatureFilterButtons = props => {
   const { selectedStatus, handleFilterButtonClick, classes } = props;
   const variants = {
     passed: {
-      icon: <DoneIcon />,
+      icon: <Done />,
       tooltip: "Passed",
       colorClass: selectedStatus.passed ? classes.xbddFilterButtonPassed : classes.xbddFilterButtonUnselected,
       handler: () => handleFilterButtonClick("passed"),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     failed: {
-      icon: <ErrorOutlineIcon />,
+      icon: <ErrorOutline />,
       tooltip: "Failed",
       colorClass: selectedStatus.failed ? classes.xbddFilterButtonFailed : classes.xbddFilterButtonUnselected,
       handler: () => handleFilterButtonClick("failed"),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     undefined: {
-      icon: <HelpOutlineIcon />,
+      icon: <HelpOutline />,
       tooltip: "Undefined",
       colorClass: selectedStatus.undefined ? classes.xbddFilterButtonUndefined : classes.xbddFilterButtonUnselected,
       handler: () => handleFilterButtonClick("undefined"),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     skipped: {
-      icon: <BlockIcon />,
+      icon: <RemoveCircleOutline />,
       tooltip: "Skipped",
       colorClass: selectedStatus.skipped ? classes.xbddFilterButtonSkipped : classes.xbddFilterButtonUnselected,
       handler: () => handleFilterButtonClick("skipped"),
@@ -52,19 +47,21 @@ const TagListFilterButtonsView = props => {
   };
 
   return (
-    <Card raised className={classes.xbddTagListFilterButtons}>
-      {createButton(variants.passed)}
-      {createButton(variants.failed)}
-      {createButton(variants.undefined)}
-      {createButton(variants.skipped)}
-    </Card>
+    <div className={classes.xbddFilterButtons}>
+      <Card raised>
+        {createButton(variants.passed)}
+        {createButton(variants.failed)}
+        {createButton(variants.undefined)}
+        {createButton(variants.skipped)}
+      </Card>
+    </div>
   );
 };
 
-TagListFilterButtonsView.propTypes = {
+FeatureFilterButtons.propTypes = {
   selectedStatus: PropTypes.shape({}).isRequired,
   handleFilterButtonClick: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
 };
 
-export default withStyles(tagListFilterButtonStyles)(TagListFilterButtonsView);
+export default withStyles(filterButtonStyles)(FeatureFilterButtons);

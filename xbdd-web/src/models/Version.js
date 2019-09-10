@@ -1,7 +1,7 @@
 class Version {
   constructor(data) {
     if (data) {
-      this.id = data["_id"];
+      this.id = data._id;
       this.major = data.coordinates.major;
       this.minor = data.coordinates.minor;
       this.servicePack = data.coordinates.servicePack;

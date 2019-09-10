@@ -53,4 +53,8 @@ export const pinABuild = (project, major, minor, servicePack, build) =>
 export const unPinABuild = (project, major, minor, servicePack, build) =>
   doDeleteRequest(`/rest/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`);
 
-export const getBuildReport = (product, version, build) => doGetRequest(`/rest/reports/featureTagIndex/${product}/${version}/${build}`);
+export const getFeatureListByTagData = (product, version, build) =>
+  doGetRequest(`/rest/reports/featureTagIndex/${product}/${version}/${build}`);
+
+export const getSimpleFeatureListData = (product, version, build) =>
+  doGetRequest(`/rest/reports/featureIndex/${product}/${version}/${build}`);

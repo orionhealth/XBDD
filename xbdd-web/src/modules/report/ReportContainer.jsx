@@ -1,41 +1,33 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid, Card } from "@material-ui/core";
-import TagListContainer from "./tag-list/TagListContainer";
-import Report from "../../models/Report";
-import { getBuildReport } from "../../lib/rest/Rest";
+import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
 
 class ReportContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = { report: null };
+    this.state = {
+      selectedFeature: null,
+      report: null,
+    };
   }
 
   componentDidMount() {
-    getBuildReport(this.props.product, this.props.version, this.props.build).then(data => {
-      this.setState({
-        report: new Report(data),
-      });
-    });
+    // Fetch data for report or stat
   }
 
   render() {
-    if (this.state.report) {
-      const tagList = this.state.report.tagList;
-
+    const { product, version, build } = this.props;
+    if (true) {
       return (
         <>
           <Card>
             <Grid container>
-              <Grid item xs={3}>
-                <Card raised>
-                  <TagListContainer tagList={tagList} />
-                </Card>
+              <Grid item xs={4} lg={3}>
+                <FeatureListContainer product={product} version={version} build={build} />
               </Grid>
-              <Grid item xs={9}>
-                <Card raised>
-                  <div style={{ height: "calc(100vh - 82px)" }}>report</div>
-                </Card>
+              <Grid item xs={8} lg={9}>
+                <div style={{ height: "calc(100vh - 82px)" }}>report</div>
               </Grid>
             </Grid>
           </Card>
