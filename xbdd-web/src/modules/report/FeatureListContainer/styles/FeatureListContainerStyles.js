@@ -54,11 +54,13 @@ const filterButtonStyles = {
 
 const featureListItemStyles = {
   tags: {
-    fontSize: "14px",
+    height: "18px",
+    margin: "0 2px",
     background: "#428bca",
     color: "white",
   },
   xbddFeatureListItem: {
+    lineHeight: "20px",
     padding: "12px 16px 12px 16px",
     display: "inline-block",
   },

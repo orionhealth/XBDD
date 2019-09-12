@@ -1,10 +1,10 @@
 import React from "react";
 import { PropTypes } from "prop-types";
-import { List, ListItem, Card } from "@material-ui/core";
+import { List, ListItem, Card, Chip } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
 
-const renderTags = (tags, classes) => <span className={classes}>{tags.map(tag => tag.name)}</span>;
+const renderTags = (tags, classes) => tags.map(tag => <Chip key={tag.name} label={tag.name} size="small" className={classes} />);
 
 const ListViewFeatureList = props => {
   const { featureList, selectedStatus, handleFeatureSelected, classes } = props;
@@ -18,11 +18,11 @@ const ListViewFeatureList = props => {
   };
 
   return (
-    <Card>
+    <Card raised>
       <List>
         {filterFeatureList.map(feature => (
-          <ListItem button key={feature.id} className={classes.xbddFeatureListItem} onClick={() => handleFeatureSelected(feature.id)}>
-            <span className={classesMap[feature.calculatedStatus]}>{" " + feature.name + " "}</span>
+          <ListItem button key={feature._id} className={classes.xbddFeatureListItem} onClick={() => handleFeatureSelected(feature)}>
+            <span className={classesMap[feature.calculatedStatus]}>{feature.name + " "}</span>
             {feature.tags ? renderTags(feature.tags, classes.tags) : null}
           </ListItem>
         ))}

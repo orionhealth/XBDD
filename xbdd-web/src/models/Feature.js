@@ -2,7 +2,8 @@ import Scenario from "./Scenario";
 
 export default class Feature {
   constructor(feature) {
-    this.id = feature._id;
+    this.id = feature.id;
+    this._id = feature._id;
     this.name = feature.name;
     this.description = feature.description;
     this.keyword = feature.keyword;
