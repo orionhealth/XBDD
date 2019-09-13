@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { inputFielsStyles } from "./styles/ScenarioListStyles";
 
 const ScenarioInputField = props => {
-  const { label, placeholder, classes } = props;
+  const { id, label, placeholder, value, handleScenarioCommentChanged, classes } = props;
 
   return (
     <div className={classes.inputField}>
@@ -14,10 +14,10 @@ const ScenarioInputField = props => {
         multiline
         rows="2"
         fullWidth={true}
-        // value={values.multiline}
-        // onChange={handleChange("multiline")}
+        value={value ? value : ""}
+        onChange={e => handleScenarioCommentChanged(id, label, e)}
         className={classes.textField}
-        margin="dense"
+        margin="normal"
         variant="outlined"
       />
     </div>

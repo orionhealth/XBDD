@@ -23,7 +23,7 @@ class FeatureReportContainer extends Component {
   }
 
   render() {
-    const { feature, executionHistory } = this.props;
+    const { feature, executionHistory, handleScenarioCommentChanged } = this.props;
     return (
       <>
         <FeatureSummary feature={feature} executionHistory={executionHistory} />
@@ -31,6 +31,8 @@ class FeatureReportContainer extends Component {
           scenarioList={feature.scenarios}
           expandedScenarioList={this.state.expandedScenarioList}
           handleScenarioClicked={this.handleScenarioClicked}
+          handleStepClicked={this.handleStepClicked}
+          handleScenarioCommentChanged={handleScenarioCommentChanged}
         />
       </>
     );

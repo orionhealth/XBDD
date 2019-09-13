@@ -44,13 +44,13 @@ const FeatureSummary = props => {
   return (
     <Card raised className={classes.featureSummary}>
       <Grid container>
-        <Grid item xs={2}>
+        <Grid item xs={3}>
           {renderFeatureStatus(feature)}
           {renderLastEdit(classes.featureEditInfo)}
           {feature.tags ? <div className={classes.featureTags}>{renderTags(feature.tags, classes.featureTag)}</div> : null}
         </Grid>
-        <Grid item xs={10}>
-          <Grid item xs={10}>
+        <Grid item xs={9}>
+          <Grid item xs={9}>
             <Typography variant="h6" className={`${classesMap[feature.calculatedStatus]} ${classes.featureTitle}`}>
               {feature.name}
             </Typography>
@@ -61,7 +61,7 @@ const FeatureSummary = props => {
             </Typography>
           </Grid>
           <Divider />
-          <Grid item xs={10}>
+          <Grid item xs={9}>
             {executionHistory ? <ExecutionHistory executionHistory={executionHistory} /> : null}
           </Grid>
         </Grid>

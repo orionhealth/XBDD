@@ -16,6 +16,7 @@ class ReportContainer extends Component {
     };
 
     this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
+    this.handleScenarioCommentChanged = this.handleScenarioCommentChanged.bind(this);
   }
 
   handleFeatureSelected(feature) {
@@ -29,6 +30,29 @@ class ReportContainer extends Component {
         });
       });
     });
+  }
+
+  func(scenarios, id, comment, commentContent) {
+    const newScenarios = [...scenarios];
+    const newScenario = newScenarios.find(scenario => scenario.id === id);
+    newScenario[comment] = commentContent;
+    return newScenarios;
+  }
+
+  handleScenarioCommentChanged(id, label, event) {
+    const labelMap = {
+      Environment: "environmentNotes",
+      "Execution Notes": "executionNotes",
+      "Testing Tips": "testingTips",
+    };
+    const comment = labelMap[label];
+    const commentContent = event.target.value;
+    this.setState(prevState =>
+      Object.assign({}, prevState, {
+        selectedFeature: Object.assign({}, prevState.selectedFeature, {
+          scenarios: this.func(prevState.selectedFeature.scenarios, id, comment, commentContent),
+        }),
+      }));
   }
 
   render() {
@@ -48,7 +72,11 @@ class ReportContainer extends Component {
               </Grid>
               <Grid item xs={8} lg={9}>
                 {this.state.selectedFeature && this.state.executionHistory ? (
-                  <FeatureReportContainer feature={this.state.selectedFeature} executionHistory={this.state.executionHistory} />
+                  <FeatureReportContainer
+                    feature={this.state.selectedFeature}
+                    executionHistory={this.state.executionHistory}
+                    handleScenarioCommentChanged={this.handleScenarioCommentChanged}
+                  />
                 ) : null}
               </Grid>
             </Grid>

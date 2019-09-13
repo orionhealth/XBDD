@@ -1,6 +1,6 @@
 import Scenario from "./Scenario";
 
-export default class Feature {
+class Feature {
   constructor(feature) {
     this.id = feature.id;
     this._id = feature._id;
@@ -13,3 +13,5 @@ export default class Feature {
     this.scenarios = feature.elements.map(element => new Scenario(element));
   }
 }
+
+export default Feature;

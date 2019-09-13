@@ -3,7 +3,11 @@ const scenarioListStyles = {
     padding: "0 24px 24px 12px",
   },
   scenarioListItem: {
+    textAlign: "left",
     boxShadow: "0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12)",
+  },
+  expandedScenarioTitle: {
+    fontWeight: "bold",
   },
   buttons: {
     textAlign: "right",
@@ -55,19 +59,27 @@ const stepStyles = {
     overflowX: "scroll",
   },
   step: {
-    display: "contents",
+    display: "block",
+    padding: "0",
   },
-  stepTitle: {
-    fontWeight: "bold",
-  },
+  stepTitle: {},
   stepKeyword: {
-    color: "green",
+    color: "#07584F",
+  },
+  cenarioStepStatusIcon: {
+    fontSize: "18px",
+  },
+  scenarioStepStatusPassed: {
+    color: "#576E5D",
+  },
+  scenarioStepStatusFailed: {
+    color: "#AC534F",
   },
 };
 
 const inputFielsStyles = {
   inputField: {
-    margin: 0,
+    margin: "0",
   },
 };
 

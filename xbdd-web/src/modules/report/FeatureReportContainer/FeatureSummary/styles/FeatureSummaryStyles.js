@@ -26,7 +26,7 @@ const featureSummaryStyles = {
   featureDescription: {
     overflowX: "scroll",
     textAlign: "left",
-    padding: "12px 0 12px 24px",
+    padding: "12px 0 12px 12px",
   },
   xbddFeatureIcons: {
     fontSize: "24px",
