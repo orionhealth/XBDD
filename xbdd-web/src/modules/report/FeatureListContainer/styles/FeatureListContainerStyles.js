@@ -60,7 +60,7 @@ const featureListItemStyles = {
     color: "white",
   },
   xbddFeatureListItem: {
-    lineHeight: "20px",
+    lineHeight: "22px",
     padding: "12px 16px 12px 16px",
     display: "inline-block",
   },
@@ -76,7 +76,11 @@ const featureListItemStyles = {
   xbddFeatureListItemSkipped: {
     color: "#457B9D",
   },
-  xbddTagViewFeatureList: {
+  xbddFeatureListItemSelected: {
+    fontWeight: "bold",
+    backgroundColor: "#E0E0E0",
+  },
+  xbddTagViewFeatureListItem: {
     paddingLeft: "40px",
   },
 };

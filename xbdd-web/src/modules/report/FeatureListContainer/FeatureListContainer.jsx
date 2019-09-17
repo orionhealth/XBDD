@@ -103,11 +103,12 @@ class FeatureListContainer extends Component {
     );
   }
 
-  renderFeatureList(handleFeatureSelected) {
+  renderFeatureList(selectedFeatureId, handleFeatureSelected) {
     if (this.state.isTagView) {
       return (
         <TagList
           tagList={this.filterTags()}
+          selectedFeatureId={selectedFeatureId}
           selectedStatus={this.state.selectedStatus}
           expandedTagsList={this.state.expandedTagsList}
           handleTagSelect={this.handleTagSelect}
@@ -117,6 +118,7 @@ class FeatureListContainer extends Component {
     } else {
       return (
         <ListViewFeatureList
+          selectedFeatureId={selectedFeatureId}
           featureList={this.state.featureList.simpleFeatureList}
           selectedStatus={this.state.selectedStatus}
           handleFeatureSelected={handleFeatureSelected}
@@ -126,14 +128,14 @@ class FeatureListContainer extends Component {
   }
 
   render() {
-    const { handleFeatureSelected, classes } = this.props;
+    const { selectedFeatureId, handleFeatureSelected, classes } = this.props;
     if (this.state.featureList) {
       return (
         <>
           <FeatureFilterButtons selectedStatus={this.state.selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
           <div className={classes.xbddTagListContainer}>
             {this.renderFeatureListTitle(classes)}
-            {this.renderFeatureList(handleFeatureSelected)}
+            {this.renderFeatureList(selectedFeatureId, handleFeatureSelected)}
           </div>
         </>
       );

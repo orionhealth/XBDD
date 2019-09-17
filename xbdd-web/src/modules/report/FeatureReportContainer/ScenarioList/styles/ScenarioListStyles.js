@@ -9,6 +9,18 @@ const scenarioListStyles = {
   expandedScenarioTitle: {
     fontWeight: "bold",
   },
+  xbddScenarioPassed: {
+    color: "#576E5D",
+  },
+  xbddScenarioFailed: {
+    color: "#AC534F",
+  },
+  xbddScenarioUndefined: {
+    color: "#C39575",
+  },
+  xbddScenarioSkipped: {
+    color: "#457B9D",
+  },
   buttons: {
     textAlign: "right",
     marginTop: "12px",
@@ -35,19 +47,6 @@ const scenarioListStyles = {
   //   width: "25%",
   //   borderRight: "1px solid rgba(0, 0, 0, 0.23)",
   // },
-  // xbddFilterButtonPassed: {
-  //   color: "#576E5D",
-  // },
-  // xbddFilterButtonFailed: {
-  //   color: "#AC534F",
-  // },
-  // xbddFilterButtonUndefined: {
-  //   color: "#C39575",
-  // },
-  // xbddFilterButtonSkipped: {
-  //   color: "#457B9D",
-  //   borderRight: "hidden",
-  // },
   // xbddFilterButtonUnselected: {
   //   color: "#E0E0E0",
   // },
@@ -66,7 +65,7 @@ const stepStyles = {
   stepKeyword: {
     color: "#07584F",
   },
-  cenarioStepStatusIcon: {
+  scenarioStepIcon: {
     fontSize: "18px",
   },
   scenarioStepStatusPassed: {
@@ -74,6 +73,9 @@ const stepStyles = {
   },
   scenarioStepStatusFailed: {
     color: "#AC534F",
+  },
+  moreButton: {
+    padding: "0px",
   },
 };
 

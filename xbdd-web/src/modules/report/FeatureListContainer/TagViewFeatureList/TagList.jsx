@@ -6,12 +6,13 @@ import { tagListStyles } from "./styles/TagListStyles";
 import TagListItem from "./TagListItem";
 import Tag from "../../../../models/Tag";
 
-const renderListItem = (tagList, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected) =>
+const renderListItem = (tagList, selectedFeatureId, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected) =>
   tagList.map(tag => (
     <TagListItem
       tag={tag}
       key={tag.name}
       isSelected={expandedTagsList.includes(tag.name)}
+      selectedFeatureId={selectedFeatureId}
       selectedStatus={selectedStatus}
       handleTagSelect={handleTagSelect}
       handleFeatureSelected={handleFeatureSelected}
@@ -19,11 +20,13 @@ const renderListItem = (tagList, selectedStatus, expandedTagsList, handleTagSele
   ));
 
 const TagList = props => {
-  const { tagList, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected, classes } = props;
+  const { tagList, selectedFeatureId, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected, classes } = props;
 
   return (
     <Card raised className={classes.xbddTagList}>
-      <List component="ul">{renderListItem(tagList, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected)}</List>
+      <List component="ul">
+        {renderListItem(tagList, selectedFeatureId, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected)}
+      </List>
     </Card>
   );
 };

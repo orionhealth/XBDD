@@ -6,8 +6,23 @@ import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
 
 const renderTags = (tags, classes) => tags.map(tag => <Chip key={tag.name} label={tag.name} size="small" className={classes} />);
 
+const renderFeatureListItem = (feature, selectedFeatureId, statusClasses, handleFeatureSelected, classes) => {
+  var className = `${statusClasses} ${classes.xbddFeatureListItem}`;
+
+  if (feature._id === selectedFeatureId) {
+    className += ` ${classes.xbddFeatureListItemSelected}`;
+  }
+
+  return (
+    <ListItem button key={feature._id} className={className} onClick={() => handleFeatureSelected(feature)}>
+      <span className={statusClasses}>{feature.name + " "}</span>
+      {feature.tags ? renderTags(feature.tags, classes.tags) : null}
+    </ListItem>
+  );
+};
+
 const ListViewFeatureList = props => {
-  const { featureList, selectedStatus, handleFeatureSelected, classes } = props;
+  const { featureList, selectedFeatureId, selectedStatus, handleFeatureSelected, classes } = props;
   const filterFeatureList = featureList.filter(feature => selectedStatus[feature.calculatedStatus]);
 
   const classesMap = {
@@ -20,12 +35,8 @@ const ListViewFeatureList = props => {
   return (
     <Card raised>
       <List>
-        {filterFeatureList.map(feature => (
-          <ListItem button key={feature._id} className={classes.xbddFeatureListItem} onClick={() => handleFeatureSelected(feature)}>
-            <span className={classesMap[feature.calculatedStatus]}>{feature.name + " "}</span>
-            {feature.tags ? renderTags(feature.tags, classes.tags) : null}
-          </ListItem>
-        ))}
+        {filterFeatureList.map(feature =>
+          renderFeatureListItem(feature, selectedFeatureId, classesMap[feature.calculatedStatus], handleFeatureSelected, classes))}
       </List>
     </Card>
   );

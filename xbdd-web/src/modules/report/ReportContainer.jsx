@@ -17,6 +17,7 @@ class ReportContainer extends Component {
 
     this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
     this.handleScenarioCommentChanged = this.handleScenarioCommentChanged.bind(this);
+    this.handleStatusChange = this.handleStatusChange.bind(this);
   }
 
   handleFeatureSelected(feature) {
@@ -32,59 +33,58 @@ class ReportContainer extends Component {
     });
   }
 
-  func(scenarios, id, comment, commentContent) {
+  updateScenariosComment(scenarios, scenarioId, comment, commentContent) {
     const newScenarios = [...scenarios];
-    const newScenario = newScenarios.find(scenario => scenario.id === id);
+    const newScenario = newScenarios.find(scenario => scenario.id === scenarioId);
     newScenario[comment] = commentContent;
     return newScenarios;
   }
 
-  handleScenarioCommentChanged(id, label, event) {
-    const labelMap = {
-      Environment: "environmentNotes",
-      "Execution Notes": "executionNotes",
-      "Testing Tips": "testingTips",
-    };
-    const comment = labelMap[label];
+  handleScenarioCommentChanged(id, comment, event) {
     const commentContent = event.target.value;
     this.setState(prevState =>
       Object.assign({}, prevState, {
         selectedFeature: Object.assign({}, prevState.selectedFeature, {
-          scenarios: this.func(prevState.selectedFeature.scenarios, id, comment, commentContent),
+          scenarios: this.updateScenariosComment(prevState.selectedFeature.scenarios, id, comment, commentContent),
         }),
       }));
   }
 
+  handleStatusChange(stepId, status) {
+    console.error(stepId);
+    console.error(status);
+  }
+
   render() {
     const { product, version, build } = this.props;
-    if (true) {
-      return (
-        <>
-          <Card>
-            <Grid container>
-              <Grid item xs={4} lg={3}>
-                <FeatureListContainer
-                  product={product}
-                  version={version}
-                  build={build}
-                  handleFeatureSelected={this.handleFeatureSelected}
-                />
-              </Grid>
-              <Grid item xs={8} lg={9}>
-                {this.state.selectedFeature && this.state.executionHistory ? (
-                  <FeatureReportContainer
-                    feature={this.state.selectedFeature}
-                    executionHistory={this.state.executionHistory}
-                    handleScenarioCommentChanged={this.handleScenarioCommentChanged}
-                  />
-                ) : null}
-              </Grid>
+    return (
+      <>
+        <Card>
+          <Grid container>
+            <Grid item xs={4} lg={3}>
+              <FeatureListContainer
+                product={product}
+                version={version}
+                build={build}
+                selectedFeatureId={this.state.selectedFeature ? this.state.selectedFeature._id : null}
+                handleFeatureSelected={this.handleFeatureSelected}
+              />
             </Grid>
-          </Card>
-        </>
-      );
-    }
-    return null;
+            <Grid item xs={8} lg={9}>
+              {this.state.selectedFeature && this.state.executionHistory ? (
+                <FeatureReportContainer
+                  feature={this.state.selectedFeature}
+                  executionHistory={this.state.executionHistory}
+                  hoveredStepId={this.state.hoveredStepId}
+                  handleScenarioCommentChanged={this.handleScenarioCommentChanged}
+                  handleStatusChange={this.handleStatusChange}
+                />
+              ) : null}
+            </Grid>
+          </Grid>
+        </Card>
+      </>
+    );
   }
 }
 

@@ -6,6 +6,12 @@ import { inputFielsStyles } from "./styles/ScenarioListStyles";
 const ScenarioInputField = props => {
   const { id, label, placeholder, value, handleScenarioCommentChanged, classes } = props;
 
+  const labelMap = {
+    Environment: "environmentNotes",
+    "Execution Notes": "executionNotes",
+    "Testing Tips": "testingTips",
+  };
+
   return (
     <div className={classes.inputField}>
       <TextField
@@ -14,8 +20,8 @@ const ScenarioInputField = props => {
         multiline
         rows="2"
         fullWidth={true}
-        value={value ? value : ""}
-        onChange={e => handleScenarioCommentChanged(id, label, e)}
+        defaultValue={value ? value : ""}
+        onBlur={e => handleScenarioCommentChanged(id, labelMap[label], e)}
         className={classes.textField}
         margin="normal"
         variant="outlined"

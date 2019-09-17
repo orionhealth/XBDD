@@ -4,8 +4,21 @@ import { List, ListItem } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
 
+const renderFeatureListItem = (feature, selectedFeatureId, statusClasses, handleFeatureSelected, classes) => {
+  var className = `${classes.xbddTagViewFeatureListItem} ${statusClasses} ${classes.xbddFeatureListItem}`;
+  if (feature._id === selectedFeatureId) {
+    className += ` ${classes.xbddFeatureListItemSelected}`;
+  }
+
+  return (
+    <ListItem button key={feature._id} className={className} onClick={() => handleFeatureSelected(feature)}>
+      {feature.name}
+    </ListItem>
+  );
+};
+
 const TagViewFeatureList = props => {
-  const { featureList, handleFeatureSelected, classes } = props;
+  const { selectedFeatureId, featureList, handleFeatureSelected, classes } = props;
   const classesMap = {
     passed: classes.xbddFeatureListItemPassed,
     failed: classes.xbddFeatureListItemFailed,
@@ -15,18 +28,8 @@ const TagViewFeatureList = props => {
 
   return (
     <List>
-      {featureList.map(feature => {
-        return (
-          <ListItem
-            button
-            key={feature._id}
-            className={`${classesMap[feature.calculatedStatus]} ${classes.xbddTagViewFeatureList}`}
-            onClick={() => handleFeatureSelected(feature)}
-          >
-            {feature.name}
-          </ListItem>
-        );
-      })}
+      {featureList.map(feature =>
+        renderFeatureListItem(feature, selectedFeatureId, classesMap[feature.calculatedStatus], handleFeatureSelected, classes))}
     </List>
   );
 };

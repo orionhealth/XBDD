@@ -6,33 +6,55 @@ import ScenarioList from "./ScenarioList/ScenarioList";
 class FeatureReportContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = { expandedScenarioList: [] };
+    this.state = { expandedScenarioIdList: [], hoveredStepId: null, anchor: null };
 
     this.handleScenarioClicked = this.handleScenarioClicked.bind(this);
+    this.handleMouseEnterStep = this.handleMouseEnterStep.bind(this);
+    this.handleMouseLeaveStep = this.handleMouseLeaveStep.bind(this);
+    this.handleMoreButtonClicked = this.handleMoreButtonClicked.bind(this);
   }
 
-  handleScenarioClicked(scenario) {
-    if (this.state.expandedScenarioList.includes(scenario)) {
-      const newExpandedScenarioList = [...this.state.expandedScenarioList];
-      const index = newExpandedScenarioList.indexOf(scenario);
-      newExpandedScenarioList.splice(index, 1);
-      this.setState({ expandedScenarioList: newExpandedScenarioList });
+  handleScenarioClicked(scenarioId) {
+    if (this.state.expandedScenarioIdList.includes(scenarioId)) {
+      const newExpandedScenarioIdList = [...this.state.expandedScenarioIdList];
+      const index = newExpandedScenarioIdList.indexOf(scenarioId);
+      newExpandedScenarioIdList.splice(index, 1);
+      this.setState({ expandedScenarioIdList: newExpandedScenarioIdList });
     } else {
-      this.setState({ expandedScenarioList: [...this.state.expandedScenarioList, scenario] });
+      this.setState({ expandedScenarioIdList: [...this.state.expandedScenarioIdList, scenarioId] });
+    }
+  }
+  handleMouseEnterStep(hoveredStepId) {
+    this.setState({ hoveredStepId: hoveredStepId });
+  }
+  handleMouseLeaveStep() {
+    this.setState({ hoveredStepId: null, anchor: null });
+  }
+
+  handleMoreButtonClicked(event) {
+    if (this.state.anchor) {
+      this.setState({ anchor: null });
+    } else {
+      this.setState({ anchor: event.currentTarget });
     }
   }
 
   render() {
-    const { feature, executionHistory, handleScenarioCommentChanged } = this.props;
+    const { feature, executionHistory, handleScenarioCommentChanged, handleStatusChange } = this.props;
     return (
       <>
         <FeatureSummary feature={feature} executionHistory={executionHistory} />
         <ScenarioList
           scenarioList={feature.scenarios}
-          expandedScenarioList={this.state.expandedScenarioList}
+          expandedScenarioIdList={this.state.expandedScenarioIdList}
+          hoveredStepId={this.state.hoveredStepId}
+          anchor={this.state.anchor}
           handleScenarioClicked={this.handleScenarioClicked}
-          handleStepClicked={this.handleStepClicked}
           handleScenarioCommentChanged={handleScenarioCommentChanged}
+          handleMouseEnterStep={this.handleMouseEnterStep}
+          handleMouseLeaveStep={this.handleMouseLeaveStep}
+          handleMoreButtonClicked={this.handleMoreButtonClicked}
+          handleStatusChange={handleStatusChange}
         />
       </>
     );
