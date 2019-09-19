@@ -77,6 +77,9 @@ const stepStyles = {
   moreButton: {
     padding: "0px",
   },
+  popperMenu: {
+    zIndex: "999",
+  },
 };
 
 const inputFielsStyles = {

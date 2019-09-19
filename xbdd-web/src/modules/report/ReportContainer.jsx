@@ -50,9 +50,31 @@ class ReportContainer extends Component {
       }));
   }
 
-  handleStatusChange(stepId, status) {
-    console.error(stepId);
-    console.error(status);
+  updateStepStatus(scenarios, scenarioId, stepId, status) {
+    const newScenarios = [...scenarios];
+    const newScenario = newScenarios.find(scenario => scenario.id === scenarioId);
+    if (newScenario.backgroundSteps) {
+      const newBackgroundSteps = [...newScenario.backgroundSteps];
+      const newBackgroundStep = newBackgroundSteps.find(step => step.id === stepId);
+      if (newBackgroundStep) {
+        newBackgroundStep.manualStatus = status;
+        return newScenarios;
+      }
+    }
+    const newSteps = [...newScenario.steps];
+    const newStep = newSteps.find(step => step.id === stepId);
+    newStep.manualStatus = status;
+
+    return newScenarios;
+  }
+
+  handleStatusChange(scenarioId, stepId, status) {
+    this.setState(prevState =>
+      Object.assign({}, prevState, {
+        selectedFeature: Object.assign({}, prevState.selectedFeature, {
+          scenarios: this.updateStepStatus(prevState.selectedFeature.scenarios, scenarioId, stepId, status),
+        }),
+      }));
   }
 
   render() {

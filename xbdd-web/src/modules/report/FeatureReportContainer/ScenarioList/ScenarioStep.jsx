@@ -1,39 +1,56 @@
 import React from "react";
-import { List, ListItem, Grid, Popper, IconButton, Fade, Paper } from "@material-ui/core";
+import { List, ListItem, Grid, Popper, IconButton, Fade, Card } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { stepStyles } from "./styles/ScenarioListStyles";
 import { CheckBox, CheckBoxOutlineBlank, IndeterminateCheckBox, MoreHoriz } from "@material-ui/icons";
 
-const getNextHandler = (step, handleStatusChange) => {
+const clickEventWrapper = (event, scenarioId, step, status, handleStatusChange) => {
+  let node = event.target;
+
   const handlerMap = {
-    passed: () => handleStatusChange(step.id, "failed"),
-    failed: () => handleStatusChange(step.id, null),
-    null: () => handleStatusChange(step.id, "passed"),
+    passed: () => handleStatusChange(scenarioId, step.id, "failed"),
+    failed: () => handleStatusChange(scenarioId, step.id, "skipped"),
+    undefined: () => handleStatusChange(scenarioId, step.id, "passed"),
+    skipped: () => handleStatusChange(scenarioId, step.id, "passed"),
   };
-  return handlerMap[step.manualStatus];
+
+  while (node) {
+    if (node.className === "MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button") {
+      if (status) {
+        handleStatusChange(scenarioId, step.id, status);
+      }
+      return;
+    }
+    node = node.parentNode;
+  }
+  if (step.manualStatus) {
+    handlerMap[step.manualStatus]();
+  } else {
+    handlerMap[step.status]();
+  }
 };
 
-const renderMoreButton = (step, anchor, handleMoreButtonClicked, handleStatusChange, classes) => (
+const renderMoreButton = (scenarioId, step, anchor, handleMoreButtonHovered, handleStatusChange, clickEventWrapper, classes) => (
   <>
-    <IconButton className={classes.moreButton} onClick={e => handleMoreButtonClicked(e)}>
+    <IconButton className={classes.moreButton} onMouseEnter={e => handleMoreButtonHovered(e)}>
       <MoreHoriz className={classes.scenarioStepIcon} />
     </IconButton>
-    <Popper open={anchor ? true : false} anchorEl={anchor} transition>
+    <Popper open={!!anchor} anchorEl={anchor} transition className={classes.popperMenu}>
       {({ TransitionProps }) => (
         <Fade {...TransitionProps} timeout={350}>
-          <Paper>
+          <Card>
             <List>
-              <ListItem button onClick={() => handleStatusChange(step.id, "passed")}>
+              <ListItem button onClick={e => clickEventWrapper(e, scenarioId, step, "passed", handleStatusChange)}>
                 Pass
               </ListItem>
-              <ListItem button onClick={() => handleStatusChange(step.id, "failed")}>
+              <ListItem button onClick={e => clickEventWrapper(e, scenarioId, step, "failed", handleStatusChange)}>
                 Fail
               </ListItem>
-              <ListItem button onClick={() => handleStatusChange(step.id, "skipped")}>
+              <ListItem button onClick={e => clickEventWrapper(e, scenarioId, step, "skipped", handleStatusChange)}>
                 Skip
               </ListItem>
             </List>
-          </Paper>
+          </Card>
         </Fade>
       )}
     </Popper>
@@ -43,12 +60,13 @@ const renderMoreButton = (step, anchor, handleMoreButtonClicked, handleStatusCha
 const ScenarioStep = props => {
   const {
     title,
+    scenarioId,
     steps,
     hoveredStepId,
     anchor,
-    handleMouseEnterStep,
-    handleMouseLeaveStep,
-    handleMoreButtonClicked,
+    handleStepHovered,
+    handleStepNotHovered,
+    handleMoreButtonHovered,
     handleStatusChange,
     classes,
   } = props;
@@ -66,15 +84,14 @@ const ScenarioStep = props => {
       <List>
         {steps.map(step => {
           const status = step.manualStatus ? step.manualStatus : step.status;
-
           return (
             <ListItem
               button
               key={step.id}
               className={classes.step}
-              onClick={getNextHandler(step, handleStatusChange)}
-              onMouseEnter={() => handleMouseEnterStep(step.id)}
-              onMouseLeave={() => handleMouseLeaveStep(step.id)}
+              onClick={e => clickEventWrapper(e, scenarioId, step, null, handleStatusChange)}
+              onMouseEnter={() => handleStepHovered(step.id)}
+              onMouseLeave={() => handleStepNotHovered(step.id)}
             >
               <Grid container spacing={1} wrap="nowrap" alignItems="flex-start">
                 <Grid item>{iconMap[status]}</Grid>
@@ -83,7 +100,9 @@ const ScenarioStep = props => {
                   <span>{step.name}</span>
                 </Grid>
                 <Grid item>
-                  {step.id === hoveredStepId ? renderMoreButton(step, anchor, handleMoreButtonClicked, handleStatusChange, classes) : null}
+                  {step.id === hoveredStepId
+                    ? renderMoreButton(scenarioId, step, anchor, handleMoreButtonHovered, handleStatusChange, clickEventWrapper, classes)
+                    : null}
                 </Grid>
               </Grid>
             </ListItem>

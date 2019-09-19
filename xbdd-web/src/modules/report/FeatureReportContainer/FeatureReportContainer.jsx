@@ -9,9 +9,9 @@ class FeatureReportContainer extends Component {
     this.state = { expandedScenarioIdList: [], hoveredStepId: null, anchor: null };
 
     this.handleScenarioClicked = this.handleScenarioClicked.bind(this);
-    this.handleMouseEnterStep = this.handleMouseEnterStep.bind(this);
-    this.handleMouseLeaveStep = this.handleMouseLeaveStep.bind(this);
-    this.handleMoreButtonClicked = this.handleMoreButtonClicked.bind(this);
+    this.handleStepHovered = this.handleStepHovered.bind(this);
+    this.handleStepNotHovered = this.handleStepNotHovered.bind(this);
+    this.handleMoreButtonHovered = this.handleMoreButtonHovered.bind(this);
   }
 
   handleScenarioClicked(scenarioId) {
@@ -24,19 +24,14 @@ class FeatureReportContainer extends Component {
       this.setState({ expandedScenarioIdList: [...this.state.expandedScenarioIdList, scenarioId] });
     }
   }
-  handleMouseEnterStep(hoveredStepId) {
+  handleStepHovered(hoveredStepId) {
     this.setState({ hoveredStepId: hoveredStepId });
   }
-  handleMouseLeaveStep() {
+  handleStepNotHovered() {
     this.setState({ hoveredStepId: null, anchor: null });
   }
-
-  handleMoreButtonClicked(event) {
-    if (this.state.anchor) {
-      this.setState({ anchor: null });
-    } else {
-      this.setState({ anchor: event.currentTarget });
-    }
+  handleMoreButtonHovered(event) {
+    this.setState({ anchor: event.currentTarget });
   }
 
   render() {
@@ -51,9 +46,9 @@ class FeatureReportContainer extends Component {
           anchor={this.state.anchor}
           handleScenarioClicked={this.handleScenarioClicked}
           handleScenarioCommentChanged={handleScenarioCommentChanged}
-          handleMouseEnterStep={this.handleMouseEnterStep}
-          handleMouseLeaveStep={this.handleMouseLeaveStep}
-          handleMoreButtonClicked={this.handleMoreButtonClicked}
+          handleStepHovered={this.handleStepHovered}
+          handleStepNotHovered={this.handleStepNotHovered}
+          handleMoreButtonHovered={this.handleMoreButtonHovered}
           handleStatusChange={handleStatusChange}
         />
       </>
