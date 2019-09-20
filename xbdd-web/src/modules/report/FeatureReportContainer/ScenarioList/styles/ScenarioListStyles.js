@@ -8,6 +8,7 @@ const scenarioListStyles = {
   },
   expandedScenarioTitle: {
     fontWeight: "bold",
+    fontSize: "18px",
   },
   xbddScenarioPassed: {
     color: "#576E5D",
@@ -25,10 +26,10 @@ const scenarioListStyles = {
     textAlign: "right",
     marginTop: "12px",
   },
-  cancelButton: {
+  passAllSteps: {
     margin: "4px",
     color: "white",
-    backgroundColor: "#1976d2",
+    backgroundColor: "#576E5D",
   },
   submitButton: {
     margin: "4px",
@@ -53,17 +54,29 @@ const scenarioListStyles = {
 };
 
 const stepStyles = {
+  stepIconBox: {
+    padding: "3px",
+  },
+  stepContentBox: {
+    padding: "3px",
+    overflowX: "scroll",
+  },
   steps: {
     paddingBottom: "12px",
-    overflowX: "scroll",
   },
   step: {
     display: "block",
     padding: "0",
   },
-  stepTitle: {},
+  stepTitle: {
+    fontWeight: "bold",
+  },
   stepKeyword: {
     color: "#07584F",
+  },
+  stepTable: {
+    margin: "4px 0 12px 0",
+    overflowX: "scroll",
   },
   scenarioStepIcon: {
     fontSize: "18px",
@@ -72,13 +85,16 @@ const stepStyles = {
     color: "#576E5D",
   },
   scenarioStepStatusFailed: {
-    color: "#AC534F",
+    color: "white",
   },
   moreButton: {
     padding: "0px",
   },
   popperMenu: {
     zIndex: "999",
+  },
+  stepIconFailed: {
+    backgroundColor: "#AC534F",
   },
 };
 

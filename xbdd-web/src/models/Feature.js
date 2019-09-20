@@ -12,6 +12,22 @@ class Feature {
     this.tags = feature.tags;
     this.scenarios = feature.elements.map(element => new Scenario(element));
   }
+
+  calculateStatus() {
+    var status = "passed";
+    if (this.scenarios) {
+      this.calculatedStatus = this.scenarios.forEach(scenario => {
+        if (scenario.calculatedStatus === "failed") {
+          status = "failed";
+        } else if (scenario.calculatedStatus === "undefined" && this.calculatedStatus !== "failed") {
+          status = "undefined";
+        } else if (scenario.calculatedStatus === "skipped" && this.calculatedStatus !== "failed" && this.calculatedStatus !== "undefined") {
+          status = "skipped";
+        }
+      });
+    }
+    this.calculatedStatus = status;
+  }
 }
 
 export default Feature;

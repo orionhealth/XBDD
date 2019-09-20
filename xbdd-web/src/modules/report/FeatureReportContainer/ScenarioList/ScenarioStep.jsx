@@ -1,8 +1,11 @@
 import React from "react";
-import { List, ListItem, Grid, Popper, IconButton, Fade, Card } from "@material-ui/core";
+import { List, ListItem, Popper, IconButton, Fade, Card, Table, TableHead, TableRow, TableCell, TableBody, Box } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { stepStyles } from "./styles/ScenarioListStyles";
-import { CheckBox, CheckBoxOutlineBlank, IndeterminateCheckBox, MoreHoriz } from "@material-ui/icons";
+import { MoreHoriz } from "@material-ui/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinusSquare, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
+import { faSquare } from "@fortawesome/free-regular-svg-icons";
 
 const clickEventWrapper = (event, scenarioId, step, status, handleStatusChange) => {
   let node = event.target;
@@ -30,9 +33,18 @@ const clickEventWrapper = (event, scenarioId, step, status, handleStatusChange) 
   }
 };
 
-const renderMoreButton = (scenarioId, step, anchor, handleMoreButtonHovered, handleStatusChange, clickEventWrapper, classes) => (
-  <>
-    <IconButton className={classes.moreButton} onMouseEnter={e => handleMoreButtonHovered(e)}>
+const renderMoreButton = (
+  scenarioId,
+  step,
+  anchor,
+  handleMoreButtonHovered,
+  handleMoreButtonNotHovered,
+  handleStatusChange,
+  clickEventWrapper,
+  classes
+) => (
+  <span onMouseEnter={e => handleMoreButtonHovered(e)} onMouseLeave={() => handleMoreButtonNotHovered()}>
+    <IconButton className={classes.moreButton}>
       <MoreHoriz className={classes.scenarioStepIcon} />
     </IconButton>
     <Popper open={!!anchor} anchorEl={anchor} transition className={classes.popperMenu}>
@@ -54,7 +66,40 @@ const renderMoreButton = (scenarioId, step, anchor, handleMoreButtonHovered, han
         </Fade>
       )}
     </Popper>
-  </>
+  </span>
+);
+
+const renderTable = (rows, classes) => {
+  var index = 0;
+  return (
+    <div className={classes.stepTable}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            {rows[0].cells.map(cell => (
+              <TableCell key={cell}>{cell}</TableCell>
+            ))}
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.slice(1).map(row => (
+            <TableRow key={row.line}>
+              {row.cells.map(cell => (
+                <TableCell key={index++}>{cell}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+const renderScreenshot = (embeddings, classes) => (
+  <div className={classes.screenshot}>
+    <img src={`/rest/attachment/${embeddings}`} alt={"Screenshot Not Found"} />
+  </div>
 );
 
 const ScenarioStep = props => {
@@ -67,15 +112,16 @@ const ScenarioStep = props => {
     handleStepHovered,
     handleStepNotHovered,
     handleMoreButtonHovered,
+    handleMoreButtonNotHovered,
     handleStatusChange,
     classes,
   } = props;
 
   const iconMap = {
-    passed: <CheckBox className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
-    failed: <IndeterminateCheckBox className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
-    undefined: <CheckBoxOutlineBlank className={classes.scenarioStepIcon} />,
-    skipped: <CheckBoxOutlineBlank className={classes.scenarioStepIcon} />,
+    passed: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
+    failed: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
+    undefined: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
+    skipped: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
   };
 
   return (
@@ -83,7 +129,11 @@ const ScenarioStep = props => {
       <div className={classes.stepTitle}>{title}</div>
       <List>
         {steps.map(step => {
+          var stepIconClasses = classes.stepIconBox;
           const status = step.manualStatus ? step.manualStatus : step.status;
+          if (status === "failed") {
+            stepIconClasses += ` ${classes.stepIconFailed}`;
+          }
           return (
             <ListItem
               button
@@ -93,18 +143,31 @@ const ScenarioStep = props => {
               onMouseEnter={() => handleStepHovered(step.id)}
               onMouseLeave={() => handleStepNotHovered(step.id)}
             >
-              <Grid container spacing={1} wrap="nowrap" alignItems="flex-start">
-                <Grid item>{iconMap[status]}</Grid>
-                <Grid item>
-                  <span className={classes.stepKeyword}>{step.keyword}</span>
-                  <span>{step.name}</span>
-                </Grid>
-                <Grid item>
-                  {step.id === hoveredStepId
-                    ? renderMoreButton(scenarioId, step, anchor, handleMoreButtonHovered, handleStatusChange, clickEventWrapper, classes)
-                    : null}
-                </Grid>
-              </Grid>
+              <Box display="flex" flexDirection="row">
+                <Box p={1} className={stepIconClasses}>
+                  {iconMap[status]}
+                </Box>
+                <Box p={1} className={classes.stepContentBox}>
+                  <div>
+                    <span className={classes.stepKeyword}>{step.keyword}</span>
+                    <span>{`${step.name} `}</span>
+                    {step.id === hoveredStepId
+                      ? renderMoreButton(
+                          scenarioId,
+                          step,
+                          anchor,
+                          handleMoreButtonHovered,
+                          handleMoreButtonNotHovered,
+                          handleStatusChange,
+                          clickEventWrapper,
+                          classes
+                        )
+                      : null}
+                  </div>
+                  {step.rows ? renderTable(step.rows, classes) : null}
+                  {step.embeddings ? renderScreenshot(step.embeddings, classes) : null}
+                </Box>
+              </Box>
             </ListItem>
           );
         })}

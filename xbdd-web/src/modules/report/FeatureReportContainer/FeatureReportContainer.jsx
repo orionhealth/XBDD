@@ -12,6 +12,7 @@ class FeatureReportContainer extends Component {
     this.handleStepHovered = this.handleStepHovered.bind(this);
     this.handleStepNotHovered = this.handleStepNotHovered.bind(this);
     this.handleMoreButtonHovered = this.handleMoreButtonHovered.bind(this);
+    this.handleMoreButtonNotHovered = this.handleMoreButtonNotHovered.bind(this);
   }
 
   handleScenarioClicked(scenarioId) {
@@ -24,18 +25,26 @@ class FeatureReportContainer extends Component {
       this.setState({ expandedScenarioIdList: [...this.state.expandedScenarioIdList, scenarioId] });
     }
   }
+
   handleStepHovered(hoveredStepId) {
     this.setState({ hoveredStepId: hoveredStepId });
   }
+
   handleStepNotHovered() {
     this.setState({ hoveredStepId: null, anchor: null });
   }
+
   handleMoreButtonHovered(event) {
     this.setState({ anchor: event.currentTarget });
   }
 
+  handleMoreButtonNotHovered() {
+    this.setState({ anchor: null });
+  }
+
   render() {
     const { feature, executionHistory, handleScenarioCommentChanged, handleStatusChange } = this.props;
+    console.error(feature);
     return (
       <>
         <FeatureSummary feature={feature} executionHistory={executionHistory} />
@@ -49,6 +58,7 @@ class FeatureReportContainer extends Component {
           handleStepHovered={this.handleStepHovered}
           handleStepNotHovered={this.handleStepNotHovered}
           handleMoreButtonHovered={this.handleMoreButtonHovered}
+          handleMoreButtonNotHovered={this.handleMoreButtonNotHovered}
           handleStatusChange={handleStatusChange}
         />
       </>

@@ -54,17 +54,15 @@ class ReportContainer extends Component {
     const newScenarios = [...scenarios];
     const newScenario = newScenarios.find(scenario => scenario.id === scenarioId);
     if (newScenario.backgroundSteps) {
-      const newBackgroundSteps = [...newScenario.backgroundSteps];
-      const newBackgroundStep = newBackgroundSteps.find(step => step.id === stepId);
+      const newBackgroundStep = newScenario.backgroundSteps.find(step => step.id === stepId);
       if (newBackgroundStep) {
         newBackgroundStep.manualStatus = status;
-        return newScenarios;
+      } else {
+        const newStep = newScenario.steps.find(step => step.id === stepId);
+        newStep.manualStatus = status;
       }
     }
-    const newSteps = [...newScenario.steps];
-    const newStep = newSteps.find(step => step.id === stepId);
-    newStep.manualStatus = status;
-
+    newScenario.calculateStatus();
     return newScenarios;
   }
 

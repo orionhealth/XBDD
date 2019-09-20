@@ -6,34 +6,6 @@ import { ExpandMore } from "@material-ui/icons";
 import ScenarioStep from "./ScenarioStep";
 import ScenarioInputField from "./ScenarioInputField";
 
-const calculateStatus = (backgroundSteps, steps) => {
-  if (backgroundSteps) {
-    const calculatedBackgroundStatus = backgroundSteps.find(step => {
-      if (step.manualStatus) {
-        return step.manualStatus !== "passed";
-      } else {
-        return step.status !== "passed";
-      }
-    });
-    if (calculatedBackgroundStatus) {
-      return calculatedBackgroundStatus.manualStatus ? calculatedBackgroundStatus.manualStatus : calculatedBackgroundStatus.status;
-    }
-  }
-  if (steps) {
-    const calculatedStatus = steps.find(step => {
-      if (step.manualStatus) {
-        return step.manualStatus !== "passed";
-      } else {
-        return step.status !== "passed";
-      }
-    });
-    if (calculatedStatus) {
-      return calculatedStatus.manualStatus ? calculatedStatus.manualStatus : calculatedStatus.status;
-    }
-  }
-  return "passed";
-};
-
 const ScenarioList = props => {
   const {
     scenarioList,
@@ -45,6 +17,7 @@ const ScenarioList = props => {
     handleStepHovered,
     handleStepNotHovered,
     handleMoreButtonHovered,
+    handleMoreButtonNotHovered,
     handleStatusChange,
     classes,
   } = props;
@@ -54,7 +27,6 @@ const ScenarioList = props => {
       {scenarioList.map(scenario => {
         const isExpanded = expandedScenarioIdList.includes(scenario.id);
         var className = isExpanded ? classes.expandedScenarioTitle : "";
-        const calculatedStatus = calculateStatus(scenario.backgroundSteps, scenario.steps);
         const classesMap = {
           passed: classes.xbddScenarioPassed,
           failed: classes.xbddScenarioFailed,
@@ -62,7 +34,7 @@ const ScenarioList = props => {
           skipped: classes.xbddScenarioSkipped,
           null: null,
         };
-        className += ` ${classesMap[calculatedStatus]}`;
+        className += ` ${classesMap[scenario.calculatedStatus]}`;
 
         const renderScenarioSteps = (title, steps) => (
           <ScenarioStep
@@ -74,6 +46,7 @@ const ScenarioList = props => {
             handleStepHovered={handleStepHovered}
             handleStepNotHovered={handleStepNotHovered}
             handleMoreButtonHovered={handleMoreButtonHovered}
+            handleMoreButtonNotHovered={handleMoreButtonNotHovered}
             handleStatusChange={handleStatusChange}
           />
         );
@@ -122,8 +95,8 @@ const ScenarioList = props => {
                 </Grid>
                 <Grid item xs={11}>
                   <div className={classes.buttons}>
-                    <Button variant="contained" size="small" className={classes.cancelButton}>
-                      Cancel
+                    <Button variant="contained" size="small" className={classes.passAllSteps}>
+                      Pass All Steps
                     </Button>
                     <Button variant="contained" size="small" className={classes.submitButton}>
                       Submit
