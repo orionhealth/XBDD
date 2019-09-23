@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { List, ListItem, Popper, IconButton, Fade, Card, Table, TableHead, TableRow, TableCell, TableBody, Box } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { stepStyles } from "./styles/ScenarioListStyles";
@@ -6,13 +7,14 @@ import { MoreHoriz } from "@material-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusSquare, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
+import Step from "../../../../models/Step";
 
 const clickEventWrapper = (event, scenarioId, step, status, handleStatusChange) => {
   let node = event.target;
 
   const handlerMap = {
     passed: () => handleStatusChange(scenarioId, step.id, "failed"),
-    failed: () => handleStatusChange(scenarioId, step.id, "skipped"),
+    failed: () => handleStatusChange(scenarioId, step.id, "undefined"),
     undefined: () => handleStatusChange(scenarioId, step.id, "passed"),
     skipped: () => handleStatusChange(scenarioId, step.id, "passed"),
   };
@@ -72,14 +74,13 @@ const renderMoreButton = (
 const renderTable = (rows, classes) => {
   var index = 0;
   return (
-    <div className={classes.stepTable}>
-      <Table size="small">
+    <div className={classes.scrollableTable}>
+      <Table size="small" className={classes.stepTable}>
         <TableHead>
           <TableRow>
             {rows[0].cells.map(cell => (
               <TableCell key={cell}>{cell}</TableCell>
             ))}
-            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -174,6 +175,20 @@ const ScenarioStep = props => {
       </List>
     </div>
   );
+};
+
+ScenarioStep.propTypes = {
+  title: PropTypes.string,
+  scenarioId: PropTypes.string,
+  steps: PropTypes.arrayOf(PropTypes.instanceOf(Step)),
+  hoveredStepId: PropTypes.string,
+  anchor: PropTypes.string,
+  handleStepHovered: PropTypes.func.isRequired,
+  handleStepNotHovered: PropTypes.func.isRequired,
+  handleMoreButtonHovered: PropTypes.func.isRequired,
+  handleMoreButtonNotHovered: PropTypes.func.isRequired,
+  handleStatusChange: PropTypes.func.isRequired,
+  classes: PropTypes.shape({}),
 };
 
 export default withStyles(stepStyles)(ScenarioStep);

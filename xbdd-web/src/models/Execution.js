@@ -1,9 +1,9 @@
 class Execution {
-  constructor(build) {
-    this.buildName = build.build;
-    this.calculatedStatus = build.calculatedStatus;
-    this.originalAutomatedStatus = build.originalAutomatedStatus;
-    this.statusLastEditedBy = build.statusLastEditedBy;
+  constructor(data) {
+    this.build = data.build;
+    this.calculatedStatus = data.calculatedStatus;
+    this.originalAutomatedStatus = data.originalAutomatedStatus;
+    this.statusLastEditedBy = data.statusLastEditedBy;
   }
 }
 

@@ -26,6 +26,11 @@ const scenarioListStyles = {
     textAlign: "right",
     marginTop: "12px",
   },
+  skipAllSteps: {
+    margin: "4px",
+    color: "white",
+    backgroundColor: "#457B9D",
+  },
   passAllSteps: {
     margin: "4px",
     color: "white",
@@ -36,21 +41,6 @@ const scenarioListStyles = {
     color: "white",
     backgroundColor: "#dc004e",
   },
-
-  // xbddFilterButtons: {
-  //   padding: "24px 24px 12px 24px",
-  // },
-  // xbddFilterButton: {
-  //   height: "calc(100% - 4px)",
-  //   marginTop: "2px",
-  //   marginBottom: "2px",
-  //   borderRadius: 0,
-  //   width: "25%",
-  //   borderRight: "1px solid rgba(0, 0, 0, 0.23)",
-  // },
-  // xbddFilterButtonUnselected: {
-  //   color: "#E0E0E0",
-  // },
 };
 
 const stepStyles = {
@@ -74,12 +64,15 @@ const stepStyles = {
   stepKeyword: {
     color: "#07584F",
   },
-  stepTable: {
-    margin: "4px 0 12px 0",
+  scrollableTable: {
     overflowX: "scroll",
   },
+  stepTable: {
+    width: "auto",
+    margin: "4px 0 12px 0",
+  },
   scenarioStepIcon: {
-    fontSize: "18px",
+    fontSize: "16px",
   },
   scenarioStepStatusPassed: {
     color: "#576E5D",

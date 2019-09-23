@@ -50,29 +50,68 @@ class ReportContainer extends Component {
       }));
   }
 
-  updateStepStatus(scenarios, scenarioId, stepId, status) {
-    const newScenarios = [...scenarios];
-    const newScenario = newScenarios.find(scenario => scenario.id === scenarioId);
-    if (newScenario.backgroundSteps) {
-      const newBackgroundStep = newScenario.backgroundSteps.find(step => step.id === stepId);
+  updateScenarioStepsStatus(scenario, stepId, status) {
+    var found = false;
+    if (scenario.backgroundSteps) {
+      const newBackgroundStep = scenario.backgroundSteps.find(step => step.id === stepId);
       if (newBackgroundStep) {
+        found = true;
         newBackgroundStep.manualStatus = status;
-      } else {
-        const newStep = newScenario.steps.find(step => step.id === stepId);
-        newStep.manualStatus = status;
       }
     }
-    newScenario.calculateStatus();
+    if (!found) {
+      const newStep = scenario.steps.find(step => step.id === stepId);
+      newStep.manualStatus = status;
+    }
+  }
+
+  updateAllSteps(scenario, status) {
+    if (scenario.backgroundSteps) {
+      scenario.backgroundSteps.forEach(step => (step.manualStatus = status));
+    }
+    if (scenario.steps) {
+      scenario.steps.forEach(step => (step.manualStatus = status));
+    }
+  }
+
+  updateScenarios(scenarios, scenarioId, stepId, status) {
+    const newScenarios = [...scenarios];
+    const newScenario = newScenarios.find(scenario => scenario.id === scenarioId);
+    if (stepId) {
+      this.updateScenarioStepsStatus(newScenario, stepId, status);
+      newScenario.calculateStatus();
+    } else {
+      this.updateAllSteps(newScenario, status);
+      newScenario.calculatedStatus = status;
+    }
     return newScenarios;
   }
 
+  updateExecutionHistory(executions, status) {
+    const newExecutions = [...executions];
+    const newExecution = newExecutions.find(execution => execution.build === this.props.build);
+
+    newExecution.calculatedStatus = status;
+    return newExecutions;
+  }
+
   handleStatusChange(scenarioId, stepId, status) {
-    this.setState(prevState =>
-      Object.assign({}, prevState, {
-        selectedFeature: Object.assign({}, prevState.selectedFeature, {
-          scenarios: this.updateStepStatus(prevState.selectedFeature.scenarios, scenarioId, stepId, status),
-        }),
-      }));
+    this.setState(prevState => {
+      const newFeature = new Feature().clone(prevState.selectedFeature);
+      const prevCalculatedStatus = newFeature.calculatedStatus;
+      newFeature.scenarios = this.updateScenarios(prevState.selectedFeature.scenarios, scenarioId, stepId, status);
+      newFeature.calculateStatus();
+      if (prevCalculatedStatus !== newFeature.calculatedStatus) {
+        const newExecutionHistory = this.updateExecutionHistory(prevState.executionHistory, newFeature.calculatedStatus);
+        return Object.assign({}, prevState, {
+          selectedFeature: newFeature,
+          executionHistory: newExecutionHistory,
+        });
+      }
+      return Object.assign({}, prevState, {
+        selectedFeature: newFeature,
+      });
+    });
   }
 
   render() {

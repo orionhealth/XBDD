@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import {} from "@material-ui/core";
+import { PropTypes } from "prop-types";
 import FeatureSummary from "./FeatureSummary/FeatureSummary";
 import ScenarioList from "./ScenarioList/ScenarioList";
+import Feature from "../../../models/Feature";
+import Execution from "../../../models/Execution";
 
 class FeatureReportContainer extends Component {
   constructor(props) {
@@ -44,7 +46,7 @@ class FeatureReportContainer extends Component {
 
   render() {
     const { feature, executionHistory, handleScenarioCommentChanged, handleStatusChange } = this.props;
-    console.error(feature);
+
     return (
       <>
         <FeatureSummary feature={feature} executionHistory={executionHistory} />
@@ -65,5 +67,12 @@ class FeatureReportContainer extends Component {
     );
   }
 }
+
+FeatureReportContainer.propTypes = {
+  feature: PropTypes.instanceOf(Feature),
+  executionHistory: PropTypes.arrayOf(PropTypes.instanceOf(Execution)),
+  handleScenarioCommentChanged: PropTypes.func.isRequired,
+  handleStatusChange: PropTypes.func.isRequired,
+};
 
 export default FeatureReportContainer;

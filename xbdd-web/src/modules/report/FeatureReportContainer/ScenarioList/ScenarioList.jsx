@@ -1,10 +1,12 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography, Grid, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { scenarioListStyles } from "./styles/ScenarioListStyles";
 import { ExpandMore } from "@material-ui/icons";
 import ScenarioStep from "./ScenarioStep";
 import ScenarioInputField from "./ScenarioInputField";
+import Scenario from "../../../../models/Scenario";
 
 const ScenarioList = props => {
   const {
@@ -22,9 +24,41 @@ const ScenarioList = props => {
     classes,
   } = props;
 
+  const renderScenarioSteps = (scenarioId, title, steps) => (
+    <ScenarioStep
+      title={title}
+      scenarioId={scenarioId}
+      hoveredStepId={hoveredStepId}
+      steps={steps}
+      anchor={anchor}
+      handleStepHovered={handleStepHovered}
+      handleStepNotHovered={handleStepNotHovered}
+      handleMoreButtonHovered={handleMoreButtonHovered}
+      handleMoreButtonNotHovered={handleMoreButtonNotHovered}
+      handleStatusChange={handleStatusChange}
+    />
+  );
+
+  const renderScenarioComment = (scenarioId, label, value, placeholder) => (
+    <ScenarioInputField
+      id={scenarioId}
+      label={label}
+      value={value}
+      handleScenarioCommentChanged={handleScenarioCommentChanged}
+      placeholder={placeholder}
+    />
+  );
+
+  const renderButton = (scenarioId, value, status, handler, className) => (
+    <Button variant="contained" size="small" onClick={() => handler(scenarioId, null, status)} className={className}>
+      {value}
+    </Button>
+  );
+
   return (
     <div className={classes.scenarioList}>
       {scenarioList.map(scenario => {
+        const id = scenario.id;
         const isExpanded = expandedScenarioIdList.includes(scenario.id);
         var className = isExpanded ? classes.expandedScenarioTitle : "";
         const classesMap = {
@@ -35,31 +69,6 @@ const ScenarioList = props => {
           null: null,
         };
         className += ` ${classesMap[scenario.calculatedStatus]}`;
-
-        const renderScenarioSteps = (title, steps) => (
-          <ScenarioStep
-            title={title}
-            scenarioId={scenario.id}
-            hoveredStepId={hoveredStepId}
-            steps={steps}
-            anchor={anchor}
-            handleStepHovered={handleStepHovered}
-            handleStepNotHovered={handleStepNotHovered}
-            handleMoreButtonHovered={handleMoreButtonHovered}
-            handleMoreButtonNotHovered={handleMoreButtonNotHovered}
-            handleStatusChange={handleStatusChange}
-          />
-        );
-
-        const renderScenarioComment = (label, value, placeholder) => (
-          <ScenarioInputField
-            id={scenario.id}
-            label={label}
-            value={value}
-            handleScenarioCommentChanged={handleScenarioCommentChanged}
-            placeholder={placeholder}
-          />
-        );
 
         return (
           <ExpansionPanel
@@ -74,20 +83,21 @@ const ScenarioList = props => {
             <ExpansionPanelDetails>
               <Grid container>
                 <Grid item xs={11}>
-                  {scenario.backgroundSteps ? renderScenarioSteps("Background: ", scenario.backgroundSteps) : null}
+                  {scenario.backgroundSteps ? renderScenarioSteps(id, "Background: ", scenario.backgroundSteps) : null}
                 </Grid>
                 <Grid item xs={11}>
-                  {scenario.steps ? renderScenarioSteps("Steps: ", scenario.steps) : null}
+                  {scenario.steps ? renderScenarioSteps(id, "Steps: ", scenario.steps) : null}
                 </Grid>
                 <Grid item xs={5}>
-                  {renderScenarioComment("Environment", scenario.environmentNotes, "Environment details go here...")}
+                  {renderScenarioComment(id, "Environment", scenario.environmentNotes, "Environment details go here...")}
                 </Grid>
                 <Grid item xs={1} />
                 <Grid item xs={5}>
-                  {renderScenarioComment("Execution Notes", scenario.executionNotes, "Notes on your test execution go here...")}
+                  {renderScenarioComment(id, "Execution Notes", scenario.executionNotes, "Notes on your test execution go here...")}
                 </Grid>
                 <Grid item xs={11}>
                   {renderScenarioComment(
+                    id,
                     "Testing Tips",
                     scenario.testingTips,
                     "Any details / gotchas on manually testing this functionality go here. This will be carried forward in subsequent reports."
@@ -95,12 +105,8 @@ const ScenarioList = props => {
                 </Grid>
                 <Grid item xs={11}>
                   <div className={classes.buttons}>
-                    <Button variant="contained" size="small" className={classes.passAllSteps}>
-                      Pass All Steps
-                    </Button>
-                    <Button variant="contained" size="small" className={classes.submitButton}>
-                      Submit
-                    </Button>
+                    {renderButton(id, "Skip All Steps", "skipped", handleStatusChange, classes.skipAllSteps)}
+                    {renderButton(id, "Pass All Steps", "passed", handleStatusChange, classes.passAllSteps)}
                   </div>
                 </Grid>
               </Grid>
@@ -110,6 +116,21 @@ const ScenarioList = props => {
       })}
     </div>
   );
+};
+
+ScenarioList.propTypes = {
+  scenarioList: PropTypes.arrayOf(PropTypes.instanceOf(Scenario)),
+  expandedScenarioIdList: PropTypes.arrayOf(PropTypes.string),
+  hoveredStepId: PropTypes.string,
+  anchor: PropTypes.string,
+  handleScenarioClicked: PropTypes.func.isRequired,
+  handleScenarioCommentChanged: PropTypes.func.isRequired,
+  handleStepHovered: PropTypes.func.isRequired,
+  handleStepNotHovered: PropTypes.func.isRequired,
+  handleMoreButtonHovered: PropTypes.func.isRequired,
+  handleMoreButtonNotHovered: PropTypes.func.isRequired,
+  handleStatusChange: PropTypes.func.isRequired,
+  classes: PropTypes.shape({}),
 };
 
 export default withStyles(scenarioListStyles)(ScenarioList);

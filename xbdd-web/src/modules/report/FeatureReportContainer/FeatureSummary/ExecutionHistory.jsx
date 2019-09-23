@@ -20,8 +20,8 @@ const ExecutionHistory = props => {
     <div className={classes.executionHistory}>
       <Typography variant="body2">Execution History</Typography>
       {executionHistory.map(build => (
-        <span key={build.buildName}>
-          <Tooltip title={build.buildName} placement="top">
+        <span key={build.build}>
+          <Tooltip title={build.build} placement="top">
             <IconButton className={classes.executionHistoryIcon}>{iconMap[build.calculatedStatus]}</IconButton>
           </Tooltip>
         </span>
