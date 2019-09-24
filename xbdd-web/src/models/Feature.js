@@ -34,8 +34,12 @@ class Feature {
       this.calculatedStatus = this.scenarios.forEach(scenario => {
         if (scenario.calculatedStatus === "failed") {
           status = "failed";
-        } else if (scenario.calculatedStatus === "undefined" && status !== "failed") {
+          return;
+        }
+        // "Undefined" has the highest priority if the "failed" is return directly
+        if (scenario.calculatedStatus === "undefined") {
           status = "undefined";
+          // Only set status skipped when the stored status is "passed", "skipped" only override "passed"
         } else if (scenario.calculatedStatus === "skipped" && status === "passed") {
           status = "skipped";
         }

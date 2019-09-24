@@ -14,30 +14,17 @@ class Scenario {
 
   calculateStatus() {
     if (this.backgroundSteps) {
-      const calculatedBackgroundStatus = this.backgroundSteps.find(step => {
-        if (step.manualStatus) {
-          return step.manualStatus !== "passed";
-        } else {
-          return step.status !== "passed";
-        }
-      });
-      if (calculatedBackgroundStatus) {
-        this.calculatedStatus = calculatedBackgroundStatus.manualStatus
-          ? calculatedBackgroundStatus.manualStatus
-          : calculatedBackgroundStatus.status;
+      const notPassedBgStep = this.backgroundSteps.find(step =>
+        step.manualStatus ? step.manualStatus !== "passed" : step.status !== "passed");
+      if (notPassedBgStep) {
+        this.calculatedStatus = notPassedBgStep.manualStatus ? notPassedBgStep.manualStatus : notPassedBgStep.status;
         return;
       }
     }
     if (this.steps) {
-      const calculatedStatus = this.steps.find(step => {
-        if (step.manualStatus) {
-          return step.manualStatus !== "passed";
-        } else {
-          return step.status !== "passed";
-        }
-      });
-      if (calculatedStatus) {
-        this.calculatedStatus = calculatedStatus.manualStatus ? calculatedStatus.manualStatus : calculatedStatus.status;
+      const notPassedStep = this.steps.find(step => (step.manualStatus ? step.manualStatus !== "passed" : step.status !== "passed"));
+      if (notPassedStep) {
+        this.calculatedStatus = notPassedStep.manualStatus ? notPassedStep.manualStatus : notPassedStep.status;
         return;
       }
     }
