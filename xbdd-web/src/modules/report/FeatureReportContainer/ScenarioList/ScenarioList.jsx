@@ -4,8 +4,8 @@ import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typograph
 import { withStyles } from "@material-ui/core/styles";
 import { scenarioListStyles } from "./styles/ScenarioListStyles";
 import { ExpandMore } from "@material-ui/icons";
-import ScenarioStep from "./ScenarioStep";
-import ScenarioInputField from "./ScenarioInputField";
+import ScenarioStep from "./ScenarioStep/ScenarioStep";
+import ScenarioInputField from "./ScenarioStep/ScenarioInputField";
 import Scenario from "../../../../models/Scenario";
 
 const ScenarioList = props => {
@@ -121,8 +121,8 @@ const ScenarioList = props => {
 ScenarioList.propTypes = {
   scenarioList: PropTypes.arrayOf(PropTypes.instanceOf(Scenario)),
   expandedScenarioIdList: PropTypes.arrayOf(PropTypes.string),
-  hoveredStepId: PropTypes.string,
-  anchor: PropTypes.string,
+  hoveredStepId: PropTypes.number,
+  anchor: PropTypes.object,
   handleScenarioClicked: PropTypes.func.isRequired,
   handleScenarioCommentChanged: PropTypes.func.isRequired,
   handleStepHovered: PropTypes.func.isRequired,

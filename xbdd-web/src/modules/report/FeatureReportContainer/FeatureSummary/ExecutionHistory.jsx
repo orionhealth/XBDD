@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { withStyles } from "@material-ui/core/styles";
 import { executionHistoryStyles } from "./styles/FeatureSummaryStyles";
+import Execution from "../../../../models/Execution";
 
 const ExecutionHistory = props => {
   const { executionHistory, classes } = props;
@@ -31,6 +32,7 @@ const ExecutionHistory = props => {
 };
 
 ExecutionHistory.propTypes = {
+  executionHistory: PropTypes.arrayOf(PropTypes.instanceOf(Execution)),
   classes: PropTypes.shape({}).isRequired,
 };
 

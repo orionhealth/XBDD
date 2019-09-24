@@ -7,13 +7,10 @@ import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } f
 import { withStyles } from "@material-ui/core/styles";
 import { featureSummaryStyles } from "./styles/FeatureSummaryStyles";
 import ExecutionHistory from "./ExecutionHistory";
+import Feature from "../../../../models/Feature";
+import Execution from "../../../../models/Execution";
 
 const renderTags = (tags, classes) => tags.map(tag => <Chip key={tag.name} label={tag.name} size="small" className={classes} />);
-
-// const calculateStatus = feature => {
-//   const calculatedStatus = feature.scenarios.find(scenario => scenario.calculatedStatus !== "passed");
-//   return calculatedStatus ? calculatedStatus.calculatedStatus : "passed";
-// };
 
 const renderLastEdit = classes => (
   <div className={classes}>
@@ -24,7 +21,6 @@ const renderLastEdit = classes => (
 
 const FeatureSummary = props => {
   const { feature, executionHistory, classes } = props;
-  // feature.calculatedStatus = calculateStatus(feature);
 
   const classesMap = {
     passed: classes.xbddFeaturePassed,
@@ -75,6 +71,12 @@ const FeatureSummary = props => {
       </Grid>
     </Card>
   );
+};
+
+FeatureSummary.propTypes = {
+  feature: PropTypes.instanceOf(Feature),
+  executionHistory: PropTypes.arrayOf(PropTypes.instanceOf(Execution)),
+  classes: PropTypes.shape({}),
 };
 
 export default withStyles(featureSummaryStyles)(FeatureSummary);

@@ -42,12 +42,13 @@ class ReportContainer extends Component {
 
   handleScenarioCommentChanged(id, comment, event) {
     const commentContent = event.target.value;
-    this.setState(prevState =>
-      Object.assign({}, prevState, {
-        selectedFeature: Object.assign({}, prevState.selectedFeature, {
-          scenarios: this.updateScenariosComment(prevState.selectedFeature.scenarios, id, comment, commentContent),
-        }),
-      }));
+    this.setState(prevState => {
+      const newSelectedFeature = new Feature().clone(prevState.selectedFeature);
+      this.updateScenariosComment(newSelectedFeature.scenarios, id, comment, commentContent);
+      return Object.assign({}, prevState, {
+        selectedFeature: newSelectedFeature,
+      });
+    });
   }
 
   updateScenarioStepsStatus(scenario, stepId, status) {
