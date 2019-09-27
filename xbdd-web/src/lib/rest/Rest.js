@@ -58,3 +58,7 @@ export const getFeatureListByTagData = (product, version, build) =>
 
 export const getSimpleFeatureListData = (product, version, build) =>
   doGetRequest(`/rest/reports/featureIndex/${product}/${version}/${build}`);
+
+export const getFeatureReport = id => doGetRequest(`/rest/feature/${id}`);
+
+export const getRollUpData = (product, version, feature) => doGetRequest(`/rest/feature/rollup/${product}/${version}/${feature}`);

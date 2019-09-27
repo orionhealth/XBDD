@@ -1,15 +1,28 @@
 import React from "react";
-import { List, ListItem, Card } from "@material-ui/core";
-import ForwardIcon from "@material-ui/icons/Forward";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { PropTypes } from "prop-types";
+import { List, ListItem, Card, Chip } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
 
-const renderTags = (tags, classes) => <span className={classes}>{tags.map(tag => tag.name)}</span>;
+const renderTags = (tags, classes) => tags.map(tag => <Chip key={tag.name} label={tag.name} size="small" className={classes} />);
+
+const renderFeatureListItem = (feature, selectedFeatureId, statusClasses, handleFeatureSelected, classes) => {
+  var className = `${statusClasses} ${classes.xbddFeatureListItem}`;
+
+  if (feature._id === selectedFeatureId) {
+    className += ` ${classes.xbddFeatureListItemSelected}`;
+  }
+
+  return (
+    <ListItem button key={feature._id} className={className} onClick={() => handleFeatureSelected(feature)}>
+      <span className={statusClasses}>{feature.name + " "}</span>
+      {feature.tags ? renderTags(feature.tags, classes.tags) : null}
+    </ListItem>
+  );
+};
 
 const ListViewFeatureList = props => {
-  const { featureList, selectedStatus, classes } = props;
+  const { featureList, selectedFeatureId, selectedStatus, handleFeatureSelected, classes } = props;
   const filterFeatureList = featureList.filter(feature => selectedStatus[feature.calculatedStatus]);
 
   const classesMap = {
@@ -19,34 +32,21 @@ const ListViewFeatureList = props => {
     skipped: classes.xbddFeatureListItemSkipped,
   };
 
-  const iconMap = {
-    passed: <FontAwesomeIcon icon={faCheckCircle} className={classesMap["passed"] + " " + classes.xbddFeatureListIcons} />,
-    failed: <FontAwesomeIcon icon={faExclamationCircle} className={classesMap["failed"] + " " + classes.xbddFeatureListIcons} />,
-    undefined: <FontAwesomeIcon icon={faQuestionCircle} className={classesMap["undefined"] + " " + classes.xbddFeatureListIcons} />,
-    skipped: <FontAwesomeIcon icon={faMinusCircle} className={classesMap["skipped"] + " " + classes.xbddFeatureListIcons} />,
-  };
-
-  const renderFeatureStatus = feature => (
-    <span className={classes.xbddFeatureStatus}>
-      {iconMap[feature.originalAutomatedStatus]}
-      <ForwardIcon className={classes.xbddFeatureListItemArrow} />
-      {iconMap[feature.calculatedStatus]}
-    </span>
-  );
-
   return (
-    <Card>
+    <Card raised>
       <List>
-        {filterFeatureList.map(feature => (
-          <ListItem button key={feature.id} className={classes.xbddFeatureListItem}>
-            {renderFeatureStatus(feature)}
-            <span className={classesMap[feature.calculatedStatus]}>{" " + feature.name + " "}</span>
-            {feature.tags ? renderTags(feature.tags, classes.tags) : null}
-          </ListItem>
-        ))}
+        {filterFeatureList.map(feature =>
+          renderFeatureListItem(feature, selectedFeatureId, classesMap[feature.calculatedStatus], handleFeatureSelected, classes))}
       </List>
     </Card>
   );
+};
+
+ListViewFeatureList.propTypes = {
+  featureList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  selectedStatus: PropTypes.shape({}).isRequired,
+  handleFeatureSelected: PropTypes.func.isRequired,
+  classes: PropTypes.shape({}),
 };
 
 export default withStyles(featureListItemStyles)(ListViewFeatureList);
