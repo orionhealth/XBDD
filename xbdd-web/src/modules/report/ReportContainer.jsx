@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import { Grid, Card } from "@material-ui/core";
 import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
 import FeatureReportContainer from "./FeatureReportContainer/FeatureReportContainer";
-import { getFeatureReport, getRollUpData } from "../../lib/rest/Rest";
+import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch } from "../../lib/rest/Rest";
 import Feature from "../../models/Feature";
 import Execution from "../../models/Execution";
+import Patch from "../../models/Patch";
 
 class ReportContainer extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class ReportContainer extends Component {
     this.state = {
       selectedFeature: null,
       executionHistory: null,
+      isNetworkError: false,
     };
 
     this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
@@ -43,7 +45,7 @@ class ReportContainer extends Component {
   handleScenarioCommentChanged(id, comment, event) {
     const commentContent = event.target.value;
     this.setState(prevState => {
-      const newSelectedFeature = new Feature().clone(prevState.selectedFeature);
+      const newSelectedFeature = prevState.selectedFeature.clone();
       this.updateScenariosComment(newSelectedFeature.scenarios, id, comment, commentContent);
       return Object.assign({}, prevState, {
         selectedFeature: newSelectedFeature,
@@ -97,6 +99,36 @@ class ReportContainer extends Component {
   }
 
   handleStatusChange(scenarioId, stepId, status) {
+    const featureId = this.state.selectedFeature._id;
+    const backupSelectedFeature = this.state.selectedFeature.clone();
+    const backupExecutionHistory = this.state.executionHistory.map(execution => execution.clone());
+    if (stepId) {
+      updateStepPatch(featureId, new Patch(scenarioId, stepId, status)).then(response => {
+        if (response.status !== 200) {
+          this.setState({
+            selectedFeature: backupSelectedFeature,
+            executionHistory: backupExecutionHistory,
+            isNetworkError: true,
+          });
+          setTimeout(() => {
+            this.setState({ isNetworkError: false });
+          }, 4000);
+        }
+      });
+    } else {
+      updateAllStepPatch(featureId, new Patch(scenarioId, null, status)).then(response => {
+        if (response.status !== 200) {
+          this.setState({
+            selectedFeature: backupSelectedFeature,
+            executionHistory: backupExecutionHistory,
+            isNetworkError: true,
+          });
+          setTimeout(() => {
+            this.setState({ isNetworkError: false });
+          }, 4000);
+        }
+      });
+    }
     this.setState(prevState => {
       const newFeature = prevState.selectedFeature.clone();
       const prevCalculatedStatus = newFeature.calculatedStatus;
@@ -119,6 +151,23 @@ class ReportContainer extends Component {
     const { product, version, build } = this.props;
     return (
       <>
+        {this.state.isNetworkError ? (
+          <Card
+            style={{
+              background: "red",
+              color: "white",
+              position: "fixed",
+              top: "0px",
+              left: "0px",
+              zIndex: "999",
+              width: "100%",
+              height: "30px",
+              fontSize: "24px",
+            }}
+          >
+            Network Error!
+          </Card>
+        ) : null}
         <Card>
           <Grid container>
             <Grid item xs={4} lg={3}>

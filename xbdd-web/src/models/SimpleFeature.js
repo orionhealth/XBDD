@@ -5,7 +5,7 @@ class SimpleFeature {
     this.name = data.name;
     this.calculatedStatus = data.calculatedStatus;
     this.originalAutomatedStatus = data.originalAutomatedStatus ? data.originalAutomatedStatus : null;
-    this.tags = data.tags ? data.tags : null;
+    this.tags = data.tags;
   }
 }
 

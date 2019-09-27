@@ -2,28 +2,29 @@ import Step from "./Step";
 
 class Scenario {
   constructor(scenario) {
-    if(scenario) {
+    if (scenario) {
       this.id = scenario.id;
       this.name = scenario.name;
       this.backgroundSteps = scenario.background ? scenario.background.steps.map(step => new Step(step)) : null;
       this.steps = scenario.steps ? scenario.steps.map(step => new Step(step)) : null;
-      this.environmentNotes = scenario["environment-notes"] ? scenario["environment-notes"] : null;
-      this.executionNotes = scenario["execution-notes"] ? scenario["execution-notes"] : null;
-      this.testingTips = scenario["testing-tips"] ? scenario["testing-tips"] : null;
+      this.environmentNotes = scenario["environment-notes"];
+      this.executionNotes = scenario["execution-notes"];
+      this.testingTips = scenario["testing-tips"];
       this.calculateStatus();
     }
   }
 
-  clone(){
+  clone() {
     const cloneScenario = new Scenario();
     cloneScenario.id = this.id;
     cloneScenario.name = this.name;
-    cloneScenario.backgroundSteps = this.backgroundSteps
-    cloneScenario.steps = this.steps;
+    cloneScenario.backgroundSteps = this.backgroundSteps ? this.backgroundSteps.map(step => step.clone()) : null;
+    cloneScenario.steps = this.steps ? this.steps.map(step => step.clone()) : null;
     cloneScenario.environmentNotes = this.environmentNotes;
     cloneScenario.executionNotes = this.executionNotes;
     cloneScenario.testingTips = this.testingTips;
-    cloneScenario.calculatedStatus = this.calculatedStatus
+    cloneScenario.calculatedStatus = this.calculatedStatus;
+    return cloneScenario;
   }
 
   calculateStatus() {

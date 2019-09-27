@@ -5,6 +5,10 @@ class Execution {
     this.originalAutomatedStatus = data.originalAutomatedStatus;
     this.statusLastEditedBy = data.statusLastEditedBy;
   }
+
+  clone() {
+    return new Execution(this);
+  }
 }
 
 export default Execution;
