@@ -2,7 +2,7 @@ import Scenario from "./Scenario";
 
 class Feature {
   constructor(data) {
-    if (data) {
+    if(data) {
       this.id = data.id;
       this._id = data._id;
       this.name = data.name;
@@ -15,37 +15,31 @@ class Feature {
     }
   }
 
-  clone(feature) {
-    this.id = feature.id;
-    this._id = feature._id;
-    this.name = feature.name;
-    this.description = feature.description;
-    this.keyword = feature.keyword;
-    this.calculatedStatus = feature.calculatedStatus;
-    this.originalAutomatedStatus = feature.originalAutomatedStatus;
-    this.tags = feature.tags;
-    this.scenarios = feature.scenarios;
-    return this;
+  clone() {
+    const cloneFeature = new Feature();
+    cloneFeature.id = this.id;
+    cloneFeature._id = this._id;
+    cloneFeature.name = this.name;
+    cloneFeature.description = this.description;
+    cloneFeature.keyword = this.keyword;
+    cloneFeature.calculatedStatus = this.calculatedStatus;
+    cloneFeature.originalAutomatedStatus = this.originalAutomatedStatus;
+    cloneFeature.tags = this.tags;
+    console.error(this.scenarios);
+    cloneFeature.scenarios = this.scenarios.map(scenario => scenario.clone());
+    return cloneFeature;
   }
 
   calculateStatus() {
-    var status = "passed";
+    const statuses = {};
+  
     if (this.scenarios) {
-      this.calculatedStatus = this.scenarios.forEach(scenario => {
-        if (scenario.calculatedStatus === "failed") {
-          status = "failed";
-          return;
-        }
-        // "Undefined" has the highest priority if the "failed" is return directly
-        if (scenario.calculatedStatus === "undefined") {
-          status = "undefined";
-          // Only set status skipped when the stored status is "passed", "skipped" only override "passed"
-        } else if (scenario.calculatedStatus === "skipped" && status === "passed") {
-          status = "skipped";
-        }
+      this.scenarios.forEach(scenario => {
+        statuses[scenario.calculatedStatus] = scenario.calculatedStatus;
       });
     }
-    this.calculatedStatus = status;
+  
+    this.calculatedStatus = statuses.failed || statuses.undefined || statuses.skipped || statuses.passed;
   }
 }
 

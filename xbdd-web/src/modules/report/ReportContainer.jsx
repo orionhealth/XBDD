@@ -98,7 +98,7 @@ class ReportContainer extends Component {
 
   handleStatusChange(scenarioId, stepId, status) {
     this.setState(prevState => {
-      const newFeature = new Feature().clone(prevState.selectedFeature);
+      const newFeature = prevState.selectedFeature.clone();
       const prevCalculatedStatus = newFeature.calculatedStatus;
       newFeature.scenarios = this.updateScenarios(prevState.selectedFeature.scenarios, scenarioId, stepId, status);
       newFeature.calculateStatus();
