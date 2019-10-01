@@ -44,12 +44,12 @@ export const getSummaryOfReports = () => doGetRequest("/rest/reports");
 
 export const getBuild = (project, version, build) => doGetRequest(`/rest/reports/${project}/${version}/${build}`);
 
-export const setProductFavouriteOn = project => doPutRequest(`/rest/favourites/${project}/`, null);
+export const setProductFavouriteOn = project => doPutRequest(`/rest/favourites/${project}/`);
 
 export const setProductFavouriteOff = project => doDeleteRequest(`/rest/favourites/${project}/`);
 
 export const pinABuild = (project, major, minor, servicePack, build) =>
-  doPutRequest(`/rest/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, null);
+  doPutRequest(`/rest/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`);
 
 export const unPinABuild = (project, major, minor, servicePack, build) =>
   doDeleteRequest(`/rest/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`);

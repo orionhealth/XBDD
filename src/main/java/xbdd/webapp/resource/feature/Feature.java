@@ -230,7 +230,6 @@ public class Feature {
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
-			Feature.embedTestingTips(featureToUpdate, coordinates, db); // rembed testing tips.
 			return Response.ok().build();
 		} catch (final Throwable th) {
 			th.printStackTrace();
@@ -336,7 +335,6 @@ public class Feature {
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", StatusHelper.getFeatureStatus(featureToUpdate));
 			collection.save(featureToUpdate);
-			Feature.embedTestingTips(featureToUpdate, coordinates, db); // rembed testing tips.
 			//throw new ServerErrorException(500); // test the exception
 			return Response.ok().build();
 		} catch (final Throwable th) {
