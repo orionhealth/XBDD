@@ -10,7 +10,7 @@ import PopperMenu from "./PopperMenu";
 import Step from "../../../../../models/Step";
 import CucumberTable from "./CucumberTable";
 
-const clickEventWrapper = (event, scenarioId, stepId, status, handleStatusChange) => {
+const clickEventWrapper = (event, scenarioId, stepId, prevStatus, newStatus, handleStatusChange) => {
   event.stopPropagation();
   let node = event.currentTarget;
   const nextStatus = {
@@ -19,12 +19,18 @@ const clickEventWrapper = (event, scenarioId, stepId, status, handleStatusChange
     undefined: "passed",
     skipped: "passed",
   };
+  const status = newStatus ? newStatus : nextStatus[prevStatus];
+  const prevStatusMap = [{ stepId: stepId, status: prevStatus }];
+  const newStatusMap = [{ stepId: stepId, status: status }];
+
+  // const prevStatusMap = { [stepId]: prevStatus };
+  // const newStatusMap = { [stepId]: status };
 
   if (node.className === "MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button") {
-    handleStatusChange(scenarioId, stepId, status);
+    handleStatusChange(scenarioId, prevStatusMap, newStatusMap);
     return;
   }
-  handleStatusChange(scenarioId, stepId, nextStatus[status]);
+  handleStatusChange(scenarioId, prevStatusMap, newStatusMap);
 };
 
 const renderScreenshot = (embeddings, classes) => (
@@ -63,7 +69,7 @@ const ScenarioStep = props => {
     return stepIconClasses;
   };
 
-  const renderBasicStep = step => (
+  const renderBasicStep = (step, status) => (
     <div>
       <span className={classes.stepKeyword}>{step.keyword}</span>
       <span>{`${step.name} `}</span>
@@ -72,6 +78,7 @@ const ScenarioStep = props => {
           scenarioId={scenarioId}
           stepId={step.id}
           anchor={anchor}
+          status={status}
           handleMoreButtonHovered={handleMoreButtonHovered}
           handleMoreButtonNotHovered={handleMoreButtonNotHovered}
           handleStatusChange={handleStatusChange}
@@ -92,7 +99,7 @@ const ScenarioStep = props => {
               button
               key={step.id}
               className={classes.step}
-              onClick={e => clickEventWrapper(e, scenarioId, step.id, status, handleStatusChange)}
+              onClick={e => clickEventWrapper(e, scenarioId, step.id, status, null, handleStatusChange)}
               onMouseEnter={() => handleStepHovered(step.id)}
               onMouseLeave={() => handleStepNotHovered(step.id)}
             >
@@ -101,7 +108,7 @@ const ScenarioStep = props => {
                   {iconMap[status]}
                 </Box>
                 <Box p={1} className={classes.stepContentBox}>
-                  {renderBasicStep(step)}
+                  {renderBasicStep(step, status)}
                   {step.rows ? <CucumberTable rows={step.rows} /> : null}
                   {step.embeddings ? renderScreenshot(step.embeddings, classes) : null}
                 </Box>

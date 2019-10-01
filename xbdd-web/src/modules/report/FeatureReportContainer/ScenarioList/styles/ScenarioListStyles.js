@@ -41,5 +41,11 @@ const scenarioListStyles = {
     color: "white",
     backgroundColor: "#dc004e",
   },
+  statusIconsBox: {
+    padding: "0px 8px 0px 0px",
+  },
+  scenarioTitleBox: {
+    padding: "0px",
+  },
 };
 export { scenarioListStyles };

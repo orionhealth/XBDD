@@ -1,12 +1,34 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography, Grid, Button } from "@material-ui/core";
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography, Grid, Button, Box } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { scenarioListStyles } from "./styles/ScenarioListStyles";
 import { ExpandMore } from "@material-ui/icons";
 import ScenarioStep from "./ScenarioStep/ScenarioStep";
 import ScenarioInputField from "./ScenarioStep/ScenarioInputField";
 import Scenario from "../../../../models/Scenario";
+import StatusIcons from "../FeatureSummary/StatusIcons";
+
+const addStepsStatus = (statusMap, steps, status) => {
+  steps.forEach(step => {
+    var finalStatus = status;
+    if (!status) {
+      finalStatus = step.manualStatus ? step.manualStatus : step.status;
+    }
+    statusMap.push({ stepId: step.id, status: finalStatus });
+  });
+};
+
+const generateStatusMap = (scenario, status) => {
+  const statusMap = [];
+  if (scenario.backgroundSteps) {
+    addStepsStatus(statusMap, scenario.backgroundSteps, status);
+  }
+  if (scenario.steps) {
+    addStepsStatus(statusMap, scenario.steps, status);
+  }
+  return statusMap;
+};
 
 const ScenarioList = props => {
   const {
@@ -49,8 +71,13 @@ const ScenarioList = props => {
     />
   );
 
-  const renderButton = (scenarioId, value, status, handler, className) => (
-    <Button variant="contained" size="small" onClick={() => handler(scenarioId, null, status)} className={className}>
+  const renderButton = (id, value, scenario, status, classes) => (
+    <Button
+      variant="contained"
+      size="small"
+      onClick={() => handleStatusChange(id, generateStatusMap(scenario), generateStatusMap(scenario, status))}
+      className={classes}
+    >
       {value}
     </Button>
   );
@@ -66,19 +93,28 @@ const ScenarioList = props => {
           failed: classes.xbddScenarioFailed,
           undefined: classes.xbddScenarioUndefined,
           skipped: classes.xbddScenarioSkipped,
-          null: null,
         };
-        className += ` ${classesMap[scenario.calculatedStatus]}`;
+        if (scenario.calculatedStatus) {
+          className += ` ${classesMap[scenario.calculatedStatus]}`;
+        } else {
+          className += ` ${classesMap[scenario.originalAutomatedStatus]}`;
+        }
 
         return (
-          <ExpansionPanel
-            key={scenario.id}
-            expanded={isExpanded}
-            className={classes.scenarioListItem}
-            TransitionProps={{ unmountOnExit: true }}
-          >
+          <ExpansionPanel key={id} expanded={isExpanded} className={classes.scenarioListItem} TransitionProps={{ unmountOnExit: true }}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />} onClick={() => handleScenarioClicked(scenario.id)}>
-              <Typography className={className}>{scenario.name}</Typography>
+              <Box display="flex" alignItems="center">
+                <Box p={1} className={classes.statusIconsBox}>
+                  <StatusIcons
+                    firstStatus={scenario.originalAutomatedStatus}
+                    secondStatus={scenario.calculatedStatus ? scenario.calculatedStatus : scenario.originalAutomatedStatus}
+                    isSmall={true}
+                  />
+                </Box>
+                <Box p={1} className={classes.scenarioTitleBox}>
+                  <Typography className={className}>{scenario.name}</Typography>
+                </Box>
+              </Box>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container>
@@ -105,8 +141,8 @@ const ScenarioList = props => {
                 </Grid>
                 <Grid item xs={11}>
                   <div className={classes.buttons}>
-                    {renderButton(id, "Skip All Steps", "skipped", handleStatusChange, classes.skipAllSteps)}
-                    {renderButton(id, "Pass All Steps", "passed", handleStatusChange, classes.passAllSteps)}
+                    {renderButton(id, "Skip All Steps", scenario, "skipped", classes.skipAllSteps)}
+                    {renderButton(id, "Pass All Steps", scenario, "passed", classes.passAllSteps)}
                   </div>
                 </Grid>
               </Grid>

@@ -22,8 +22,8 @@ class Feature {
     cloneFeature.name = this.name;
     cloneFeature.description = this.description;
     cloneFeature.keyword = this.keyword;
-    cloneFeature.calculatedStatus = this.calculatedStatus;
     cloneFeature.originalAutomatedStatus = this.originalAutomatedStatus;
+    cloneFeature.calculatedStatus = this.calculatedStatus;
     cloneFeature.tags = this.tags;
     cloneFeature.scenarios = this.scenarios.map(scenario => scenario.clone());
     return cloneFeature;
@@ -34,7 +34,11 @@ class Feature {
 
     if (this.scenarios) {
       this.scenarios.forEach(scenario => {
-        statuses[scenario.calculatedStatus] = scenario.calculatedStatus;
+        if (scenario.calculatedStatus) {
+          statuses[scenario.calculatedStatus] = scenario.calculatedStatus;
+        } else {
+          statuses[scenario.originalAutomatedStatus] = scenario.originalAutomatedStatus;
+        }
       });
     }
 
