@@ -31,11 +31,10 @@ const doPutRequest = (path, data) => {
   return fetch(`${url}${path}`, { ...options }).catch(error => console.error(error));
 };
 
-const doDeleteRequest = (path, file) => {
+const doDeleteRequest = path => {
   const options = {
     method: "DELETE",
     headers: getHeaders(),
-    file: file,
   };
 
   return fetch(`${url}${path}`, { ...options }).catch(error => console.error(error));
