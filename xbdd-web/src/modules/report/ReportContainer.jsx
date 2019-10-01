@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid, Card } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import { reportContainerStyles } from "./styles/ReportContainerStyles";
 import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
 import FeatureReportContainer from "./FeatureReportContainer/FeatureReportContainer";
 import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch } from "../../lib/rest/Rest";
@@ -98,36 +100,29 @@ class ReportContainer extends Component {
     return newExecutions;
   }
 
+  processFailedResponse(response, backupSelectedFeature, backupExecutionHistory) {
+    if (response.status !== 200) {
+      this.setState({
+        selectedFeature: backupSelectedFeature,
+        executionHistory: backupExecutionHistory,
+        isNetworkError: true,
+      });
+      setTimeout(() => {
+        this.setState({ isNetworkError: false });
+      }, 4000);
+    }
+  }
+
   handleStatusChange(scenarioId, stepId, status) {
     const featureId = this.state.selectedFeature._id;
     const backupSelectedFeature = this.state.selectedFeature.clone();
     const backupExecutionHistory = this.state.executionHistory.map(execution => execution.clone());
     if (stepId) {
-      updateStepPatch(featureId, new Patch(scenarioId, stepId, status)).then(response => {
-        if (response.status !== 200) {
-          this.setState({
-            selectedFeature: backupSelectedFeature,
-            executionHistory: backupExecutionHistory,
-            isNetworkError: true,
-          });
-          setTimeout(() => {
-            this.setState({ isNetworkError: false });
-          }, 4000);
-        }
-      });
+      updateStepPatch(featureId, new Patch(scenarioId, stepId, status)).then(response =>
+        this.processFailedResponse(response, backupSelectedFeature, backupExecutionHistory));
     } else {
-      updateAllStepPatch(featureId, new Patch(scenarioId, null, status)).then(response => {
-        if (response.status !== 200) {
-          this.setState({
-            selectedFeature: backupSelectedFeature,
-            executionHistory: backupExecutionHistory,
-            isNetworkError: true,
-          });
-          setTimeout(() => {
-            this.setState({ isNetworkError: false });
-          }, 4000);
-        }
-      });
+      updateAllStepPatch(featureId, new Patch(scenarioId, null, status)).then(response =>
+        this.processFailedResponse(response, backupSelectedFeature, backupExecutionHistory));
     }
     this.setState(prevState => {
       const newFeature = prevState.selectedFeature.clone();
@@ -148,26 +143,10 @@ class ReportContainer extends Component {
   }
 
   render() {
-    const { product, version, build } = this.props;
+    const { product, version, build, classes } = this.props;
     return (
       <>
-        {this.state.isNetworkError ? (
-          <Card
-            style={{
-              background: "red",
-              color: "white",
-              position: "fixed",
-              top: "0px",
-              left: "0px",
-              zIndex: "999",
-              width: "100%",
-              height: "30px",
-              fontSize: "24px",
-            }}
-          >
-            Network Error!
-          </Card>
-        ) : null}
+        {this.state.isNetworkError ? <Card className={classes.errorMessageBox}>Network Error!</Card> : null}
         <Card>
           <Grid container>
             <Grid item xs={4} lg={3}>
@@ -201,6 +180,7 @@ ReportContainer.propTypes = {
   product: PropTypes.string,
   version: PropTypes.string,
   build: PropTypes.string,
+  classes: PropTypes.shape({}),
 };
 
-export default ReportContainer;
+export default withStyles(reportContainerStyles)(ReportContainer);

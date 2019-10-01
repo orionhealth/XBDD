@@ -15,9 +15,7 @@
  */
 package xbdd.webapp.resource.feature;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -228,13 +226,9 @@ public class Feature {
 				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
 				updateSteps(stepsToUpdate, stepLine, status);
 			}
-			// get the differences/new edits
-
-
-			// Detect if the edits caused a change
 			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
 			featureToUpdate.put("lastEditOn", new Date());
-			featureToUpdate.put("calculatedStatus", StatusHelper.getFeatureStatus(featureToUpdate));
+			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
 			Feature.embedTestingTips(featureToUpdate, coordinates, db); // rembed testing tips.
 			return Response.ok().build();
@@ -242,17 +236,6 @@ public class Feature {
 			th.printStackTrace();
 			return Response.serverError().build();
 		}
-	}
-
-	private BasicDBObject getScenarioById(String scenarioId, DBObject feature) {
-		final BasicDBList scenarios = (BasicDBList) feature.get("elements");
-		for(Object scenario: scenarios) {
-			if (new Scenario((BasicDBObject) scenario).getId().equals(scenarioId)) {
-				return (BasicDBObject) scenario;
-			}
-		}
-
-		return null;
 	}
 
 	private boolean updateSteps(BasicDBList steps, int stepLine, String status) {
@@ -266,6 +249,59 @@ public class Feature {
 		}
 		return false;
 	}
+
+	private String calculateStatusForFeature(DBObject feature) {
+		String currentBgStatus = "passed", currentStepsStatus = "passed";
+
+		BasicDBList scenarios = (BasicDBList) feature.get("elements");
+		for (Object scenario : scenarios) {
+			BasicDBObject background = (BasicDBObject) ((BasicDBObject) scenario).get("background");
+			if(background != null) {
+				BasicDBList bgsteps = (BasicDBList) background.get("steps");
+				currentBgStatus = calculateStatusForSteps(currentBgStatus, bgsteps);
+			}
+			BasicDBList steps = (BasicDBList) ((BasicDBObject) scenario).get("steps");
+			if(steps != null) {
+				currentStepsStatus = calculateStatusForSteps(currentStepsStatus, steps);
+			}
+		}
+		return compareStatusPriority(currentBgStatus, currentStepsStatus);
+	}
+
+	private String calculateStatusForSteps(String currentStatus, BasicDBList steps) {
+		for(Object step: steps) {
+			BasicDBObject result = (BasicDBObject) ((BasicDBObject)step).get("result");
+			String status = (String) result.get("status");
+			String manualStatus = (String) result.get("manualStatus");
+			if(manualStatus != null) {
+				currentStatus = compareStatusPriority(currentStatus, manualStatus);
+			} else {
+				currentStatus = compareStatusPriority(currentStatus, status);
+			}
+		}
+		return currentStatus;
+	}
+
+	private String compareStatusPriority(String firstStatus , String secondStatus) {
+		HashMap<String, Integer> statusPriority = new HashMap<>();
+		statusPriority.put("passed", 1);
+		statusPriority.put("skipped", 2);
+		statusPriority.put("undefined", 3);
+		statusPriority.put("failed", 4);
+		return statusPriority.get(firstStatus) > statusPriority.get(secondStatus) ? firstStatus : secondStatus;
+	}
+
+	private BasicDBObject getScenarioById(String scenarioId, DBObject feature) {
+		final BasicDBList scenarios = (BasicDBList) feature.get("elements");
+		for(Object scenario: scenarios) {
+			if (new Scenario((BasicDBObject) scenario).getId().equals(scenarioId)) {
+				return (BasicDBObject) scenario;
+			}
+		}
+
+		return null;
+	}
+
 
 
 	@PUT
@@ -296,17 +332,13 @@ public class Feature {
 				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
 				updateAllSteps(stepsToUpdate, status);
 			}
-			// get the differences/new edits
-
-
-			// Detect if the edits caused a change
 			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", StatusHelper.getFeatureStatus(featureToUpdate));
 			collection.save(featureToUpdate);
 			Feature.embedTestingTips(featureToUpdate, coordinates, db); // rembed testing tips.
-			throw new ServerErrorException(500); // test the exception
-			//return Response.ok().build();
+			//throw new ServerErrorException(500); // test the exception
+			return Response.ok().build();
 		} catch (final Throwable th) {
 			th.printStackTrace();
 			return Response.serverError().build();

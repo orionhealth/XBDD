@@ -21,11 +21,11 @@ const doGetRequest = path => {
     .catch(error => console.error(error));
 };
 
-const doPutRequest = (path, body) => {
+const doPutRequest = (path, data) => {
   const options = {
     method: "PUT",
     headers: getHeaders(),
-    body: JSON.stringify(body),
+    body: data ? JSON.stringify(data) : null,
   };
 
   return fetch(`${url}${path}`, { ...options }).catch(error => console.error(error));
