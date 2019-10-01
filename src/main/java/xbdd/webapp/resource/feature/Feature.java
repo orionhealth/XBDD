@@ -15,20 +15,15 @@
  */
 package xbdd.webapp.resource.feature;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.BeanParam;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
+import xbdd.model.simple.Scenario;
 import xbdd.util.StatusHelper;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
@@ -85,11 +80,11 @@ public class Feature {
 		}
 		final BasicDBObject returns = new BasicDBObject()
 				.append("coordinates", coordinates.getRollupCoordinates().append("featureId", featureId).append("version", coordinates.getVersionString()));
-		
+
 		final DBObject buildOrder = summary.findOne(coordinates.getQueryObject());
 		final List<String> buildArray = (List<String>) buildOrder.get("builds");
 		final List<BasicDBObject> orderedFeatures = new ArrayList<BasicDBObject>();
-		
+
 		for (String build : buildArray) {
 			for (BasicDBObject feature : features) {
 				if (feature.get("build").equals(build)) {
@@ -98,9 +93,9 @@ public class Feature {
 				}
 			}
 		}
-		
+
 		returns.append("rollup", orderedFeatures);
-		
+
 		return returns;
 	}
 
@@ -174,7 +169,7 @@ public class Feature {
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes("application/json")
 	public DBObject putFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final DBObject feature) {
+							   @Context final HttpServletRequest req, final DBObject feature) {
 		feature.put("calculatedStatus", StatusHelper.getFeatureStatus(feature));
 		try {
 			final DB db = this.client.getDB("bdd");
@@ -200,6 +195,163 @@ public class Feature {
 			return null;
 		}
 	}
+
+	@PUT
+	@Path("/step/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
+	@Consumes("application/json")
+	public Response updateStepWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
+								   @Context final HttpServletRequest req, final DBObject patch) {
+		try {
+			final DB db = this.client.getDB("bdd");
+			final DBCollection collection = db.getCollection("features");
+			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
+			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
+
+			final int stepLine = (int) patch.get("line");
+			final String status = (String) patch.get("status");
+			final String scenarioId = (String) patch.get("id");
+
+			final BasicDBObject featureToUpdate = (BasicDBObject) storedFeature.copy();
+			final BasicDBObject scenarioToUpdate = getScenarioById(scenarioId, featureToUpdate);
+
+
+			boolean found = false;
+
+			if(scenarioToUpdate.get("background") != null) {
+				final BasicDBObject backgroundToUpdate = (BasicDBObject) (scenarioToUpdate.get("background"));
+				final BasicDBList backgroundStepsToUpdate = (BasicDBList) (backgroundToUpdate.get("steps"));
+				found = updateSteps(backgroundStepsToUpdate, stepLine, status);
+			}
+			if(!found) {
+				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
+				updateSteps(stepsToUpdate, stepLine, status);
+			}
+			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
+			featureToUpdate.put("lastEditOn", new Date());
+			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
+			collection.save(featureToUpdate);
+			return Response.ok().build();
+		} catch (final Throwable th) {
+			th.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
+
+	private boolean updateSteps(BasicDBList steps, int stepLine, String status) {
+		for(Object step : steps) {
+			final BasicDBObject dbStep = (BasicDBObject)step;
+			if((int)dbStep.get("line") == stepLine) {
+				final BasicDBObject result = (BasicDBObject) dbStep.get("result");
+				result.put("manualStatus", status);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String calculateStatusForFeature(DBObject feature) {
+		String currentBgStatus = "passed", currentStepsStatus = "passed";
+
+		BasicDBList scenarios = (BasicDBList) feature.get("elements");
+		for (Object scenario : scenarios) {
+			BasicDBObject background = (BasicDBObject) ((BasicDBObject) scenario).get("background");
+			if(background != null) {
+				BasicDBList bgsteps = (BasicDBList) background.get("steps");
+				currentBgStatus = calculateStatusForSteps(currentBgStatus, bgsteps);
+			}
+			BasicDBList steps = (BasicDBList) ((BasicDBObject) scenario).get("steps");
+			if(steps != null) {
+				currentStepsStatus = calculateStatusForSteps(currentStepsStatus, steps);
+			}
+		}
+		return compareStatusPriority(currentBgStatus, currentStepsStatus);
+	}
+
+	private String calculateStatusForSteps(String currentStatus, BasicDBList steps) {
+		for(Object step: steps) {
+			BasicDBObject result = (BasicDBObject) ((BasicDBObject)step).get("result");
+			String status = (String) result.get("status");
+			String manualStatus = (String) result.get("manualStatus");
+			if(manualStatus != null) {
+				currentStatus = compareStatusPriority(currentStatus, manualStatus);
+			} else {
+				currentStatus = compareStatusPriority(currentStatus, status);
+			}
+		}
+		return currentStatus;
+	}
+
+	private String compareStatusPriority(String firstStatus , String secondStatus) {
+		HashMap<String, Integer> statusPriority = new HashMap<>();
+		statusPriority.put("passed", 1);
+		statusPriority.put("skipped", 2);
+		statusPriority.put("undefined", 3);
+		statusPriority.put("failed", 4);
+		return statusPriority.get(firstStatus) > statusPriority.get(secondStatus) ? firstStatus : secondStatus;
+	}
+
+	private BasicDBObject getScenarioById(String scenarioId, DBObject feature) {
+		final BasicDBList scenarios = (BasicDBList) feature.get("elements");
+		for(Object scenario: scenarios) {
+			if (new Scenario((BasicDBObject) scenario).getId().equals(scenarioId)) {
+				return (BasicDBObject) scenario;
+			}
+		}
+
+		return null;
+	}
+
+
+
+	@PUT
+	@Path("/steps/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
+	@Consumes("application/json")
+	public Response updateStepsWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
+										@Context final HttpServletRequest req, final DBObject patch) {
+		try {
+			final DB db = this.client.getDB("bdd");
+			final DBCollection collection = db.getCollection("features");
+			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
+			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
+
+			final String status = (String) patch.get("status");
+			final String scenarioId = (String) patch.get("id");
+
+			final BasicDBObject featureToUpdate = (BasicDBObject) storedFeature.copy();
+			final BasicDBObject scenarioToUpdate = getScenarioById(scenarioId, featureToUpdate);
+
+
+			if(scenarioToUpdate.get("background") != null) {
+				final BasicDBObject backgroundToUpdate = (BasicDBObject) (scenarioToUpdate.get("background"));
+				final BasicDBList backgroundStepsToUpdate = (BasicDBList) (backgroundToUpdate.get("steps"));
+				updateAllSteps(backgroundStepsToUpdate, status);
+
+			}
+			if(scenarioToUpdate.get("steps") != null) {
+				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
+				updateAllSteps(stepsToUpdate, status);
+			}
+			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
+			featureToUpdate.put("lastEditOn", new Date());
+			featureToUpdate.put("calculatedStatus", StatusHelper.getFeatureStatus(featureToUpdate));
+			collection.save(featureToUpdate);
+			//throw new ServerErrorException(500); // test the exception
+			return Response.ok().build();
+		} catch (final Throwable th) {
+			th.printStackTrace();
+			return Response.serverError().build();
+		}
+	}
+
+	private void updateAllSteps(BasicDBList steps, String status) {
+		for(Object step : steps) {
+			final BasicDBObject dbStep = (BasicDBObject)step;
+			final BasicDBObject result = (BasicDBObject) dbStep.get("result");
+			result.put("manualStatus", status);
+		}
+	}
+
+
 
 	/**
 	 * Goes through each environment detail on this feature and pushes each unique one to a per-product document in the 'environments'
@@ -298,78 +450,83 @@ public class Feature {
 
 	private BasicDBList constructEditStepChanges(final DBObject currentVersion, final DBObject previousVersion) {
 		final BasicDBList stepChanges = new BasicDBList();
-		final BasicDBList elements = (BasicDBList) currentVersion.get("elements");
-		final BasicDBList prevElements = (BasicDBList) previousVersion.get("elements");
-		if (elements != null) {
-			for (int i = 0; i < elements.size(); i++) {
-				final BasicDBList allSteps = new BasicDBList();
-				final BasicDBList changes = new BasicDBList();
-				final BasicDBObject element = (BasicDBObject) elements.get(i);
-				final BasicDBObject prevElement = (BasicDBObject) prevElements.get(i);
-				final String scenarioName = (String) element.get("name");
-				boolean currManual = false;
-				boolean prevManual = false;
-
-				// get all scenario steps
-				if ((BasicDBObject) element.get("background") != null) {
-					for (int j = 0; j < ((BasicDBList) ((BasicDBObject) element.get("background")).get("steps")).size(); j++) {
-						final BasicDBObject step = (BasicDBObject) ((BasicDBList) ((BasicDBObject) element.get("background")).get("steps"))
-								.get(j);
-						final BasicDBObject prevStep = (BasicDBObject) ((BasicDBList) ((BasicDBObject) prevElement.get("background"))
-								.get("steps"))
-								.get(j);
-						final String id = (String) step.get("keyword") + (String) step.get("name");
-						if (((BasicDBObject) step.get("result")).get("manualStatus") != null) {
-							currManual = true;
-						}
-						if (((BasicDBObject) prevStep.get("result")).get("manualStatus") != null) {
-							prevManual = true;
-						}
-						final BasicDBObject compareStep = new BasicDBObject()
-								.append("id", id)
-								.append("curr", step)
-								.append("prev", prevStep);
-						allSteps.add(compareStep);
-					}
-				}
-
-				if ((BasicDBList) element.get("steps") != null) {
-					for (int j = 0; j < ((BasicDBList) element.get("steps")).size(); j++) {
-						final BasicDBObject step = (BasicDBObject) ((BasicDBList) element.get("steps")).get(j);
-						final BasicDBObject prevStep = (BasicDBObject) ((BasicDBList) prevElement.get("steps")).get(j);
-						final String id = (String) step.get("keyword") + (String) step.get("name");
-						if (((BasicDBObject) step.get("result")).get("manualStatus") != null) {
-							currManual = true;
-						}
-						if (((BasicDBObject) prevStep.get("result")).get("manualStatus") != null) {
-							prevManual = true;
-						}
-						final BasicDBObject compareStep = new BasicDBObject()
-								.append("id", id)
-								.append("curr", step)
-								.append("prev", prevStep);
-						allSteps.add(compareStep);
-					}
-				}
-
-				for (int j = 0; j < allSteps.size(); j++) {
-					formatStep(changes, (BasicDBObject) allSteps.get(j), currManual, prevManual);
-				}
-
-				// only add if changes have been made
-				if (changes.size() > 0) {
-					final BasicDBObject singleScenario = new BasicDBObject()
-							.append("scenario", scenarioName)
-							.append("changes", changes);
-					stepChanges.add(singleScenario);
-				}
+		final BasicDBList scenarios = (BasicDBList) currentVersion.get("elements");
+		final BasicDBList prevScenarios = (BasicDBList) previousVersion.get("elements");
+		if (scenarios != null) {
+			for (int i = 0; i < scenarios.size(); i++) {
+				stepChanges.addAll(updateScenarioSteps((BasicDBObject) scenarios.get(i), (BasicDBObject) prevScenarios.get(i)));
 			}
 		}
 		return stepChanges;
 	}
 
+	private BasicDBList updateScenarioSteps(DBObject scenario, DBObject previousScenario) {
+		final BasicDBList stepChanges = new BasicDBList();
+		final BasicDBList allSteps = new BasicDBList();
+		final BasicDBList changes = new BasicDBList();
+		final String scenarioName = (String) scenario.get("name");
+		boolean currManual = false;
+		boolean prevManual = false;
+
+		// get all scenario steps
+		if ((BasicDBObject) scenario.get("background") != null) {
+			for (int j = 0; j < ((BasicDBList) ((BasicDBObject) scenario.get("background")).get("steps")).size(); j++) {
+				final BasicDBObject step = (BasicDBObject) ((BasicDBList) ((BasicDBObject) scenario.get("background")).get("steps"))
+						.get(j);
+				final BasicDBObject prevStep = (BasicDBObject) ((BasicDBList) ((BasicDBObject) previousScenario.get("background"))
+						.get("steps"))
+						.get(j);
+				final String id = (String) step.get("keyword") + (String) step.get("name");
+				if (((BasicDBObject) step.get("result")).get("manualStatus") != null) {
+					currManual = true;
+				}
+				if (((BasicDBObject) prevStep.get("result")).get("manualStatus") != null) {
+					prevManual = true;
+				}
+				final BasicDBObject compareStep = new BasicDBObject()
+						.append("id", id)
+						.append("curr", step)
+						.append("prev", prevStep);
+				allSteps.add(compareStep);
+			}
+		}
+
+		if ((BasicDBList) scenario.get("steps") != null) {
+			for (int j = 0; j < ((BasicDBList) scenario.get("steps")).size(); j++) {
+				final BasicDBObject step = (BasicDBObject) ((BasicDBList) scenario.get("steps")).get(j);
+				final BasicDBObject prevStep = (BasicDBObject) ((BasicDBList) previousScenario.get("steps")).get(j);
+				final String id = (String) step.get("keyword") + (String) step.get("name");
+				if (((BasicDBObject) step.get("result")).get("manualStatus") != null) {
+					currManual = true;
+				}
+				if (((BasicDBObject) prevStep.get("result")).get("manualStatus") != null) {
+					prevManual = true;
+				}
+				final BasicDBObject compareStep = new BasicDBObject()
+						.append("id", id)
+						.append("curr", step)
+						.append("prev", prevStep);
+				allSteps.add(compareStep);
+			}
+		}
+
+		for (int j = 0; j < allSteps.size(); j++) {
+			formatStep(changes, (BasicDBObject) allSteps.get(j), currManual, prevManual);
+		}
+
+		// only add if changes have been made
+		if (changes.size() > 0) {
+			final BasicDBObject singleScenario = new BasicDBObject()
+					.append("scenario", scenarioName)
+					.append("changes", changes);
+			stepChanges.add(singleScenario);
+		}
+
+		return stepChanges;
+	}
+
 	private void formatStep(final BasicDBList changes, final BasicDBObject step,
-			final boolean currManual, final boolean prevManual) {
+							final boolean currManual, final boolean prevManual) {
 		String currState, currCause, prevState, prevCause;
 
 		final BasicDBObject currStep = ((BasicDBObject) step.get("curr"));

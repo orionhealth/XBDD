@@ -21,10 +21,11 @@ const doGetRequest = path => {
     .catch(error => console.error(error));
 };
 
-const doPutRequest = path => {
+const doPutRequest = (path, data) => {
   const options = {
     method: "PUT",
     headers: getHeaders(),
+    body: data ? JSON.stringify(data) : null,
   };
 
   return fetch(`${url}${path}`, { ...options }).catch(error => console.error(error));
@@ -62,3 +63,7 @@ export const getSimpleFeatureListData = (product, version, build) =>
 export const getFeatureReport = id => doGetRequest(`/rest/feature/${id}`);
 
 export const getRollUpData = (product, version, feature) => doGetRequest(`/rest/feature/rollup/${product}/${version}/${feature}`);
+
+export const updateStepPatch = (featureId, patch) => doPutRequest(`/rest/feature/step/${featureId}`, patch);
+
+export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/rest/feature/steps/${featureId}`, patch);

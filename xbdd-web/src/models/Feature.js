@@ -2,7 +2,7 @@ import Scenario from "./Scenario";
 
 class Feature {
   constructor(data) {
-    if(data) {
+    if (data) {
       this.id = data.id;
       this._id = data._id;
       this.name = data.name;
@@ -25,20 +25,19 @@ class Feature {
     cloneFeature.calculatedStatus = this.calculatedStatus;
     cloneFeature.originalAutomatedStatus = this.originalAutomatedStatus;
     cloneFeature.tags = this.tags;
-    console.error(this.scenarios);
     cloneFeature.scenarios = this.scenarios.map(scenario => scenario.clone());
     return cloneFeature;
   }
 
   calculateStatus() {
     const statuses = {};
-  
+
     if (this.scenarios) {
       this.scenarios.forEach(scenario => {
         statuses[scenario.calculatedStatus] = scenario.calculatedStatus;
       });
     }
-  
+
     this.calculatedStatus = statuses.failed || statuses.undefined || statuses.skipped || statuses.passed;
   }
 }
