@@ -109,7 +109,7 @@ const ScenarioList = props => {
                   <StatusIcons
                     firstStatus={scenario.originalAutomatedStatus}
                     secondStatus={scenario.calculatedStatus ? scenario.calculatedStatus : scenario.originalAutomatedStatus}
-                    isSmall={true}
+                    size="small"
                   />
                 </Box>
                 <Box p={1} className={classes.scenarioTitleBox}>

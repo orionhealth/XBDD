@@ -7,9 +7,9 @@ import { withStyles } from "@material-ui/core/styles";
 import { statusIconStyles } from "./styles/FeatureSummaryStyles";
 
 const StatusIcons = props => {
-  const { firstStatus, secondStatus, isSmall, classes } = props;
+  const { firstStatus, secondStatus, size, classes } = props;
   var sizeClasses = classes.bigIcons;
-  if (isSmall) {
+  if (size === "small") {
     sizeClasses = classes.smallIcons;
   }
 

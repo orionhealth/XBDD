@@ -23,9 +23,6 @@ const clickEventWrapper = (event, scenarioId, stepId, prevStatus, newStatus, han
   const prevStatusMap = [{ stepId: stepId, status: prevStatus }];
   const newStatusMap = [{ stepId: stepId, status: status }];
 
-  // const prevStatusMap = { [stepId]: prevStatus };
-  // const newStatusMap = { [stepId]: status };
-
   if (node.className === "MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button") {
     handleStatusChange(scenarioId, prevStatusMap, newStatusMap);
     return;
