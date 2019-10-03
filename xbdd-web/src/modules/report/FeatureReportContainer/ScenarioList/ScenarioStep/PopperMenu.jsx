@@ -22,6 +22,7 @@ const PopperMenu = props => {
     passed: "Pass",
     failed: "Fail",
     skipped: "Skip",
+    undefined: "Undefine",
   };
 
   const renderListItem = newStatus => (
@@ -43,6 +44,7 @@ const PopperMenu = props => {
                 {renderListItem("passed")}
                 {renderListItem("failed")}
                 {renderListItem("skipped")}
+                {renderListItem("undefined")}
               </List>
             </Card>
           </Fade>

@@ -202,6 +202,7 @@ public class Feature {
 	public Response updateStepWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 								   @Context final HttpServletRequest req, final DBObject patch) {
 		try {
+//			throw new ServerErrorException(500); //For testing
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
@@ -309,6 +310,7 @@ public class Feature {
 	public Response updateStepsWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 										@Context final HttpServletRequest req, final DBObject patch) {
 		try {
+//			throw new ServerErrorException(500); //For testing
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
@@ -335,7 +337,6 @@ public class Feature {
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", StatusHelper.getFeatureStatus(featureToUpdate));
 			collection.save(featureToUpdate);
-			//throw new ServerErrorException(500); // test the exception
 			return Response.ok().build();
 		} catch (final Throwable th) {
 			th.printStackTrace();

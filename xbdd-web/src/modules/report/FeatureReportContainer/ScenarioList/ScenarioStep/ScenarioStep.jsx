@@ -15,7 +15,7 @@ const clickEventWrapper = (event, scenarioId, stepId, prevStatus, newStatus, han
   let node = event.currentTarget;
   const nextStatus = {
     passed: "failed",
-    failed: "undefined",
+    failed: "passed",
     undefined: "passed",
     skipped: "passed",
   };
