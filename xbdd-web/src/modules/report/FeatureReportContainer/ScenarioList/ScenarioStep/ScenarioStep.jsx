@@ -73,7 +73,7 @@ const ScenarioStep = props => {
     <div>
       <span className={classes.stepKeyword}>{step.keyword}</span>
       <span>{`${step.name} `}</span>
-      {step.id === hoveredStepId ? (
+      {`${scenarioId} ${step.id}` === hoveredStepId ? (
         <PopperMenu
           scenarioId={scenarioId}
           stepId={step.id}
@@ -100,8 +100,8 @@ const ScenarioStep = props => {
               key={step.id}
               className={classes.step}
               onClick={e => clickEventWrapper(e, scenarioId, step.id, status, null, handleStatusChange)}
-              onMouseEnter={() => handleStepHovered(step.id)}
-              onMouseLeave={() => handleStepNotHovered(step.id)}
+              onMouseEnter={() => handleStepHovered(`${scenarioId} ${step.id}`)}
+              onMouseLeave={() => handleStepNotHovered(`${scenarioId} ${step.id}`)}
             >
               <Box display="flex" flexDirection="row">
                 <Box p={1} className={getFailedClasses(status)}>
@@ -125,7 +125,7 @@ ScenarioStep.propTypes = {
   title: PropTypes.string,
   scenarioId: PropTypes.string,
   steps: PropTypes.arrayOf(PropTypes.instanceOf(Step)),
-  hoveredStepId: PropTypes.number,
+  hoveredStepId: PropTypes.string,
   anchor: PropTypes.object,
   handleStepHovered: PropTypes.func.isRequired,
   handleStepNotHovered: PropTypes.func.isRequired,

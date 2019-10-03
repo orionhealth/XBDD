@@ -11,11 +11,12 @@ import StatusIcons from "../FeatureSummary/StatusIcons";
 
 const addStepsStatus = (statusMap, steps, status) => {
   steps.forEach(step => {
-    var finalStatus = status;
     if (!status) {
-      finalStatus = step.manualStatus ? step.manualStatus : step.status;
+      const finalStatus = step.manualStatus ? step.manualStatus : step.status;
+      statusMap.push({ stepId: step.id, status: finalStatus });
+    } else {
+      statusMap.push({ stepId: step.id, status: status });
     }
-    statusMap.push({ stepId: step.id, status: finalStatus });
   });
 };
 
@@ -157,7 +158,7 @@ const ScenarioList = props => {
 ScenarioList.propTypes = {
   scenarioList: PropTypes.arrayOf(PropTypes.instanceOf(Scenario)),
   expandedScenarioIdList: PropTypes.arrayOf(PropTypes.string),
-  hoveredStepId: PropTypes.number,
+  hoveredStepId: PropTypes.string,
   anchor: PropTypes.object,
   handleScenarioClicked: PropTypes.func.isRequired,
   handleScenarioCommentChanged: PropTypes.func.isRequired,

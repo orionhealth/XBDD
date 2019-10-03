@@ -114,12 +114,12 @@ class ReportContainer extends Component {
   handleStatusChange(scenarioId, prevStatusMap, newStatusMap) {
     const featureId = this.state.selectedFeature._id;
     const firstStepId = newStatusMap[0].stepId;
-    const newStatus = newStatusMap[firstStepId];
+    const firstStatus = newStatusMap[0].status;
     if (newStatusMap.length === 1) {
-      updateStepPatch(featureId, new Patch(scenarioId, firstStepId, newStatus)).then(response =>
+      updateStepPatch(featureId, new Patch(scenarioId, firstStepId, firstStatus)).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap));
     } else {
-      updateAllStepPatch(featureId, new Patch(scenarioId, null, newStatus)).then(response =>
+      updateAllStepPatch(featureId, new Patch(scenarioId, null, firstStatus)).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap));
     }
     this.setStateForStep(scenarioId, newStatusMap);
