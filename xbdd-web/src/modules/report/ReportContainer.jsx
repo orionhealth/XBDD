@@ -5,10 +5,11 @@ import { withStyles } from "@material-ui/core/styles";
 import { reportContainerStyles } from "./styles/ReportContainerStyles";
 import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
 import FeatureReportContainer from "./FeatureReportContainer/FeatureReportContainer";
-import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch } from "../../lib/rest/Rest";
+import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from "../../lib/rest/Rest";
 import Feature from "../../models/Feature";
 import Execution from "../../models/Execution";
-import Patch from "../../models/Patch";
+import StepStatusPatch from "../../models/StepStatusPatch";
+import InputFieldPatch from "../../models/InputFieldPatch";
 
 class ReportContainer extends Component {
   constructor(props) {
@@ -37,22 +38,35 @@ class ReportContainer extends Component {
     });
   }
 
-  updateScenariosComment(scenarios, scenarioId, comment, commentContent) {
+  updateScenariosComment(scenarios, scenarioId, label, content) {
     const newScenarios = [...scenarios];
     const newScenario = newScenarios.find(scenario => scenario.id === scenarioId);
-    newScenario[comment] = commentContent;
+    newScenario[label] = content;
     return newScenarios;
   }
 
-  handleScenarioCommentChanged(id, comment, event) {
-    const commentContent = event.target.value;
+  setStateForComment(scenarioId, label, content) {
     this.setState(prevState => {
       const newSelectedFeature = prevState.selectedFeature.clone();
-      this.updateScenariosComment(newSelectedFeature.scenarios, id, comment, commentContent);
+      this.updateScenariosComment(newSelectedFeature.scenarios, scenarioId, label, content);
       return Object.assign({}, prevState, {
         selectedFeature: newSelectedFeature,
       });
     });
+  }
+
+  handleScenarioCommentChanged(scenarioId, label, requestLabel, prevContent, newContent) {
+    const featureId = this.state.selectedFeature._id;
+    updateComments(featureId, new InputFieldPatch(scenarioId, requestLabel, newContent)).then(response => {
+      if (response.status !== 200) {
+        this.setState({ isNetworkError: true });
+        this.setStateForComment(scenarioId, label, prevContent);
+        setTimeout(() => {
+          this.setState({ isNetworkError: false });
+        }, 4000);
+      }
+    });
+    this.setStateForComment(scenarioId, label, newContent);
   }
 
   updateExecutionHistory(executions, status) {
@@ -116,10 +130,10 @@ class ReportContainer extends Component {
     const firstStepId = newStatusMap[0].stepId;
     const firstStatus = newStatusMap[0].status;
     if (newStatusMap.length === 1) {
-      updateStepPatch(featureId, new Patch(scenarioId, firstStepId, firstStatus)).then(response =>
+      updateStepPatch(featureId, new StepStatusPatch(scenarioId, firstStepId, firstStatus)).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap));
     } else {
-      updateAllStepPatch(featureId, new Patch(scenarioId, null, firstStatus)).then(response =>
+      updateAllStepPatch(featureId, new StepStatusPatch(scenarioId, null, firstStatus)).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap));
     }
     this.setStateForStep(scenarioId, newStatusMap);

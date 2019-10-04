@@ -67,3 +67,5 @@ export const getRollUpData = (product, version, feature) => doGetRequest(`/rest/
 export const updateStepPatch = (featureId, patch) => doPutRequest(`/rest/feature/step/${featureId}`, patch);
 
 export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/rest/feature/steps/${featureId}`, patch);
+
+export const updateComments = (featureId, patch) => doPutRequest(`/rest/feature/comments/${featureId}`, patch);

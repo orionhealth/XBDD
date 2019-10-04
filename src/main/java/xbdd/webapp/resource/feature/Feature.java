@@ -123,40 +123,82 @@ public class Feature {
 		final DBCollection tips = db.getCollection("testingTips");
 		final List<DBObject> elements = (List<DBObject>) feature.get("elements");
 		for (final DBObject scenario : elements) {
-			if (scenario.get("testing-tips") != null) {
-				final String tipText = (String) scenario.get("testing-tips");
-				final String scenarioId = (String) scenario.get("id");
-				final BasicDBObject tipQuery = coordinates.getTestingTipsCoordinatesQueryObject(featureId, scenarioId);
-				DBObject oldTip = null;
-				// get the most recent tip that is LTE to the current coordinates. i.e. sort in reverse chronological order and take the
-				// first item (if one exists).
-				final DBCursor oldTipCursor = tips.find(tipQuery)
-						.sort(new BasicDBObject("coordinates.major", -1).append("coordinates.minor", -1)
-								.append("coordinates.servicePack", -1).append("coordinates.build", -1)).limit(1);
-				try {
-					if (oldTipCursor.hasNext()) {
-						oldTip = oldTipCursor.next();
-					}
-				} finally {
-					oldTipCursor.close();
+			updateTestingTipsForScenario(tips, scenario, coordinates, featureId);
+		}
+	}
+
+	private void updateTestingTipsForScenario(final DBCollection tips, final DBObject scenario, final Coordinates coordinates, final String featureId) {
+		if (scenario.get("testing-tips") != null) {
+			final String tipText = (String) scenario.get("testing-tips");
+			final String scenarioId = (String) scenario.get("id");
+			final BasicDBObject tipQuery = coordinates.getTestingTipsCoordinatesQueryObject(featureId, scenarioId);
+			DBObject oldTip = null;
+			// get the most recent tip that is LTE to the current coordinates. i.e. sort in reverse chronological order and take the
+			// first item (if one exists).
+			final DBCursor oldTipCursor = tips.find(tipQuery)
+					.sort(new BasicDBObject("coordinates.major", -1).append("coordinates.minor", -1)
+							.append("coordinates.servicePack", -1).append("coordinates.build", -1)).limit(1);
+			try {
+				if (oldTipCursor.hasNext()) {
+					oldTip = oldTipCursor.next();
 				}
-				if (oldTip != null) { // if there is an old tip...
-					final String oldTipText = (String) oldTip.get("testing-tips"); // get it and...
-					if (!tipText.equals(oldTipText)) {// compare it to the current tip to it, if they're not the same...
-						final DBObject newTip = new BasicDBObject("testing-tips", tipText).append("coordinates",
-								coordinates.getTestingTipsCoordinates(featureId, scenarioId))
-								.append("_id", coordinates.getTestingTipsId(featureId, scenarioId));
-						tips.save(newTip);// then save this as a new tip.
-					}
-				} else { // no prior tip exists, add this one.
+			} finally {
+				oldTipCursor.close();
+			}
+			if (oldTip != null) { // if there is an old tip...
+				final String oldTipText = (String) oldTip.get("testing-tips"); // get it and...
+				if (!tipText.equals(oldTipText)) {// compare it to the current tip to it, if they're not the same...
 					final DBObject newTip = new BasicDBObject("testing-tips", tipText).append("coordinates",
 							coordinates.getTestingTipsCoordinates(featureId, scenarioId))
 							.append("_id", coordinates.getTestingTipsId(featureId, scenarioId));
 					tips.save(newTip);// then save this as a new tip.
 				}
+			} else { // no prior tip exists, add this one.
+				final DBObject newTip = new BasicDBObject("testing-tips", tipText).append("coordinates",
+						coordinates.getTestingTipsCoordinates(featureId, scenarioId))
+						.append("_id", coordinates.getTestingTipsId(featureId, scenarioId));
+				tips.save(newTip);// then save this as a new tip.
 			}
-			scenario.removeField("testing-tips");
 		}
+		scenario.removeField("testing-tips");
+	}
+
+	@PUT
+	@Path("/comments/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
+	@Consumes("application/json")
+	public Response updateCommentWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
+											   @Context final HttpServletRequest req, final DBObject patch) {
+		try {
+			final DB db = this.client.getDB("bdd");
+			final DBCollection collection = db.getCollection("features");
+			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
+			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
+
+			final String scenarioId = (String) patch.get("scenarioId");
+			final String label = (String) patch.get("label");
+			final String content = (String) patch.get("content");
+
+			final BasicDBObject featureToUpdate = (BasicDBObject) storedFeature.copy();
+			final BasicDBObject scenarioToUpdate = getScenarioById(scenarioId, featureToUpdate);
+			scenarioToUpdate.put(label, content);
+
+			if(label.equals( "testing-tips")){
+				final DBCollection tips = db.getCollection("testingTips");
+				updateTestingTipsForScenario(tips, scenarioToUpdate, coordinates, featureId);
+			}
+			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
+			featureToUpdate.put("lastEditOn", new Date());
+			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
+			collection.save(featureToUpdate);
+			if(label.equals( "testing-tips")) {
+				Feature.embedTestingTips(featureToUpdate, coordinates, db);
+			}
+			return Response.ok().build();
+		} catch (final Throwable th) {
+			th.printStackTrace();
+			return Response.serverError().build();
+		}
+
 	}
 
 	/**
@@ -209,7 +251,7 @@ public class Feature {
 
 			final int stepLine = (int) patch.get("line");
 			final String status = (String) patch.get("status");
-			final String scenarioId = (String) patch.get("id");
+			final String scenarioId = (String) patch.get("scenarioId");
 
 			final BasicDBObject featureToUpdate = (BasicDBObject) storedFeature.copy();
 			final BasicDBObject scenarioToUpdate = getScenarioById(scenarioId, featureToUpdate);
@@ -315,7 +357,7 @@ public class Feature {
 			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
 
 			final String status = (String) patch.get("status");
-			final String scenarioId = (String) patch.get("id");
+			final String scenarioId = (String) patch.get("scenarioId");
 
 			final BasicDBObject featureToUpdate = (BasicDBObject) storedFeature.copy();
 			final BasicDBObject scenarioToUpdate = getScenarioById(scenarioId, featureToUpdate);
@@ -333,7 +375,7 @@ public class Feature {
 			}
 			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
 			featureToUpdate.put("lastEditOn", new Date());
-			featureToUpdate.put("calculatedStatus", StatusHelper.getFeatureStatus(featureToUpdate));
+			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
 			return Response.ok().build();
 		} catch (final Throwable th) {
