@@ -10,12 +10,26 @@ const PopperMenu = props => {
     scenarioId,
     stepId,
     anchor,
+    status,
     handleMoreButtonHovered,
     handleMoreButtonNotHovered,
     handleStatusChange,
     clickEventWrapper,
     classes,
   } = props;
+
+  const labelMap = {
+    passed: "Pass",
+    failed: "Fail",
+    skipped: "Skip",
+    undefined: "Undefine",
+  };
+
+  const renderListItem = newStatus => (
+    <ListItem button onClick={e => clickEventWrapper(e, scenarioId, stepId, status, newStatus, handleStatusChange)}>
+      {labelMap[newStatus]}
+    </ListItem>
+  );
 
   return (
     <span onMouseEnter={e => handleMoreButtonHovered(e)} onMouseLeave={() => handleMoreButtonNotHovered()}>
@@ -27,15 +41,10 @@ const PopperMenu = props => {
           <Fade {...TransitionProps} timeout={350}>
             <Card>
               <List>
-                <ListItem button onClick={e => clickEventWrapper(e, scenarioId, stepId, "passed", handleStatusChange)}>
-                  Pass
-                </ListItem>
-                <ListItem button onClick={e => clickEventWrapper(e, scenarioId, stepId, "failed", handleStatusChange)}>
-                  Fail
-                </ListItem>
-                <ListItem button onClick={e => clickEventWrapper(e, scenarioId, stepId, "skipped", handleStatusChange)}>
-                  Skip
-                </ListItem>
+                {renderListItem("passed")}
+                {renderListItem("failed")}
+                {renderListItem("skipped")}
+                {renderListItem("undefined")}
               </List>
             </Card>
           </Fade>
@@ -49,6 +58,7 @@ PopperMenu.propTypes = {
   scenarioId: PropTypes.string,
   stepId: PropTypes.number,
   anchor: PropTypes.object,
+  status: PropTypes.string,
   handleMoreButtonHovered: PropTypes.func.isRequired,
   handleMoreButtonNotHovered: PropTypes.func.isRequired,
   handleStatusChange: PropTypes.func.isRequired,

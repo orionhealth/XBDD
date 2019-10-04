@@ -55,43 +55,6 @@ class ReportContainer extends Component {
     });
   }
 
-  updateScenarioStepsStatus(scenario, stepId, status) {
-    var found = false;
-    if (scenario.backgroundSteps) {
-      const newBackgroundStep = scenario.backgroundSteps.find(step => step.id === stepId);
-      if (newBackgroundStep) {
-        found = true;
-        newBackgroundStep.manualStatus = status;
-      }
-    }
-    if (!found) {
-      const newStep = scenario.steps.find(step => step.id === stepId);
-      newStep.manualStatus = status;
-    }
-  }
-
-  updateAllSteps(scenario, status) {
-    if (scenario.backgroundSteps) {
-      scenario.backgroundSteps.forEach(step => (step.manualStatus = status));
-    }
-    if (scenario.steps) {
-      scenario.steps.forEach(step => (step.manualStatus = status));
-    }
-  }
-
-  updateScenarios(scenarios, scenarioId, stepId, status) {
-    const newScenarios = [...scenarios];
-    const newScenario = newScenarios.find(scenario => scenario.id === scenarioId);
-    if (stepId) {
-      this.updateScenarioStepsStatus(newScenario, stepId, status);
-      newScenario.calculateStatus();
-    } else {
-      this.updateAllSteps(newScenario, status);
-      newScenario.calculatedStatus = status;
-    }
-    return newScenarios;
-  }
-
   updateExecutionHistory(executions, status) {
     const newExecutions = [...executions];
     const newExecution = newExecutions.find(execution => execution.build === this.props.build);
@@ -100,34 +63,40 @@ class ReportContainer extends Component {
     return newExecutions;
   }
 
-  processFailedResponse(response, backupSelectedFeature, backupExecutionHistory) {
+  processFailedResponse(response, scenarioId, prevStatusMap) {
     if (response.status !== 200) {
-      this.setState({
-        selectedFeature: backupSelectedFeature,
-        executionHistory: backupExecutionHistory,
-        isNetworkError: true,
-      });
+      this.setState({ isNetworkError: true });
+      this.setStateForStep(scenarioId, prevStatusMap);
       setTimeout(() => {
         this.setState({ isNetworkError: false });
       }, 4000);
     }
   }
 
-  handleStatusChange(scenarioId, stepId, status) {
-    const featureId = this.state.selectedFeature._id;
-    const backupSelectedFeature = this.state.selectedFeature.clone();
-    const backupExecutionHistory = this.state.executionHistory.map(execution => execution.clone());
-    if (stepId) {
-      updateStepPatch(featureId, new Patch(scenarioId, stepId, status)).then(response =>
-        this.processFailedResponse(response, backupSelectedFeature, backupExecutionHistory));
-    } else {
-      updateAllStepPatch(featureId, new Patch(scenarioId, null, status)).then(response =>
-        this.processFailedResponse(response, backupSelectedFeature, backupExecutionHistory));
-    }
+  updateStepsStatus(scenario, statusMap) {
+    statusMap.forEach(change => {
+      var found = false;
+      if (scenario.backgroundSteps) {
+        const newBackgroundStep = scenario.backgroundSteps.find(step => step.id === change.stepId);
+        if (newBackgroundStep) {
+          found = true;
+          newBackgroundStep.manualStatus = change.status;
+        }
+      }
+      if (!found) {
+        const newStep = scenario.steps.find(step => step.id === change.stepId);
+        newStep.manualStatus = change.status;
+      }
+    });
+    scenario.calculatedStatus = scenario.calculateManualStatus();
+  }
+
+  setStateForStep(scenarioId, statusMap) {
     this.setState(prevState => {
       const newFeature = prevState.selectedFeature.clone();
       const prevCalculatedStatus = newFeature.calculatedStatus;
-      newFeature.scenarios = this.updateScenarios(prevState.selectedFeature.scenarios, scenarioId, stepId, status);
+      const scenario = newFeature.scenarios.find(scenario => scenario.id === scenarioId);
+      this.updateStepsStatus(scenario, statusMap);
       newFeature.calculateStatus();
       if (prevCalculatedStatus !== newFeature.calculatedStatus) {
         const newExecutionHistory = this.updateExecutionHistory(prevState.executionHistory, newFeature.calculatedStatus);
@@ -140,6 +109,20 @@ class ReportContainer extends Component {
         selectedFeature: newFeature,
       });
     });
+  }
+
+  handleStatusChange(scenarioId, prevStatusMap, newStatusMap) {
+    const featureId = this.state.selectedFeature._id;
+    const firstStepId = newStatusMap[0].stepId;
+    const firstStatus = newStatusMap[0].status;
+    if (newStatusMap.length === 1) {
+      updateStepPatch(featureId, new Patch(scenarioId, firstStepId, firstStatus)).then(response =>
+        this.processFailedResponse(response, scenarioId, prevStatusMap));
+    } else {
+      updateAllStepPatch(featureId, new Patch(scenarioId, null, firstStatus)).then(response =>
+        this.processFailedResponse(response, scenarioId, prevStatusMap));
+    }
+    this.setStateForStep(scenarioId, newStatusMap);
   }
 
   render() {
