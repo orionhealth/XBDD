@@ -64,7 +64,7 @@ const ScenarioList = props => {
 
   const renderScenarioComment = (scenarioId, label, value, placeholder) => (
     <ScenarioInputField
-      id={scenarioId}
+      scenarioId={scenarioId}
       label={label}
       value={value}
       handleScenarioCommentChanged={handleScenarioCommentChanged}
