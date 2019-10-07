@@ -27,13 +27,11 @@ app.use(bodyParser.json()); // for parsing application/json
 app.all("/*", (req, res) => {
   const target = url.resolve(hostName, req.url);
 
-  setTimeout(() => {
-    appAPIProxy.proxyRequest(req, res, {
-      target,
-      ignorePath: true,
-      header: req.headers,
-    });
-  }, _.random(1000));
+  appAPIProxy.proxyRequest(req, res, {
+    target,
+    ignorePath: true,
+    header: req.headers,
+  });
 });
 
 /* eslint-disable */
