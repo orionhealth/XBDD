@@ -58,7 +58,7 @@ class ReportContainer extends Component {
   handleScenarioCommentChanged(scenarioId, label, requestLabel, prevContent, newContent) {
     const featureId = this.state.selectedFeature._id;
     updateComments(featureId, new InputFieldPatch(scenarioId, requestLabel, newContent)).then(response => {
-      if (response.status !== 200) {
+      if (!response || response.status !== 200) {
         this.setState({ isNetworkError: true });
         this.setStateForComment(scenarioId, label, prevContent);
         setTimeout(() => {
@@ -78,7 +78,7 @@ class ReportContainer extends Component {
   }
 
   processFailedResponse(response, scenarioId, prevStatusMap) {
-    if (response.status !== 200) {
+    if (!response || response.status !== 200) {
       this.setState({ isNetworkError: true });
       this.setStateForStep(scenarioId, prevStatusMap);
       setTimeout(() => {

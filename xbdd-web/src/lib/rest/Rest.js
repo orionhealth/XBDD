@@ -1,6 +1,7 @@
 const username = "admin";
 const password = "password";
 const url = process.env.REACT_APP_BACKEND_HOST;
+const TIME_OUT = 10000;
 
 const getHeaders = () => {
   const headers = new Headers();
@@ -10,13 +11,22 @@ const getHeaders = () => {
   return headers;
 };
 
+const timeout = (promise, ms = TIME_OUT) => {
+  let timerPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error("Request Timeout"));
+    }, ms);
+  });
+  return Promise.race([timerPromise, promise]);
+};
+
 const doGetRequest = path => {
   const options = {
     method: "GET",
     headers: getHeaders(),
   };
 
-  return fetch(`${url}${path}`, { ...options })
+  return timeout(fetch(`${url}${path}`, { ...options }))
     .then(response => response.json())
     .catch(error => console.error(error));
 };
@@ -28,7 +38,7 @@ const doPutRequest = (path, data) => {
     body: data ? JSON.stringify(data) : null,
   };
 
-  return fetch(`${url}${path}`, { ...options }).catch(error => console.error(error));
+  return timeout(fetch(`${url}${path}`, { ...options })).catch(error => console.error(error));
 };
 
 const doDeleteRequest = path => {
@@ -37,7 +47,7 @@ const doDeleteRequest = path => {
     headers: getHeaders(),
   };
 
-  return fetch(`${url}${path}`, { ...options }).catch(error => console.error(error));
+  return timeout(fetch(`${url}${path}`, { ...options })).catch(error => console.error(error));
 };
 
 export const getSummaryOfReports = () => doGetRequest("/rest/reports");
