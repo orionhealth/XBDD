@@ -23,6 +23,7 @@ class ReportContainer extends Component {
     this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
     this.handleScenarioCommentChanged = this.handleScenarioCommentChanged.bind(this);
     this.handleStatusChange = this.handleStatusChange.bind(this);
+    this.handleErrorMessageDisplay = this.handleErrorMessageDisplay.bind(this);
   }
 
   handleFeatureSelected(feature) {
@@ -77,13 +78,17 @@ class ReportContainer extends Component {
     return newExecutions;
   }
 
+  handleErrorMessageDisplay() {
+    this.setState({ isNetworkError: true });
+    setTimeout(() => {
+      this.setState({ isNetworkError: false });
+    }, 4000);
+  }
+
   processFailedResponse(response, scenarioId, prevStatusMap) {
     if (!response || response.status !== 200) {
-      this.setState({ isNetworkError: true });
       this.setStateForStep(scenarioId, prevStatusMap);
-      setTimeout(() => {
-        this.setState({ isNetworkError: false });
-      }, 4000);
+      this.handleErrorMessageDisplay();
     }
   }
 
@@ -140,22 +145,24 @@ class ReportContainer extends Component {
   }
 
   render() {
-    const { product, version, build, classes } = this.props;
+    const { userName, product, version, build, classes } = this.props;
     return (
       <>
         {this.state.isNetworkError ? <Card className={classes.errorMessageBox}>Network Error!</Card> : null}
         <Card>
           <Grid container>
-            <Grid item xs={4} lg={3}>
+            <Grid item xs={4} lg={4}>
               <FeatureListContainer
+                userName={userName}
                 product={product}
                 version={version}
                 build={build}
                 selectedFeatureId={this.state.selectedFeature ? this.state.selectedFeature._id : null}
                 handleFeatureSelected={this.handleFeatureSelected}
+                handleErrorMessageDisplay={this.handleErrorMessageDisplay}
               />
             </Grid>
-            <Grid item xs={8} lg={9}>
+            <Grid item xs={8} lg={8}>
               {this.state.selectedFeature && this.state.executionHistory ? (
                 <FeatureReportContainer
                   feature={this.state.selectedFeature}

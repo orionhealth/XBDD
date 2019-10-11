@@ -17,7 +17,7 @@ const theme = createMuiTheme({
 });
 
 const Navbar = props => {
-  const { classes } = props;
+  const { login, classes } = props;
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -32,7 +32,9 @@ const Navbar = props => {
               </a>
             </div>
             <div className={classes.xbddLogin}>
-              <Button color="inherit">Login</Button>
+              <Button color="inherit" onClick={login}>
+                Login
+              </Button>
             </div>
           </Toolbar>
         </AppBar>
@@ -42,6 +44,7 @@ const Navbar = props => {
 };
 
 Navbar.propTypes = {
+  login: PropTypes.func,
   classes: PropTypes.shape({}),
   styles: PropTypes.shape({}),
 };

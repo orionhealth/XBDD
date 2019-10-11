@@ -11,16 +11,35 @@ class Xbdd extends React.Component {
       productSelected: null,
       versionSelected: null,
       buildSelected: null,
+      userName: null,
     };
 
     this.handleBuildSelected = this.handleBuildSelected.bind(this);
+    this.login = this.login.bind(this);
+  }
+
+  login() {
+    if (process.env.NODE_ENV === "development") {
+      this.setState({ userName: "FX" });
+    }
   }
 
   switchPage(buildSelected) {
-    if (buildSelected) {
-      return <ReportContainer product={this.state.productSelected} version={this.state.versionSelected} build={this.state.buildSelected} />;
+    if (this.state.userName) {
+      if (buildSelected) {
+        return (
+          <ReportContainer
+            userName={this.state.userName}
+            product={this.state.productSelected}
+            version={this.state.versionSelected}
+            build={this.state.buildSelected}
+          />
+        );
+      } else {
+        return <SummaryContainer handleBuildSelected={this.handleBuildSelected} />;
+      }
     } else {
-      return <SummaryContainer handleBuildSelected={this.handleBuildSelected} />;
+      return <div />;
     }
   }
 
@@ -31,7 +50,7 @@ class Xbdd extends React.Component {
   render() {
     return (
       <div className="xbdd-app">
-        <Navbar />
+        <Navbar login={this.login} />
         {this.switchPage(this.state.buildSelected)}
       </div>
     );

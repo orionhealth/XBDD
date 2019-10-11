@@ -6,26 +6,39 @@ import { tagListStyles } from "./styles/TagListStyles";
 import TagListItem from "./TagListItem";
 import Tag from "../../../../models/Tag";
 
-const renderListItem = (tagList, selectedFeatureId, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected) =>
-  tagList.map(tag => (
-    <TagListItem
-      tag={tag}
-      key={tag.name}
-      isSelected={expandedTagsList.includes(tag.name)}
-      selectedFeatureId={selectedFeatureId}
-      selectedStatus={selectedStatus}
-      handleTagSelect={handleTagSelect}
-      handleFeatureSelected={handleFeatureSelected}
-    />
-  ));
-
 const TagList = props => {
-  const { tagList, selectedFeatureId, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected, classes } = props;
+  const {
+    userName,
+    tagList,
+    restId,
+    selectedFeatureId,
+    selectedStatus,
+    expandedTagsList,
+    handleTagSelect,
+    handleFeatureSelected,
+    handleTagAssigned,
+    handleWarningShow,
+    classes,
+  } = props;
 
   return (
     <Card raised className={classes.xbddTagList}>
       <List component="ul">
-        {renderListItem(tagList, selectedFeatureId, selectedStatus, expandedTagsList, handleTagSelect, handleFeatureSelected)}
+        {tagList.map(tag => (
+          <TagListItem
+            userName={userName}
+            tag={tag}
+            key={tag.name}
+            restId={restId}
+            isSelected={expandedTagsList.includes(tag.name)}
+            selectedFeatureId={selectedFeatureId}
+            selectedStatus={selectedStatus}
+            handleTagSelect={handleTagSelect}
+            handleFeatureSelected={handleFeatureSelected}
+            handleTagAssigned={handleTagAssigned}
+            handleWarningShow={handleWarningShow}
+          />
+        ))}
       </List>
     </Card>
   );
