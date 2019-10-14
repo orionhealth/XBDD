@@ -20,7 +20,7 @@ class FeatureListContainer extends Component {
     this.state = {
       warningArgs: null,
       isAssignedTagsView: true,
-      isTagView: false,
+      isTagView: true,
       featureList: null,
       selectedStatus: {
         passed: true,
@@ -58,16 +58,14 @@ class FeatureListContainer extends Component {
     this.setState(prevState =>
       Object.assign({}, prevState, {
         isTagView: !prevState.isTagView,
-      })
-    );
+      }));
   }
 
   handleTagsSwitch() {
     this.setState(prevState =>
       Object.assign({}, prevState, {
         isAssignedTagsView: !prevState.isAssignedTagsView,
-      })
-    );
+      }));
   }
 
   handleFilterButtonClick(status) {
@@ -76,8 +74,7 @@ class FeatureListContainer extends Component {
         selectedStatus: Object.assign({}, prevState.selectedStatus, {
           [status]: !prevState.selectedStatus[status],
         }),
-      })
-    );
+      }));
   }
 
   handleTagSelect(tag) {
@@ -124,10 +121,14 @@ class FeatureListContainer extends Component {
     this.setState({ warningArgs: null });
   }
 
-  filterTags() {
-    const tagList = this.state.featureList.tagList;
+  filterTags(userName) {
+    var newTagList = this.state.featureList.tagList;
 
-    return tagList.filter(
+    if (this.state.isAssignedTagsView) {
+      newTagList = newTagList.filter(tag => tag.userName === userName);
+    }
+
+    return newTagList.filter(
       tag =>
         (this.state.selectedStatus.passed && tag.containsPassed) ||
         (this.state.selectedStatus.failed && tag.containsFailed) ||
@@ -176,7 +177,7 @@ class FeatureListContainer extends Component {
       return (
         <TagList
           userName={userName}
-          tagList={this.filterTags()}
+          tagList={this.filterTags(userName)}
           restId={restId}
           selectedFeatureId={selectedFeatureId}
           selectedStatus={this.state.selectedStatus}

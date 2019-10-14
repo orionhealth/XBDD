@@ -4,6 +4,7 @@ class SimpleFeature {
       this._id = data._id;
       this.name = data.name;
       this.tags = data.tags;
+      this.calculatedStatus = data.calculatedStatus;
     }
   }
   clone() {
