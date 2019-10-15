@@ -19,7 +19,7 @@ class FeatureListContainer extends Component {
 
     this.state = {
       warningArgs: null,
-      isAssignedTagsView: true,
+      isAssignedTagsView: false,
       isTagView: true,
       featureList: null,
       selectedStatus: {
@@ -126,9 +126,6 @@ class FeatureListContainer extends Component {
 
     if (this.state.isAssignedTagsView) {
       newTagList = newTagList.filter(tag => tag.userName === userName);
-    }
-    if (newTagList.length === 0) {
-      newTagList = this.state.featureList.tagList;
     }
 
     return newTagList.filter(
