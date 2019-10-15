@@ -14,7 +14,7 @@ const clickEventWrapper = (event, restId, tagName, tagUserName, currentUserName,
   let node = event.target;
 
   while (node) {
-    if (node.className && node.className.indexOf("MuiAvatar-root") !== -1) {
+    if (typeof node.className === "string" && node.className.indexOf("MuiAvatar-root") !== -1) {
       if (tagUserName && tagUserName !== currentUserName) {
         handleWarningShow(restId, tagName, tagUserName, currentUserName);
         return;
