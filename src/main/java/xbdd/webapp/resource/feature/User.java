@@ -49,28 +49,6 @@ public class User {
         return null;
     }
 
-//    private DBObject getUserTagsByUserName(BasicDBList usersTags, String tag) {
-//        for(Object userTag : usersTags) {
-//            final String fetchUserName = (String) ((BasicDBObject)userTag).get("userName");
-//            if(fetchUserName.equals(tag)) {
-//                return (DBObject) userTag;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    private DBObject getUserTagsByTag(BasicDBList usersTags, String tag) {
-//        for(Object userTag : usersTags) {
-//            final BasicDBList fetchTags = (BasicDBList) ((BasicDBObject)userTag).get("tags");
-//            for(Object fetchTag : fetchTags) {
-//                if(fetchTag.equals(tag)) {
-//                    return (DBObject) userTag;
-//                }
-//            }
-//        }
-//        return null;
-//    }
-
     @PUT
     @Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
     @Consumes("application/json")
@@ -111,19 +89,6 @@ public class User {
             }
         }
         tags.add(generateNewTag(tagName, userName));
-
-
-//        if(userTagsByTag != null) {
-//            final BasicDBList tags = (BasicDBList)userTagsByTag.get("tags");
-//            tags.remove(tag);
-//        }
-//        final DBObject userTagsByUserName = getUserTagsByUserName(usersTags, userName);
-//        if(userTagsByUserName != null) {
-//            final BasicDBList tags = (BasicDBList) userTagsByUserName.get("tags");
-//            tags.add(tag);
-//        } else {
-//            usersTags.add(generateNewUserTags(userName, tag));
-//        }
     }
 
     private DBObject generateNewDocument(final Coordinates coordinates, final String tagName, final String userName) {
