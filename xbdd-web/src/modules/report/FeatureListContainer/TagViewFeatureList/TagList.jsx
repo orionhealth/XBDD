@@ -45,11 +45,16 @@ const TagList = props => {
 };
 
 TagList.propTypes = {
+  userName: PropTypes.string,
   tagList: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
+  restId: PropTypes.string,
   expandedTagsList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedFeatureId: PropTypes.string,
   selectedStatus: PropTypes.shape({}).isRequired,
   handleTagSelect: PropTypes.func.isRequired,
   handleFeatureSelected: PropTypes.func.isRequired,
+  handleTagAssigned: PropTypes.func,
+  handleWarningShow: PropTypes.func,
   classes: PropTypes.shape({
     xbddTagListContainer: PropTypes.string,
     xbddTagList: PropTypes.string,

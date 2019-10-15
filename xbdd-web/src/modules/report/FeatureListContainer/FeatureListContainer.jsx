@@ -127,6 +127,9 @@ class FeatureListContainer extends Component {
     if (this.state.isAssignedTagsView) {
       newTagList = newTagList.filter(tag => tag.userName === userName);
     }
+    if (newTagList.length === 0) {
+      newTagList = this.state.featureList.tagList;
+    }
 
     return newTagList.filter(
       tag =>
@@ -225,6 +228,12 @@ class FeatureListContainer extends Component {
 }
 
 FeatureListContainer.propTypes = {
+  product: PropTypes.string,
+  version: PropTypes.string,
+  build: PropTypes.string,
+  userName: PropTypes.string,
+  selectedFeatureId: PropTypes.string,
+  handleErrorMessageDisplay: PropTypes.func.isRequired,
   handleFeatureSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };

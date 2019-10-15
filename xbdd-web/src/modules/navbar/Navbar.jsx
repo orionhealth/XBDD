@@ -48,6 +48,9 @@ const Navbar = props => {
 };
 
 Navbar.propTypes = {
+  userName: PropTypes.string,
+  userNameInput: PropTypes.string,
+  handleUserNameInput: PropTypes.func,
   login: PropTypes.func,
   classes: PropTypes.shape({}),
   styles: PropTypes.shape({}),

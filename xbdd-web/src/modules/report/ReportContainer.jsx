@@ -181,6 +181,7 @@ class ReportContainer extends Component {
 }
 
 ReportContainer.propTypes = {
+  userName: PropTypes.string,
   product: PropTypes.string,
   version: PropTypes.string,
   build: PropTypes.string,

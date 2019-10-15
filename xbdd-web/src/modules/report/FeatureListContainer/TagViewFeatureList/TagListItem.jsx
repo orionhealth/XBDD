@@ -93,11 +93,15 @@ const TagListItem = props => {
 };
 
 TagListItem.propTypes = {
+  userName: PropTypes.string,
   tag: PropTypes.instanceOf(Tag).isRequired,
+  selectedFeatureId: PropTypes.string,
   isSelected: PropTypes.bool.isRequired,
   selectedStatus: PropTypes.shape({}).isRequired,
   handleTagSelect: PropTypes.func.isRequired,
   handleFeatureSelected: PropTypes.func.isRequired,
+  handleTagAssigned: PropTypes.func.isRequired,
+  handleWarningShow: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
 };
 

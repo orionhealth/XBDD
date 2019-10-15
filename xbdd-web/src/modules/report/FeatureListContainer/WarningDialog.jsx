@@ -1,4 +1,5 @@
 import React from "react";
+import { PropTypes } from "prop-types";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core";
 
 const WarningDialog = props => {
@@ -20,6 +21,14 @@ const WarningDialog = props => {
       </DialogActions>
     </Dialog>
   );
+};
+
+WarningDialog.propTypes = {
+  open: PropTypes.bool,
+  msg: PropTypes.string,
+  handler: PropTypes.func.isRequired,
+  handleClosed: PropTypes.func.isRequired,
+  classes: PropTypes.shape({}),
 };
 
 export default WarningDialog;
