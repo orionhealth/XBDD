@@ -1,7 +1,8 @@
 const featureListContainerStyles = {
   featureListTitle: {
+    display: "flex",
     alignItems: "center",
-    padding: "10px 10px 10px 20px",
+    padding: "4px 12px",
     borderRadius: "4px 4px 0 0",
     backgroundColor: "#457B9D",
     color: "white",
@@ -10,11 +11,8 @@ const featureListContainerStyles = {
   xbddTagListContainer: {
     padding: "12px 24px 24px 24px",
   },
-  tagIcon: {
-    textAlign: "right",
-  },
   checkedIcon: {
-    color: "#6ac5ff",
+    color: "#7dc3ff",
     fontSize: "20px",
   },
   unCheckedIcon: {
@@ -61,7 +59,6 @@ const featureListItemStyles = {
   },
   xbddFeatureListItem: {
     lineHeight: "22px",
-    padding: "12px 16px 12px 16px",
     display: "inline-block",
   },
   xbddFeatureListItemPassed: {

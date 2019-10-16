@@ -11,16 +11,39 @@ class Xbdd extends React.Component {
       productSelected: null,
       versionSelected: null,
       buildSelected: null,
+      userNameInput: null,
+      userName: null,
     };
 
+    this.handleUserNameInput = this.handleUserNameInput.bind(this);
     this.handleBuildSelected = this.handleBuildSelected.bind(this);
+    this.login = this.login.bind(this);
+  }
+
+  handleUserNameInput(event) {
+    this.setState({ userNameInput: event.target.value });
+  }
+
+  login() {
+    this.setState({ userName: this.state.userNameInput });
   }
 
   switchPage(buildSelected) {
-    if (buildSelected) {
-      return <ReportContainer product={this.state.productSelected} version={this.state.versionSelected} build={this.state.buildSelected} />;
+    if (this.state.userName) {
+      if (buildSelected) {
+        return (
+          <ReportContainer
+            userName={this.state.userName}
+            product={this.state.productSelected}
+            version={this.state.versionSelected}
+            build={this.state.buildSelected}
+          />
+        );
+      } else {
+        return <SummaryContainer handleBuildSelected={this.handleBuildSelected} />;
+      }
     } else {
-      return <SummaryContainer handleBuildSelected={this.handleBuildSelected} />;
+      return <div />;
     }
   }
 
@@ -31,7 +54,12 @@ class Xbdd extends React.Component {
   render() {
     return (
       <div className="xbdd-app">
-        <Navbar />
+        <Navbar
+          userName={this.state.userName}
+          userNameInput={this.state.userNameInput}
+          handleUserNameInput={this.handleUserNameInput}
+          login={this.login}
+        />
         {this.switchPage(this.state.buildSelected)}
       </div>
     );

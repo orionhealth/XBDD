@@ -14,12 +14,17 @@ const tagListItemStyles = {
     fontSize: "20px",
     color: "#6fc1f5",
   },
+  userAvatar: {
+    height: "32px",
+    width: "32px",
+    fontSize: "16px",
+    marginRight: "4px",
+  },
   xbddTagListItemContainer: {
-    width: "100%",
+    padding: "8px 16px",
   },
   xbddTagListItemContainerExpanded: {
     backgroundColor: "rgba(0, 0, 0, 0.1)",
-    width: "100%",
   },
   xbddFeatureListContainer: {
     paddingLeft: "30px",

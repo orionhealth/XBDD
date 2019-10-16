@@ -13,9 +13,34 @@ const getStatusPresences = features => {
 
 class Tag {
   constructor(data) {
-    this.name = data.tag;
-    this.features = data.features.map(data => new SimpleFeature(data));
-    Object.assign(this, getStatusPresences(data.features));
+    if (data) {
+      this.name = data.tag;
+      this.features = data.features.map(data => new SimpleFeature(data));
+      Object.assign(this, getStatusPresences(data.features));
+    }
+  }
+
+  clone() {
+    const cloneTag = new Tag();
+    cloneTag.name = this.name;
+    cloneTag.features = this.features.map(simpleFeature => simpleFeature.clone());
+    cloneTag.userName = this.userName;
+    cloneTag.containsPassed = this.containsPassed;
+    cloneTag.containsUndefined = this.containsUndefined;
+    cloneTag.containsFailed = this.containsFailed;
+    cloneTag.containsSkipped = this.containsSkipped;
+    return cloneTag;
+  }
+
+  setUserForTag(userName) {
+    this.userName = userName;
+  }
+
+  setUserForTags(data) {
+    const tagAssignment = data.find(item => item.tag === this.name);
+    if (tagAssignment) {
+      this.userName = tagAssignment.userName;
+    }
   }
 }
 

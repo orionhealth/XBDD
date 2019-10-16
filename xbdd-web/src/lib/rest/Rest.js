@@ -27,7 +27,7 @@ const doGetRequest = path => {
   };
 
   return timeout(fetch(`${url}${path}`, { ...options }))
-    .then(response => response.json())
+    .then(response => (response.status === 200 ? response.json() : null))
     .catch(error => console.error(error));
 };
 
@@ -79,3 +79,7 @@ export const updateStepPatch = (featureId, patch) => doPutRequest(`/rest/feature
 export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/rest/feature/steps/${featureId}`, patch);
 
 export const updateComments = (featureId, patch) => doPutRequest(`/rest/feature/comments/${featureId}`, patch);
+
+export const getTagAssignmentData = (product, version, build) => doGetRequest(`/rest/users/tagAssignment/${product}/${version}/${build}`);
+
+export const setTagAssignmentData = (restId, patch) => doPutRequest(`/rest/users/tagAssignment/${restId}`, patch);

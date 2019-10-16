@@ -1,10 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles, MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import { AppBar, Toolbar, Button, TextField, Avatar, Box } from "@material-ui/core";
 import navbarStyles from "./styles/NavbarStyles";
 
 const theme = createMuiTheme({
@@ -17,31 +14,44 @@ const theme = createMuiTheme({
 });
 
 const Navbar = props => {
-  const { classes } = props;
+  const { userName, userNameInput, handleUserNameInput, login, classes } = props;
 
   return (
     <MuiThemeProvider theme={theme}>
-      <div className={classes.xbddNavbarStyles}>
-        <AppBar position="static" className={classes.appBarBorder}>
-          <Toolbar>
-            <div className={classes.xbddLogoFlex}>
-              <a href="/" className={classes.xbddLogo}>
-                <Typography variant="h5" color="inherit">
-                  xbdd
-                </Typography>
-              </a>
-            </div>
-            <div className={classes.xbddLogin}>
-              <Button color="inherit">Login</Button>
-            </div>
-          </Toolbar>
-        </AppBar>
-      </div>
+      <AppBar position="static" className={classes.appBarBorder}>
+        <Toolbar>
+          <Box className={classes.xbddLogoFlex}>
+            <Box>
+              <Button href="/" className={classes.xbddLogo}>
+                XBDD
+              </Button>
+            </Box>
+          </Box>
+          <Box className={classes.xbddLogin}>
+            <TextField
+              label="User Name"
+              margin="dense"
+              variant="outlined"
+              value={userNameInput ? userNameInput : ""}
+              onChange={handleUserNameInput}
+              InputProps={{ style: { color: "white" } }}
+            />
+            <Button color="inherit" onClick={login}>
+              Login
+            </Button>
+            <Avatar>{userName}</Avatar>
+          </Box>
+        </Toolbar>
+      </AppBar>
     </MuiThemeProvider>
   );
 };
 
 Navbar.propTypes = {
+  userName: PropTypes.string,
+  userNameInput: PropTypes.string,
+  handleUserNameInput: PropTypes.func,
+  login: PropTypes.func,
   classes: PropTypes.shape({}),
   styles: PropTypes.shape({}),
 };
