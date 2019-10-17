@@ -21,11 +21,9 @@ const Navbar = props => {
       <AppBar position="static" className={classes.appBarBorder}>
         <Toolbar>
           <Box className={classes.xbddLogoFlex}>
-            <Box>
-              <Button href="/" className={classes.xbddLogo}>
-                XBDD
-              </Button>
-            </Box>
+            <Button href="/" className={classes.xbddLogo}>
+              XBDD
+            </Button>
           </Box>
           <Box className={classes.xbddLogin}>
             <TextField
@@ -35,6 +33,7 @@ const Navbar = props => {
               value={userNameInput ? userNameInput : ""}
               onChange={handleUserNameInput}
               InputProps={{ style: { color: "white" } }}
+              autoFocus
             />
             <Button color="inherit" onClick={login}>
               Login

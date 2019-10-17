@@ -44,6 +44,7 @@ const ScenarioList = props => {
     handleMoreButtonHovered,
     handleMoreButtonNotHovered,
     handleStatusChange,
+    handleScreenshotClicked,
     classes,
   } = props;
 
@@ -59,6 +60,7 @@ const ScenarioList = props => {
       handleMoreButtonHovered={handleMoreButtonHovered}
       handleMoreButtonNotHovered={handleMoreButtonNotHovered}
       handleStatusChange={handleStatusChange}
+      handleScreenshotClicked={handleScreenshotClicked}
     />
   );
 
@@ -167,6 +169,7 @@ ScenarioList.propTypes = {
   handleMoreButtonHovered: PropTypes.func.isRequired,
   handleMoreButtonNotHovered: PropTypes.func.isRequired,
   handleStatusChange: PropTypes.func.isRequired,
+  handleScreenshotClicked: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

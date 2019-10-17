@@ -45,7 +45,7 @@ class FeatureReportContainer extends Component {
   }
 
   render() {
-    const { feature, executionHistory, handleScenarioCommentChanged, handleStatusChange } = this.props;
+    const { feature, executionHistory, handleScenarioCommentChanged, handleStatusChange, handleScreenshotClicked } = this.props;
 
     return (
       <>
@@ -62,6 +62,7 @@ class FeatureReportContainer extends Component {
           handleMoreButtonHovered={this.handleMoreButtonHovered}
           handleMoreButtonNotHovered={this.handleMoreButtonNotHovered}
           handleStatusChange={handleStatusChange}
+          handleScreenshotClicked={handleScreenshotClicked}
         />
       </>
     );
@@ -73,6 +74,7 @@ FeatureReportContainer.propTypes = {
   executionHistory: PropTypes.arrayOf(PropTypes.instanceOf(Execution)),
   handleScenarioCommentChanged: PropTypes.func.isRequired,
   handleStatusChange: PropTypes.func.isRequired,
+  handleScreenshotClicked: PropTypes.func.isRequired,
 };
 
 export default FeatureReportContainer;

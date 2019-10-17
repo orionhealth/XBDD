@@ -7,6 +7,7 @@ import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
 import FeatureReportContainer from "./FeatureReportContainer/FeatureReportContainer";
 import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from "../../lib/rest/Rest";
 import Feature from "../../models/Feature";
+import SimpleDialog from "../utils/SimpleDialog";
 import Execution from "../../models/Execution";
 import StepStatusPatch from "../../models/StepStatusPatch";
 import InputFieldPatch from "../../models/InputFieldPatch";
@@ -15,6 +16,7 @@ class ReportContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      screenshotDialogContent: null,
       selectedFeature: null,
       executionHistory: null,
       isNetworkError: false,
@@ -24,6 +26,8 @@ class ReportContainer extends Component {
     this.handleScenarioCommentChanged = this.handleScenarioCommentChanged.bind(this);
     this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleErrorMessageDisplay = this.handleErrorMessageDisplay.bind(this);
+    this.handleScreenshotClicked = this.handleScreenshotClicked.bind(this);
+    this.handleDialogClosed = this.handleDialogClosed.bind(this);
   }
 
   handleFeatureSelected(feature) {
@@ -144,12 +148,26 @@ class ReportContainer extends Component {
     this.setStateForStep(scenarioId, newStatusMap);
   }
 
+  handleScreenshotClicked(content) {
+    this.setState({ screenshotDialogContent: content });
+  }
+
+  handleDialogClosed() {
+    this.setState({ screenshotDialogContent: null });
+  }
+
   render() {
     const { userName, product, version, build, classes } = this.props;
     return (
       <>
         {this.state.isNetworkError ? <Card className={classes.errorMessageBox}>Network Error!</Card> : null}
         <Card>
+          <SimpleDialog
+            open={!!this.state.screenshotDialogContent}
+            title="Full Size Screecshot"
+            content={this.state.screenshotDialogContent}
+            handleClosed={this.handleDialogClosed}
+          />
           <Grid container>
             <Grid item xs={4} lg={4}>
               <FeatureListContainer
@@ -170,6 +188,7 @@ class ReportContainer extends Component {
                   hoveredStepId={this.state.hoveredStepId}
                   handleScenarioCommentChanged={this.handleScenarioCommentChanged}
                   handleStatusChange={this.handleStatusChange}
+                  handleScreenshotClicked={this.handleScreenshotClicked}
                 />
               ) : null}
             </Grid>
