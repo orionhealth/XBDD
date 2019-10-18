@@ -164,7 +164,7 @@ class ReportContainer extends Component {
         <Card>
           <SimpleDialog
             open={!!this.state.screenshotDialogContent}
-            title="Full Size Screecshot"
+            title="Full Size Screenshot"
             content={this.state.screenshotDialogContent}
             handleClosed={this.handleDialogClosed}
           />
