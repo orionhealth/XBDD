@@ -76,7 +76,7 @@ class SummaryContainer extends Component {
             <Grid container>
               <Grid item xs={12}>
                 <Typography variant="h3" className={this.props.classes.summaryTitle}>
-                  G'day Mate
+                  Welcome to XBDD
                 </Typography>
               </Grid>
               <Grid item xs={6} className={this.props.classes.productListContainer}>
