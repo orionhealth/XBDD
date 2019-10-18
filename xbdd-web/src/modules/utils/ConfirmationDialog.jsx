@@ -2,20 +2,20 @@ import React from "react";
 import { PropTypes } from "prop-types";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core";
 
-const WarningDialog = props => {
-  const { open, msg, handler, handleClosed } = props;
+const ConfirmationDialog = props => {
+  const { open, title, msg, handleConfirmed, handleClosed } = props;
 
   return (
     <Dialog open={open} onClose={handleClosed}>
-      <DialogTitle>Warning!!!</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{msg}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClosed} color="primary">
+        <Button onClick={handleClosed} variant="contained">
           Cancel
         </Button>
-        <Button onClick={handler} color="primary" autoFocus>
+        <Button onClick={handleConfirmed} variant="contained" color="primary">
           Hell Yeah
         </Button>
       </DialogActions>
@@ -23,12 +23,12 @@ const WarningDialog = props => {
   );
 };
 
-WarningDialog.propTypes = {
+ConfirmationDialog.propTypes = {
   open: PropTypes.bool,
+  title: PropTypes.string,
   msg: PropTypes.string,
-  handler: PropTypes.func.isRequired,
+  handleConfirmed: PropTypes.func.isRequired,
   handleClosed: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}),
 };
 
-export default WarningDialog;
+export default ConfirmationDialog;

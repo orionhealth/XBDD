@@ -8,7 +8,7 @@ import { featureListContainerStyles } from "./styles/FeatureListContainerStyles"
 import FeatureFilterButtons from "./FeatureFilterButtons";
 import ListViewFeatureList from "./ListViewFeatureList/ListViewFeatureList";
 import TagList from "./TagViewFeatureList/TagList";
-import WarningDialog from "./WarningDialog";
+import ConfirmationDialog from "../../utils/ConfirmationDialog";
 import FeatureList from "../../../models/FeatureList";
 import TagAssignmentPatch from "../../../models/TagAssignmentPatch";
 import { getFeatureListByTagData, getSimpleFeatureListData, getTagAssignmentData, setTagAssignmentData } from "../../../lib/rest/Rest";
@@ -206,10 +206,11 @@ class FeatureListContainer extends Component {
     if (this.state.featureList) {
       return (
         <>
-          <WarningDialog
+          <ConfirmationDialog
             open={!!this.state.warningArgs}
-            msg={"Overriding"}
-            handler={() => this.handleTagAssigned(...this.state.warningArgs)}
+            title={"Warning!!"}
+            msg={"Reassigning The Tag"}
+            handleConfirmed={() => this.state.warningArgs && this.handleTagAssigned(...this.state.warningArgs)}
             handleClosed={this.handleWarningClosed}
           />
           <FeatureFilterButtons selectedStatus={this.state.selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />

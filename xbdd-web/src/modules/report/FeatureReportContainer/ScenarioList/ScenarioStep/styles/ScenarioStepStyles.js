@@ -6,6 +6,12 @@ const stepStyles = {
     padding: "3px",
     overflowX: "scroll",
   },
+  screenshot: {
+    margin: "20px 0 0 24px",
+    border: "1px solid rgba(0, 0, 0, 0.23)",
+    height: "50%",
+    width: "50%",
+  },
   steps: {
     paddingBottom: "12px",
   },

@@ -30,11 +30,12 @@ const clickEventWrapper = (event, scenarioId, stepId, prevStatus, newStatus, han
   handleStatusChange(scenarioId, prevStatusMap, newStatusMap);
 };
 
-const renderScreenshot = (embeddings, classes) => (
-  <div className={classes.screenshot}>
-    <img src={`/rest/attachment/${embeddings}`} alt={"Screenshot Not Found"} />
-  </div>
-);
+const renderScreenshot = (embeddings, handleScreenshotClicked, classes) => {
+  const url = `http://localhost:28080/xbdd/rest/attachment/${embeddings}`;
+  const alt = `Screenshot Not Found`;
+  const style = { height: "100%", width: "100%" };
+  return <img src={url} alt={alt} onClick={() => handleScreenshotClicked(<img src={url} alt={alt} style={style} />)} className={classes} />;
+};
 
 const ScenarioStep = props => {
   const {
@@ -48,6 +49,7 @@ const ScenarioStep = props => {
     handleMoreButtonHovered,
     handleMoreButtonNotHovered,
     handleStatusChange,
+    handleScreenshotClicked,
     classes,
   } = props;
 
@@ -92,25 +94,26 @@ const ScenarioStep = props => {
         {steps.map(step => {
           const status = step.manualStatus ? step.manualStatus : step.status;
           return (
-            <ListItem
-              button
-              key={step.id}
-              className={classes.step}
-              onClick={e => clickEventWrapper(e, scenarioId, step.id, status, null, handleStatusChange)}
-              onMouseEnter={() => handleStepHovered(`${scenarioId} ${step.id}`)}
-              onMouseLeave={() => handleStepNotHovered(`${scenarioId} ${step.id}`)}
-            >
-              <Box display="flex" flexDirection="row">
-                <Box p={1} className={getFailedClasses(status)}>
-                  {iconMap[status]}
+            <div key={step.id}>
+              <ListItem
+                button
+                className={classes.step}
+                onClick={e => clickEventWrapper(e, scenarioId, step.id, status, null, handleStatusChange)}
+                onMouseEnter={() => handleStepHovered(`${scenarioId} ${step.id}`)}
+                onMouseLeave={() => handleStepNotHovered(`${scenarioId} ${step.id}`)}
+              >
+                <Box display="flex" flexDirection="row">
+                  <Box p={1} className={getFailedClasses(status)}>
+                    {iconMap[status]}
+                  </Box>
+                  <Box p={1} className={classes.stepContentBox}>
+                    {renderBasicStep(step, status)}
+                    {step.rows ? <CucumberTable rows={step.rows} /> : null}
+                  </Box>
                 </Box>
-                <Box p={1} className={classes.stepContentBox}>
-                  {renderBasicStep(step, status)}
-                  {step.rows ? <CucumberTable rows={step.rows} /> : null}
-                  {step.embeddings ? renderScreenshot(step.embeddings, classes) : null}
-                </Box>
-              </Box>
-            </ListItem>
+              </ListItem>
+              {step.embeddings ? renderScreenshot(step.embeddings, handleScreenshotClicked, classes.screenshot) : null}
+            </div>
           );
         })}
       </List>
@@ -129,6 +132,7 @@ ScenarioStep.propTypes = {
   handleMoreButtonHovered: PropTypes.func.isRequired,
   handleMoreButtonNotHovered: PropTypes.func.isRequired,
   handleStatusChange: PropTypes.func.isRequired,
+  handleScreenshotClicked: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 
