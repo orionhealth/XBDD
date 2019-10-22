@@ -1,12 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { List, ListItem, ListItemIcon, ListItemText, Checkbox } from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbtack } from "@fortawesome/free-solid-svg-icons";
+import { List, ListItem } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import BuildListStyles from "./styles/BuildListStyles";
+import { buildListStyles } from "./styles/BuildListStyles";
 import Product from "../../../../../models/Product";
 import Version from "../../../../../models/Version";
+import BuildListItem from "./BuildListItem";
 
 const clickEventWrapper = (event, product, version, build, isPinned, handlePinChange, handleBuildSelected) => {
   let node = event.target;
@@ -21,38 +20,41 @@ const clickEventWrapper = (event, product, version, build, isPinned, handlePinCh
   handleBuildSelected(product.name, version.getString(), build);
 };
 
-const renderBuildListByPin = (buildList, handlePinChange, handleBuildSelected, product, version, isPinned, classes) => (
-  <List>
-    {buildList.map(build => (
-      <ListItem
-        button
-        divider
-        key={build}
-        className={classes.buildListItem}
-        onClick={e => clickEventWrapper(e, product, version, build, isPinned, handlePinChange, handleBuildSelected)}
-      >
-        <ListItemText>Build {build}</ListItemText>
-        <ListItemIcon className={classes.listItemIcon}>
-          <Checkbox icon={<FontAwesomeIcon icon={faThumbtack} />} checkedIcon={<FontAwesomeIcon icon={faThumbtack} />} checked={isPinned} />
-        </ListItemIcon>
-      </ListItem>
-    ))}
-  </List>
-);
-
 const BuildList = props => {
-  const { product, version, handlePinChange, handleBuildSelected, classes } = props;
+  const { product, version, expandedBuildList, handlePinChange, handleBuildSelected, handleBuildListExpanded, classes } = props;
   const pinnedBuildList = version.pinnedBuildList;
-  const otherBuildList = version.getUnpinnedBuildList();
+  var unpinnedBuildList = version.getUnpinnedBuildList();
+  const productVersionId = `${product.name} ${version.getString()}`;
+  const isBuildListExpanded = expandedBuildList.includes(productVersionId);
+  const isBigBuildList = unpinnedBuildList.length > 5 ? true : false;
+
+  if (isBigBuildList && !isBuildListExpanded) {
+    unpinnedBuildList = unpinnedBuildList.slice(0, 5);
+  }
+
+  const renderBuildListByPin = (buildList, isPinned) => (
+    <List>
+      <BuildListItem
+        product={product}
+        version={version}
+        isPinned={isPinned}
+        buildList={buildList}
+        handlePinChange={handlePinChange}
+        handleBuildSelected={handleBuildSelected}
+        clickEventWrapper={clickEventWrapper}
+      />
+      {isPinned || !isBigBuildList ? null : (
+        <ListItem button divider className={classes.buildListItem} onClick={() => handleBuildListExpanded(productVersionId)}>
+          {isBuildListExpanded ? "Show Less" : "Show More"}
+        </ListItem>
+      )}
+    </List>
+  );
 
   return (
     <div className={classes.buildListContainer}>
-      {pinnedBuildList.length !== 0
-        ? renderBuildListByPin(pinnedBuildList, handlePinChange, handleBuildSelected, product, version, true, classes)
-        : null}
-      {otherBuildList.length !== 0
-        ? renderBuildListByPin(otherBuildList, handlePinChange, handleBuildSelected, product, version, false, classes)
-        : null}
+      {pinnedBuildList.length !== 0 ? renderBuildListByPin(pinnedBuildList, true) : null}
+      {unpinnedBuildList.length !== 0 ? renderBuildListByPin(unpinnedBuildList, false) : null}
     </div>
   );
 };
@@ -60,9 +62,11 @@ const BuildList = props => {
 BuildList.propTypes = {
   product: PropTypes.instanceOf(Product),
   version: PropTypes.instanceOf(Version),
+  expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handlePinChange: PropTypes.func.isRequired,
   handleBuildSelected: PropTypes.func.isRequired,
+  handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 
-export default withStyles(BuildListStyles)(BuildList);
+export default withStyles(buildListStyles)(BuildList);

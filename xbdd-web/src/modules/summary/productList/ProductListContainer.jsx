@@ -12,11 +12,13 @@ class ProductListContainer extends Component {
       searchContent: null,
       expandedProductsList: [],
       selectedVersionList: {},
+      expandedBuildList: [],
     };
 
     this.handleSearchProduct = this.handleSearchProduct.bind(this);
     this.handleProductClicked = this.handleProductClicked.bind(this);
     this.handleVersionSelected = this.handleVersionSelected.bind(this);
+    this.handleBuildListExpanded = this.handleBuildListExpanded.bind(this);
   }
 
   handleSearchProduct(event) {
@@ -43,6 +45,17 @@ class ProductListContainer extends Component {
       }));
   }
 
+  handleBuildListExpanded(productVersionId) {
+    if (this.state.expandedBuildList.includes(productVersionId)) {
+      const newExpandedBuildList = [...this.state.expandedBuildList];
+      const index = newExpandedBuildList.indexOf(productVersionId);
+      newExpandedBuildList.splice(index, 1);
+      this.setState({ expandedBuildList: newExpandedBuildList });
+    } else {
+      this.setState({ expandedBuildList: [...this.state.expandedBuildList, productVersionId] });
+    }
+  }
+
   render() {
     var filteredList = this.props.list;
 
@@ -56,6 +69,7 @@ class ProductListContainer extends Component {
         <ProductList
           list={filteredList}
           expandedProductsList={this.state.expandedProductsList}
+          expandedBuildList={this.state.expandedBuildList}
           selectedVersionList={this.state.selectedVersionList}
           title={this.props.title}
           handleFavouriteChange={this.props.handleFavouriteChange}
@@ -64,6 +78,7 @@ class ProductListContainer extends Component {
           handleProductClicked={this.handleProductClicked}
           handleVersionSelected={this.handleVersionSelected}
           handleBuildSelected={this.props.handleBuildSelected}
+          handleBuildListExpanded={this.handleBuildListExpanded}
         />
       </Card>
     );
