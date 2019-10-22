@@ -17,7 +17,16 @@ const buildVersionList = version => {
 };
 
 const BuildSummaryContainer = props => {
-  const { product, version, handleVersionSelected, handlePinChange, handleBuildSelected, classes } = props;
+  const {
+    product,
+    version,
+    expandedBuildList,
+    handleVersionSelected,
+    handlePinChange,
+    handleBuildSelected,
+    handleBuildListExpanded,
+    classes,
+  } = props;
 
   return (
     <Grid container>
@@ -30,7 +39,14 @@ const BuildSummaryContainer = props => {
         </FormControl>
       </Grid>
       <Grid item xs={9}>
-        <BuildList product={product} version={version} handlePinChange={handlePinChange} handleBuildSelected={handleBuildSelected} />
+        <BuildList
+          product={product}
+          version={version}
+          expandedBuildList={expandedBuildList}
+          handlePinChange={handlePinChange}
+          handleBuildSelected={handleBuildSelected}
+          handleBuildListExpanded={handleBuildListExpanded}
+        />
       </Grid>
     </Grid>
   );
@@ -39,9 +55,11 @@ const BuildSummaryContainer = props => {
 BuildSummaryContainer.propTypes = {
   product: PropTypes.instanceOf(Product),
   version: PropTypes.instanceOf(Version),
+  expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
   handleBuildSelected: PropTypes.func.isRequired,
+  handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

@@ -12,6 +12,7 @@ const ProductList = props => {
     list,
     title,
     expandedProductsList,
+    expandedBuildList,
     selectedVersionList,
     handleSearchProduct,
     handleFavouriteChange,
@@ -19,6 +20,7 @@ const ProductList = props => {
     handleVersionSelected,
     handlePinChange,
     handleBuildSelected,
+    handleBuildListExpanded,
     classes,
   } = props;
 
@@ -45,6 +47,7 @@ const ProductList = props => {
             <ProductListItem
               product={product}
               expandedProductsList={expandedProductsList}
+              expandedBuildList={expandedBuildList}
               selectedVersionList={selectedVersionList}
               key={product.name}
               handleFavouriteChange={handleFavouriteChange}
@@ -52,6 +55,7 @@ const ProductList = props => {
               handleVersionSelected={handleVersionSelected}
               handlePinChange={handlePinChange}
               handleBuildSelected={handleBuildSelected}
+              handleBuildListExpanded={handleBuildListExpanded}
             />
           );
         })}
@@ -64,6 +68,7 @@ ProductList.propTypes = {
   list: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
   title: PropTypes.string,
   expandedProductsList: PropTypes.arrayOf(PropTypes.string),
+  expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   selectedVersionList: PropTypes.shape({}),
   handleSearchProduct: PropTypes.func.isRequired,
   handleFavouriteChange: PropTypes.func.isRequired,
@@ -71,6 +76,7 @@ ProductList.propTypes = {
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
   handleBuildSelected: PropTypes.func.isRequired,
+  handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 export default withStyles(ProductListStyles)(ProductList);

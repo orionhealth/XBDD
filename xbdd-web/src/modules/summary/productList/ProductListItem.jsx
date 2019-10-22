@@ -27,12 +27,14 @@ const ProductListItem = props => {
   const {
     product,
     expandedProductsList,
+    expandedBuildList,
     selectedVersionList,
     handleFavouriteChange,
     handleProductClicked,
     handleVersionSelected,
     handlePinChange,
     handleBuildSelected,
+    handleBuildListExpanded,
     classes,
   } = props;
 
@@ -56,9 +58,11 @@ const ProductListItem = props => {
         <BuildSummaryContainer
           product={product}
           version={version}
+          expandedBuildList={expandedBuildList}
           handleVersionSelected={handleVersionSelected}
           handlePinChange={handlePinChange}
           handleBuildSelected={handleBuildSelected}
+          handleBuildListExpanded={handleBuildListExpanded}
         />
       </Collapse>
     </>
@@ -68,12 +72,14 @@ const ProductListItem = props => {
 ProductListItem.propTypes = {
   product: PropTypes.instanceOf(Product),
   expandedProductsList: PropTypes.arrayOf(PropTypes.string),
+  expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   selectedVersionList: PropTypes.shape({}),
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
   handleBuildSelected: PropTypes.func.isRequired,
+  handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 
