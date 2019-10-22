@@ -23,10 +23,10 @@ const clickEventWrapper = (event, product, version, build, isPinned, handlePinCh
 const BuildList = props => {
   const { product, version, expandedBuildList, handlePinChange, handleBuildSelected, handleBuildListExpanded, classes } = props;
   const pinnedBuildList = version.pinnedBuildList;
-  var unpinnedBuildList = version.getUnpinnedBuildList();
+  let unpinnedBuildList = version.getUnpinnedBuildList();
   const productVersionId = `${product.name} ${version.getString()}`;
   const isBuildListExpanded = expandedBuildList.includes(productVersionId);
-  const isBigBuildList = unpinnedBuildList.length > 5 ? true : false;
+  const isBigBuildList = unpinnedBuildList.length > 5;
 
   if (isBigBuildList && !isBuildListExpanded) {
     unpinnedBuildList = unpinnedBuildList.slice(0, 5);
