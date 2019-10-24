@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { PropTypes } from "prop-types";
 import { Typography, Checkbox, Tooltip, Box } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTags, faUserTag } from "@fortawesome/free-solid-svg-icons";
+import { faTags, faUserTag, faUserSlash } from "@fortawesome/free-solid-svg-icons";
 import { withStyles } from "@material-ui/styles";
 import { featureListContainerStyles } from "./styles/FeatureListContainerStyles";
 import FeatureFilterButtons from "./FeatureFilterButtons";
@@ -11,7 +11,14 @@ import TagList from "./TagViewFeatureList/TagList";
 import ConfirmationDialog from "../../utils/ConfirmationDialog";
 import FeatureList from "../../../models/FeatureList";
 import TagAssignmentPatch from "../../../models/TagAssignmentPatch";
-import { getFeatureListByTagData, getSimpleFeatureListData, getTagAssignmentData, setTagAssignmentData } from "../../../lib/rest/Rest";
+import {
+  getFeatureListByTagData,
+  getSimpleFeatureListData,
+  getTagAssignmentData,
+  setTagAssignmentData,
+  getIgnoredTags,
+  setIgnoredTag,
+} from "../../../lib/rest/Rest";
 
 class FeatureListContainer extends Component {
   constructor(props) {
@@ -19,6 +26,7 @@ class FeatureListContainer extends Component {
 
     this.state = {
       warningArgs: null,
+      isEditMode: false,
       isAssignedTagsView: false,
       isTagView: true,
       featureList: null,
@@ -32,11 +40,13 @@ class FeatureListContainer extends Component {
     };
     this.handleViewSwitch = this.handleViewSwitch.bind(this);
     this.handleTagsSwitch = this.handleTagsSwitch.bind(this);
+    this.handleEditModeSwitch = this.handleEditModeSwitch.bind(this);
     this.handleFilterButtonClick = this.handleFilterButtonClick.bind(this);
     this.handleTagSelect = this.handleTagSelect.bind(this);
     this.handleTagAssigned = this.handleTagAssigned.bind(this);
     this.handleWarningShow = this.handleWarningShow.bind(this);
     this.handleWarningClosed = this.handleWarningClosed.bind(this);
+    this.handleTagIgnore = this.handleTagIgnore.bind(this);
   }
 
   componentDidMount() {
@@ -46,10 +56,12 @@ class FeatureListContainer extends Component {
       getFeatureListByTagData(product, version, build),
       getSimpleFeatureListData(product, version, build),
       getTagAssignmentData(product, version, build),
+      getIgnoredTags(product),
     ]).then(data => {
       featureList.setFeatureListByTag(data[0]);
       featureList.setSimpleFeatureList(data[1]);
       featureList.setUserForTags(data[2]);
+      featureList.setIgnoredTags(data[3]);
       this.setState({ featureList });
     });
   }
@@ -65,6 +77,13 @@ class FeatureListContainer extends Component {
     this.setState(prevState =>
       Object.assign({}, prevState, {
         isAssignedTagsView: !prevState.isAssignedTagsView,
+      }));
+  }
+
+  handleEditModeSwitch() {
+    this.setState(prevState =>
+      Object.assign({}, prevState, {
+        isEditMode: !prevState.isEditMode,
       }));
   }
 
@@ -121,6 +140,26 @@ class FeatureListContainer extends Component {
     this.setState({ warningArgs: null });
   }
 
+  handleTagIgnore(product, tagName) {
+    setIgnoredTag(product, { tagName: tagName }).then(response => {
+      if (!response || response.status !== 200) {
+        this.setIgnoreStateForTag(tagName);
+        this.props.handleErrorMessageDisplay();
+      }
+    });
+    this.setIgnoreStateForTag(tagName);
+  }
+
+  setIgnoreStateForTag(tagName) {
+    this.setState(prevState => {
+      const newFeatureList = prevState.featureList.clone();
+      newFeatureList.toggleIgnoreForTag(tagName);
+      return Object.assign({}, prevState, {
+        featureList: newFeatureList,
+      });
+    });
+  }
+
   filterTags(userName) {
     var newTagList = this.state.featureList.tagList;
 
@@ -139,12 +178,35 @@ class FeatureListContainer extends Component {
 
   renderAssignedTagsSwitch(classes) {
     return (
-      <Tooltip title={this.state.isAssignedTagsView ? "Show All Tags" : "Show Only Assigned Tags"} placement="top">
+      <>
+        <Tooltip title={this.state.isEditMode ? "Turn Edit Mode Off" : "Turn Edit Mode On"} placement="top">
+          <Checkbox
+            onChange={this.handleEditModeSwitch}
+            icon={<FontAwesomeIcon icon={faUserSlash} className={classes.unCheckedIcon} />}
+            checkedIcon={<FontAwesomeIcon icon={faUserSlash} className={classes.checkedIcon} />}
+            checked={this.state.isEditMode}
+          />
+        </Tooltip>
+        <Tooltip title={this.state.isAssignedTagsView ? "Show All Tags" : "Show Only Assigned Tags"} placement="top">
+          <Checkbox
+            onChange={this.handleTagsSwitch}
+            icon={<FontAwesomeIcon icon={faUserTag} className={classes.unCheckedIcon} />}
+            checkedIcon={<FontAwesomeIcon icon={faUserTag} className={classes.checkedIcon} />}
+            checked={this.state.isAssignedTagsView}
+          />
+        </Tooltip>
+      </>
+    );
+  }
+
+  renderViewsSwithch(classes) {
+    return (
+      <Tooltip title={this.state.isTagView ? "Switch to List View" : "Switch to Tag View"} placement="top">
         <Checkbox
-          onChange={this.handleTagsSwitch}
-          icon={<FontAwesomeIcon icon={faUserTag} className={classes.unCheckedIcon} />}
-          checkedIcon={<FontAwesomeIcon icon={faUserTag} className={classes.checkedIcon} />}
-          checked={this.state.isAssignedTagsView}
+          onChange={this.handleViewSwitch}
+          icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
+          checkedIcon={<FontAwesomeIcon icon={faTags} className={classes.checkedIcon} />}
+          checked={this.state.isTagView}
         />
       </Tooltip>
     );
@@ -158,15 +220,7 @@ class FeatureListContainer extends Component {
         </Box>
         <Box>
           {this.state.isTagView ? this.renderAssignedTagsSwitch(classes) : null}
-
-          <Tooltip title={this.state.isTagView ? "Switch to List View" : "Switch to Tag View"} placement="top">
-            <Checkbox
-              onChange={this.handleViewSwitch}
-              icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
-              checkedIcon={<FontAwesomeIcon icon={faTags} className={classes.checkedIcon} />}
-              checked={this.state.isTagView}
-            />
-          </Tooltip>
+          {this.renderViewsSwithch(classes)}
         </Box>
       </Box>
     );
@@ -177,6 +231,8 @@ class FeatureListContainer extends Component {
       return (
         <TagList
           userName={userName}
+          isEditMode={this.state.isEditMode}
+          isAssignedTagsView={this.state.isAssignedTagsView}
           tagList={this.filterTags(userName)}
           restId={restId}
           selectedFeatureId={selectedFeatureId}
@@ -186,6 +242,7 @@ class FeatureListContainer extends Component {
           handleFeatureSelected={handleFeatureSelected}
           handleTagAssigned={this.handleTagAssigned}
           handleWarningShow={this.handleWarningShow}
+          handleTagIgnore={this.handleTagIgnore}
         />
       );
     } else {

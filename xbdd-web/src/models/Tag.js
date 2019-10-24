@@ -25,6 +25,7 @@ class Tag {
     cloneTag.name = this.name;
     cloneTag.features = this.features.map(simpleFeature => simpleFeature.clone());
     cloneTag.userName = this.userName;
+    cloneTag.isIgnored = this.isIgnored;
     cloneTag.containsPassed = this.containsPassed;
     cloneTag.containsUndefined = this.containsUndefined;
     cloneTag.containsFailed = this.containsFailed;
@@ -41,6 +42,14 @@ class Tag {
     if (tagAssignment) {
       this.userName = tagAssignment.userName;
     }
+  }
+
+  setIgnoredTags(data) {
+    this.isIgnored = data.includes(this.name);
+  }
+
+  toggleIgnoreForTag() {
+    this.isIgnored = !this.isIgnored;
   }
 }
 
