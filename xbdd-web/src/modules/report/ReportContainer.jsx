@@ -31,16 +31,18 @@ class ReportContainer extends Component {
   }
 
   handleFeatureSelected(feature) {
-    getFeatureReport(feature._id).then(data => {
-      const selectedFeature = new Feature(data);
-      getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
-        const executionHistory = data.rollup.map(build => new Execution(build));
-        this.setState({
-          selectedFeature,
-          executionHistory,
+    if (!this.state.selectedFeature || this.state.selectedFeature.id !== feature.id) {
+      getFeatureReport(feature._id).then(data => {
+        const selectedFeature = new Feature(data);
+        getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
+          const executionHistory = data.rollup.map(build => new Execution(build));
+          this.setState({
+            selectedFeature,
+            executionHistory,
+          });
         });
       });
-    });
+    }
   }
 
   updateScenariosComment(scenarios, scenarioId, label, content) {

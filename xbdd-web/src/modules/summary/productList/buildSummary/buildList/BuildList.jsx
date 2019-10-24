@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { List, ListItem } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDoubleUp, faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 import { withStyles } from "@material-ui/core/styles";
 import { buildListStyles } from "./styles/BuildListStyles";
 import Product from "../../../../../models/Product";
@@ -45,7 +47,10 @@ const BuildList = props => {
       />
       {isPinned || !isBigBuildList ? null : (
         <ListItem button divider className={classes.buildListItem} onClick={() => handleBuildListExpanded(productVersionId)}>
-          {isBuildListExpanded ? "Show Less" : "Show More"}
+          <ListItemIcon className={classes.arrowIcon}>
+            <FontAwesomeIcon icon={isBuildListExpanded ? faAngleDoubleUp : faAngleDoubleDown} />
+          </ListItemIcon>
+          <ListItemText>{isBuildListExpanded ? "Show Less" : "Show More..."}</ListItemText>
         </ListItem>
       )}
     </List>
