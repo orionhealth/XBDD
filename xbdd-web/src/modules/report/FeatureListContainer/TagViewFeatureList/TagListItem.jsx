@@ -33,7 +33,7 @@ const clickEventWrapper = (
       handleTagAssigned(restId, tagName, tagUserName, currentUserName);
       return;
     }
-    if (node.className && node.className.baseVal && node.className.baseVal.indexOf("TagListItem-checkboxIcons-573") !== -1) {
+    if (node.className && node.className.baseVal && node.className.baseVal.indexOf("TagListItem-checkboxIcons") !== -1) {
       const product = restId.split("/")[0];
       handleTagIgnore(product, tagName);
       return;
@@ -61,7 +61,7 @@ const renderAvatar = (restId, tag, currentUserName, handleWarningShow, handleTag
   );
 };
 
-const renderCheckbox = (tag, restId, currentUserName, handleTagIgnore, classes) => {
+const renderCheckbox = (tag, restId, handleTagIgnore, classes) => {
   let iconClasses = classes.checkboxIcons;
   if (tag.isIgnored) {
     iconClasses += ` ${classes.ignoredColor}`;
@@ -71,7 +71,7 @@ const renderCheckbox = (tag, restId, currentUserName, handleTagIgnore, classes) 
     <FontAwesomeIcon
       icon={tag.isIgnored ? faMinusSquare : faSquare}
       className={iconClasses}
-      onClick={e => clickEventWrapper(e, restId, tag.name, null, currentUserName, null, null, null, handleTagIgnore)}
+      onClick={e => clickEventWrapper(e, restId, tag.name, null, null, null, null, null, handleTagIgnore)}
     />
   );
 };
@@ -116,7 +116,7 @@ const TagListItem = props => {
         onClick={e => clickEventWrapper(e, null, tag.name, null, null, null, null, handleTagSelect)}
         className={className}
       >
-        {isEditMode ? renderCheckbox(tag, restId, userName, handleTagIgnore, classes) : null}
+        {isEditMode ? renderCheckbox(tag, restId, handleTagIgnore, classes) : null}
         <ListItemIcon className={classes.listItemIcon}>
           <span className={tag.isIgnored ? classes.ignoredColor : null}>
             <FontAwesomeIcon icon={faTag} />
