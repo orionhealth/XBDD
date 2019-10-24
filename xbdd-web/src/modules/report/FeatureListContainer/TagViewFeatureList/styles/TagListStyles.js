@@ -14,11 +14,21 @@ const tagListItemStyles = {
     fontSize: "20px",
     color: "#6fc1f5",
   },
+  checkboxIcons: {
+    marginRight: "12px",
+    fontSize: "20px",
+  },
   userAvatar: {
     height: "32px",
     width: "32px",
     fontSize: "16px",
     marginRight: "4px",
+  },
+  blockAvatar: {
+    height: "32px",
+    width: "32px",
+    marginRight: "4px",
+    color: "#bdbdbd",
   },
   xbddTagListItemContainer: {
     padding: "8px 16px",
@@ -40,6 +50,9 @@ const tagListItemStyles = {
   },
   xbddFeatureListItemSkipped: {
     color: "#457B9D",
+  },
+  ignoredColor: {
+    color: "#bdbdbd",
   },
 };
 

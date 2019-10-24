@@ -14,18 +14,31 @@ class FeatureList {
     }
   }
 
-  setUserForTags(data) {
-    if (data) {
-      this.tagList.forEach(tag => tag.setUserForTags(data));
-    }
-  }
-
   setFeatureListByTag(data) {
     this.tagList = data.map(item => new Tag(item));
   }
 
   setSimpleFeatureList(data) {
     this.simpleFeatureList = data.map(item => new SimpleFeature(item));
+  }
+
+  setUserForTags(data) {
+    if (data) {
+      this.tagList.forEach(tag => tag.setUserForTags(data));
+    }
+  }
+
+  setIgnoredTags(data) {
+    if (data) {
+      this.tagList.forEach(tag => tag.setIgnoredTags(data));
+    }
+  }
+
+  toggleIgnoreForTag(tagName) {
+    const tagFound = this.tagList.find(tag => tag.name === tagName);
+    if (tagFound) {
+      tagFound.toggleIgnoreForTag();
+    }
   }
 
   clone() {

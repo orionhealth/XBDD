@@ -96,6 +96,15 @@ public class Coordinates {
 		return this.major + "." + this.minor + "." + this.servicePack;
 	}
 
+
+	public BasicDBObject getProductCoordinates() {
+		return new BasicDBObject().append("product", this.product);
+	}
+
+	public BasicDBObject getProductCoordinatesQueryObject() {
+		return new BasicDBObject().append("coordinates.product", this.product);
+	}
+
 	public BasicDBObject getReportCoordinates() {
 		return new BasicDBObject().append("product", this.product).append("major", this.major).append("minor", this.minor)
 				.append("servicePack", this.servicePack)

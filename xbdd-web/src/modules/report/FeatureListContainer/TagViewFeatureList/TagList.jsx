@@ -9,6 +9,8 @@ import Tag from "../../../../models/Tag";
 const TagList = props => {
   const {
     userName,
+    isEditMode,
+    isAssignedTagsView,
     tagList,
     restId,
     selectedFeatureId,
@@ -18,6 +20,7 @@ const TagList = props => {
     handleFeatureSelected,
     handleTagAssigned,
     handleWarningShow,
+    handleTagIgnore,
     classes,
   } = props;
 
@@ -27,6 +30,8 @@ const TagList = props => {
         {tagList.map(tag => (
           <TagListItem
             userName={userName}
+            isEditMode={isEditMode}
+            isAssignedTagsView={isAssignedTagsView}
             tag={tag}
             key={tag.name}
             restId={restId}
@@ -37,6 +42,7 @@ const TagList = props => {
             handleFeatureSelected={handleFeatureSelected}
             handleTagAssigned={handleTagAssigned}
             handleWarningShow={handleWarningShow}
+            handleTagIgnore={handleTagIgnore}
           />
         ))}
       </List>
@@ -46,6 +52,8 @@ const TagList = props => {
 
 TagList.propTypes = {
   userName: PropTypes.string,
+  isEditMode: PropTypes.bool,
+  isAssignedTagsView: PropTypes.bool,
   tagList: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
   restId: PropTypes.string,
   expandedTagsList: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -55,6 +63,7 @@ TagList.propTypes = {
   handleFeatureSelected: PropTypes.func.isRequired,
   handleTagAssigned: PropTypes.func,
   handleWarningShow: PropTypes.func,
+  handleTagIgnore: PropTypes.func,
   classes: PropTypes.shape({
     xbddTagListContainer: PropTypes.string,
     xbddTagList: PropTypes.string,

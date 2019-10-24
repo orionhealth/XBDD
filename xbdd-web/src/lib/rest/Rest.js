@@ -83,3 +83,7 @@ export const updateComments = (featureId, patch) => doPutRequest(`/rest/feature/
 export const getTagAssignmentData = (product, version, build) => doGetRequest(`/rest/users/tagAssignment/${product}/${version}/${build}`);
 
 export const setTagAssignmentData = (restId, patch) => doPutRequest(`/rest/users/tagAssignment/${restId}`, patch);
+
+export const getIgnoredTags = product => doGetRequest(`/rest/users/ignoredTags/${product}`);
+
+export const setIgnoredTag = (product, patch) => doPutRequest(`/rest/users/ignoredTags/${product}`, patch);

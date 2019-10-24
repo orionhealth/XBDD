@@ -52,7 +52,7 @@ public class User {
     @PUT
     @Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
     @Consumes("application/json")
-    public Response updateTagsAssignment(@BeanParam final Coordinates coordinates, final DBObject patch) {
+    public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final DBObject patch) {
         try {
             final DB db = this.client.getDB("bdd");
             final DBCollection collection = db.getCollection("tagsAssignment");
@@ -68,7 +68,7 @@ public class User {
                 updateTagsAssignment(documentToUpdate, tagName, userName);
                 collection.save(documentToUpdate);
             } else {
-                DBObject newDocument = generateNewDocument(coordinates, tagName, userName);
+                DBObject newDocument = generateNewTagAssignment(coordinates, tagName, userName);
                 collection.save(newDocument);
             }
             return Response.ok().build();
@@ -77,7 +77,6 @@ public class User {
             return Response.serverError().build();
         }
     }
-
 
     private void updateTagsAssignment(final DBObject documentToUpdate, final String tagName, final String userName) {
         final BasicDBList tags = (BasicDBList) documentToUpdate.get("tags");
@@ -91,7 +90,7 @@ public class User {
         tags.add(generateNewTag(tagName, userName));
     }
 
-    private DBObject generateNewDocument(final Coordinates coordinates, final String tagName, final String userName) {
+    private DBObject generateNewTagAssignment(final Coordinates coordinates, final String tagName, final String userName) {
         final BasicDBObject co = coordinates.getReportCoordinates();
         final BasicDBObject newDocument = new BasicDBObject();
         final BasicDBList tags = new BasicDBList();
@@ -112,6 +111,72 @@ public class User {
         newTag.put("userName", userName);
 
         return newTag;
+    }
+
+
+    @GET
+    @Path("/ignoredTags/{product}")
+    @Consumes("application/json")
+    public DBObject getIgnoredTags(@BeanParam final Coordinates coordinates) {
+        final DB db = this.client.getDB("bdd");
+        final DBCollection collection = db.getCollection("ignoredTags");
+        final BasicDBObject coq = coordinates.getProductCoordinatesQueryObject();
+        final DBObject document = collection.findOne(coq);
+
+        if(document != null) {
+            final BasicDBList tags = (BasicDBList) document.get("tags");
+            return tags;
+        }
+        return null;
+    }
+
+    @PUT
+    @Path("/ignoredTags/{product}")
+    @Consumes("application/json")
+    public Response putIgnoredTags(@BeanParam final Coordinates coordinates, final DBObject patch) {
+        try {
+            final DB db = this.client.getDB("bdd");
+            final DBCollection collection = db.getCollection("ignoredTags");
+            final BasicDBObject coq = coordinates.getProductCoordinatesQueryObject();
+            final BasicDBObject storedDocument = (BasicDBObject)collection.findOne(coq);
+
+            final String tagName = (String) patch.get("tagName");
+
+            if (storedDocument != null) {
+                final BasicDBObject documentToUpdate = (BasicDBObject)storedDocument.copy();
+                updateIgnoredTag(documentToUpdate, tagName);
+                collection.save(documentToUpdate);
+            } else {
+                DBObject newDocument = generateNewIgnoredTags(coordinates,tagName);
+                collection.save(newDocument);
+            }
+            return Response.ok().build();
+        } catch (final Throwable th) {
+            th.printStackTrace();
+            return Response.serverError().build();
+        }
+    }
+
+    private void updateIgnoredTag(final BasicDBObject documentToUpdate, final String tagName){
+        final BasicDBList tags = (BasicDBList) documentToUpdate.get("tags");
+        if(tags.contains(tagName)) {
+            tags.remove(tagName);
+        } else {
+            tags.add(tagName);
+        }
+    }
+
+    private DBObject generateNewIgnoredTags(final Coordinates coordinates, final String tagName) {
+        final BasicDBObject co = coordinates.getProductCoordinates();
+        final BasicDBObject newDocument = new BasicDBObject();
+        final BasicDBList newTags = new BasicDBList();
+
+        newTags.add(tagName);
+
+        newDocument.put("coordinates", co);
+        newDocument.put("tags", newTags);
+
+        return newDocument;
     }
 
 }
