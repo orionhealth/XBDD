@@ -7,6 +7,9 @@ const buildListStyles = {
     paddingLeft: "0px",
     height: "42px",
   },
+  arrowIcon: {
+    minWidth: "24px",
+  },
 };
 
 const buildListItemStyles = {
