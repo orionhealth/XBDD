@@ -1,0 +1,56 @@
+{
+  "name": "xbdd-web",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "/xbdd",
+  "devDependencies": {
+    "babel-jest": "^24.8.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "concurrently": "^5.0.2",
+    "cors": "^2.8.5",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-react": "^7.17.0",
+    "http-proxy": "^1.17.0",
+    "nodemon": "^2.0.2",
+    "popper.js": "^1.14.3",
+    "prettier": "^1.19.1",
+    "react-test-renderer": "^16.12.0"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.21",
+    "@fortawesome/free-regular-svg-icons": "^5.12.0",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/react-fontawesome": "^0.1.8",
+    "@material-ui/core": "^4.8.0",
+    "@material-ui/icons": "^4.2.1",
+    "prop-types": "^15.6.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "^3.3.0"
+  },
+  "scripts": {
+    "start": "concurrently \"react-scripts start\" \"npm run start-server\"",
+    "start:debug": "concurrently \"react-scripts --inspect start --no-cache --runInBand\" \"npm run start-server\"",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --env=jsdom",
+    "eject": "react-scripts eject",
+    "start-server": "nodemon ./dev_proxy/index"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
