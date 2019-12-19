@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,10 +15,10 @@
  */
 package xbdd.webapp.util;
 
-import javax.ws.rs.PathParam;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+
+import javax.ws.rs.PathParam;
 
 public class Coordinates {
 
@@ -45,6 +45,17 @@ public class Coordinates {
 		this.minor = minor;
 		this.servicePack = servicePack;
 		this.build = build;
+	}
+
+	/**
+	 * We only really want to order on URI, but prepending with the other co-ordinates allows the compound index that should exist for the
+	 * purposes of lookup to be re-used for sorting.
+	 *
+	 * @return
+	 */
+	public static BasicDBObject getFeatureSortingObject() {
+		return new BasicDBObject("coordinates.product", 1).append("coordinates.major", -1).append("coordinates.minor", -1)
+				.append("coordinates.build", -1).append("uri", 1);
 	}
 
 	public String getProduct() {
@@ -95,7 +106,6 @@ public class Coordinates {
 	public String getVersionString() {
 		return this.major + "." + this.minor + "." + this.servicePack;
 	}
-
 
 	public BasicDBObject getProductCoordinates() {
 		return new BasicDBObject().append("product", this.product);
@@ -182,17 +192,6 @@ public class Coordinates {
 	 */
 	public String getFeature_Id(final String id) {
 		return this.product + "/" + getVersionString() + "/" + getBuild() + "/" + id;
-	}
-
-	/**
-	 * We only really want to order on URI, but prepending with the other co-ordinates allows the compound index that should exist for the
-	 * purposes of lookup to be re-used for sorting.
-	 *
-	 * @return
-	 */
-	public static BasicDBObject getFeatureSortingObject() {
-		return new BasicDBObject("coordinates.product", 1).append("coordinates.major", -1).append("coordinates.minor", -1)
-				.append("coordinates.build", -1).append("uri", 1);
 	}
 
 	public BasicDBObject getQueryObject(final Field... fields) {

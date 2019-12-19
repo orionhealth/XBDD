@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,27 +15,24 @@
  */
 package xbdd.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import xbdd.model.MergeFeature;
 import xbdd.model.MergeScenario;
 import xbdd.model.simple.Feature;
 import xbdd.model.simple.Scenario;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a helper class for retrieving a merged feature
  */
 public class MultipleBuildsFeatureMergeHelper {
 
+	private static final String MERGE = "{{MERGE}}";
 	private final List<String> orderedBuildList;
-
 	private final MultipleBuildMap<Feature> features = new MultipleBuildMap<Feature>();
 	private final MultipleBuildMap<Scenario> scenarios = new MultipleBuildMap<Scenario>();
-
 	private final MultipleBuildStatusMap scenarioStatusMap = new MultipleBuildStatusMap();
-
-	private static final String MERGE = "{{MERGE}}";
 
 	public MultipleBuildsFeatureMergeHelper(final List<String> orderedBuilds) {
 		this.orderedBuildList = orderedBuilds;

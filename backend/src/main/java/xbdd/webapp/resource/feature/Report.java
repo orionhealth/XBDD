@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,56 +15,38 @@
  */
 package xbdd.webapp.resource.feature;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.BeanParam;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import com.mongodb.*;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSInputFile;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-
 import xbdd.util.StatusHelper;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
 
-import com.mongodb.AggregationOptions;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.Cursor;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSInputFile;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/report")
 public class Report {
 
 	private final MongoDBAccessor client;
+	Logger log = Logger.getLogger(Report.class);
 
 	@Inject
 	public Report(final MongoDBAccessor client) {
 		this.client = client;
 	}
-
-	Logger log = Logger.getLogger(Report.class);
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
@@ -206,7 +188,7 @@ public class Report {
 						final BasicDBList embeddings = (BasicDBList) step.get("embeddings");
 						if (embeddings != null) {
 							for (int l = 0; l < embeddings.size(); l++) {
-								
+
 								//handle a malformatted 'embedding' better.
 								//https://github.com/orionhealth/XBDD/issues/46
 								try {
@@ -227,7 +209,7 @@ public class Report {
 									log.warn("Embedding was malformatted and will be skipped");
 									continue;
 								}
-								
+
 							}
 						}
 					}
@@ -265,22 +247,21 @@ public class Report {
 		final DBCollection summary = bdd.getCollection("summary");
 		final DBObject summaryObject = summary.findOne(summaryQuery);
 		if (summaryObject != null) { // lookup the summary document
-			@SuppressWarnings("unchecked")
-			final List<String> buildArray = (List<String>) summaryObject.get("builds");
+			@SuppressWarnings("unchecked") final List<String> buildArray = (List<String>) summaryObject.get("builds");
 			if (!buildArray.contains(coordinates.getBuild())) { // only update it if this build hasn't been added to it before.
 				// Update index document version.
 				summary.update(summaryQuery,
 						new BasicDBObject("$push", new BasicDBObject("builds", coordinates.getBuild())),
 						true,
 						false
-						);
+				);
 			}
 		} else {// if the report doesn't already exist... then add it.
 			summary.update(summaryQuery,
 					new BasicDBObject("$push", new BasicDBObject("builds", coordinates.getBuild())),
 					true,
 					false
-					);
+			);
 		}
 	}
 
@@ -303,14 +284,14 @@ public class Report {
 		groupFields.put("amount", new BasicDBObject("$sum", 1));
 		objectList.add(new BasicDBObject("$group", groupFields));
 		objectList.add(new BasicDBObject("$sort", new BasicDBObject("amount", -1)));
-		
+
 		AggregationOptions options = AggregationOptions.builder().build();
 
 		final Cursor output = features.aggregate(objectList, options);
 
 		// get _ids from each entry of output.result
 		final BasicDBList returns = new BasicDBList();
-		while(output.hasNext()) {
+		while (output.hasNext()) {
 			returns.add(output.next().get("_id").toString());
 		}
 		return returns;
@@ -374,8 +355,9 @@ public class Report {
 			this.log.trace("Adding feature:" + feature.toJson());
 			features.save(feature);
 		}
-		final DBCursor cursor = features.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the "version"
-																						// field
+		final DBCursor cursor = features
+				.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the "version"
+		// field
 		final List<DBObject> returns = new ArrayList<DBObject>();
 		try {
 			while (cursor.hasNext()) {

@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,36 +15,56 @@
  */
 package xbdd.webapp.resource.feature;
 
-import java.util.*;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-
+import com.mongodb.*;
 import xbdd.model.simple.Scenario;
 import xbdd.util.StatusHelper;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @Path("/feature")
 public class Feature {
 
-	private final MongoDBAccessor client;
 	private static int MAX_ENVIRONMENTS_FOR_A_PRODUCT = 10;
+	private final MongoDBAccessor client;
 
 	@Inject
 	public Feature(final MongoDBAccessor client) {
 		this.client = client;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void embedTestingTips(final DBObject feature, final Coordinates coordinates, final DB db) {
+		final DBCollection tips = db.getCollection("testingTips");
+		final List<DBObject> elements = (List<DBObject>) feature.get("elements");
+		for (final DBObject scenario : elements) {
+			DBObject oldTip = null;
+			final BasicDBObject tipQuery = coordinates
+					.getTestingTipsCoordinatesQueryObject((String) feature.get("id"), (String) scenario.get("id"));
+			// get the most recent tip that is LTE to the current coordinates. i.e. sort in reverse chronological order and take the first
+			// item (if one exists).
+			final DBCursor oldTipCursor = tips.find(tipQuery)
+					.sort(new BasicDBObject("coordinates.major", -1).append("coordinates.minor", -1)
+							.append("coordinates.servicePack", -1).append("coordinates.build", -1)).limit(1);
+			try {
+				if (oldTipCursor.hasNext()) {
+					oldTip = oldTipCursor.next();
+					scenario.put("testing-tips", oldTip.get("testing-tips"));
+				}
+			} finally {
+				oldTipCursor.close();
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -79,7 +99,8 @@ public class Feature {
 			cursor.close();
 		}
 		final BasicDBObject returns = new BasicDBObject()
-				.append("coordinates", coordinates.getRollupCoordinates().append("featureId", featureId).append("version", coordinates.getVersionString()));
+				.append("coordinates", coordinates.getRollupCoordinates().append("featureId", featureId)
+						.append("version", coordinates.getVersionString()));
 
 		final DBObject buildOrder = summary.findOne(coordinates.getQueryObject());
 		final List<String> buildArray = (List<String>) buildOrder.get("builds");
@@ -127,7 +148,8 @@ public class Feature {
 		}
 	}
 
-	private void updateTestingTipsForScenario(final DBCollection tips, final DBObject scenario, final Coordinates coordinates, final String featureId) {
+	private void updateTestingTipsForScenario(final DBCollection tips, final DBObject scenario, final Coordinates coordinates,
+			final String featureId) {
 		if (scenario.get("testing-tips") != null) {
 			final String tipText = (String) scenario.get("testing-tips");
 			final String scenarioId = (String) scenario.get("id");
@@ -167,7 +189,7 @@ public class Feature {
 	@Path("/comments/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes("application/json")
 	public Response updateCommentWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-											   @Context final HttpServletRequest req, final DBObject patch) {
+			@Context final HttpServletRequest req, final DBObject patch) {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("features");
@@ -182,7 +204,7 @@ public class Feature {
 			final BasicDBObject scenarioToUpdate = getScenarioById(scenarioId, featureToUpdate);
 			scenarioToUpdate.put(label, content);
 
-			if(label.equals( "testing-tips")){
+			if (label.equals("testing-tips")) {
 				final DBCollection tips = db.getCollection("testingTips");
 				updateTestingTipsForScenario(tips, scenarioToUpdate, coordinates, featureId);
 			}
@@ -190,7 +212,7 @@ public class Feature {
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
-			if(label.equals( "testing-tips")) {
+			if (label.equals("testing-tips")) {
 				Feature.embedTestingTips(featureToUpdate, coordinates, db);
 			}
 			return Response.ok().build();
@@ -211,7 +233,7 @@ public class Feature {
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes("application/json")
 	public DBObject putFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-							   @Context final HttpServletRequest req, final DBObject feature) {
+			@Context final HttpServletRequest req, final DBObject feature) {
 		feature.put("calculatedStatus", StatusHelper.getFeatureStatus(feature));
 		try {
 			final DB db = this.client.getDB("bdd");
@@ -242,7 +264,7 @@ public class Feature {
 	@Path("/step/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes("application/json")
 	public Response updateStepWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-								   @Context final HttpServletRequest req, final DBObject patch) {
+			@Context final HttpServletRequest req, final DBObject patch) {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("features");
@@ -256,15 +278,14 @@ public class Feature {
 			final BasicDBObject featureToUpdate = (BasicDBObject) storedFeature.copy();
 			final BasicDBObject scenarioToUpdate = getScenarioById(scenarioId, featureToUpdate);
 
-
 			boolean found = false;
 
-			if(scenarioToUpdate.get("background") != null) {
+			if (scenarioToUpdate.get("background") != null) {
 				final BasicDBObject backgroundToUpdate = (BasicDBObject) (scenarioToUpdate.get("background"));
 				final BasicDBList backgroundStepsToUpdate = (BasicDBList) (backgroundToUpdate.get("steps"));
 				found = updateSteps(backgroundStepsToUpdate, stepLine, status);
 			}
-			if(!found) {
+			if (!found) {
 				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
 				updateSteps(stepsToUpdate, stepLine, status);
 			}
@@ -280,9 +301,9 @@ public class Feature {
 	}
 
 	private boolean updateSteps(BasicDBList steps, int stepLine, String status) {
-		for(Object step : steps) {
-			final BasicDBObject dbStep = (BasicDBObject)step;
-			if((int)dbStep.get("line") == stepLine) {
+		for (Object step : steps) {
+			final BasicDBObject dbStep = (BasicDBObject) step;
+			if ((int) dbStep.get("line") == stepLine) {
 				final BasicDBObject result = (BasicDBObject) dbStep.get("result");
 				result.put("manualStatus", status);
 				return true;
@@ -297,12 +318,12 @@ public class Feature {
 		BasicDBList scenarios = (BasicDBList) feature.get("elements");
 		for (Object scenario : scenarios) {
 			BasicDBObject background = (BasicDBObject) ((BasicDBObject) scenario).get("background");
-			if(background != null) {
+			if (background != null) {
 				BasicDBList bgsteps = (BasicDBList) background.get("steps");
 				currentBgStatus = calculateStatusForSteps(currentBgStatus, bgsteps);
 			}
 			BasicDBList steps = (BasicDBList) ((BasicDBObject) scenario).get("steps");
-			if(steps != null) {
+			if (steps != null) {
 				currentStepsStatus = calculateStatusForSteps(currentStepsStatus, steps);
 			}
 		}
@@ -310,11 +331,11 @@ public class Feature {
 	}
 
 	private String calculateStatusForSteps(String currentStatus, BasicDBList steps) {
-		for(Object step: steps) {
-			BasicDBObject result = (BasicDBObject) ((BasicDBObject)step).get("result");
+		for (Object step : steps) {
+			BasicDBObject result = (BasicDBObject) ((BasicDBObject) step).get("result");
 			String status = (String) result.get("status");
 			String manualStatus = (String) result.get("manualStatus");
-			if(manualStatus != null) {
+			if (manualStatus != null) {
 				currentStatus = compareStatusPriority(currentStatus, manualStatus);
 			} else {
 				currentStatus = compareStatusPriority(currentStatus, status);
@@ -323,7 +344,7 @@ public class Feature {
 		return currentStatus;
 	}
 
-	private String compareStatusPriority(String firstStatus , String secondStatus) {
+	private String compareStatusPriority(String firstStatus, String secondStatus) {
 		HashMap<String, Integer> statusPriority = new HashMap<>();
 		statusPriority.put("passed", 1);
 		statusPriority.put("skipped", 2);
@@ -334,7 +355,7 @@ public class Feature {
 
 	private BasicDBObject getScenarioById(String scenarioId, DBObject feature) {
 		final BasicDBList scenarios = (BasicDBList) feature.get("elements");
-		for(Object scenario: scenarios) {
+		for (Object scenario : scenarios) {
 			if (new Scenario((BasicDBObject) scenario).getId().equals(scenarioId)) {
 				return (BasicDBObject) scenario;
 			}
@@ -343,13 +364,11 @@ public class Feature {
 		return null;
 	}
 
-
-
 	@PUT
 	@Path("/steps/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes("application/json")
 	public Response updateStepsWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-										@Context final HttpServletRequest req, final DBObject patch) {
+			@Context final HttpServletRequest req, final DBObject patch) {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("features");
@@ -362,14 +381,13 @@ public class Feature {
 			final BasicDBObject featureToUpdate = (BasicDBObject) storedFeature.copy();
 			final BasicDBObject scenarioToUpdate = getScenarioById(scenarioId, featureToUpdate);
 
-
-			if(scenarioToUpdate.get("background") != null) {
+			if (scenarioToUpdate.get("background") != null) {
 				final BasicDBObject backgroundToUpdate = (BasicDBObject) (scenarioToUpdate.get("background"));
 				final BasicDBList backgroundStepsToUpdate = (BasicDBList) (backgroundToUpdate.get("steps"));
 				updateAllSteps(backgroundStepsToUpdate, status);
 
 			}
-			if(scenarioToUpdate.get("steps") != null) {
+			if (scenarioToUpdate.get("steps") != null) {
 				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
 				updateAllSteps(stepsToUpdate, status);
 			}
@@ -385,14 +403,12 @@ public class Feature {
 	}
 
 	private void updateAllSteps(BasicDBList steps, String status) {
-		for(Object step : steps) {
-			final BasicDBObject dbStep = (BasicDBObject)step;
+		for (Object step : steps) {
+			final BasicDBObject dbStep = (BasicDBObject) step;
 			final BasicDBObject result = (BasicDBObject) dbStep.get("result");
 			result.put("manualStatus", status);
 		}
 	}
-
-
 
 	/**
 	 * Goes through each environment detail on this feature and pushes each unique one to a per-product document in the 'environments'
@@ -446,29 +462,6 @@ public class Feature {
 		}
 		// save the list back.
 		env.save(productEnvironments);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static void embedTestingTips(final DBObject feature, final Coordinates coordinates, final DB db) {
-		final DBCollection tips = db.getCollection("testingTips");
-		final List<DBObject> elements = (List<DBObject>) feature.get("elements");
-		for (final DBObject scenario : elements) {
-			DBObject oldTip = null;
-			final BasicDBObject tipQuery = coordinates.getTestingTipsCoordinatesQueryObject((String) feature.get("id"), (String) scenario.get("id"));
-			// get the most recent tip that is LTE to the current coordinates. i.e. sort in reverse chronological order and take the first
-			// item (if one exists).
-			final DBCursor oldTipCursor = tips.find(tipQuery)
-					.sort(new BasicDBObject("coordinates.major", -1).append("coordinates.minor", -1)
-							.append("coordinates.servicePack", -1).append("coordinates.build", -1)).limit(1);
-			try {
-				if (oldTipCursor.hasNext()) {
-					oldTip = oldTipCursor.next();
-					scenario.put("testing-tips", oldTip.get("testing-tips"));
-				}
-			} finally {
-				oldTipCursor.close();
-			}
-		}
 	}
 
 	private BasicDBList updateEdits(final DBObject feature, final DBObject previousVersion) {
@@ -567,7 +560,7 @@ public class Feature {
 	}
 
 	private void formatStep(final BasicDBList changes, final BasicDBObject step,
-							final boolean currManual, final boolean prevManual) {
+			final boolean currManual, final boolean prevManual) {
 		String currState, currCause, prevState, prevCause;
 
 		final BasicDBObject currStep = ((BasicDBObject) step.get("curr"));

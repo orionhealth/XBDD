@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,24 +15,17 @@
  */
 package xbdd.webapp.resource.feature;
 
-import java.net.UnknownHostException;
+import com.mongodb.*;
+import xbdd.webapp.factory.MongoDBAccessor;
+import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.Field;
 
 import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-
-import xbdd.webapp.factory.MongoDBAccessor;
-import xbdd.webapp.util.Coordinates;
-import xbdd.webapp.util.Field;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import java.net.UnknownHostException;
 
 @Path("/automation-statistics")
 public class AutomationStatistics {
@@ -83,7 +76,8 @@ public class AutomationStatistics {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection summaryCollection = db.getCollection("summary");
 		final DBCollection reportStatsCollection = db.getCollection("reportStats");
-		final DBCursor versions = summaryCollection.find(coordinates.getQueryObject(Field.PRODUCT)).sort(Coordinates.getFeatureSortingObject());
+		final DBCursor versions = summaryCollection.find(coordinates.getQueryObject(Field.PRODUCT))
+				.sort(Coordinates.getFeatureSortingObject());
 		if (limit != null) {
 			versions.limit(limit);
 		}

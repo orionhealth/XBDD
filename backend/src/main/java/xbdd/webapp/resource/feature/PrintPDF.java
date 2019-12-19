@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,17 @@
  */
 package xbdd.webapp.resource.feature;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.commons.io.IOUtils;
+import xbdd.webapp.util.Coordinates;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -28,28 +33,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.BeanParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.StreamingOutput;
-
-import org.apache.commons.io.IOUtils;
-
-import xbdd.webapp.util.Coordinates;
-
 @Path("/print-pdf")
 public class PrintPDF {
 
 	private static final String XBDD_PHANTOMJS_HOME_INIT_PARAMETER = "sample_reports.phantomjs.home";
 	private static final String XBDD_PHANTOMJS_USERNAME_INIT_PARAMETER = "sample_reports.phantomjs.username";
 	private static final String XBDD_PHANTOMJS_PASSWORD_INIT_PARAMETER = "sample_reports.phantomjs.password";
+
+	public static int randInt(final int min, final int max) {
+
+		final Random rand = new Random();
+
+		// nextInt is normally exclusive of the top value,
+		// so add 1 to make it inclusive
+		final int randomNum = rand.nextInt((max - min) + 1) + min;
+
+		return randomNum;
+	}
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/")
@@ -125,17 +125,6 @@ public class PrintPDF {
 		};
 
 		return stream;
-	}
-
-	public static int randInt(final int min, final int max) {
-
-		final Random rand = new Random();
-
-		// nextInt is normally exclusive of the top value,
-		// so add 1 to make it inclusive
-		final int randomNum = rand.nextInt((max - min) + 1) + min;
-
-		return randomNum;
 	}
 
 	public void generatePDF(final List<String> commands) throws IOException {

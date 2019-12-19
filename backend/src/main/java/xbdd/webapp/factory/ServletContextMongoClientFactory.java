@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,20 +15,18 @@
  */
 package xbdd.webapp.factory;
 
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Objects;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import org.apache.commons.lang.math.NumberUtils;
+import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
-
-import org.apache.commons.lang.math.NumberUtils;
-import org.glassfish.hk2.api.Factory;
-
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Factory for {@link MongoClient} that retrieves hostname and port parameters from the ServletContext. The {@link MongoClient} is designed
@@ -68,7 +66,7 @@ public class ServletContextMongoClientFactory implements Factory<MongoDBAccessor
 		} else {
 			mc = new MongoClient(this.host, this.port);
 		}
-		
+
 		return new MongoDBAccessor(mc);
 	}
 

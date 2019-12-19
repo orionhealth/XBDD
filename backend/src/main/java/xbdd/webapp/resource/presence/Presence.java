@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,29 +15,17 @@
  */
 package xbdd.webapp.resource.presence;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.BeanParam;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-
+import com.mongodb.*;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import java.util.Calendar;
+import java.util.Date;
 
 @Path("/presence")
 public class Presence {
@@ -56,9 +44,11 @@ public class Presence {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("presence");
-			final BasicDBObject query = new BasicDBObject("coordinates", coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
-					"featureId", featureId))
-					.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates.getBuild() + "/" + featureId);
+			final BasicDBObject query = new BasicDBObject("coordinates",
+					coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
+							"featureId", featureId))
+					.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
+							.getBuild() + "/" + featureId);
 			final Date now = Calendar.getInstance().getTime();
 			collection.update(query,
 					new BasicDBObject("$set", new BasicDBObject("users." + req.getRemoteUser(), now).append("lastUpdated", now)), true,
@@ -79,9 +69,11 @@ public class Presence {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("presence");
-			final BasicDBObject query = new BasicDBObject("coordinates", coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
-					"featureId", featureId))
-					.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates.getBuild() + "/" + featureId);
+			final BasicDBObject query = new BasicDBObject("coordinates",
+					coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
+							"featureId", featureId))
+					.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
+							.getBuild() + "/" + featureId);
 			final DBObject newPresence = collection.findOne(query);
 			newPresence.put("currentUser", req.getRemoteUser());
 			return newPresence;
@@ -117,9 +109,11 @@ public class Presence {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("presence");
-			final BasicDBObject query = new BasicDBObject("coordinates", coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
-					"featureId", featureId))
-					.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates.getBuild() + "/" + featureId);
+			final BasicDBObject query = new BasicDBObject("coordinates",
+					coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
+							"featureId", featureId))
+					.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
+							.getBuild() + "/" + featureId);
 			collection.update(query, new BasicDBObject("$unset", new BasicDBObject("users." + req.getRemoteUser(), 1)), true, false);
 			final DBObject newPresence = collection.findOne(query);
 			newPresence.put("currentUser", req.getRemoteUser());

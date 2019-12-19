@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Orion Health (Orchestral Development Ltd)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,11 @@
  */
 package xbdd.webapp.resource.feature;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.mongodb.DBObject;
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,12 +27,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.mongodb.DBObject;
 
 /**
  * Matcher that compares two DBObjects by the number of times they match a set of regular expressions
@@ -40,7 +39,7 @@ public class DBObjectComparator implements Comparator<DBObject> {
 
 	/**
 	 * Construct a {@link Comparator} with the given set of expressions
-	 * 
+	 *
 	 * @param searchExpressions a list of regular expressions
 	 * @throws PatternSyntaxException if any of the expressions are not valid regex
 	 */
