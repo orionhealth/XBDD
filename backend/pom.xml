@@ -68,6 +68,11 @@
                     <port>28080</port>
                     <httpsPort>28443</httpsPort>
                     <ajpPort>28009</ajpPort>
+                    <!-- keystore now included as the keytool plugin does not work in JDK8 -->
+                    <keystorePass>password</keystorePass>
+                    <keystoreFile>${project.basedir}/conf/keystore/xbdd.jks</keystoreFile>
+                    <tomcatUsers>${project.basedir}/conf/tomcatconf/tomcat-users.xml</tomcatUsers>
+                    <contextFile>${project.basedir}/conf/tomcatconf/context.xml</contextFile>
                 </configuration>
             </plugin>
         </plugins>

@@ -4,24 +4,14 @@ XBDD
 Pre-requisites
 --------------
 
-* MongoDB 2.6. See https://docs.mongodb.com/v2.6
-* Tomcat 7. See http://tomcat.apache.org/download-70.cgi
 * Maven 3+. See https://maven.apache.org/
-
-Optional requirements
----------------------
-
-To run the automated tests, a driver is required. By default, the automated tests run against the Firefox Web Driver.
-See https://github.com/mozilla/geckodriver for details.
-
-This can be overridden with the `selenium-profile` property and the CI server runs with `phantom-js`.
-Other supported values are `selenium-grid` and `chrome`. These have their own requirements.
-See [XbddDriver.java](https://github.com/orionhealth/XBDD/blob/master/src/test/java/xbdd/XbddDriver.java) for more details.
+* Docker
 
 Pre-installation
 ----------------
 
-In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory.
+In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory and is available as a ENV variable in the Dockerfile.
+As this solution is built using docker, the Dockerfile in the `package` directory will need to be modified for any of the following cusomisations.
 
 ### SSL/TLS
 The XBDD application requires a secure connection. This can be setup using the Tomcat SSL connector.
@@ -75,72 +65,22 @@ For example:
 </Realm>
 ```
 
-### Setup MongoDB
+### Setup MongoDB for a dev environment
 
-If you don't already have a MongoDB server, you can install MongoDB in a Docker container.
+1. Build the docker mongo image with `docker build -t xbdd_mongo_dev mongo`
+1. Start the docker container with `docker run -p=27017:27017 --name xbdd_mongo_dev -d xbdd_mongo_dev`
 
-1. Install docker on your system. You can download it [here](https://docs.docker.com/engine/installation/).
-2. Pull the docker container in using `docker pull mongo`
-3. Start the docker container with the command
-`docker run -p=27017:27017 --name mongo -d mongo`
-
-This will give you a docker container named mongo which is accessible at
+This will give you a docker container named xbdd_mongo_dev which is accessible at
 [localhost:27017](http://localhost:27017)
 
-#### Using MongoDB version 2 in a dev environment
-
-If you are using version 3 for your development environment the authenticaion schema needs to be downgraded. Once you have brought up your Mongo Docker container do the following,
-```bash
-# log into the docker container and open a bash terminal
-docker exec -it <mongo-container-name> bash
-
-# start the mongo command line
-mongo
-```
-```js
-// select and create the admin db
-use admin
-
-// create an admin user with read/write and dbAdmin permissions
-db.createUser({ user: "admin", pwd: "password", roles: [ "readWrite", "dbAdmin" ] } )
-
-// create the bdd and grid db's
-use bdd
-use grid
-```
-
-#### Using MongoDB version 3
-
-If you are using version 3 for your development environment the authenticaion schema needs to be downgraded. Once you have brought up your Mongo Docker container do the following,
-```bash
-# log into the docker container and open a bash terminal
-docker exec -it <mongo-container-name> bash
-
-# start the mongo command line
-mongo
-```
-```js
-// select and create the admin db
-use admin
-
-// update the auth schema
-var schema = db.system.version.findOne({"_id" : "authSchema"})
-schema.currentVersion = 3
-db.system.version.save(schema)
-
-// create an admin user with read/write and dbAdmin permissions
-db.createUser({ user: "admin", pwd: "password", roles: [ "readWrite", "dbAdmin" ] } )
-
-// create the bdd and grid db's
-use bdd
-use grid
-```
 
 ### Configure Mongo Server Connection
 
 By default XBDD will connect to MongoDB at its default address of `localhost:27017`.
 
 To configure an alternative server or to add authentication, add the following parameters to `$CATALINA_BASE/conf/context.xml`
+
+If you are deploying a full solution via the docker-compose setup, modify the `package/conf/context.xml` to your needs.
 
 ```xml
     <Parameter name="xbdd.mongo.hostname" value="<hostname>"/>
@@ -155,47 +95,19 @@ MongoDB provides user access on a per-DB basis. XBDD uses two databases, `bdd` a
 Install and start XBDD
 ======================
 
-XBDD can be run as a standalone webapp in Tomcat (recommended) or via Eclipse.
-It can also be run with an embedded Tomcat instance however the above configuration will not be applied if using this mode. This may be useful for development purposes though.
+XBDD can be brought up via the docker-compose file or directly in eclipse/intelliJ.
 
-### Standalone mode
+### Docker Compose
 
-1. From the top level directory run `mvn clean package`.
-2. Copy `target/xbdd.war` into `$CATALINA_BASE/webapps`.
-3. Start Tomcat with `$CATALINA_BASE/bin/startup.sh`.
-4. Open https://localhost:8443/xbdd
+1. Run `maven clean install package` in the top level directory
+1. From the top level directory run `docker-compose build`
+1. Next run `docker-compose build`
+1. Xbdd will be available at http://localhost:8080/xbdd
 
-### Embedded mode
+### In IDE's
 
-1. From the top level directory (or within an IDE) run `mvn tomcat7:run`
-2. Open <https://localhost:28443/xbdd>
-
-Running the tests
-=================
-
-You need to have the Gecko Web Driver installed and the system property `webdriver.gecko.driver=/path/to/your/gecko/webdriver` set, in order for the tests to pass. The easiest way to do this is via your `~/.m2/settings.xml` file. Add the following snippet to an active profile:
-
-```
-<properties>
-    <webdriver.gecko.driver>/usr/local/Cellar/geckodriver/0.18.0</webdriver.gecko.driver>
-</properties>
-
-```
-
-If you don't have an active profile, or a settings.xml file, add this:
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<settings>
-	<profiles>
-		<profile>
-			<id>global</id>
-			<properties>
-   				<webdriver.gecko.driver>/usr/local/Cellar/geckodriver/0.18.0</webdriver.gecko.driver>
-   			</properties>
-   		</profile>
-	</profiles>
-	<activeProfiles>
-		<activeProfile>global</activeProfile>
-	</activeProfiles>
-</settings>
-```
+1. Import the top level into either IntelliJ or Eclipse
+1. Run `maven clean install package` in the top level directory
+1. Create a run target that executes `tomcat7:run` in the backend directory (this starts the backend server)
+1. In the `frontend` directory run `npm start`
+1. Xbdd will be available at http://localhost:28080/xbdd
