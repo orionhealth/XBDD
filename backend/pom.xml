@@ -66,34 +66,7 @@
                     <port>28080</port>
                     <httpsPort>28443</httpsPort>
                     <ajpPort>28009</ajpPort>
-                    <!-- keystore now included as the keytool plugin does not work in JDK8 -->
-                    <keystorePass>password</keystorePass>
-                    <keystoreFile>${project.build.testOutputDirectory}/keystore/xbdd.jks</keystoreFile>
-                    <tomcatUsers>${project.build.testOutputDirectory}/tomcatconf/tomcat-users.xml</tomcatUsers>
-                    <contextFile>${project.build.testOutputDirectory}/tomcatconf/context.xml</contextFile>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>start-tomcat</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <port>${tomcat.http.port}</port>
-                            <httpsPort>${tomcat.https.port}</httpsPort>
-                            <ajpPort>${tomcat.ajp.port}</ajpPort>
-                            <fork>true</fork>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-tomcat</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>shutdown</goal>
-                        </goals>
-                    </execution>
-            </executions>
             </plugin>
         </plugins>
 
