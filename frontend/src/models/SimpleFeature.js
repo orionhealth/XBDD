@@ -10,7 +10,7 @@ class SimpleFeature {
   }
   clone() {
     const cloneSimpleFeature = new SimpleFeature();
-    this.id = this.id;
+    cloneSimpleFeature.id = this.id;
     cloneSimpleFeature._id = this._id;
     cloneSimpleFeature.name = this.name;
     cloneSimpleFeature.tags = this.tags;
