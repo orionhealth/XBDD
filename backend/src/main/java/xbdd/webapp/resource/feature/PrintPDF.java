@@ -47,9 +47,9 @@ import xbdd.webapp.util.Coordinates;
 @Path("/print-pdf")
 public class PrintPDF {
 
-	private static final String XBDD_PHANTOMJS_HOME_INIT_PARAMETER = "xbdd.phantomjs.home";
-	private static final String XBDD_PHANTOMJS_USERNAME_INIT_PARAMETER = "xbdd.phantomjs.username";
-	private static final String XBDD_PHANTOMJS_PASSWORD_INIT_PARAMETER = "xbdd.phantomjs.password";
+	private static final String XBDD_PHANTOMJS_HOME_INIT_PARAMETER = "sample_reports.phantomjs.home";
+	private static final String XBDD_PHANTOMJS_USERNAME_INIT_PARAMETER = "sample_reports.phantomjs.username";
+	private static final String XBDD_PHANTOMJS_PASSWORD_INIT_PARAMETER = "sample_reports.phantomjs.password";
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/")

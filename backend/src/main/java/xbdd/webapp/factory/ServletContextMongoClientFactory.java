@@ -34,17 +34,17 @@ import com.mongodb.ServerAddress;
  * Factory for {@link MongoClient} that retrieves hostname and port parameters from the ServletContext. The {@link MongoClient} is designed
  * to be used a {@link Singleton}. <br>
  * To specify a hostname, port number, username and password for the mongo db connection you can add parameters
- * <code>xbdd.mongo.hostname</code>, <code>xbdd.monogo.port</code>, <code>xbdd.monogo.username</code> and <code>xbdd.monogo.password</code>.
+ * <code>sample_reports.mongo.hostname</code>, <code>sample_reports.monogo.port</code>, <code>sample_reports.monogo.username</code> and <code>sample_reports.monogo.password</code>.
  * The parameters are optional and will default to the mongo defaults {@link ServerAddress#defaultHost()} and
  * {@link ServerAddress#defaultPort()} respectively.
  *
  */
 public class ServletContextMongoClientFactory implements Factory<MongoDBAccessor> {
 
-	private static final String XBDD_MONGO_HOSTNAME_INIT_PARAMETER = "xbdd.mongo.hostname";
-	private static final String XBDD_MONGO_USERNAME_INIT_PARAMETER = "xbdd.mongo.username";
-	private static final String XBDD_MONGO_PASSWORD_INIT_PARAMETER = "xbdd.mongo.password";
-	private static final String XBDD_MONGO_PORT_INIT_PARAMETER = "xbdd.mongo.port";
+	private static final String XBDD_MONGO_HOSTNAME_INIT_PARAMETER = "sample_reports.mongo.hostname";
+	private static final String XBDD_MONGO_USERNAME_INIT_PARAMETER = "sample_reports.mongo.username";
+	private static final String XBDD_MONGO_PASSWORD_INIT_PARAMETER = "sample_reports.mongo.password";
+	private static final String XBDD_MONGO_PORT_INIT_PARAMETER = "sample_reports.mongo.port";
 
 	private final String host;
 	private final int port;

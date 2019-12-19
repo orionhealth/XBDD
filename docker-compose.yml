@@ -1,7 +1,7 @@
 version: '3'
 services:
   xbdd:
-    container_name: xbdd
+    container_name: sample_reports
     build: ./packager
     ports:
       - "8080:8080"
