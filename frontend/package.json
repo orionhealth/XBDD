@@ -37,7 +37,9 @@
     "start": "concurrently \"react-scripts start\" \"npm run start-server\"",
     "start:debug": "concurrently \"react-scripts --inspect start --no-cache --runInBand\" \"npm run start-server\"",
     "build": "react-scripts build",
+    "lint": "eslint ./src",
     "test": "react-scripts test --env=jsdom",
+    "testCI": "react-scripts test --coverage --watchAll=false --env=jsdom",
     "test:debug": "react-scripts --inspect-brk test --runInBand --env=jsdom",
     "eject": "react-scripts eject",
     "start-server": "nodemon ./dev_proxy/index"
