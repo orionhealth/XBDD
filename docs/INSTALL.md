@@ -99,15 +99,15 @@ XBDD can be brought up via the docker-compose file or directly in eclipse/intell
 
 ### Docker Compose
 
-1. Run `maven clean install package` in the top level directory
+1. Run `mvn clean install package` in the top level directory
 1. From the top level directory run `docker-compose build`
-1. Next run `docker-compose build`
+1. Next run `docker-compose up`
 1. Xbdd will be available at http://localhost:8080/xbdd
 
 ### In IDE's
 
 1. Import the top level into either IntelliJ or Eclipse
-1. Run `maven clean install package` in the top level directory
+1. Run `mvn clean install package` in the top level directory
 1. Create a run target that executes `tomcat7:run` in the backend directory (this starts the backend server)
 1. In the `frontend` directory run `npm start`
-1. Xbdd will be available at http://localhost:28080/xbdd
+1. Xbdd will be available at http://localhost:3000
