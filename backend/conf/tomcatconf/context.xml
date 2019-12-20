@@ -19,7 +19,7 @@
 <!-- The contents of this file will be loaded for each web application -->
 <Context>
 	<Parameter name="xbdd.mongo.hostname" value="localhost" />
-	<Parameter name="xbdd.mongo.port" value="${mongo.port}" />
+	<Parameter name="xbdd.mongo.port" value="$27017" />
 	<Parameter name="xbdd.mongo.username" value="admin" />
 	<Parameter name="xbdd.mongo.password" value="password" />
 </Context>

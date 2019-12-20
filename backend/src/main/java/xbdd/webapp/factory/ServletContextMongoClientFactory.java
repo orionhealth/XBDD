@@ -39,10 +39,10 @@ import java.util.Objects;
  */
 public class ServletContextMongoClientFactory implements Factory<MongoDBAccessor> {
 
-	private static final String XBDD_MONGO_HOSTNAME_INIT_PARAMETER = "sample_reports.mongo.hostname";
-	private static final String XBDD_MONGO_USERNAME_INIT_PARAMETER = "sample_reports.mongo.username";
-	private static final String XBDD_MONGO_PASSWORD_INIT_PARAMETER = "sample_reports.mongo.password";
-	private static final String XBDD_MONGO_PORT_INIT_PARAMETER = "sample_reports.mongo.port";
+	private static final String XBDD_MONGO_HOSTNAME_INIT_PARAMETER = "xbdd.mongo.hostname";
+	private static final String XBDD_MONGO_USERNAME_INIT_PARAMETER = "xbdd.mongo.username";
+	private static final String XBDD_MONGO_PASSWORD_INIT_PARAMETER = "xbdd.mongo.password";
+	private static final String XBDD_MONGO_PORT_INIT_PARAMETER = "xbdd.mongo.port";
 
 	private final String host;
 	private final int port;
@@ -62,6 +62,7 @@ public class ServletContextMongoClientFactory implements Factory<MongoDBAccessor
 		final MongoClient mc;
 		if (this.username != null) {
 			MongoCredential credentials = MongoCredential.createScramSha1Credential(this.username, "admin", this.password);
+			System.out.println(String.format("name: %s, pw: %s", this.username, this.password));
 			mc = new MongoClient(new ServerAddress(this.host, this.port), Arrays.asList(credentials));
 		} else {
 			mc = new MongoClient(this.host, this.port);
