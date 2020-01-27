@@ -57,7 +57,7 @@ Add post-integration phase to upload JSON report to xbdd instance in the project
             <arg value="-d" />
             <arg value="@./target/cucumber-report.json" />
             <arg
-              value="https://{{YOUR-XBDD-CONTEXT-ROOT}}/rest/reports/${project.artifactId}/${version.major}.${version.minor}.${version.servicepack}/${buildNumber}" />
+              value="https://{{YOUR-XBDD-CONTEXT-ROOT}}/rest/report/${project.artifactId}/${version.major}.${version.minor}.${version.servicepack}/${buildNumber}" />
             <arg value="--header" />
             <arg value="Content-Type:application/json" />
             <arg value="-u" />
@@ -71,7 +71,7 @@ Add post-integration phase to upload JSON report to xbdd instance in the project
             <arg value="-d" />
             <arg value="@./target/cucumber-manual-report.json" />
             <arg
-              value="https://{{YOUR-XBDD-CONTEXT-ROOT}}/rest/reports/${project.artifactId}/${version.major}.${version.minor}.${version.servicepack}/${buildNumber}" />
+              value="https://{{YOUR-XBDD-CONTEXT-ROOT}}/rest/report/${project.artifactId}/${version.major}.${version.minor}.${version.servicepack}/${buildNumber}" />
             <arg value="--header" />
             <arg value="Content-Type:application/json" />
             <arg value="-u" />

@@ -1,0 +1,6 @@
+<Context>
+    <Parameter name="xbdd.mongo.hostname" value="xbdd_mongo"/>
+    <Parameter name="xbdd.mongo.port" value="27017"/>
+    <Parameter name="xbdd.mongo.username" value="admin"/>
+    <Parameter name="xbdd.mongo.password" value="password"/>
+</Context>
