@@ -5,7 +5,6 @@ services:
     build: ./packager
     ports:
       - "80:80"
-      - "443:443"
   mongo:
     container_name: xbdd_mongo
     build: ./mongo
