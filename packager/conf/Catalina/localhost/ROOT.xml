@@ -1,0 +1,5 @@
+<Context 
+  docBase="../deploy/xbdd.war" 
+  path="" 
+  reloadable="true" 
+/>

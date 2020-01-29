@@ -1,19 +1,17 @@
-XBDD
-====
+# XBDD
 
-Pre-requisites
---------------
+## Pre-requisites
 
-* Maven 3+. See https://maven.apache.org/
-* Docker
+-   Maven 3+. See https://maven.apache.org/
+-   Docker
 
-Pre-installation
-----------------
+## Pre-installation
 
 In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory and is available as a ENV variable in the Dockerfile.
 As this solution is built using docker, the Dockerfile in the `package` directory will need to be modified for any of the following cusomisations.
 
 ### SSL/TLS
+
 The XBDD application requires a secure connection. This can be setup using the Tomcat SSL connector.
 
 You must first have configured a keystore. You can [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) or skip ahead if you have an existing one.
@@ -33,6 +31,7 @@ Replace `FILE_LOCATION` with the location of your security certificate and `PASS
 ### User Authentication
 
 #### Local Authentication
+
 To get started quickly without configuring enterprise authentication, it is possible to use Tomcat's default local UserDatabaseRealm with XBDD.
 
 Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a `user` element within the `tomcat-users` element, e.g.:
@@ -42,20 +41,24 @@ Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a 
 ```
 
 To make a user an administrator, in `$CATALINA_BASE/conf/tomcat-users.xml` first add the admin role:
+
 ```xml
 <role rolename="admin"/>
 ```
 
 Then assign a user that role, e.g.:
+
 ```xml
 <user username="xbdd-admin" password="something" roles="admin" />
 ```
 
 #### LDAP
+
 If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields.
 
 For example:
-```	xml
+
+```xml
 <Realm className="org.apache.catalina.realm.LockOutRealm">
     <Realm allRolesMode="authOnly" className="org.apache.catalina.realm.JNDIRealm"
     connectionName="USERNAME" connectionPassword="PASSWORD" connectionURL="ldap://LDAP_HOST:389"
@@ -73,7 +76,6 @@ For example:
 This will give you a docker container named xbdd_mongo_dev which is accessible at
 [localhost:27017](http://localhost:27017)
 
-
 ### Configure Mongo Server Connection
 
 By default XBDD will connect to MongoDB at its default address of `localhost:27017`.
@@ -90,10 +92,10 @@ If you are deploying a full solution via the docker-compose setup, modify the `p
 ```
 
 #### A word on securing the connection to MongoDB
+
 MongoDB provides user access on a per-DB basis. XBDD uses two databases, `bdd` and `grid`. The user needs read/write permissions for both.
 
-Install and start XBDD
-======================
+# Install and start XBDD
 
 XBDD can be brought up via the docker-compose file or directly in eclipse/intelliJ.
 
@@ -102,7 +104,7 @@ XBDD can be brought up via the docker-compose file or directly in eclipse/intell
 1. Run `mvn clean install package` in the top level directory
 1. From the top level directory run `docker-compose build`
 1. Next run `docker-compose up`
-1. Xbdd will be available at http://localhost:8080/xbdd
+1. Xbdd will be available at http://localhost:8080
 
 ### In IDE's
 
