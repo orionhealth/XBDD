@@ -4,7 +4,8 @@ services:
     container_name: xbdd
     build: ./packager
     ports:
-      - "80:80"
+      - "8080:8080"
+      - "8443:8443"
   mongo:
     container_name: xbdd_mongo
     build: ./mongo
