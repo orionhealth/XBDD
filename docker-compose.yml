@@ -11,3 +11,5 @@ services:
     build: ./mongo
     ports:
       - "27017:27017"
+    volumes:
+      - /opt/xbdd/volumes/mongodb:/data/db
