@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./Xbdd.css";
 import Navbar from "./modules/navbar/Navbar";
 import SummaryContainer from "./modules/summary/SummaryContainer";
