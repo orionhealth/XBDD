@@ -1,63 +1,62 @@
 {
-    "name": "xbdd-web",
-    "version": "1.0.0",
-    "private": true,
-    "homepage": "/",
-    "devDependencies": {
-        "babel-jest": "^24.8.0",
-        "babel-preset-env": "^1.7.0",
-        "babel-preset-react": "^6.24.1",
-        "babel-register": "^6.26.0",
-        "concurrently": "^5.0.2",
-        "cors": "^2.8.5",
-        "enzyme": "^3.3.0",
-        "enzyme-adapter-react-16": "^1.1.1",
-        "eslint": "^6.7.2",
-        "eslint-plugin-import": "^2.19.1",
-        "eslint-plugin-react": "^7.17.0",
-        "http-proxy": "^1.17.0",
-        "nodemon": "^2.0.2",
-        "popper.js": "^1.14.3",
-        "prettier": "^1.19.1",
-        "react-test-renderer": "^16.12.0",
-        "redux-mock-store": "^1.5.4"
-    },
-    "dependencies": {
-        "@fortawesome/fontawesome-svg-core": "^1.2.21",
-        "@fortawesome/free-regular-svg-icons": "^5.12.0",
-        "@fortawesome/free-solid-svg-icons": "^5.12.0",
-        "@fortawesome/react-fontawesome": "^0.1.8",
-        "@material-ui/core": "^4.8.0",
-        "@material-ui/icons": "^4.2.1",
-        "@reduxjs/toolkit": "^1.2.3",
-        "prop-types": "^15.6.1",
-        "react": "^16.12.0",
-        "react-dom": "^16.12.0",
-        "react-redux": "^7.1.3",
-        "react-scripts": "^3.3.0",
-        "redux": "^4.0.5"
-    },
-    "scripts": {
-        "start": "concurrently \"react-scripts start\" \"npm run start-server\"",
-        "start:debug": "concurrently \"react-scripts --inspect start --no-cache --runInBand\" \"npm run start-server\"",
-        "build": "react-scripts build",
-        "lint": "eslint ./src",
-        "test": "react-scripts test --env=jsdom",
-        "testCI": "react-scripts test --coverage --watchAll=false --env=jsdom",
-        "test:debug": "react-scripts --inspect-brk test --runInBand --env=jsdom",
-        "eject": "react-scripts eject",
-        "start-server": "nodemon ./dev_proxy/index"
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    }
+  "name": "xbdd-web",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "/",
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "concurrently": "^5.1.0",
+    "cors": "^2.8.5",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-react": "^7.18.3",
+    "http-proxy": "^1.17.0",
+    "nodemon": "^2.0.2",
+    "popper.js": "^1.16.1",
+    "prettier": "^1.19.1",
+    "react-test-renderer": "^16.12.0",
+    "redux-mock-store": "^1.5.4"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/free-regular-svg-icons": "^5.12.1",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
+    "@fortawesome/react-fontawesome": "^0.1.8",
+    "@material-ui/core": "^4.9.2",
+    "@material-ui/icons": "^4.9.1",
+    "@reduxjs/toolkit": "^1.2.5",
+    "prop-types": "^15.6.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.1.3",
+    "react-scripts": "^3.4.0",
+    "redux": "^4.0.5"
+  },
+  "scripts": {
+    "start": "concurrently \"react-scripts start\" \"npm run start-server\"",
+    "start:debug": "concurrently \"react-scripts --inspect start --no-cache --runInBand\" \"npm run start-server\"",
+    "build": "react-scripts build",
+    "lint": "eslint ./src",
+    "test": "react-scripts test --env=jsdom",
+    "testCI": "react-scripts test --coverage --watchAll=false --env=jsdom",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --env=jsdom",
+    "eject": "react-scripts eject",
+    "start-server": "nodemon ./dev_proxy/index"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
