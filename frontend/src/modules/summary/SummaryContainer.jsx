@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid, Card, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+
 import ProductListContainer from "./productList/ProductListContainer";
 import SummaryStyles from "./styles/SummaryStyles";
 import ProductSummary from "../../models/ProductSummary";
@@ -86,7 +87,6 @@ class SummaryContainer extends Component {
                     title={"Product List"}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
-                    handleBuildSelected={this.props.handleBuildSelected}
                   />
                 </Card>
               </Grid>
@@ -97,7 +97,6 @@ class SummaryContainer extends Component {
                     title={"Favourite"}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
-                    handleBuildSelected={this.props.handleBuildSelected}
                   />
                 </Card>
               </Grid>
@@ -111,7 +110,6 @@ class SummaryContainer extends Component {
 }
 
 SummaryContainer.propTypes = {
-  handleBuildSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

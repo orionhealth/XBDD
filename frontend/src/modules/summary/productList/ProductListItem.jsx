@@ -6,6 +6,7 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { withStyles } from "@material-ui/core/styles";
+
 import ProductListStyles from "./styles/ProductListStyles";
 import Product from "../../../models/Product";
 import BuildSummaryContainer from "./buildSummary/BuildSummaryContainer";
@@ -33,7 +34,6 @@ const ProductListItem = props => {
     handleProductClicked,
     handleVersionSelected,
     handlePinChange,
-    handleBuildSelected,
     handleBuildListExpanded,
     classes,
   } = props;
@@ -61,7 +61,6 @@ const ProductListItem = props => {
           expandedBuildList={expandedBuildList}
           handleVersionSelected={handleVersionSelected}
           handlePinChange={handlePinChange}
-          handleBuildSelected={handleBuildSelected}
           handleBuildListExpanded={handleBuildListExpanded}
         />
       </Collapse>
@@ -78,7 +77,6 @@ ProductListItem.propTypes = {
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
-  handleBuildSelected: PropTypes.func.isRequired,
   handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };

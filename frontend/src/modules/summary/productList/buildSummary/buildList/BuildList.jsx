@@ -4,26 +4,17 @@ import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleUp, faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 import { withStyles } from "@material-ui/core/styles";
+import { useDispatch } from "react-redux";
+
 import { buildListStyles } from "./styles/BuildListStyles";
 import Product from "../../../../../models/Product";
 import Version from "../../../../../models/Version";
 import BuildListItem from "./BuildListItem";
-
-const clickEventWrapper = (event, product, version, build, isPinned, handlePinChange, handleBuildSelected) => {
-  let node = event.target;
-
-  while (node) {
-    if (node.className === "MuiIconButton-label") {
-      handlePinChange(product, version, build, isPinned);
-      return;
-    }
-    node = node.parentNode;
-  }
-  handleBuildSelected(product.name, version.getString(), build);
-};
+import { setProductVersionAndBuild } from "../../../../../xbddReducer";
 
 const BuildList = props => {
-  const { product, version, expandedBuildList, handlePinChange, handleBuildSelected, handleBuildListExpanded, classes } = props;
+  const { product, version, expandedBuildList, handlePinChange, handleBuildListExpanded, classes } = props;
+  const dispatch = useDispatch();
   const pinnedBuildList = version.pinnedBuildList;
   let unpinnedBuildList = version.getUnpinnedBuildList();
   const productVersionId = `${product.name} ${version.getString()}`;
@@ -34,6 +25,18 @@ const BuildList = props => {
     unpinnedBuildList = unpinnedBuildList.slice(0, 5);
   }
 
+  const clickEventWrapper = (event, product, version, build, isPinned, handlePinChange) => {
+    let node = event.target;
+    while (node) {
+      if (node.className === "MuiIconButton-label") {
+        handlePinChange(product, version, build, isPinned);
+        return;
+      }
+      node = node.parentNode;
+    }
+    dispatch(setProductVersionAndBuild(product.name, version.getString(), build));
+  };
+
   const renderBuildListByPin = (buildList, isPinned) => (
     <List>
       <BuildListItem
@@ -42,7 +45,6 @@ const BuildList = props => {
         isPinned={isPinned}
         buildList={buildList}
         handlePinChange={handlePinChange}
-        handleBuildSelected={handleBuildSelected}
         clickEventWrapper={clickEventWrapper}
       />
       {isPinned || !isBigBuildList ? null : (
@@ -69,7 +71,6 @@ BuildList.propTypes = {
   version: PropTypes.instanceOf(Version),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handlePinChange: PropTypes.func.isRequired,
-  handleBuildSelected: PropTypes.func.isRequired,
   handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };

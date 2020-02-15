@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { List, Typography, TextField, Grid } from "@material-ui/core";
 import Search from "@material-ui/icons/Search";
 import { withStyles } from "@material-ui/core/styles";
+
 import ProductListStyles from "./styles/ProductListStyles";
 import ProductListItem from "./ProductListItem";
 import Product from "../../../models/Product";
@@ -19,7 +20,6 @@ const ProductList = props => {
     handleProductClicked,
     handleVersionSelected,
     handlePinChange,
-    handleBuildSelected,
     handleBuildListExpanded,
     classes,
   } = props;
@@ -54,7 +54,6 @@ const ProductList = props => {
               handleProductClicked={handleProductClicked}
               handleVersionSelected={handleVersionSelected}
               handlePinChange={handlePinChange}
-              handleBuildSelected={handleBuildSelected}
               handleBuildListExpanded={handleBuildListExpanded}
             />
           );
@@ -75,7 +74,6 @@ ProductList.propTypes = {
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
-  handleBuildSelected: PropTypes.func.isRequired,
   handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
