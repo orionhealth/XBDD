@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Card } from "@material-ui/core";
+
 import ProductList from "./ProductList";
 import Product from "../../../models/Product";
 
@@ -42,7 +43,8 @@ class ProductListContainer extends Component {
         selectedVersionList: Object.assign({}, prevState.selectedVersionList, {
           [product.name]: product.getVersionFromString(event.target.value),
         }),
-      }));
+      })
+    );
   }
 
   handleBuildListExpanded(productVersionId) {
@@ -77,7 +79,6 @@ class ProductListContainer extends Component {
           handleSearchProduct={this.handleSearchProduct}
           handleProductClicked={this.handleProductClicked}
           handleVersionSelected={this.handleVersionSelected}
-          handleBuildSelected={this.props.handleBuildSelected}
           handleBuildListExpanded={this.handleBuildListExpanded}
         />
       </Card>
@@ -90,7 +91,6 @@ ProductListContainer.propTypes = {
   title: PropTypes.string,
   handleFavouriteChange: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
-  handleBuildSelected: PropTypes.func.isRequired,
 };
 
 export default ProductListContainer;

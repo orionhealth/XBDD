@@ -4,6 +4,8 @@ import { Typography, Checkbox, Tooltip, Box } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTags, faUserTag, faUserSlash } from "@fortawesome/free-solid-svg-icons";
 import { withStyles } from "@material-ui/styles";
+import { connect } from "react-redux";
+
 import { featureListContainerStyles } from "./styles/FeatureListContainerStyles";
 import FeatureFilterButtons from "./FeatureFilterButtons";
 import ListViewFeatureList from "./ListViewFeatureList/ListViewFeatureList";
@@ -70,21 +72,24 @@ class FeatureListContainer extends Component {
     this.setState(prevState =>
       Object.assign({}, prevState, {
         isTagView: !prevState.isTagView,
-      }));
+      })
+    );
   }
 
   handleTagsSwitch() {
     this.setState(prevState =>
       Object.assign({}, prevState, {
         isAssignedTagsView: !prevState.isAssignedTagsView,
-      }));
+      })
+    );
   }
 
   handleEditModeSwitch() {
     this.setState(prevState =>
       Object.assign({}, prevState, {
         isEditMode: !prevState.isEditMode,
-      }));
+      })
+    );
   }
 
   handleFilterButtonClick(status) {
@@ -93,7 +98,8 @@ class FeatureListContainer extends Component {
         selectedStatus: Object.assign({}, prevState.selectedStatus, {
           [status]: !prevState.selectedStatus[status],
         }),
-      }));
+      })
+    );
   }
 
   handleTagSelect(tag) {
@@ -293,4 +299,8 @@ FeatureListContainer.propTypes = {
   classes: PropTypes.shape({}),
 };
 
-export default withStyles(featureListContainerStyles)(FeatureListContainer);
+const mapStateToProps = state => ({
+  userName: state.app.user,
+});
+
+export default connect(mapStateToProps)(withStyles(featureListContainerStyles)(FeatureListContainer));

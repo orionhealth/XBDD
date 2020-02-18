@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid, Card } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+
 import { reportContainerStyles } from "./styles/ReportContainerStyles";
 import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
 import FeatureReportContainer from "./FeatureReportContainer/FeatureReportContainer";
@@ -142,10 +143,12 @@ class ReportContainer extends Component {
     const firstStatus = newStatusMap[0].status;
     if (newStatusMap.length === 1) {
       updateStepPatch(featureId, new StepStatusPatch(scenarioId, firstStepId, firstStatus)).then(response =>
-        this.processFailedResponse(response, scenarioId, prevStatusMap));
+        this.processFailedResponse(response, scenarioId, prevStatusMap)
+      );
     } else {
       updateAllStepPatch(featureId, new StepStatusPatch(scenarioId, null, firstStatus)).then(response =>
-        this.processFailedResponse(response, scenarioId, prevStatusMap));
+        this.processFailedResponse(response, scenarioId, prevStatusMap)
+      );
     }
     this.setStateForStep(scenarioId, newStatusMap);
   }
@@ -159,7 +162,7 @@ class ReportContainer extends Component {
   }
 
   render() {
-    const { userName, product, version, build, classes } = this.props;
+    const { product, version, build, classes } = this.props;
     return (
       <>
         {this.state.isNetworkError ? <Card className={classes.errorMessageBox}>Network Error!</Card> : null}
@@ -173,7 +176,6 @@ class ReportContainer extends Component {
           <Grid container>
             <Grid item xs={4} lg={4}>
               <FeatureListContainer
-                userName={userName}
                 product={product}
                 version={version}
                 build={build}
@@ -202,7 +204,6 @@ class ReportContainer extends Component {
 }
 
 ReportContainer.propTypes = {
-  userName: PropTypes.string,
   product: PropTypes.string,
   version: PropTypes.string,
   build: PropTypes.string,

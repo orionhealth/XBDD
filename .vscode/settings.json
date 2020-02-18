@@ -1,0 +1,17 @@
+{
+  "prettier.configPath": "./frontend/.prettierrc",
+  "jest.rootPath": "./frontend",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": true,
+  "[yaml, java]": {
+    "editor.formatOnSave": false
+  },
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "eslint.enable": true,
+  "eslint.options": {
+    "configFile": "./frontend/.eslintrc.js"
+  }
+}
