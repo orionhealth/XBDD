@@ -1,7 +1,7 @@
-import { combineReducers } from "redux";
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 
-import xbddReducer from "./xbddReducer";
+import xbddReducer from './xbddReducer';
 
 const rootReducer = combineReducers({
   app: xbddReducer,

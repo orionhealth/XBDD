@@ -1,6 +1,6 @@
-import React, { FC } from "react";
-import { Dialog, DialogTitle, DialogContent, Box } from "@material-ui/core";
-import { Cancel } from "@material-ui/icons";
+import React, { FC } from 'react';
+import { Dialog, DialogTitle, DialogContent, Box } from '@material-ui/core';
+import { Cancel } from '@material-ui/icons';
 
 interface Props {
   open: boolean;
