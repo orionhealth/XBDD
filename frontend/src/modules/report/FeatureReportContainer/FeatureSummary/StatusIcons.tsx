@@ -2,14 +2,13 @@ import React, { FC } from "react";
 import { Forward } from "@material-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, WithStyles } from "@material-ui/core/styles";
 import { statusIconStyles } from "./styles/FeatureSummaryStyles";
 
-interface Props {
+interface Props extends WithStyles<typeof statusIconStyles> {
   firstStatus: string;
   secondStatus: string;
   size: string;
-  classes: Record<keyof typeof statusIconStyles, string>;
 }
 
 const StatusIcons: FC<Props> = props => {

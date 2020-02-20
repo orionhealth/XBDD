@@ -1,4 +1,6 @@
-const featureSummaryStyles = {
+import { createStyles } from "@material-ui/core";
+
+const featureSummaryStyles = createStyles({
   featureSummary: {
     padding: "24px",
     margin: "24px 24px 24px 12px",
@@ -24,9 +26,9 @@ const featureSummaryStyles = {
     textAlign: "left",
     padding: "12px 0 12px 12px",
   },
-};
+});
 
-const executionHistoryStyles = {
+const executionHistoryStyles = createStyles({
   executionHistory: {
     paddingTop: "12px",
   },
@@ -49,9 +51,9 @@ const executionHistoryStyles = {
     fontSize: "24px",
     color: "#999",
   },
-};
+});
 
-const statusIconStyles = {
+const statusIconStyles = createStyles({
   xbddFeatureStatus: {
     display: "inline-flex",
   },
@@ -76,6 +78,6 @@ const statusIconStyles = {
   xbddFeatureStatusArrow: {
     color: "#999",
   },
-};
+});
 
 export { featureSummaryStyles, executionHistoryStyles, statusIconStyles };
