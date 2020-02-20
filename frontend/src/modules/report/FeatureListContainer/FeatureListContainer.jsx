@@ -10,9 +10,9 @@ import { featureListContainerStyles } from "./styles/FeatureListContainerStyles"
 import FeatureFilterButtons from "./FeatureFilterButtons";
 import ListViewFeatureList from "./ListViewFeatureList/ListViewFeatureList";
 import TagList from "./TagViewFeatureList/TagList";
-import ConfirmationDialog from "../../utils/ConfirmationDialog";
-import FeatureList from "../../../models/FeatureList";
-import TagAssignmentPatch from "../../../models/TagAssignmentPatch";
+import ConfirmationDialog from "modules/utils/ConfirmationDialog";
+import FeatureList from "models/FeatureList";
+import TagAssignmentPatch from "models/TagAssignmentPatch";
 import {
   getFeatureListByTagData,
   getSimpleFeatureListData,
@@ -20,7 +20,7 @@ import {
   setTagAssignmentData,
   getIgnoredTags,
   setIgnoredTag,
-} from "../../../lib/rest/Rest";
+} from "lib/rest/Rest";
 
 class FeatureListContainer extends Component {
   constructor(props) {

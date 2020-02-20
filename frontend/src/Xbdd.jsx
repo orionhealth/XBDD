@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import Navbar from "./modules/navbar/Navbar";
-import SummaryContainer from "./modules/summary/SummaryContainer";
-import ReportContainer from "./modules/report/ReportContainer";
+import Navbar from "modules/navbar/Navbar";
+import SummaryContainer from "modules/summary/SummaryContainer";
+import ReportContainer from "modules/report/ReportContainer";
 
 import "./Xbdd.css";
 

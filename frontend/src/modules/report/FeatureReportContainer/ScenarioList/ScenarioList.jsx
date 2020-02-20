@@ -6,7 +6,7 @@ import { scenarioListStyles } from "./styles/ScenarioListStyles";
 import { ExpandMore } from "@material-ui/icons";
 import ScenarioStep from "./ScenarioStep/ScenarioStep";
 import ScenarioInputField from "./ScenarioStep/ScenarioInputField";
-import Scenario from "../../../../models/Scenario";
+import Scenario from "models/Scenario";
 import StatusIcons from "../FeatureSummary/StatusIcons";
 
 const addStepsStatus = (statusMap, steps, status) => {

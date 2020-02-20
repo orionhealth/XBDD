@@ -5,8 +5,8 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ProductListContainer from "./productList/ProductListContainer";
 import SummaryStyles from "./styles/SummaryStyles";
-import ProductSummary from "../../models/ProductSummary";
-import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from "../../lib/rest/Rest";
+import ProductSummary from "models/ProductSummary";
+import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from "lib/rest/Rest";
 
 class SummaryContainer extends Component {
   constructor(props) {
