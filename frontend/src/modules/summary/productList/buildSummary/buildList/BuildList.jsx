@@ -7,8 +7,8 @@ import { withStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 
 import { buildListStyles } from "./styles/BuildListStyles";
-import Product from "../../../../../models/Product";
-import Version from "../../../../../models/Version";
+import Product from "models/Product";
+import Version from "models/Version";
 import BuildListItem from "./BuildListItem";
 import { selectProductBuildAndVersion } from "../../../../../xbddReducer";
 

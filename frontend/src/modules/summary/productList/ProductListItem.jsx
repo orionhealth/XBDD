@@ -8,7 +8,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { withStyles } from "@material-ui/core/styles";
 
 import ProductListStyles from "./styles/ProductListStyles";
-import Product from "../../../models/Product";
+import Product from "models/Product";
 import BuildSummaryContainer from "./buildSummary/BuildSummaryContainer";
 
 const clickEventWrapper = (event, product, handleFavouriteChange, handleProductClicked) => {

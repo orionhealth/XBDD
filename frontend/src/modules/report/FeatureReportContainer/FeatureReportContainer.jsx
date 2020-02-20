@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { PropTypes } from "prop-types";
 import FeatureSummary from "./FeatureSummary/FeatureSummary";
 import ScenarioList from "./ScenarioList/ScenarioList";
-import Feature from "../../../models/Feature";
-import Execution from "../../../models/Execution";
+import Feature from "models/Feature";
+import Execution from "models/Execution";
 
 class FeatureReportContainer extends Component {
   constructor(props) {
