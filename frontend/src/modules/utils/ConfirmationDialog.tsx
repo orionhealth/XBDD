@@ -1,8 +1,15 @@
-import React from "react";
-import PropTypes, { InferProps } from "prop-types";
+import React, { FC } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core";
 
-const ConfirmationDialog = (props: InferProps<typeof ConfirmationDialog.propTypes>) => {
+interface Props {
+  open: boolean;
+  title: string;
+  msg: string;
+  handleConfirmed: (event: React.MouseEvent) => void;
+  handleClosed: (event: React.MouseEvent) => void;
+}
+
+const ConfirmationDialog: FC<Props> = props => {
   const { open, title, msg, handleConfirmed, handleClosed } = props;
 
   return (
@@ -21,14 +28,6 @@ const ConfirmationDialog = (props: InferProps<typeof ConfirmationDialog.propType
       </DialogActions>
     </Dialog>
   );
-};
-
-ConfirmationDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  title: PropTypes.string,
-  msg: PropTypes.string,
-  handleConfirmed: PropTypes.func.isRequired,
-  handleClosed: PropTypes.func.isRequired,
 };
 
 export default ConfirmationDialog;

@@ -1,15 +1,15 @@
-import React from "react";
+import React, { FC } from "react";
 import { Dialog, DialogTitle, DialogContent, Box } from "@material-ui/core";
 import { Cancel } from "@material-ui/icons";
 
-type Props = {
+interface Props {
   open: boolean;
   title: string;
   content: string;
   handleClosed: (event: React.MouseEvent) => void;
-};
+}
 
-const SimpleDialog = (props: Props) => {
+const SimpleDialog: FC<Props> = props => {
   const { open, title, content, handleClosed } = props;
   return (
     <Dialog open={open} onClose={handleClosed} maxWidth={false}>
