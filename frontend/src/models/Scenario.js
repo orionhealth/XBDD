@@ -32,7 +32,8 @@ class Scenario {
   calculateManualStatus() {
     if (this.backgroundSteps) {
       const notPassedBgStep = this.backgroundSteps.find(step =>
-        step.manualStatus ? step.manualStatus !== "passed" : step.status !== "passed");
+        step.manualStatus ? step.manualStatus !== "passed" : step.status !== "passed"
+      );
       if (notPassedBgStep) {
         return notPassedBgStep.manualStatus ? notPassedBgStep.manualStatus : notPassedBgStep.status;
       }

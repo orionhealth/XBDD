@@ -1,4 +1,5 @@
 import Product from "./Product";
+
 class ProductSummary {
   constructor(data) {
     this.productList = this.buildProductList(data);
