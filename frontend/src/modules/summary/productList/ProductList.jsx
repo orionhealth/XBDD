@@ -6,7 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ProductListStyles from "./styles/ProductListStyles";
 import ProductListItem from "./ProductListItem";
-import Product from "../../../models/Product";
+import Product from "models/Product";
 
 const ProductList = props => {
   const {

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Card } from "@material-ui/core";
 
 import ProductList from "./ProductList";
-import Product from "../../../models/Product";
+import Product from "models/Product";
 
 class ProductListContainer extends Component {
   constructor(props) {

@@ -7,10 +7,10 @@ import { withStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 
 import { buildListStyles } from "./styles/BuildListStyles";
-import Product from "../../../../../models/Product";
-import Version from "../../../../../models/Version";
+import Product from "models/Product";
+import Version from "models/Version";
 import BuildListItem from "./BuildListItem";
-import { setProductVersionAndBuild } from "../../../../../xbddReducer";
+import { selectProductBuildAndVersion } from "../../../../../xbddReducer";
 
 const BuildList = props => {
   const { product, version, expandedBuildList, handlePinChange, handleBuildListExpanded, classes } = props;
@@ -34,7 +34,7 @@ const BuildList = props => {
       }
       node = node.parentNode;
     }
-    dispatch(setProductVersionAndBuild(product.name, version.getString(), build));
+    dispatch(selectProductBuildAndVersion({ product: product.name, version: version.getString(), build }));
   };
 
   const renderBuildListByPin = (buildList, isPinned) => (

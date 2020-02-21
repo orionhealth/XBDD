@@ -4,7 +4,7 @@ import { Card, List } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { tagListStyles } from "./styles/TagListStyles";
 import TagListItem from "./TagListItem";
-import Tag from "../../../../models/Tag";
+import Tag from "models/Tag";
 
 const TagList = props => {
   const {

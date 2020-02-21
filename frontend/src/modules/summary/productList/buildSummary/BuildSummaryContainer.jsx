@@ -5,8 +5,8 @@ import { withStyles } from "@material-ui/core/styles";
 
 import BuildSummaryStyles from "./styles/BuildSummaryStyles";
 import BuildList from "./buildList/BuildList";
-import Product from "../../../../models/Product";
-import Version from "../../../../models/Version";
+import Product from "models/Product";
+import Version from "models/Version";
 
 const buildVersionList = version => {
   const versionString = version.getString();

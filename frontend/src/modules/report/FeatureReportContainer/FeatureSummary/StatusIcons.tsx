@@ -1,15 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Forward } from "@material-ui/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { withStyles } from "@material-ui/core/styles";
-import { statusIconStyles } from "./styles/FeatureSummaryStyles";
+import React, { FC } from 'react';
+import { Forward } from '@material-ui/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import { withStyles, WithStyles } from '@material-ui/core/styles';
 
-const StatusIcons = props => {
+import { statusIconStyles } from './styles/FeatureSummaryStyles';
+
+interface Props extends WithStyles<typeof statusIconStyles> {
+  firstStatus: string;
+  secondStatus: string;
+  size: string;
+}
+
+const StatusIcons: FC<Props> = props => {
   const { firstStatus, secondStatus, size, classes } = props;
-  var sizeClasses = classes.bigIcons;
-  if (size === "small") {
+  let sizeClasses = classes.bigIcons;
+  if (size === 'small') {
     sizeClasses = classes.smallIcons;
   }
 
@@ -27,12 +33,6 @@ const StatusIcons = props => {
       {iconMap[secondStatus]}
     </div>
   );
-};
-
-StatusIcons.propTypes = {
-  originalAutomatedStatus: PropTypes.string,
-  calculatedStatus: PropTypes.string,
-  classes: PropTypes.shape({}),
 };
 
 export default withStyles(statusIconStyles)(StatusIcons);
