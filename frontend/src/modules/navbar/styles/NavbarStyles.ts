@@ -1,4 +1,6 @@
-const navbarStyles = () => ({
+import { createStyles } from "@material-ui/core";
+
+const navbarStyles = createStyles({
   appBarBorder: {
     borderRadius: "10px 10px 0 0",
   },

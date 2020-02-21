@@ -1,29 +1,30 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState, FC, ChangeEvent, KeyboardEvent } from "react";
 import { withStyles, MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, TextField, Avatar, Box } from "@material-ui/core";
+import { AppBar, Toolbar, Button, TextField, Avatar, Box, Theme, WithStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 
+import { RootStore } from "rootReducer";
 import navbarStyles from "./styles/NavbarStyles";
 import { setUser } from "../../xbddReducer";
 
-const theme = createMuiTheme({
+const theme: Theme = createMuiTheme({
   palette: {
     primary: { main: "#457B9D" },
   },
-  typography: {
-    useNextVariants: true,
-  },
 });
 
-const Navbar = props => {
+type Props = WithStyles<typeof navbarStyles>;
+
+const Navbar: FC<Props> = props => {
   const { classes } = props;
   const [loginInput, setLoginInput] = useState("");
-  const loggedInUser = useSelector(state => state.app.user);
+  const loggedInUser = useSelector((state: RootStore) => state.app.user);
 
   const dispatch = useDispatch();
-  const login = () => dispatch(setUser(loginInput)) && setLoginInput("");
-  const logout = () => dispatch(setUser(null));
+  const login = (): void => dispatch(setUser(loginInput)) && setLoginInput("");
+  const logout = (): void => {
+    dispatch(setUser(null));
+  };
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -41,13 +42,14 @@ const Navbar = props => {
                 margin="dense"
                 variant="outlined"
                 value={loginInput}
-                onChange={event => setLoginInput(event.target.value)}
+                onChange={(event: ChangeEvent<HTMLInputElement>): void => setLoginInput(event.target.value)}
                 InputProps={{ style: { color: "white" } }}
-                autoFocus
-                onKeyPress={e => e.key === "Enter" && login()}
+                onKeyPress={(event: KeyboardEvent<HTMLDivElement>): void => {
+                  event.key === "Enter" && login();
+                }}
               />
             )}
-            <Button color="inherit" onClick={() => (loggedInUser ? logout() : login())}>
+            <Button color="inherit" onClick={(): void => (loggedInUser ? logout() : login())}>
               {loggedInUser ? "Logout" : "Login"}
             </Button>
             <Avatar>{loggedInUser}</Avatar>
@@ -56,15 +58,6 @@ const Navbar = props => {
       </AppBar>
     </MuiThemeProvider>
   );
-};
-
-Navbar.propTypes = {
-  userName: PropTypes.string,
-  userNameInput: PropTypes.string,
-  handleUserNameInput: PropTypes.func,
-  login: PropTypes.func,
-  classes: PropTypes.shape({}),
-  styles: PropTypes.shape({}),
 };
 
 export default withStyles(navbarStyles)(React.memo(Navbar));
