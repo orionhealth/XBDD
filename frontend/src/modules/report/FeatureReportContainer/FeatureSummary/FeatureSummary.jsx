@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Card, Grid, Typography, Chip, Divider } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import { featureSummaryStyles } from "./styles/FeatureSummaryStyles";
-import ExecutionHistory from "./ExecutionHistory";
-import Feature from "models/Feature";
-import Execution from "models/Execution";
-import StatusIcons from "./StatusIcons";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Card, Grid, Typography, Chip, Divider } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { featureSummaryStyles } from './styles/FeatureSummaryStyles';
+import ExecutionHistory from './ExecutionHistory';
+import Feature from 'models/Feature';
+import Execution from 'models/Execution';
+import StatusIcons from './StatusIcons';
 
 const renderTags = (tags, classes) => tags.map(tag => <Chip key={tag.name} label={tag.name} size="small" className={classes} />);
 

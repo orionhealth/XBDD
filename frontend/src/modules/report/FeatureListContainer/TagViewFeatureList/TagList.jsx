@@ -1,10 +1,10 @@
-import React from "react";
-import { PropTypes } from "prop-types";
-import { Card, List } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import { tagListStyles } from "./styles/TagListStyles";
-import TagListItem from "./TagListItem";
-import Tag from "models/Tag";
+import React from 'react';
+import { PropTypes } from 'prop-types';
+import { Card, List } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { tagListStyles } from './styles/TagListStyles';
+import TagListItem from './TagListItem';
+import Tag from 'models/Tag';
 
 const TagList = props => {
   const {

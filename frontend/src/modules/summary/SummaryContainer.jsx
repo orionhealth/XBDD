@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Grid, Card, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Card, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
-import ProductListContainer from "./productList/ProductListContainer";
-import SummaryStyles from "./styles/SummaryStyles";
-import ProductSummary from "models/ProductSummary";
-import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from "lib/rest/Rest";
+import ProductListContainer from './productList/ProductListContainer';
+import SummaryStyles from './styles/SummaryStyles';
+import ProductSummary from 'models/ProductSummary';
+import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
 
 class SummaryContainer extends Component {
   constructor(props) {
@@ -84,7 +84,7 @@ class SummaryContainer extends Component {
                 <Card raised>
                   <ProductListContainer
                     list={this.state.productList}
-                    title={"Product List"}
+                    title={'Product List'}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
                   />
@@ -94,7 +94,7 @@ class SummaryContainer extends Component {
                 <Card raised>
                   <ProductListContainer
                     list={this.state.productList.filter(product => product.favourite)}
-                    title={"Favourite"}
+                    title={'Favourite'}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
                   />

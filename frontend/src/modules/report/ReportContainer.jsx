@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Grid, Card } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Card } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
-import { reportContainerStyles } from "./styles/ReportContainerStyles";
-import FeatureListContainer from "./FeatureListContainer/FeatureListContainer";
-import FeatureReportContainer from "./FeatureReportContainer/FeatureReportContainer";
-import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from "lib/rest/Rest";
-import Feature from "models/Feature";
-import SimpleDialog from "modules/utils/SimpleDialog";
-import Execution from "models/Execution";
-import StepStatusPatch from "models/StepStatusPatch";
-import InputFieldPatch from "models/InputFieldPatch";
+import { reportContainerStyles } from './styles/ReportContainerStyles';
+import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
+import FeatureReportContainer from './FeatureReportContainer/FeatureReportContainer';
+import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
+import Feature from 'models/Feature';
+import SimpleDialog from 'modules/utils/SimpleDialog';
+import Execution from 'models/Execution';
+import StepStatusPatch from 'models/StepStatusPatch';
+import InputFieldPatch from 'models/InputFieldPatch';
 
 class ReportContainer extends Component {
   constructor(props) {

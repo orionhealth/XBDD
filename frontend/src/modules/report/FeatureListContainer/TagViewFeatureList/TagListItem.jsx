@@ -1,14 +1,14 @@
-import React from "react";
-import { PropTypes } from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import { ListItem, ListItemIcon, ListItemText, Collapse, Avatar } from "@material-ui/core";
-import { Block, ExpandLess, ExpandMore } from "@material-ui/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTag, faMinusSquare } from "@fortawesome/free-solid-svg-icons";
-import { faSquare } from "@fortawesome/free-regular-svg-icons";
-import Tag from "models/Tag";
-import { tagListItemStyles } from "./styles/TagListStyles";
-import TagViewFeatureList from "./TagViewFeatureList";
+import React from 'react';
+import { PropTypes } from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { ListItem, ListItemIcon, ListItemText, Collapse, Avatar } from '@material-ui/core';
+import { Block, ExpandLess, ExpandMore } from '@material-ui/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTag, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faSquare } from '@fortawesome/free-regular-svg-icons';
+import Tag from 'models/Tag';
+import { tagListItemStyles } from './styles/TagListStyles';
+import TagViewFeatureList from './TagViewFeatureList';
 
 const clickEventWrapper = (
   event,
@@ -25,7 +25,7 @@ const clickEventWrapper = (
   let node = event.target;
 
   while (node) {
-    if (typeof node.className === "string" && node.className.indexOf("MuiAvatar-root") !== -1) {
+    if (typeof node.className === 'string' && node.className.indexOf('MuiAvatar-root') !== -1) {
       if (tagUserName && tagUserName !== currentUserName) {
         handleWarningShow(restId, tagName, tagUserName, currentUserName);
         return;
@@ -33,8 +33,8 @@ const clickEventWrapper = (
       handleTagAssigned(restId, tagName, tagUserName, currentUserName);
       return;
     }
-    if (node.className && node.className.baseVal && node.className.baseVal.indexOf("TagListItem-checkboxIcons") !== -1) {
-      const product = restId.split("/")[0];
+    if (node.className && node.className.baseVal && node.className.baseVal.indexOf('TagListItem-checkboxIcons') !== -1) {
+      const product = restId.split('/')[0];
       handleTagIgnore(product, tagName);
       return;
     }
@@ -56,7 +56,7 @@ const renderAvatar = (restId, tag, currentUserName, handleWarningShow, handleTag
       style={{ backgroundColor: color }}
       onClick={e => clickEventWrapper(e, restId, tag.name, tagUserName, currentUserName, handleWarningShow, handleTagAssigned)}
     >
-      {tagUserName ? tagUserName : "?"}
+      {tagUserName ? tagUserName : '?'}
     </Avatar>
   );
 };
@@ -81,7 +81,7 @@ const getHSLFromString = string => {
   for (let i = 0; i < string.length; i++) {
     val += string.charCodeAt(i);
   }
-  return "hsl(" + ((val * val) % 360) + ", 21%, 63%)";
+  return 'hsl(' + ((val * val) % 360) + ', 21%, 63%)';
 };
 
 const TagListItem = props => {

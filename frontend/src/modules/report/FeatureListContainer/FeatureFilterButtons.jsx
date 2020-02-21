@@ -1,9 +1,9 @@
-import React from "react";
-import { PropTypes } from "prop-types";
-import { Card, IconButton, Tooltip } from "@material-ui/core";
-import { CheckCircleOutline, ErrorOutline, RemoveCircleOutline, HelpOutline } from "@material-ui/icons";
-import { withStyles } from "@material-ui/core/styles";
-import { filterButtonStyles } from "./styles/FeatureListContainerStyles";
+import React from 'react';
+import { PropTypes } from 'prop-types';
+import { Card, IconButton, Tooltip } from '@material-ui/core';
+import { CheckCircleOutline, ErrorOutline, RemoveCircleOutline, HelpOutline } from '@material-ui/icons';
+import { withStyles } from '@material-ui/core/styles';
+import { filterButtonStyles } from './styles/FeatureListContainerStyles';
 
 const createButton = variant => (
   <Tooltip title={variant.tooltip} placement="top">
@@ -18,30 +18,30 @@ const FeatureFilterButtons = props => {
   const variants = {
     passed: {
       icon: <CheckCircleOutline />,
-      tooltip: "Passed",
+      tooltip: 'Passed',
       colorClass: selectedStatus.passed ? classes.xbddFilterButtonPassed : classes.xbddFilterButtonUnselected,
-      handler: () => handleFilterButtonClick("passed"),
+      handler: () => handleFilterButtonClick('passed'),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     failed: {
       icon: <ErrorOutline />,
-      tooltip: "Failed",
+      tooltip: 'Failed',
       colorClass: selectedStatus.failed ? classes.xbddFilterButtonFailed : classes.xbddFilterButtonUnselected,
-      handler: () => handleFilterButtonClick("failed"),
+      handler: () => handleFilterButtonClick('failed'),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     undefined: {
       icon: <HelpOutline />,
-      tooltip: "Undefined",
+      tooltip: 'Undefined',
       colorClass: selectedStatus.undefined ? classes.xbddFilterButtonUndefined : classes.xbddFilterButtonUnselected,
-      handler: () => handleFilterButtonClick("undefined"),
+      handler: () => handleFilterButtonClick('undefined'),
       buttonClass: `${classes.xbddFilterButton}`,
     },
     skipped: {
       icon: <RemoveCircleOutline />,
-      tooltip: "Skipped",
+      tooltip: 'Skipped',
       colorClass: selectedStatus.skipped ? classes.xbddFilterButtonSkipped : classes.xbddFilterButtonUnselected,
-      handler: () => handleFilterButtonClick("skipped"),
+      handler: () => handleFilterButtonClick('skipped'),
       buttonClass: `${classes.xbddFilterButton}`,
     },
   };

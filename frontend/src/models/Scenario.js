@@ -1,4 +1,4 @@
-import Step from "./Step";
+import Step from './Step';
 
 class Scenario {
   constructor(scenario) {
@@ -7,9 +7,9 @@ class Scenario {
       this.name = scenario.name;
       this.backgroundSteps = scenario.background ? scenario.background.steps.map(step => new Step(step)) : null;
       this.steps = scenario.steps ? scenario.steps.map(step => new Step(step)) : null;
-      this.environmentNotes = scenario["environment-notes"];
-      this.executionNotes = scenario["execution-notes"];
-      this.testingTips = scenario["testing-tips"];
+      this.environmentNotes = scenario['environment-notes'];
+      this.executionNotes = scenario['execution-notes'];
+      this.testingTips = scenario['testing-tips'];
       this.originalAutomatedStatus = this.calculateAutoStatus();
       this.calculatedStatus = this.calculateManualStatus();
     }
@@ -32,35 +32,35 @@ class Scenario {
   calculateManualStatus() {
     if (this.backgroundSteps) {
       const notPassedBgStep = this.backgroundSteps.find(step =>
-        step.manualStatus ? step.manualStatus !== "passed" : step.status !== "passed"
+        step.manualStatus ? step.manualStatus !== 'passed' : step.status !== 'passed'
       );
       if (notPassedBgStep) {
         return notPassedBgStep.manualStatus ? notPassedBgStep.manualStatus : notPassedBgStep.status;
       }
     }
     if (this.steps) {
-      const notPassedStep = this.steps.find(step => (step.manualStatus ? step.manualStatus !== "passed" : step.status !== "passed"));
+      const notPassedStep = this.steps.find(step => (step.manualStatus ? step.manualStatus !== 'passed' : step.status !== 'passed'));
       if (notPassedStep) {
         return notPassedStep.manualStatus ? notPassedStep.manualStatus : notPassedStep.status;
       }
     }
-    return "passed";
+    return 'passed';
   }
 
   calculateAutoStatus() {
     if (this.backgroundSteps) {
-      const notPassedBgStep = this.backgroundSteps.find(step => step.status !== "passed");
+      const notPassedBgStep = this.backgroundSteps.find(step => step.status !== 'passed');
       if (notPassedBgStep) {
         return notPassedBgStep.status;
       }
     }
     if (this.steps) {
-      const notPassedStep = this.steps.find(step => step.status !== "passed");
+      const notPassedStep = this.steps.find(step => step.status !== 'passed');
       if (notPassedStep) {
         return notPassedStep.status;
       }
     }
-    return "passed";
+    return 'passed';
   }
 }
 

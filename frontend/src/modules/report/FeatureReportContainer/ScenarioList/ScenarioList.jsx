@@ -1,13 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography, Grid, Button, Box } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import { scenarioListStyles } from "./styles/ScenarioListStyles";
-import { ExpandMore } from "@material-ui/icons";
-import ScenarioStep from "./ScenarioStep/ScenarioStep";
-import ScenarioInputField from "./ScenarioStep/ScenarioInputField";
-import Scenario from "models/Scenario";
-import StatusIcons from "../FeatureSummary/StatusIcons";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography, Grid, Button, Box } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { scenarioListStyles } from './styles/ScenarioListStyles';
+import { ExpandMore } from '@material-ui/icons';
+import ScenarioStep from './ScenarioStep/ScenarioStep';
+import ScenarioInputField from './ScenarioStep/ScenarioInputField';
+import Scenario from 'models/Scenario';
+import StatusIcons from '../FeatureSummary/StatusIcons';
 
 const addStepsStatus = (statusMap, steps, status) => {
   steps.forEach(step => {
@@ -90,7 +90,7 @@ const ScenarioList = props => {
       {scenarioList.map(scenario => {
         const id = scenario.id;
         const isExpanded = expandedScenarioIdList.includes(scenario.id);
-        var className = isExpanded ? classes.expandedScenarioTitle : "";
+        var className = isExpanded ? classes.expandedScenarioTitle : '';
         const classesMap = {
           passed: classes.xbddScenarioPassed,
           failed: classes.xbddScenarioFailed,
@@ -122,30 +122,30 @@ const ScenarioList = props => {
             <ExpansionPanelDetails>
               <Grid container>
                 <Grid item xs={11}>
-                  {scenario.backgroundSteps ? renderScenarioSteps(id, "Background: ", scenario.backgroundSteps) : null}
+                  {scenario.backgroundSteps ? renderScenarioSteps(id, 'Background: ', scenario.backgroundSteps) : null}
                 </Grid>
                 <Grid item xs={11}>
-                  {scenario.steps ? renderScenarioSteps(id, "Steps: ", scenario.steps) : null}
+                  {scenario.steps ? renderScenarioSteps(id, 'Steps: ', scenario.steps) : null}
                 </Grid>
                 <Grid item xs={5}>
-                  {renderScenarioComment(id, "Environment", scenario.environmentNotes, "Environment details go here...")}
+                  {renderScenarioComment(id, 'Environment', scenario.environmentNotes, 'Environment details go here...')}
                 </Grid>
                 <Grid item xs={1} />
                 <Grid item xs={5}>
-                  {renderScenarioComment(id, "Execution Notes", scenario.executionNotes, "Notes on your test execution go here...")}
+                  {renderScenarioComment(id, 'Execution Notes', scenario.executionNotes, 'Notes on your test execution go here...')}
                 </Grid>
                 <Grid item xs={11}>
                   {renderScenarioComment(
                     id,
-                    "Testing Tips",
+                    'Testing Tips',
                     scenario.testingTips,
-                    "Any details / gotchas on manually testing this functionality go here. This will be carried forward in subsequent reports."
+                    'Any details / gotchas on manually testing this functionality go here. This will be carried forward in subsequent reports.'
                   )}
                 </Grid>
                 <Grid item xs={11}>
                   <div className={classes.buttons}>
-                    {renderButton(id, "Skip All Steps", scenario, "skipped", classes.skipAllSteps)}
-                    {renderButton(id, "Pass All Steps", scenario, "passed", classes.passAllSteps)}
+                    {renderButton(id, 'Skip All Steps', scenario, 'skipped', classes.skipAllSteps)}
+                    {renderButton(id, 'Pass All Steps', scenario, 'passed', classes.passAllSteps)}
                   </div>
                 </Grid>
               </Grid>

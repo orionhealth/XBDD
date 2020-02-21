@@ -1,82 +1,82 @@
-import { createStyles } from "@material-ui/core";
+import { createStyles } from '@material-ui/core';
 
 const featureSummaryStyles = createStyles({
   featureSummary: {
-    padding: "24px",
-    margin: "24px 24px 24px 12px",
+    padding: '24px',
+    margin: '24px 24px 24px 12px',
   },
   featureEditInfo: {
-    fontSize: "14px",
-    padding: "6px 0",
+    fontSize: '14px',
+    padding: '6px 0',
   },
   featureTags: {
-    padding: "6px",
+    padding: '6px',
   },
   featureTag: {
-    size: "small",
-    margin: "2px",
-    background: "#428bca",
-    color: "white",
+    size: 'small',
+    margin: '2px',
+    background: '#428bca',
+    color: 'white',
   },
   featureTitle: {
-    paddingBottom: "6px",
+    paddingBottom: '6px',
   },
   featureDescription: {
-    overflowX: "scroll",
-    textAlign: "left",
-    padding: "12px 0 12px 12px",
+    overflowX: 'scroll',
+    textAlign: 'left',
+    padding: '12px 0 12px 12px',
   },
 });
 
 const executionHistoryStyles = createStyles({
   executionHistory: {
-    paddingTop: "12px",
+    paddingTop: '12px',
   },
   executionHistoryIcon: {
-    padding: "4px",
+    padding: '4px',
   },
   xbddFeaturePassed: {
-    color: "#576E5D",
+    color: '#576E5D',
   },
   xbddFeatureFailed: {
-    color: "#AC534F",
+    color: '#AC534F',
   },
   xbddFeatureUndefined: {
-    color: "#C39575",
+    color: '#C39575',
   },
   xbddFeatureSkipped: {
-    color: "#457B9D",
+    color: '#457B9D',
   },
   xbddFeatureStatusArrow: {
-    fontSize: "24px",
-    color: "#999",
+    fontSize: '24px',
+    color: '#999',
   },
 });
 
 const statusIconStyles = createStyles({
   xbddFeatureStatus: {
-    display: "inline-flex",
+    display: 'inline-flex',
   },
   bigIcons: {
-    fontSize: "24px",
+    fontSize: '24px',
   },
   smallIcons: {
-    fontSize: "17px",
+    fontSize: '17px',
   },
   xbddFeaturePassed: {
-    color: "#576E5D",
+    color: '#576E5D',
   },
   xbddFeatureFailed: {
-    color: "#AC534F",
+    color: '#AC534F',
   },
   xbddFeatureUndefined: {
-    color: "#C39575",
+    color: '#C39575',
   },
   xbddFeatureSkipped: {
-    color: "#457B9D",
+    color: '#457B9D',
   },
   xbddFeatureStatusArrow: {
-    color: "#999",
+    color: '#999',
   },
 });
 

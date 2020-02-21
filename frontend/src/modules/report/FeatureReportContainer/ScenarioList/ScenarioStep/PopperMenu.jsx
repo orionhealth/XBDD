@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { IconButton, Popper, Fade, Card, List, ListItem } from "@material-ui/core";
-import { MoreHoriz } from "@material-ui/icons";
-import { withStyles } from "@material-ui/core/styles";
-import { popperMenuStyles } from "./styles/ScenarioStepStyles";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { IconButton, Popper, Fade, Card, List, ListItem } from '@material-ui/core';
+import { MoreHoriz } from '@material-ui/icons';
+import { withStyles } from '@material-ui/core/styles';
+import { popperMenuStyles } from './styles/ScenarioStepStyles';
 
 const PopperMenu = props => {
   const {
@@ -19,10 +19,10 @@ const PopperMenu = props => {
   } = props;
 
   const labelMap = {
-    passed: "Pass",
-    failed: "Fail",
-    skipped: "Skip",
-    undefined: "Undefine",
+    passed: 'Pass',
+    failed: 'Fail',
+    skipped: 'Skip',
+    undefined: 'Undefine',
   };
 
   const renderListItem = newStatus => (
@@ -41,10 +41,10 @@ const PopperMenu = props => {
           <Fade {...TransitionProps} timeout={350}>
             <Card>
               <List>
-                {renderListItem("passed")}
-                {renderListItem("failed")}
-                {renderListItem("skipped")}
-                {renderListItem("undefined")}
+                {renderListItem('passed')}
+                {renderListItem('failed')}
+                {renderListItem('skipped')}
+                {renderListItem('undefined')}
               </List>
             </Card>
           </Fade>

@@ -1,15 +1,15 @@
-import React, { useState, FC, ChangeEvent, KeyboardEvent } from "react";
-import { withStyles, MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, TextField, Avatar, Box, Theme, WithStyles } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, FC, ChangeEvent, KeyboardEvent } from 'react';
+import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { AppBar, Toolbar, Button, TextField, Avatar, Box, Theme, WithStyles } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { RootStore } from "rootReducer";
-import navbarStyles from "./styles/NavbarStyles";
-import { setUser } from "../../xbddReducer";
+import { RootStore } from 'rootReducer';
+import navbarStyles from './styles/NavbarStyles';
+import { setUser } from '../../xbddReducer';
 
 const theme: Theme = createMuiTheme({
   palette: {
-    primary: { main: "#457B9D" },
+    primary: { main: '#457B9D' },
   },
 });
 
@@ -17,11 +17,11 @@ type Props = WithStyles<typeof navbarStyles>;
 
 const Navbar: FC<Props> = props => {
   const { classes } = props;
-  const [loginInput, setLoginInput] = useState("");
+  const [loginInput, setLoginInput] = useState('');
   const loggedInUser = useSelector((state: RootStore) => state.app.user);
 
   const dispatch = useDispatch();
-  const login = (): void => dispatch(setUser(loginInput)) && setLoginInput("");
+  const login = (): void => dispatch(setUser(loginInput)) && setLoginInput('');
   const logout = (): void => {
     dispatch(setUser(null));
   };
@@ -43,14 +43,14 @@ const Navbar: FC<Props> = props => {
                 variant="outlined"
                 value={loginInput}
                 onChange={(event: ChangeEvent<HTMLInputElement>): void => setLoginInput(event.target.value)}
-                InputProps={{ style: { color: "white" } }}
+                InputProps={{ style: { color: 'white' } }}
                 onKeyPress={(event: KeyboardEvent<HTMLDivElement>): void => {
-                  event.key === "Enter" && login();
+                  event.key === 'Enter' && login();
                 }}
               />
             )}
             <Button color="inherit" onClick={(): void => (loggedInUser ? logout() : login())}>
-              {loggedInUser ? "Logout" : "Login"}
+              {loggedInUser ? 'Logout' : 'Login'}
             </Button>
             <Avatar>{loggedInUser}</Avatar>
           </Box>

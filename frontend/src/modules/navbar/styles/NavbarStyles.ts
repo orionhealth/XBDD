@@ -1,23 +1,23 @@
-import { createStyles } from "@material-ui/core";
+import { createStyles } from '@material-ui/core';
 
 const navbarStyles = createStyles({
   appBarBorder: {
-    borderRadius: "10px 10px 0 0",
+    borderRadius: '10px 10px 0 0',
   },
   xbddLogoFlex: {
-    color: "inherit",
+    color: 'inherit',
     flexGrow: 1,
-    textAlign: "left",
+    textAlign: 'left',
   },
   xbddLogo: {
-    fontSize: "20px",
-    padding: "0px",
-    color: "inherit",
+    fontSize: '20px',
+    padding: '0px',
+    color: 'inherit',
   },
   xbddLogin: {
     flexGrow: 1,
-    textAlign: "right",
-    display: "contents",
+    textAlign: 'right',
+    display: 'contents',
   },
 });
 

@@ -1,29 +1,29 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { List, ListItem, Box } from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusSquare, faCheckSquare } from "@fortawesome/free-solid-svg-icons";
-import { faSquare } from "@fortawesome/free-regular-svg-icons";
-import { withStyles } from "@material-ui/core/styles";
-import { stepStyles } from "./styles/ScenarioStepStyles";
-import PopperMenu from "./PopperMenu";
-import Step from "models/Step";
-import CucumberTable from "./CucumberTable";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { List, ListItem, Box } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import { faSquare } from '@fortawesome/free-regular-svg-icons';
+import { withStyles } from '@material-ui/core/styles';
+import { stepStyles } from './styles/ScenarioStepStyles';
+import PopperMenu from './PopperMenu';
+import Step from 'models/Step';
+import CucumberTable from './CucumberTable';
 
 const clickEventWrapper = (event, scenarioId, stepId, prevStatus, newStatus, handleStatusChange) => {
   event.stopPropagation();
   let node = event.currentTarget;
   const nextStatus = {
-    passed: "failed",
-    failed: "passed",
-    undefined: "passed",
-    skipped: "passed",
+    passed: 'failed',
+    failed: 'passed',
+    undefined: 'passed',
+    skipped: 'passed',
   };
   const status = newStatus ? newStatus : nextStatus[prevStatus];
   const prevStatusMap = [{ stepId: stepId, status: prevStatus }];
   const newStatusMap = [{ stepId: stepId, status: status }];
 
-  if (node.className === "MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button") {
+  if (node.className === 'MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button') {
     handleStatusChange(scenarioId, prevStatusMap, newStatusMap);
     return;
   }
@@ -33,7 +33,7 @@ const clickEventWrapper = (event, scenarioId, stepId, prevStatus, newStatus, han
 const renderScreenshot = (embeddings, handleScreenshotClicked, classes) => {
   const url = `http://localhost:28080/xbdd/rest/attachment/${embeddings}`;
   const alt = `Screenshot Not Found`;
-  const style = { height: "100%", width: "100%" };
+  const style = { height: '100%', width: '100%' };
   return <img src={url} alt={alt} onClick={() => handleScreenshotClicked(<img src={url} alt={alt} style={style} />)} className={classes} />;
 };
 
@@ -62,7 +62,7 @@ const ScenarioStep = props => {
 
   const getFailedClasses = status => {
     var stepIconClasses = classes.stepIconBox;
-    if (status === "failed") {
+    if (status === 'failed') {
       stepIconClasses += ` ${classes.stepIconFailed}`;
     }
     return stepIconClasses;

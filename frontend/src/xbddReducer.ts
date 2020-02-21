@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, CaseReducer } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
 
 interface UserState {
   user: string | null;
@@ -33,7 +33,7 @@ const initialState: XbddState = {
 };
 
 const { actions, reducer } = createSlice({
-  name: "xbdd",
+  name: 'xbdd',
   initialState,
   reducers: {
     setUser: userReducer,

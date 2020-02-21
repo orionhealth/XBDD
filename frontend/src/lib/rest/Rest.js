@@ -1,12 +1,12 @@
-const username = "admin";
-const password = "password";
+const username = 'admin';
+const password = 'password';
 const url = process.env.REACT_APP_BACKEND_HOST;
 const TIME_OUT = 10000;
 
 const getHeaders = () => {
   const headers = new Headers();
-  headers.set("Authorization", `Basic ${btoa(`${username}:${password}`)}`);
-  headers.set("Content-Type", "application/json");
+  headers.set('Authorization', `Basic ${btoa(`${username}:${password}`)}`);
+  headers.set('Content-Type', 'application/json');
 
   return headers;
 };
@@ -14,7 +14,7 @@ const getHeaders = () => {
 const timeout = (promise, ms = TIME_OUT) => {
   let timerPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(new Error("Request Timeout"));
+      reject(new Error('Request Timeout'));
     }, ms);
   });
   return Promise.race([timerPromise, promise]);
@@ -22,7 +22,7 @@ const timeout = (promise, ms = TIME_OUT) => {
 
 const doGetRequest = path => {
   const options = {
-    method: "GET",
+    method: 'GET',
     headers: getHeaders(),
   };
 
@@ -33,7 +33,7 @@ const doGetRequest = path => {
 
 const doPutRequest = (path, data) => {
   const options = {
-    method: "PUT",
+    method: 'PUT',
     headers: getHeaders(),
     body: data ? JSON.stringify(data) : null,
   };
@@ -43,14 +43,14 @@ const doPutRequest = (path, data) => {
 
 const doDeleteRequest = path => {
   const options = {
-    method: "DELETE",
+    method: 'DELETE',
     headers: getHeaders(),
   };
 
   return timeout(fetch(`${url}${path}`, { ...options })).catch(error => console.error(error));
 };
 
-export const getSummaryOfReports = () => doGetRequest("/report");
+export const getSummaryOfReports = () => doGetRequest('/report');
 
 export const getBuild = (project, version, build) => doGetRequest(`/report/${project}/${version}/${build}`);
 

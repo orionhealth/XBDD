@@ -1,13 +1,13 @@
-import SimpleFeature from "./SimpleFeature";
+import SimpleFeature from './SimpleFeature';
 
 const getStatusPresences = features => {
   const findStatus = status => features.find(feature => feature.calculatedStatus === status);
 
   return {
-    containsPassed: !!findStatus("passed"),
-    containsUndefined: !!findStatus("undefined"),
-    containsFailed: !!findStatus("failed"),
-    containsSkipped: !!findStatus("skipped"),
+    containsPassed: !!findStatus('passed'),
+    containsUndefined: !!findStatus('undefined'),
+    containsFailed: !!findStatus('failed'),
+    containsSkipped: !!findStatus('skipped'),
   };
 };
 

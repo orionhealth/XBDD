@@ -1,5 +1,5 @@
-import Tag from "./Tag";
-import SimpleFeature from "./SimpleFeature";
+import Tag from './Tag';
+import SimpleFeature from './SimpleFeature';
 
 class FeatureList {
   constructor() {

@@ -1,4 +1,4 @@
-import Scenario from "./Scenario";
+import Scenario from './Scenario';
 
 class Feature {
   constructor(data) {

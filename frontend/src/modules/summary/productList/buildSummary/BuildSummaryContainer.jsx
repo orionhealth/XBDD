@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { FormControl, InputLabel, Select, MenuItem, OutlinedInput, Grid } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { FormControl, InputLabel, Select, MenuItem, OutlinedInput, Grid } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
-import BuildSummaryStyles from "./styles/BuildSummaryStyles";
-import BuildList from "./buildList/BuildList";
-import Product from "models/Product";
-import Version from "models/Version";
+import BuildSummaryStyles from './styles/BuildSummaryStyles';
+import BuildList from './buildList/BuildList';
+import Product from 'models/Product';
+import Version from 'models/Version';
 
 const buildVersionList = version => {
   const versionString = version.getString();
