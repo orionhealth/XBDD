@@ -11,7 +11,7 @@ class Feature {
       this.calculatedStatus = data.calculatedStatus;
       this.originalAutomatedStatus = data.originalAutomatedStatus;
       this.tags = data.tags;
-      this.scenarios = data.elements.map(element => ({ ...element }));
+      this.scenarios = data.elements.map(element => new Scenario(element));
     }
   }
 
@@ -25,7 +25,7 @@ class Feature {
     cloneFeature.originalAutomatedStatus = this.originalAutomatedStatus;
     cloneFeature.calculatedStatus = this.calculatedStatus;
     cloneFeature.tags = this.tags;
-    cloneFeature.scenarios = this.scenarios.map(scenario => ({ ...scenario }));
+    cloneFeature.scenarios = this.scenarios.map(scenario => scenario.clone());
     return cloneFeature;
   }
 

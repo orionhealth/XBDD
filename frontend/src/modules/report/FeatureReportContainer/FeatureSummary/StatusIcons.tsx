@@ -9,7 +9,7 @@ import { statusIconStyles } from './styles/FeatureSummaryStyles';
 interface Props extends WithStyles<typeof statusIconStyles> {
   firstStatus: string;
   secondStatus: string;
-  size?: string;
+  size: string;
 }
 
 const StatusIcons: FC<Props> = props => {
