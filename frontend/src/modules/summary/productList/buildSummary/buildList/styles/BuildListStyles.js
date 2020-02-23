@@ -1,23 +1,23 @@
 const buildListStyles = {
   buildListContainer: {
-    paddingLeft: "8px",
-    paddingRight: "16px",
+    paddingLeft: '8px',
+    paddingRight: '16px',
   },
   buildListItem: {
-    paddingLeft: "0px",
-    height: "42px",
+    paddingLeft: '0px',
+    height: '42px',
   },
   arrowIcon: {
-    minWidth: "24px",
+    minWidth: '24px',
   },
 };
 
 const buildListItemStyles = {
   listItemIcon: {
-    minWidth: "0",
+    minWidth: '0',
   },
   buildListItem: {
-    padding: "0px",
+    padding: '0px',
   },
 };
 

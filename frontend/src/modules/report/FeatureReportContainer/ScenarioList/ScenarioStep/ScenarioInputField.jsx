@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { TextField } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import { inputFielsStyles } from "./styles/ScenarioStepStyles";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { TextField } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { inputFielsStyles } from './styles/ScenarioStepStyles';
 
 class ScenarioInputField extends Component {
   constructor(props) {
@@ -39,15 +39,15 @@ class ScenarioInputField extends Component {
     const { scenarioId, label, placeholder, handleScenarioCommentChanged, classes } = this.props;
 
     const labelMap = {
-      Environment: "environmentNotes",
-      "Execution Notes": "executionNotes",
-      "Testing Tips": "testingTips",
+      Environment: 'environmentNotes',
+      'Execution Notes': 'executionNotes',
+      'Testing Tips': 'testingTips',
     };
 
     const requestLabelMap = {
-      Environment: "environment-notes",
-      "Execution Notes": "execution-notes",
-      "Testing Tips": "testing-tips",
+      Environment: 'environment-notes',
+      'Execution Notes': 'execution-notes',
+      'Testing Tips': 'testing-tips',
     };
 
     return (

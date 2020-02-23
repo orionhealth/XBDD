@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { PropTypes } from "prop-types";
-import { Typography, Checkbox, Tooltip, Box } from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTags, faUserTag, faUserSlash } from "@fortawesome/free-solid-svg-icons";
-import { withStyles } from "@material-ui/styles";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
+import { Typography, Checkbox, Tooltip, Box } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icons';
+import { withStyles } from '@material-ui/styles';
+import { connect } from 'react-redux';
 
-import { featureListContainerStyles } from "./styles/FeatureListContainerStyles";
-import FeatureFilterButtons from "./FeatureFilterButtons";
-import ListViewFeatureList from "./ListViewFeatureList/ListViewFeatureList";
-import TagList from "./TagViewFeatureList/TagList";
-import ConfirmationDialog from "modules/utils/ConfirmationDialog";
-import FeatureList from "models/FeatureList";
-import TagAssignmentPatch from "models/TagAssignmentPatch";
+import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
+import FeatureFilterButtons from './FeatureFilterButtons';
+import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
+import TagList from './TagViewFeatureList/TagList';
+import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
+import FeatureList from 'models/FeatureList';
+import TagAssignmentPatch from 'models/TagAssignmentPatch';
 import {
   getFeatureListByTagData,
   getSimpleFeatureListData,
@@ -20,7 +20,7 @@ import {
   setTagAssignmentData,
   getIgnoredTags,
   setIgnoredTag,
-} from "lib/rest/Rest";
+} from 'lib/rest/Rest';
 
 class FeatureListContainer extends Component {
   constructor(props) {
@@ -185,7 +185,7 @@ class FeatureListContainer extends Component {
   renderAssignedTagsSwitch(classes) {
     return (
       <>
-        <Tooltip title={this.state.isEditMode ? "Turn Edit Mode Off" : "Turn Edit Mode On"} placement="top">
+        <Tooltip title={this.state.isEditMode ? 'Turn Edit Mode Off' : 'Turn Edit Mode On'} placement="top">
           <Checkbox
             onChange={this.handleEditModeSwitch}
             icon={<FontAwesomeIcon icon={faUserSlash} className={classes.unCheckedIcon} />}
@@ -193,7 +193,7 @@ class FeatureListContainer extends Component {
             checked={this.state.isEditMode}
           />
         </Tooltip>
-        <Tooltip title={this.state.isAssignedTagsView ? "Show All Tags" : "Show Only Assigned Tags"} placement="top">
+        <Tooltip title={this.state.isAssignedTagsView ? 'Show All Tags' : 'Show Only Assigned Tags'} placement="top">
           <Checkbox
             onChange={this.handleTagsSwitch}
             icon={<FontAwesomeIcon icon={faUserTag} className={classes.unCheckedIcon} />}
@@ -207,7 +207,7 @@ class FeatureListContainer extends Component {
 
   renderViewsSwithch(classes) {
     return (
-      <Tooltip title={this.state.isTagView ? "Switch to List View" : "Switch to Tag View"} placement="top">
+      <Tooltip title={this.state.isTagView ? 'Switch to List View' : 'Switch to Tag View'} placement="top">
         <Checkbox
           onChange={this.handleViewSwitch}
           icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
@@ -271,8 +271,8 @@ class FeatureListContainer extends Component {
         <>
           <ConfirmationDialog
             open={!!this.state.warningArgs}
-            title={"Warning!!"}
-            msg={"Reassigning The Tag"}
+            title={'Warning!!'}
+            msg={'Reassigning The Tag'}
             handleConfirmed={() => this.state.warningArgs && this.handleTagAssigned(...this.state.warningArgs)}
             handleClosed={this.handleWarningClosed}
           />

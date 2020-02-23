@@ -1,10 +1,10 @@
-import React from "react";
-import Enzyme, { mount } from "enzyme";
-import { Provider } from "react-redux";
-import configureStore from "redux-mock-store";
-import Adapter from "enzyme-adapter-react-16";
+import React from 'react';
+import Enzyme, { mount } from 'enzyme';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import Adapter from 'enzyme-adapter-react-16';
 
-import Xbdd from "../Xbdd";
+import Xbdd from '../Xbdd';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -25,9 +25,9 @@ const renderApp = () => {
   );
 };
 
-describe("Xbdd", () => {
-  test("it renders without failing", () => {
+describe('Xbdd', () => {
+  test('it renders without failing', () => {
     const app = mount(renderApp());
-    expect(app.find(".xbdd-app")).not.toBeNull();
+    expect(app.find('.xbdd-app')).not.toBeNull();
   });
 });

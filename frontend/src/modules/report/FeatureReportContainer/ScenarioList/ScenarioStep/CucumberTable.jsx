@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Table, TableHead, TableRow, TableBody, TableCell } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import { cucumberTableStyles } from "./styles/ScenarioStepStyles";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Table, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { cucumberTableStyles } from './styles/ScenarioStepStyles';
 
 const CucumberTable = props => {
   const { rows, classes } = props;

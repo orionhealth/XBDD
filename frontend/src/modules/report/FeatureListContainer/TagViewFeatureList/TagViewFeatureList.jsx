@@ -1,8 +1,8 @@
-import React from "react";
-import { PropTypes } from "prop-types";
-import { List, ListItem } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import { featureListItemStyles } from "../styles/FeatureListContainerStyles";
+import React from 'react';
+import { PropTypes } from 'prop-types';
+import { List, ListItem } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 
 const renderFeatureListItem = (feature, selectedFeatureId, statusClasses, handleFeatureSelected, classes) => {
   var className = `${classes.xbddTagViewFeatureListItem} ${statusClasses} ${classes.xbddFeatureListItem}`;
@@ -29,7 +29,8 @@ const TagViewFeatureList = props => {
   return (
     <List>
       {featureList.map(feature =>
-        renderFeatureListItem(feature, selectedFeatureId, classesMap[feature.calculatedStatus], handleFeatureSelected, classes))}
+        renderFeatureListItem(feature, selectedFeatureId, classesMap[feature.calculatedStatus], handleFeatureSelected, classes)
+      )}
     </List>
   );
 };

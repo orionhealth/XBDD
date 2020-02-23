@@ -1,4 +1,4 @@
-import Version from "./Version";
+import Version from './Version';
 
 class Product {
   constructor(data) {

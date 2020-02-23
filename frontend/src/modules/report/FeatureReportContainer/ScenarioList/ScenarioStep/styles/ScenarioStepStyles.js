@@ -1,69 +1,69 @@
 const stepStyles = {
   stepIconBox: {
-    padding: "3px",
+    padding: '3px',
   },
   stepContentBox: {
-    padding: "3px",
-    overflowX: "scroll",
+    padding: '3px',
+    overflowX: 'scroll',
   },
   screenshot: {
-    margin: "20px 0 0 24px",
-    border: "1px solid rgba(0, 0, 0, 0.23)",
-    height: "50%",
-    width: "50%",
+    margin: '20px 0 0 24px',
+    border: '1px solid rgba(0, 0, 0, 0.23)',
+    height: '50%',
+    width: '50%',
   },
   steps: {
-    paddingBottom: "12px",
+    paddingBottom: '12px',
   },
   step: {
-    display: "block",
-    padding: "0",
+    display: 'block',
+    padding: '0',
   },
   stepTitle: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   stepKeyword: {
-    color: "#07584F",
+    color: '#07584F',
   },
   scenarioStepIcon: {
-    fontSize: "16px",
+    fontSize: '16px',
   },
   scenarioStepStatusPassed: {
-    color: "#576E5D",
+    color: '#576E5D',
   },
   scenarioStepStatusFailed: {
-    color: "white",
+    color: 'white',
   },
   stepIconFailed: {
-    backgroundColor: "#AC534F",
+    backgroundColor: '#AC534F',
   },
 };
 
 const popperMenuStyles = {
   scenarioStepIcon: {
-    fontSize: "16px",
+    fontSize: '16px',
   },
   moreButton: {
-    padding: "0px",
+    padding: '0px',
   },
   popperMenu: {
-    zIndex: "999",
+    zIndex: '999',
   },
 };
 
 const cucumberTableStyles = {
   scrollableTable: {
-    overflowX: "scroll",
+    overflowX: 'scroll',
   },
   stepTable: {
-    width: "auto",
-    margin: "4px 0 12px 0",
+    width: 'auto',
+    margin: '4px 0 12px 0',
   },
 };
 
 const inputFielsStyles = {
   inputField: {
-    margin: "0",
+    margin: '0',
   },
 };
 

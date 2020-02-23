@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { List, Typography, TextField, Grid } from "@material-ui/core";
-import Search from "@material-ui/icons/Search";
-import { withStyles } from "@material-ui/core/styles";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { List, Typography, TextField, Grid } from '@material-ui/core';
+import Search from '@material-ui/icons/Search';
+import { withStyles } from '@material-ui/core/styles';
 
-import ProductListStyles from "./styles/ProductListStyles";
-import ProductListItem from "./ProductListItem";
-import Product from "models/Product";
+import ProductListStyles from './styles/ProductListStyles';
+import ProductListItem from './ProductListItem';
+import Product from 'models/Product';
 
 const ProductList = props => {
   const {
