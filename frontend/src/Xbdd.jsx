@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { connect } from 'react-redux';
-
 import Navbar from 'modules/navbar/Navbar';
 import SummaryContainer from 'modules/summary/SummaryContainer';
 import ReportContainer from 'modules/report/ReportContainer';
@@ -24,8 +23,10 @@ class Xbdd extends React.Component {
   render() {
     return (
       <div className="xbdd-app">
-        <Navbar />
-        {this.switchPage()}
+        <Suspense fallback={<div />}>
+          <Navbar />
+          {this.switchPage()}
+        </Suspense>
       </div>
     );
   }

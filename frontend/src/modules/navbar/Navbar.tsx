@@ -2,6 +2,7 @@ import React, { useState, FC, ChangeEvent, KeyboardEvent } from 'react';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, TextField, Avatar, Box, Theme, WithStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import { RootStore } from 'rootReducer';
 import navbarStyles from './styles/NavbarStyles';
@@ -17,6 +18,8 @@ type Props = WithStyles<typeof navbarStyles>;
 
 const Navbar: FC<Props> = props => {
   const { classes } = props;
+  const { t } = useTranslation();
+
   const [loginInput, setLoginInput] = useState('');
   const loggedInUser = useSelector((state: RootStore) => state.app.user);
 
@@ -38,7 +41,7 @@ const Navbar: FC<Props> = props => {
           <Box className={classes.xbddLogin}>
             {!loggedInUser && (
               <TextField
-                label="User Name"
+                label={t('navbar.userName')}
                 margin="dense"
                 variant="outlined"
                 value={loginInput}
@@ -50,7 +53,7 @@ const Navbar: FC<Props> = props => {
               />
             )}
             <Button color="inherit" onClick={(): void => (loggedInUser ? logout() : login())}>
-              {loggedInUser ? 'Logout' : 'Login'}
+              {loggedInUser ? t('navbar.logout') : t('navbar.login')}
             </Button>
             <Avatar>{loggedInUser}</Avatar>
           </Box>
@@ -60,4 +63,4 @@ const Navbar: FC<Props> = props => {
   );
 };
 
-export default withStyles(navbarStyles)(React.memo(Navbar));
+export default withStyles(navbarStyles)(Navbar);

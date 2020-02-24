@@ -1,0 +1,7 @@
+{
+  "navbar": {
+    "login": "Login",
+    "logout": "Logout",
+    "userName": "User Name"
+  }
+}

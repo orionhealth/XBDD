@@ -6,6 +6,7 @@ import Xbdd from './Xbdd';
 import * as serviceWorker from './serviceWorker';
 import store from './rootReducer';
 
+import './i18n';
 import './index.css';
 
 ReactDOM.render(
