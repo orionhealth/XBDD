@@ -12,6 +12,7 @@ i18n
       loadPath: '/locales/{{lng}}.json',
     },
     fallbackLng: 'en',
+    preload: ['en'],
     debug: process.env.REACT_APP_DEBUG === 'ON',
     interpolation: {
       escapeValue: false,
