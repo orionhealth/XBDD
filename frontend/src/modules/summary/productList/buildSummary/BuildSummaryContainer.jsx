@@ -1,3 +1,6 @@
+import Product from 'models/Product';
+
+import Version, { getString } from 'models/Version';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormControl, InputLabel, Select, MenuItem, OutlinedInput, Grid } from '@material-ui/core';
@@ -5,11 +8,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import BuildSummaryStyles from './styles/BuildSummaryStyles';
 import BuildList from './buildList/BuildList';
-import Product from 'models/Product';
-import Version from 'models/Version';
 
 const buildVersionList = version => {
-  const versionString = version.getString();
+  const versionString = getString(version);
   return (
     <MenuItem value={versionString} key={versionString}>
       {versionString}
@@ -25,7 +26,7 @@ const BuildSummaryContainer = props => {
       <Grid item xs={3} className={classes.versionsSelector}>
         <FormControl variant="outlined">
           <InputLabel>Versions</InputLabel>
-          <Select value={version.getString()} onChange={e => handleVersionSelected(e, product)} input={<OutlinedInput labelWidth={65} />}>
+          <Select value={getString(version)} onChange={e => handleVersionSelected(e, product)} input={<OutlinedInput labelWidth={65} />}>
             {product.versionList.map(buildVersionList)}
           </Select>
         </FormControl>
