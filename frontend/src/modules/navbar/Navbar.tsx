@@ -1,7 +1,7 @@
 import React, { useState, FC, ChangeEvent, KeyboardEvent } from 'react';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, TextField, Avatar, Box, Theme, WithStyles } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import { RootStore } from 'rootReducer';
@@ -14,14 +14,17 @@ const theme: Theme = createMuiTheme({
   },
 });
 
-type Props = WithStyles<typeof navbarStyles>;
+interface StateProps {
+  loggedInUser: string | null;
+}
+
+type Props = WithStyles<typeof navbarStyles> & StateProps;
 
 const Navbar: FC<Props> = props => {
-  const { classes } = props;
+  const { classes, loggedInUser } = props;
   const { t } = useTranslation();
 
   const [loginInput, setLoginInput] = useState('');
-  const loggedInUser = useSelector((state: RootStore) => state.app.user);
 
   const dispatch = useDispatch();
   const login = (): void => dispatch(setUser(loginInput)) && setLoginInput('');
@@ -63,4 +66,8 @@ const Navbar: FC<Props> = props => {
   );
 };
 
-export default withStyles(navbarStyles)(Navbar);
+const mapStateToProps = (state: RootStore): StateProps => ({
+  loggedInUser: state.app.user,
+});
+
+export default connect(mapStateToProps)(withStyles(navbarStyles)(React.memo(Navbar)));
