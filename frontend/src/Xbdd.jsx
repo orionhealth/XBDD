@@ -5,6 +5,19 @@ import SummaryContainer from 'modules/summary/SummaryContainer';
 import ReportContainer from 'modules/report/ReportContainer';
 
 import './Xbdd.css';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#457B9D',
+      contrastText: '#fefefe',
+    },
+    secondary: {
+      main: '#fefefe',
+    },
+  },
+});
 
 class Xbdd extends React.Component {
   switchPage() {
@@ -24,8 +37,10 @@ class Xbdd extends React.Component {
     return (
       <div className="xbdd-app">
         <Suspense fallback={<div />}>
-          <Navbar />
-          {this.switchPage()}
+          <ThemeProvider theme={theme}>
+            <Navbar />
+            {this.switchPage()}
+          </ThemeProvider>
         </Suspense>
       </div>
     );
