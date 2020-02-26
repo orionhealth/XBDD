@@ -1,6 +1,6 @@
 import Product from 'models/Product';
 
-import Version, { getString } from 'models/Version';
+import { getString } from 'models/Version';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormControl, InputLabel, Select, MenuItem, OutlinedInput, Grid } from '@material-ui/core';
@@ -46,7 +46,7 @@ const BuildSummaryContainer = props => {
 
 BuildSummaryContainer.propTypes = {
   product: PropTypes.instanceOf(Product),
-  version: PropTypes.instanceOf(Version),
+  version: PropTypes.shape({}),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,

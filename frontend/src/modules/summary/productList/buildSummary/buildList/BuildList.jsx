@@ -68,7 +68,7 @@ const BuildList = props => {
 
 BuildList.propTypes = {
   product: PropTypes.instanceOf(Product),
-  version: PropTypes.shapeOf({}),
+  version: PropTypes.shape({}),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handlePinChange: PropTypes.func.isRequired,
   handleBuildListExpanded: PropTypes.func.isRequired,

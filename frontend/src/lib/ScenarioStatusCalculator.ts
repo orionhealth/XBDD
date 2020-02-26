@@ -1,7 +1,12 @@
-import Scenario from 'models/Scenario';
 import Status from 'models/Status';
+import Step from 'models/Step';
 
-export function calculateManualStatus(scenario: Scenario): Status {
+type ScenarioDetails = {
+  backgroundSteps: Step[];
+  steps: Step[];
+};
+
+export const calculateManualStatus = (scenario: ScenarioDetails): Status => {
   if (scenario.backgroundSteps) {
     const notPassedBgStep = scenario.backgroundSteps.find(step =>
       step.manualStatus ? step.manualStatus !== Status.Passed : step.status !== Status.Passed
@@ -19,10 +24,9 @@ export function calculateManualStatus(scenario: Scenario): Status {
     }
   }
   return Status.Passed;
-}
+};
 
-// TODO - this function isn't used - is it needed?
-export function calculateAutoStatus(scenario: Scenario): Status {
+export const calculateAutoStatus = (scenario: ScenarioDetails): Status => {
   if (scenario.backgroundSteps) {
     const notPassedBgStep = scenario.backgroundSteps.find(step => step.status !== Status.Passed);
     if (notPassedBgStep) {
@@ -36,4 +40,4 @@ export function calculateAutoStatus(scenario: Scenario): Status {
     }
   }
   return Status.Passed;
-}
+};
