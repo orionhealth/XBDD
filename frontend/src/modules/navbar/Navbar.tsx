@@ -1,8 +1,9 @@
 import React, { useState, FC, ChangeEvent, KeyboardEvent } from 'react';
 import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, TextField, Avatar, Box, Theme, WithStyles } from '@material-ui/core';
-import { useDispatch, connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { grey } from '@material-ui/core/colors';
 
 import { RootStore } from 'rootReducer';
 import navbarStyles from './styles/NavbarStyles';
@@ -11,26 +12,26 @@ import { setUser } from '../../xbddReducer';
 const theme: Theme = createMuiTheme({
   palette: {
     primary: { main: '#457B9D' },
+    secondary: grey,
   },
 });
 
-interface StateProps {
-  loggedInUser: string | null;
-}
-
-type Props = WithStyles<typeof navbarStyles> & StateProps;
+type Props = WithStyles<typeof navbarStyles>;
 
 const Navbar: FC<Props> = props => {
-  const { classes, loggedInUser } = props;
+  const { classes } = props;
   const { t } = useTranslation();
 
   const [loginInput, setLoginInput] = useState('');
+  const loggedInUser = useSelector((state: RootStore) => state.app.user);
 
   const dispatch = useDispatch();
   const login = (): void => dispatch(setUser(loginInput)) && setLoginInput('');
   const logout = (): void => {
     dispatch(setUser(null));
   };
+
+  console.log('Navbar rendered');
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -48,6 +49,7 @@ const Navbar: FC<Props> = props => {
                 margin="dense"
                 variant="outlined"
                 value={loginInput}
+                color="secondary"
                 onChange={(event: ChangeEvent<HTMLInputElement>): void => setLoginInput(event.target.value)}
                 InputProps={{ style: { color: 'white' } }}
                 onKeyPress={(event: KeyboardEvent<HTMLDivElement>): void => {
@@ -66,8 +68,4 @@ const Navbar: FC<Props> = props => {
   );
 };
 
-const mapStateToProps = (state: RootStore): StateProps => ({
-  loggedInUser: state.app.user,
-});
-
-export default connect(mapStateToProps)(withStyles(navbarStyles)(React.memo(Navbar)));
+export default withStyles(navbarStyles)(React.memo(Navbar));
