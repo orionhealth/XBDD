@@ -1,9 +1,9 @@
-import ProductSummary from 'models/ProductSummary';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Card, Typography } from '@material-ui/core';
+import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
+import ProductSummary from 'models/ProductSummary';
 import ProductListContainer from './productList/ProductListContainer';
 import SummaryStyles from './styles/SummaryStyles';
 import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
