@@ -1,4 +1,4 @@
-import { createStyles, fade } from '@material-ui/core';
+import { createStyles } from '@material-ui/core';
 
 const navbarStyles = theme =>
   createStyles({

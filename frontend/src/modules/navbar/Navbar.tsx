@@ -1,6 +1,6 @@
 import React, { useState, FC, ChangeEvent, KeyboardEvent } from 'react';
-import { withStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Button, TextField, Avatar, Box, WithStyles, fade } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { AppBar, Toolbar, Button, TextField, Avatar, Box, WithStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
