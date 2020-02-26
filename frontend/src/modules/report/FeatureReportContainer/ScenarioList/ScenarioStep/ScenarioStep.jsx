@@ -7,7 +7,6 @@ import { faSquare } from '@fortawesome/free-regular-svg-icons';
 import { withStyles } from '@material-ui/core/styles';
 import { stepStyles } from './styles/ScenarioStepStyles';
 import PopperMenu from './PopperMenu';
-import Step from 'models/Step';
 import CucumberTable from './CucumberTable';
 
 const clickEventWrapper = (event, scenarioId, stepId, prevStatus, newStatus, handleStatusChange) => {
@@ -124,7 +123,7 @@ const ScenarioStep = props => {
 ScenarioStep.propTypes = {
   title: PropTypes.string,
   scenarioId: PropTypes.string,
-  steps: PropTypes.arrayOf(PropTypes.instanceOf(Step)),
+  steps: PropTypes.arrayOf(PropTypes.shape({})),
   hoveredStepId: PropTypes.string,
   anchor: PropTypes.object,
   handleStepHovered: PropTypes.func.isRequired,

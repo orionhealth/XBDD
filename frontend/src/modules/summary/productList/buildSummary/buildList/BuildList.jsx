@@ -1,3 +1,7 @@
+import Product from 'models/Product';
+import { getString, getUnpinnedBuildList } from 'models/Version';
+import { selectProductBuildAndVersion } from 'xbddReducer';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
@@ -5,19 +9,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { withStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
-
 import { buildListStyles } from './styles/BuildListStyles';
-import Product from 'models/Product';
-import Version from 'models/Version';
 import BuildListItem from './BuildListItem';
-import { selectProductBuildAndVersion } from '../../../../../xbddReducer';
 
 const BuildList = props => {
   const { product, version, expandedBuildList, handlePinChange, handleBuildListExpanded, classes } = props;
   const dispatch = useDispatch();
   const pinnedBuildList = version.pinnedBuildList;
-  let unpinnedBuildList = version.getUnpinnedBuildList();
-  const productVersionId = `${product.name} ${version.getString()}`;
+  let unpinnedBuildList = getUnpinnedBuildList(version);
+  const productVersionId = `${product.name} ${getString(version)}`;
   const isBuildListExpanded = expandedBuildList.includes(productVersionId);
   const isBigBuildList = unpinnedBuildList.length > 5;
 
@@ -34,7 +34,7 @@ const BuildList = props => {
       }
       node = node.parentNode;
     }
-    dispatch(selectProductBuildAndVersion({ product: product.name, version: version.getString(), build }));
+    dispatch(selectProductBuildAndVersion({ product: product.name, version: getString(version), build }));
   };
 
   const renderBuildListByPin = (buildList, isPinned) => (
@@ -68,7 +68,7 @@ const BuildList = props => {
 
 BuildList.propTypes = {
   product: PropTypes.instanceOf(Product),
-  version: PropTypes.instanceOf(Version),
+  version: PropTypes.shape({}),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handlePinChange: PropTypes.func.isRequired,
   handleBuildListExpanded: PropTypes.func.isRequired,
