@@ -6,7 +6,6 @@ import { scenarioListStyles } from './styles/ScenarioListStyles';
 import { ExpandMore } from '@material-ui/icons';
 import ScenarioStep from './ScenarioStep/ScenarioStep';
 import ScenarioInputField from './ScenarioStep/ScenarioInputField';
-import Scenario from 'models/Scenario';
 import StatusIcons from '../FeatureSummary/StatusIcons';
 
 const addStepsStatus = (statusMap, steps, status) => {
@@ -158,7 +157,7 @@ const ScenarioList = props => {
 };
 
 ScenarioList.propTypes = {
-  scenarioList: PropTypes.arrayOf(PropTypes.instanceOf(Scenario)),
+  scenarioList: PropTypes.arrayOf(PropTypes.shape({})),
   expandedScenarioIdList: PropTypes.arrayOf(PropTypes.string),
   hoveredStepId: PropTypes.string,
   anchor: PropTypes.object,

@@ -1,3 +1,4 @@
+import ProductSummary from 'models/ProductSummary';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, Typography } from '@material-ui/core';
@@ -5,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import ProductListContainer from './productList/ProductListContainer';
 import SummaryStyles from './styles/SummaryStyles';
-import ProductSummary from 'models/ProductSummary';
 import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
 
 class SummaryContainer extends Component {
@@ -61,7 +61,7 @@ class SummaryContainer extends Component {
     this.changePinStatus(product, version, build, isPinned).then(response => {
       if (response.status === 200) {
         const newProduct = newProductList.find(item => item.name === product.name);
-        newProduct.updatePinnedBuildList(version, build, isPinned);
+        newProduct.updateProductPinnedBuildList(version, build, isPinned);
         this.setState({
           productList: newProductList,
         });
