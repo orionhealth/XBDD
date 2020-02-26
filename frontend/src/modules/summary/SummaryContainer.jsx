@@ -73,13 +73,8 @@ class SummaryContainer extends Component {
     if (this.state.productList) {
       return (
         <>
-          <Card>
+          <Card elevation={0}>
             <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="h3" className={this.props.classes.summaryTitle}>
-                  Welcome to XBDD
-                </Typography>
-              </Grid>
               <Grid item xs={6} className={this.props.classes.productListContainer}>
                 <Card raised>
                   <ProductListContainer

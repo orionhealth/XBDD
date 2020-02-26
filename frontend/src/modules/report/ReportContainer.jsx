@@ -167,7 +167,7 @@ class ReportContainer extends Component {
     return (
       <>
         {this.state.isNetworkError ? <Card className={classes.errorMessageBox}>Network Error!</Card> : null}
-        <Card>
+        <Card elevation={0}>
           <SimpleDialog
             open={!!this.state.screenshotDialogContent}
             title="Full Size Screenshot"

@@ -2,9 +2,6 @@ import { createStyles } from '@material-ui/core';
 
 const navbarStyles = theme =>
   createStyles({
-    appBarBorder: {
-      borderRadius: '10px 10px 0 0',
-    },
     xbddLogoFlex: {
       color: 'inherit',
       flexGrow: 1,

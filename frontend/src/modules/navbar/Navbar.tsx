@@ -24,7 +24,7 @@ const Navbar: FC<Props> = props => {
   };
 
   return (
-    <AppBar position="static" className={classes.appBarBorder}>
+    <AppBar position="static">
       <Toolbar>
         <Box className={classes.xbddLogoFlex}>
           <Button href="/" className={classes.xbddLogo}>
