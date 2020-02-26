@@ -1,9 +1,9 @@
-import ProductSummary from 'models/ProductSummary';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Card, Typography } from '@material-ui/core';
+import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
+import ProductSummary from 'models/ProductSummary';
 import ProductListContainer from './productList/ProductListContainer';
 import SummaryStyles from './styles/SummaryStyles';
 import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
@@ -73,13 +73,8 @@ class SummaryContainer extends Component {
     if (this.state.productList) {
       return (
         <>
-          <Card>
+          <Card elevation={0}>
             <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="h3" className={this.props.classes.summaryTitle}>
-                  Welcome to XBDD
-                </Typography>
-              </Grid>
               <Grid item xs={6} className={this.props.classes.productListContainer}>
                 <Card raised>
                   <ProductListContainer
