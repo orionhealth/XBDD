@@ -1,12 +1,15 @@
 import React, { ReactNode } from 'react';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 interface State {
   error: Error | null;
 }
 
-class ErrorBoundary extends React.Component<{}, State> {
+type Props = WithTranslation;
+
+class ErrorBoundary extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = { error: null };
@@ -21,12 +24,18 @@ class ErrorBoundary extends React.Component<{}, State> {
   }
 
   render(): ReactNode {
+    const { t } = this.props;
     const { error } = this.state;
     if (error) {
       return (
-        <Snackbar open autoHideDuration={6000}>
+        <Snackbar
+          open
+          onClose={(): void => {
+            this.setState({ error: null });
+          }}
+        >
           <MuiAlert elevation={6} variant="filled" severity="error">
-            {error.message}
+            {t('errors.unexpected')}
           </MuiAlert>
         </Snackbar>
       );
@@ -36,4 +45,4 @@ class ErrorBoundary extends React.Component<{}, State> {
   }
 }
 
-export default ErrorBoundary;
+export default withTranslation()(ErrorBoundary);
