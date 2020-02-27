@@ -89,7 +89,10 @@ module.exports = {
         'no-underscore-dangle': ['error', { allow: ['_t', '_raw', '_id'] }],
         'prettier/prettier': 'error',
         'react/prop-types': 'off',
-        'react/sort-comp': ['error', { order: ['static-methods', 'lifecycle', '/^on.+$/', 'everything-else', '/^render.+$/', 'render'] }],
+        'react/sort-comp': [
+          'error',
+          { order: ['constructor', 'static-methods', 'lifecycle', '/^on.+$/', 'everything-else', '/^render.+$/', 'render'] },
+        ],
       },
       settings: {
         'import/resolver': {
