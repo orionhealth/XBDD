@@ -1,5 +1,5 @@
-import Tag from './Tag';
-import SimpleFeature from './SimpleFeature';
+import { cloneTag, setUserFromTagAssignments, setUserForTag, setIgnoredTags, toggleIgnoreForTag, createTagFromFetchedData } from './Tag';
+import { cloneSimpleFeature, createSimpleFeatureFromFetchedData } from './SimpleFeature';
 
 class FeatureList {
   constructor() {
@@ -10,41 +10,41 @@ class FeatureList {
   setUserForTag(tagName, userName) {
     const tag = this.tagList.find(tag => tag.name === tagName);
     if (tag) {
-      tag.setUserForTag(userName);
+      setUserForTag(tag, userName);
     }
   }
 
   setFeatureListByTag(data) {
-    this.tagList = data.map(item => new Tag(item));
+    this.tagList = data.map(item => createTagFromFetchedData(item));
   }
 
   setSimpleFeatureList(data) {
-    this.simpleFeatureList = data.map(item => new SimpleFeature(item));
+    this.simpleFeatureList = data.map(item => createSimpleFeatureFromFetchedData(item));
   }
 
-  setUserForTags(data) {
+  setUserFromTagAssignments(data) {
     if (data) {
-      this.tagList.forEach(tag => tag.setUserForTags(data));
+      this.tagList.forEach(tag => setUserFromTagAssignments(tag, data));
     }
   }
 
   setIgnoredTags(data) {
     if (data) {
-      this.tagList.forEach(tag => tag.setIgnoredTags(data));
+      this.tagList.forEach(tag => setIgnoredTags(tag, data));
     }
   }
 
   toggleIgnoreForTag(tagName) {
     const tagFound = this.tagList.find(tag => tag.name === tagName);
     if (tagFound) {
-      tagFound.toggleIgnoreForTag();
+      toggleIgnoreForTag(tagFound);
     }
   }
 
   clone() {
     const newFeatureList = new FeatureList();
-    newFeatureList.tagList = this.tagList.map(tag => tag.clone());
-    newFeatureList.simpleFeatureList = this.simpleFeatureList.map(simpleFeature => simpleFeature.clone());
+    newFeatureList.tagList = this.tagList.map(tag => cloneTag(tag));
+    newFeatureList.simpleFeatureList = this.simpleFeatureList.map(simpleFeature => cloneSimpleFeature(simpleFeature));
     return newFeatureList;
   }
 }
