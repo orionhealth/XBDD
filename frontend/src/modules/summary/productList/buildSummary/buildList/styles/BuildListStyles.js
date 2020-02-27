@@ -1,10 +1,10 @@
 const buildListStyles = {
   buildListContainer: {
-    paddingLeft: '8px',
-    paddingRight: '16px',
+    height: '100%',
+    width: '100%',
   },
   buildListItem: {
-    paddingLeft: '0px',
+    padding: '0 6px',
     height: '42px',
   },
   arrowIcon: {
@@ -12,13 +12,4 @@ const buildListStyles = {
   },
 };
 
-const buildListItemStyles = {
-  listItemIcon: {
-    minWidth: '0',
-  },
-  buildListItem: {
-    padding: '0px',
-  },
-};
-
-export { buildListStyles, buildListItemStyles };
+export { buildListStyles };

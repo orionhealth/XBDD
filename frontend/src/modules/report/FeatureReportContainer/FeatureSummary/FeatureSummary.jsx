@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Grid, Typography, Chip, Divider } from '@material-ui/core';
+import { Card, Grid, Typography, Chip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+
 import { featureSummaryStyles } from './styles/FeatureSummaryStyles';
 import ExecutionHistory from './ExecutionHistory';
 import Feature from 'models/Feature';
@@ -46,7 +47,6 @@ const FeatureSummary = props => {
               {feature.description}
             </Typography>
           </Grid>
-          <Divider />
           <Grid item xs={9}>
             {executionHistory ? <ExecutionHistory executionHistory={executionHistory} /> : null}
           </Grid>
