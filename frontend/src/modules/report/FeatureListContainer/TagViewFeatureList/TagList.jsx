@@ -2,9 +2,9 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Card, List } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+
 import { tagListStyles } from './styles/TagListStyles';
 import TagListItem from './TagListItem';
-import Tag from 'models/Tag';
 
 const TagList = props => {
   const {
@@ -54,7 +54,7 @@ TagList.propTypes = {
   userName: PropTypes.string,
   isEditMode: PropTypes.bool,
   isAssignedTagsView: PropTypes.bool,
-  tagList: PropTypes.arrayOf(PropTypes.instanceOf(Tag)),
+  tagList: PropTypes.arrayOf(PropTypes.shape({})),
   restId: PropTypes.string,
   expandedTagsList: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedFeatureId: PropTypes.string,

@@ -5,11 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
-
-import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
-import FeatureFilterButtons from './FeatureFilterButtons';
-import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
-import TagList from './TagViewFeatureList/TagList';
 import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
 import FeatureList from 'models/FeatureList';
 import TagAssignmentPatch from 'models/TagAssignmentPatch';
@@ -21,6 +16,11 @@ import {
   getIgnoredTags,
   setIgnoredTag,
 } from 'lib/rest/Rest';
+
+import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
+import FeatureFilterButtons from './FeatureFilterButtons';
+import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
+import TagList from './TagViewFeatureList/TagList';
 
 class FeatureListContainer extends Component {
   constructor(props) {
@@ -62,7 +62,7 @@ class FeatureListContainer extends Component {
     ]).then(data => {
       featureList.setFeatureListByTag(data[0]);
       featureList.setSimpleFeatureList(data[1]);
-      featureList.setUserForTags(data[2]);
+      featureList.setUserFromTagAssignments(data[2]);
       featureList.setIgnoredTags(data[3]);
       this.setState({ featureList });
     });
