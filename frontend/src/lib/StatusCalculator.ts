@@ -1,9 +1,26 @@
 import Status from 'models/Status';
 import Step from 'models/Step';
+import Feature from 'models/Feature';
 
 type ScenarioDetails = {
   backgroundSteps: Step[];
   steps: Step[];
+};
+
+export const calculateFeatureStatus = (feature: Feature): void => {
+  const statuses = {};
+
+  if (feature.scenarios) {
+    feature.scenarios.forEach(scenario => {
+      if (scenario.calculatedStatus) {
+        statuses[scenario.calculatedStatus] = scenario.calculatedStatus;
+      } else {
+        statuses[scenario.originalAutomatedStatus] = scenario.originalAutomatedStatus;
+      }
+    });
+  }
+
+  feature.calculatedStatus = Status.Failed || Status.Undefined || Status.Skipped || Status.Passed;
 };
 
 export const calculateManualStatus = (scenario: ScenarioDetails): Status => {
