@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { IconButton, Popper, Fade, Card, List, ListItem } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
+
 import { popperMenuStyles } from './styles/ScenarioStepStyles';
 
 const PopperMenu = props => {

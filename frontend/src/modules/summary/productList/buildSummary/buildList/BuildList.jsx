@@ -1,7 +1,3 @@
-import Product from 'models/Product';
-import { getString, getUnpinnedBuildList } from 'models/Version';
-import { selectProductBuildAndVersion } from 'xbddReducer';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
@@ -9,6 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { withStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
+
+import { selectProductBuildAndVersion } from 'xbddReducer';
+import { getString, getUnpinnedBuildList } from 'models/Version';
+import Product from 'models/Product';
 import { buildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
 

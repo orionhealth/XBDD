@@ -29,8 +29,10 @@ class Xbdd extends React.Component {
       <div className="xbdd-app">
         <Suspense fallback={<div />}>
           <ThemeProvider theme={theme}>
-            <Navbar />
-            <ErrorBoundary>{this.switchPage()}</ErrorBoundary>
+            <ErrorBoundary>
+              <Navbar />
+              {this.switchPage()}
+            </ErrorBoundary>
           </ThemeProvider>
         </Suspense>
       </div>
