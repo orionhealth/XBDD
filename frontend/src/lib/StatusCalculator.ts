@@ -8,7 +8,7 @@ type ScenarioDetails = {
 };
 
 export const calculateFeatureStatus = (feature: Feature): void => {
-  const statuses = {};
+  const statuses: Record<string, Status> = {}; // TODO change string to Status
 
   if (feature.scenarios) {
     feature.scenarios.forEach(scenario => {
@@ -20,7 +20,7 @@ export const calculateFeatureStatus = (feature: Feature): void => {
     });
   }
 
-  feature.calculatedStatus = Status.Failed || Status.Undefined || Status.Skipped || Status.Passed;
+  feature.calculatedStatus = statuses.failed || statuses.undefined || statuses.skipped || statuses.passed;
 };
 
 export const calculateManualStatus = (scenario: ScenarioDetails): Status => {
