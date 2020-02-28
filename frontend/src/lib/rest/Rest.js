@@ -1,3 +1,5 @@
+import { showNotification } from 'modules/notifications/notifications';
+
 const username = 'admin';
 const password = 'password';
 const url = process.env.REACT_APP_BACKEND_HOST;
@@ -17,7 +19,14 @@ const timeout = (promise, ms = TIME_OUT) => {
       reject(new Error('Request Timeout'));
     }, ms);
   });
-  return Promise.race([timerPromise, promise]);
+  return Promise.race([timerPromise, promise]).then(response => {
+    if (response.ok) {
+      showNotification({ status: 'success', message: 'Rest Call Successful!!' });
+      return response;
+    } else {
+      showNotification({ status: 'error', message: 'Rest Call Failed.' });
+    }
+  });
 };
 
 const doGetRequest = path => {

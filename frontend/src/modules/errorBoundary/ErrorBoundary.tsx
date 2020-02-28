@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Snackbar } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import Alert from '@material-ui/lab/Alert';
 import { withTranslation, WithTranslation } from 'react-i18next';
 
 interface State {
@@ -34,9 +34,9 @@ class ErrorBoundary extends React.Component<Props, State> {
             this.setState({ error: null });
           }}
         >
-          <MuiAlert elevation={6} variant="filled" severity="error">
+          <Alert elevation={6} variant="filled" severity="error">
             {t('errors.unexpected')}
-          </MuiAlert>
+          </Alert>
         </Snackbar>
       );
     }

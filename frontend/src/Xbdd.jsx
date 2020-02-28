@@ -7,6 +7,7 @@ import SummaryContainer from 'modules/summary/SummaryContainer';
 import ReportContainer from 'modules/report/ReportContainer';
 import ErrorBoundary from 'modules/errorBoundary/ErrorBoundary';
 import theme from 'AppTheme';
+import NotificationsView from 'modules/notifications/NotificationsView';
 
 import './Xbdd.css';
 
@@ -32,6 +33,7 @@ class Xbdd extends React.Component {
             <ErrorBoundary>
               <Navbar />
               {this.switchPage()}
+              <NotificationsView />
             </ErrorBoundary>
           </ThemeProvider>
         </Suspense>
