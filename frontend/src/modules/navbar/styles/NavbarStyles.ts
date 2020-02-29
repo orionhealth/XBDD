@@ -1,6 +1,7 @@
 import { createStyles, Theme } from '@material-ui/core';
+import { StyleRules } from '@material-ui/core/styles/withStyles';
 
-const navbarStyles = (theme: Theme) =>
+const navbarStyles = (theme: Theme): StyleRules =>
   createStyles({
     xbddLogoFlex: {
       color: 'inherit',

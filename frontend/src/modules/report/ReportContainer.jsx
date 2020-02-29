@@ -21,13 +21,11 @@ class ReportContainer extends Component {
       screenshotDialogContent: null,
       selectedFeature: null,
       executionHistory: null,
-      isNetworkError: false,
     };
 
     this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
     this.handleScenarioCommentChanged = this.handleScenarioCommentChanged.bind(this);
     this.handleStatusChange = this.handleStatusChange.bind(this);
-    this.handleErrorMessageDisplay = this.handleErrorMessageDisplay.bind(this);
     this.handleScreenshotClicked = this.handleScreenshotClicked.bind(this);
     this.handleDialogClosed = this.handleDialogClosed.bind(this);
   }
@@ -35,14 +33,18 @@ class ReportContainer extends Component {
   handleFeatureSelected(feature) {
     if (!this.state.selectedFeature || this.state.selectedFeature.id !== feature.id) {
       getFeatureReport(feature._id).then(data => {
-        const selectedFeature = new Feature(data);
-        getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
-          const executionHistory = data.rollup.map(build => new Execution(build));
-          this.setState({
-            selectedFeature,
-            executionHistory,
+        if (data) {
+          const selectedFeature = new Feature(data);
+          getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
+            if (data) {
+              const executionHistory = data.rollup.map(build => build && new Execution(build)).filter(Boolean);
+              this.setState({
+                selectedFeature,
+                executionHistory,
+              });
+            }
           });
-        });
+        }
       });
     }
   }
@@ -67,12 +69,8 @@ class ReportContainer extends Component {
   handleScenarioCommentChanged(scenarioId, label, requestLabel, prevContent, newContent) {
     const featureId = this.state.selectedFeature._id;
     updateComments(featureId, new InputFieldPatch(scenarioId, requestLabel, newContent)).then(response => {
-      if (!response || response.status !== 200) {
-        this.setState({ isNetworkError: true });
+      if (!response || !response.ok) {
         this.setStateForComment(scenarioId, label, prevContent);
-        setTimeout(() => {
-          this.setState({ isNetworkError: false });
-        }, 4000);
       }
     });
     this.setStateForComment(scenarioId, label, newContent);
@@ -86,17 +84,9 @@ class ReportContainer extends Component {
     return newExecutions;
   }
 
-  handleErrorMessageDisplay() {
-    this.setState({ isNetworkError: true });
-    setTimeout(() => {
-      this.setState({ isNetworkError: false });
-    }, 4000);
-  }
-
   processFailedResponse(response, scenarioId, prevStatusMap) {
-    if (!response || response.status !== 200) {
+    if (!response || !response.ok) {
       this.setStateForStep(scenarioId, prevStatusMap);
-      this.handleErrorMessageDisplay();
     }
   }
 
@@ -163,10 +153,9 @@ class ReportContainer extends Component {
   }
 
   render() {
-    const { product, version, build, classes } = this.props;
+    const { product, version, build } = this.props;
     return (
       <>
-        {this.state.isNetworkError ? <Card className={classes.errorMessageBox}>Network Error!</Card> : null}
         <Card elevation={0}>
           <SimpleDialog
             open={!!this.state.screenshotDialogContent}
@@ -182,7 +171,6 @@ class ReportContainer extends Component {
                 build={build}
                 selectedFeatureId={this.state.selectedFeature ? this.state.selectedFeature._id : null}
                 handleFeatureSelected={this.handleFeatureSelected}
-                handleErrorMessageDisplay={this.handleErrorMessageDisplay}
               />
             </Grid>
             <Grid item xs={8} lg={8}>

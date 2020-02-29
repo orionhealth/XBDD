@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
+
 import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
 import FeatureList from 'models/FeatureList';
 import TagAssignmentPatch from 'models/TagAssignmentPatch';
@@ -16,7 +17,6 @@ import {
   getIgnoredTags,
   setIgnoredTag,
 } from 'lib/rest/Rest';
-
 import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
 import FeatureFilterButtons from './FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
@@ -130,9 +130,8 @@ class FeatureListContainer extends Component {
       newUserName = null;
     }
     setTagAssignmentData(restId, new TagAssignmentPatch(tag, newUserName)).then(response => {
-      if (!response || response.status !== 200) {
+      if (!response || !response.ok) {
         this.setStateForTagUser(tag, prevUserName);
-        this.props.handleErrorMessageDisplay();
       }
     });
     this.setStateForTagUser(tag, newUserName);
@@ -148,9 +147,8 @@ class FeatureListContainer extends Component {
 
   handleTagIgnore(product, tagName) {
     setIgnoredTag(product, { tagName: tagName }).then(response => {
-      if (!response || response.status !== 200) {
+      if (!response || !response.ok) {
         this.setIgnoreStateForTag(tagName);
-        this.props.handleErrorMessageDisplay();
       }
     });
     this.setIgnoreStateForTag(tagName);
@@ -294,7 +292,6 @@ FeatureListContainer.propTypes = {
   build: PropTypes.string,
   userName: PropTypes.string,
   selectedFeatureId: PropTypes.string,
-  handleErrorMessageDisplay: PropTypes.func.isRequired,
   handleFeatureSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };

@@ -19,10 +19,12 @@ class SummaryContainer extends Component {
 
   componentDidMount() {
     getSummaryOfReports().then(summaryData => {
-      const productList = new ProductSummary(summaryData).productList;
-      this.setState({
-        productList,
-      });
+      if (summaryData) {
+        const productList = new ProductSummary(summaryData).productList;
+        this.setState({
+          productList,
+        });
+      }
     });
   }
 
@@ -38,7 +40,7 @@ class SummaryContainer extends Component {
     const newProductList = this.state.productList;
 
     this.changeFavouriteStatus(isFavourite, product).then(response => {
-      if (response.status === 200) {
+      if (response && response.ok) {
         const newProduct = newProductList.find(item => item.name === product.name);
         newProduct.setFavouriteStatus(!isFavourite);
         this.setState({

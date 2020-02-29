@@ -1,6 +1,7 @@
 import React, { useState, useEffect, FC, useRef } from 'react';
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 
 import { notificationsStream$, UniqueNotification } from './notifications';
 import useClickOutside from 'hooks/useClickOutside';
@@ -20,6 +21,7 @@ const NotificationsView: FC = () => {
   const [visibleNotifications, setVisibleNotifications] = useState([] as UniqueNotification[]);
   const styles = useStyles();
   const ref = useRef(null);
+  const { t } = useTranslation();
 
   useClickOutside(ref, () => setVisibleNotifications([]));
 
@@ -44,7 +46,7 @@ const NotificationsView: FC = () => {
             setVisibleNotifications(visibleNotifications.filter(vis => vis.id !== note.id));
           }}
         >
-          {note.message}
+          {t(note.message)}
         </Alert>
       ))}
     </div>

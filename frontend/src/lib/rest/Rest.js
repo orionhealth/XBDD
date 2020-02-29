@@ -1,8 +1,10 @@
 import { showNotification } from 'modules/notifications/notifications';
 
+const TIMEOUT_STATUS = 408;
+
 const username = 'admin';
 const password = 'password';
-const url = process.env.REACT_APP_BACKEND_HOST;
+const backendUrl = process.env.REACT_APP_BACKEND_HOST;
 const TIME_OUT = 10000;
 
 const getHeaders = () => {
@@ -16,64 +18,87 @@ const getHeaders = () => {
 const timeout = (promise, ms = TIME_OUT) => {
   let timerPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(new Error('Request Timeout'));
+      reject(new Error(TIMEOUT_STATUS));
     }, ms);
   });
-  return Promise.race([timerPromise, promise]).then(response => {
-    if (response.ok) {
-      showNotification({ status: 'success', message: 'Rest Call Successful!!' });
-      return response;
-    } else {
-      showNotification({ status: 'error', message: 'Rest Call Failed.' });
-    }
-  });
+  return Promise.race([timerPromise, promise]);
 };
 
-const doGetRequest = path => {
+const handleError = (error, url, message) => {
+  console.error(`${url} failed with status ${error.message}`);
+  showNotification({ message, severity: 'error' });
+};
+
+const doGetRequest = (path, errorMessage = 'rest.error.get') => {
+  const url = `${backendUrl}${path}`;
   const options = {
     method: 'GET',
     headers: getHeaders(),
   };
 
-  return timeout(fetch(`${url}${path}`, { ...options }))
-    .then(response => (response.status === 200 ? response.json() : null))
-    .catch(error => console.error(error));
+  return timeout(fetch(url, options))
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      if (response.status !== 204) {
+        return response.json();
+      }
+    })
+    .catch(error => handleError(error, url, errorMessage));
 };
 
-const doPutRequest = (path, data) => {
+const doPutRequest = (path, data, errorMessage = 'rest.error.put') => {
+  const url = `${backendUrl}${path}`;
   const options = {
     method: 'PUT',
     headers: getHeaders(),
     body: data ? JSON.stringify(data) : null,
   };
 
-  return timeout(fetch(`${url}${path}`, { ...options })).catch(error => console.error(error));
+  return timeout(fetch(url, options))
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+      return response;
+    })
+    .catch(error => handleError(error, url, errorMessage));
 };
 
-const doDeleteRequest = path => {
+const doDeleteRequest = (path, errorMessage = 'rest.error.delete') => {
+  const url = `${backendUrl}${path}`;
   const options = {
     method: 'DELETE',
     headers: getHeaders(),
   };
 
-  return timeout(fetch(`${url}${path}`, { ...options })).catch(error => console.error(error));
+  return timeout(fetch(url, options))
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+
+      return response;
+    })
+    .catch(error => handleError(error, url, errorMessage));
 };
 
-export const getSummaryOfReports = () => doGetRequest('/report');
+export const getSummaryOfReports = () => doGetRequest('/report', 'rest.error.summaryOfReports');
 
-export const getBuild = (project, version, build) => doGetRequest(`/report/${project}/${version}/${build}`);
+export const setProductFavouriteOn = project => doPutRequest(`/favourites/${project}/`, null, 'rest.error.favourite');
 
-export const setProductFavouriteOn = project => doPutRequest(`/favourites/${project}/`);
-
-export const setProductFavouriteOff = project => doDeleteRequest(`/favourites/${project}/`);
+export const setProductFavouriteOff = project => doDeleteRequest(`/favourites/${project}/`, 'rest.error.unfavourite');
 
 export const pinABuild = (project, major, minor, servicePack, build) =>
-  doPutRequest(`/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`);
+  doPutRequest(`/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, null, 'rest.error.pin');
 
 export const unPinABuild = (project, major, minor, servicePack, build) =>
-  doDeleteRequest(`/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`);
+  doDeleteRequest(`/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, 'rest.error.unpin');
 
-export const getFeatureListByTagData = (product, version, build) => doGetRequest(`/tagview/featureTagIndex/${product}/${version}/${build}`);
+export const getFeatureListByTagData = (product, version, build) =>
+  doGetRequest(`/tagview/featureTagIndex/${product}/${version}/${build}`, 'rest.error.featuresByTag');
 
 export const getSimpleFeatureListData = (product, version, build) => doGetRequest(`/report/featureIndex/${product}/${version}/${build}`);
 
