@@ -21,6 +21,7 @@ import { featureListContainerStyles } from './styles/FeatureListContainerStyles'
 import FeatureFilterButtons from './FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
 import TagList from './TagViewFeatureList/TagList';
+import Loading from 'modules/loading/Loading';
 
 class FeatureListContainer extends Component {
   constructor(props) {
@@ -39,92 +40,70 @@ class FeatureListContainer extends Component {
         skipped: true,
       },
       expandedTagsList: [],
+      loading: false,
     };
-    this.handleViewSwitch = this.handleViewSwitch.bind(this);
-    this.handleTagsSwitch = this.handleTagsSwitch.bind(this);
-    this.handleEditModeSwitch = this.handleEditModeSwitch.bind(this);
-    this.handleFilterButtonClick = this.handleFilterButtonClick.bind(this);
-    this.handleTagSelect = this.handleTagSelect.bind(this);
-    this.handleTagAssigned = this.handleTagAssigned.bind(this);
-    this.handleWarningShow = this.handleWarningShow.bind(this);
-    this.handleWarningClosed = this.handleWarningClosed.bind(this);
-    this.handleTagIgnore = this.handleTagIgnore.bind(this);
   }
 
   componentDidMount() {
     const featureList = new FeatureList();
     const { product, version, build } = this.props;
+    this.setState({ loading: true });
     Promise.all([
       getFeatureListByTagData(product, version, build),
       getSimpleFeatureListData(product, version, build),
       getTagAssignmentData(product, version, build),
       getIgnoredTags(product),
-    ]).then(data => {
-      featureList.setFeatureListByTag(data[0]);
-      featureList.setSimpleFeatureList(data[1]);
-      featureList.setUserFromTagAssignments(data[2]);
-      featureList.setIgnoredTags(data[3]);
-      this.setState({ featureList });
-    });
-  }
-
-  handleViewSwitch() {
-    this.setState(prevState =>
-      Object.assign({}, prevState, {
-        isTagView: !prevState.isTagView,
+    ])
+      .then(data => {
+        featureList.setFeatureListByTag(data[0]);
+        featureList.setSimpleFeatureList(data[1]);
+        featureList.setUserFromTagAssignments(data[2]);
+        featureList.setIgnoredTags(data[3]);
+        this.setState({ featureList });
       })
-    );
+      .finally(() => this.setState({ loading: false }));
   }
 
-  handleTagsSwitch() {
-    this.setState(prevState =>
-      Object.assign({}, prevState, {
-        isAssignedTagsView: !prevState.isAssignedTagsView,
-      })
-    );
-  }
+  handleViewSwitch = () => {
+    this.setState(prevState => ({ ...prevState, isTagView: !prevState.isTagView }));
+  };
 
-  handleEditModeSwitch() {
-    this.setState(prevState =>
-      Object.assign({}, prevState, {
-        isEditMode: !prevState.isEditMode,
-      })
-    );
-  }
+  handleTagsSwitch = () => {
+    this.setState(prevState => ({ ...prevState, isAssignedTagsView: !prevState.isAssignedTagsView }));
+  };
 
-  handleFilterButtonClick(status) {
-    this.setState(prevState =>
-      Object.assign({}, prevState, {
-        selectedStatus: Object.assign({}, prevState.selectedStatus, {
-          [status]: !prevState.selectedStatus[status],
-        }),
-      })
-    );
-  }
+  handleEditModeSwitch = () => {
+    this.setState(prevState => ({ ...prevState, isEditMode: !prevState.isEditMode }));
+  };
 
-  handleTagSelect(tag) {
-    if (this.state.expandedTagsList.includes(tag)) {
-      const newExpandTagsList = [...this.state.expandedTagsList];
+  handleFilterButtonClick = status => {
+    this.setState(prevState => ({
+      ...prevState,
+      selectedStatus: { ...prevState.selectedStatus, [status]: !prevState.selectedStatus[status] },
+    }));
+  };
+
+  handleTagSelect = tag => {
+    const { expandedTagsList } = this.state;
+    if (expandedTagsList.includes(tag)) {
+      const newExpandTagsList = [...expandedTagsList];
       const index = newExpandTagsList.indexOf(tag);
       newExpandTagsList.splice(index, 1);
       this.setState({ expandedTagsList: newExpandTagsList });
     } else {
-      this.setState({ expandedTagsList: [...this.state.expandedTagsList, tag] });
+      this.setState({ expandedTagsList: [...expandedTagsList, tag] });
     }
-  }
+  };
 
   setStateForTagUser(tag, userName) {
     this.setState(prevState => {
       const newFeatureList = prevState.featureList.clone();
       newFeatureList.setUserForTag(tag, userName);
-      return Object.assign({}, prevState, {
-        featureList: newFeatureList,
-        warningArgs: null,
-      });
+      return { ...prevState, featureList: newFeatureList, warningArgs: null };
     });
   }
 
-  handleTagAssigned(restId, tag, prevUserName, userName) {
+  handleTagAssigned = (restId, tag, prevUserName, userName) => {
     var newUserName = userName;
     if (prevUserName === userName) {
       newUserName = null;
@@ -135,113 +114,120 @@ class FeatureListContainer extends Component {
       }
     });
     this.setStateForTagUser(tag, newUserName);
-  }
+  };
 
-  handleWarningShow(...args) {
+  handleWarningShow = (...args) => {
     this.setState({ warningArgs: args });
-  }
+  };
 
-  handleWarningClosed() {
+  handleWarningClosed = () => {
     this.setState({ warningArgs: null });
-  }
+  };
 
-  handleTagIgnore(product, tagName) {
+  handleTagIgnore = (product, tagName) => {
     setIgnoredTag(product, { tagName: tagName }).then(response => {
       if (!response || !response.ok) {
         this.setIgnoreStateForTag(tagName);
       }
     });
     this.setIgnoreStateForTag(tagName);
-  }
+  };
 
   setIgnoreStateForTag(tagName) {
     this.setState(prevState => {
       const newFeatureList = prevState.featureList.clone();
       newFeatureList.toggleIgnoreForTag(tagName);
-      return Object.assign({}, prevState, {
-        featureList: newFeatureList,
-      });
+      return { ...prevState, featureList: newFeatureList };
     });
   }
 
   filterTags(userName) {
-    var newTagList = this.state.featureList.tagList;
+    const { featureList, isAssignedTagsView, selectedStatus } = this.state;
+    var newTagList = featureList.tagList;
 
-    if (this.state.isAssignedTagsView) {
+    if (isAssignedTagsView) {
       newTagList = newTagList.filter(tag => tag.userName === userName);
     }
 
     return newTagList.filter(
       tag =>
-        (this.state.selectedStatus.passed && tag.containsPassed) ||
-        (this.state.selectedStatus.failed && tag.containsFailed) ||
-        (this.state.selectedStatus.undefined && tag.containsUndefined) ||
-        (this.state.selectedStatus.skipped && tag.containsSkipped)
+        (selectedStatus.passed && tag.containsPassed) ||
+        (selectedStatus.failed && tag.containsFailed) ||
+        (selectedStatus.undefined && tag.containsUndefined) ||
+        (selectedStatus.skipped && tag.containsSkipped)
     );
   }
 
-  renderAssignedTagsSwitch(classes) {
+  renderAssignedTagsSwitch() {
+    const { classes } = this.props;
+    const { isEditMode, isAssignedTagsView } = this.state;
     return (
       <>
-        <Tooltip title={this.state.isEditMode ? 'Turn Edit Mode Off' : 'Turn Edit Mode On'} placement="top">
+        <Tooltip title={isEditMode ? 'Turn Edit Mode Off' : 'Turn Edit Mode On'} placement="top">
           <Checkbox
             onChange={this.handleEditModeSwitch}
             icon={<FontAwesomeIcon icon={faUserSlash} className={classes.unCheckedIcon} />}
             checkedIcon={<FontAwesomeIcon icon={faUserSlash} className={classes.checkedIcon} />}
-            checked={this.state.isEditMode}
+            checked={isEditMode}
           />
         </Tooltip>
-        <Tooltip title={this.state.isAssignedTagsView ? 'Show All Tags' : 'Show Only Assigned Tags'} placement="top">
+        <Tooltip title={isAssignedTagsView ? 'Show All Tags' : 'Show Only Assigned Tags'} placement="top">
           <Checkbox
             onChange={this.handleTagsSwitch}
             icon={<FontAwesomeIcon icon={faUserTag} className={classes.unCheckedIcon} />}
             checkedIcon={<FontAwesomeIcon icon={faUserTag} className={classes.checkedIcon} />}
-            checked={this.state.isAssignedTagsView}
+            checked={isAssignedTagsView}
           />
         </Tooltip>
       </>
     );
   }
 
-  renderViewsSwithch(classes) {
+  renderViewsSwitch() {
+    const { classes } = this.props;
+    const { isTagView } = this.state;
     return (
-      <Tooltip title={this.state.isTagView ? 'Switch to List View' : 'Switch to Tag View'} placement="top">
+      <Tooltip title={isTagView ? 'Switch to List View' : 'Switch to Tag View'} placement="top">
         <Checkbox
           onChange={this.handleViewSwitch}
           icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
           checkedIcon={<FontAwesomeIcon icon={faTags} className={classes.checkedIcon} />}
-          checked={this.state.isTagView}
+          checked={isTagView}
         />
       </Tooltip>
     );
   }
 
-  renderFeatureListTitle(classes) {
+  renderFeatureListTitle() {
+    const { classes } = this.props;
+    const { isTagView } = this.state;
     return (
       <Box className={classes.featureListTitle}>
         <Box p={1} flexGrow={1} className={null}>
           <Typography variant="h5">Features</Typography>
         </Box>
         <Box>
-          {this.state.isTagView ? this.renderAssignedTagsSwitch(classes) : null}
-          {this.renderViewsSwithch(classes)}
+          {isTagView ? this.renderAssignedTagsSwitch() : null}
+          {this.renderViewsSwitch()}
         </Box>
       </Box>
     );
   }
 
-  renderFeatureList(userName, restId, selectedFeatureId, handleFeatureSelected) {
-    if (this.state.isTagView) {
+  renderFeatureList(userName, restId, selectedFeatureId) {
+    const { handleFeatureSelected } = this.props;
+    const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, expandedTagsList, featureList } = this.state;
+    if (isTagView) {
       return (
         <TagList
           userName={userName}
-          isEditMode={this.state.isEditMode}
-          isAssignedTagsView={this.state.isAssignedTagsView}
+          isEditMode={isEditMode}
+          isAssignedTagsView={isAssignedTagsView}
           tagList={this.filterTags(userName)}
           restId={restId}
           selectedFeatureId={selectedFeatureId}
-          selectedStatus={this.state.selectedStatus}
-          expandedTagsList={this.state.expandedTagsList}
+          selectedStatus={selectedStatus}
+          expandedTagsList={expandedTagsList}
           handleTagSelect={this.handleTagSelect}
           handleFeatureSelected={handleFeatureSelected}
           handleTagAssigned={this.handleTagAssigned}
@@ -253,8 +239,8 @@ class FeatureListContainer extends Component {
       return (
         <ListViewFeatureList
           selectedFeatureId={selectedFeatureId}
-          featureList={this.state.featureList.simpleFeatureList}
-          selectedStatus={this.state.selectedStatus}
+          featureList={featureList.simpleFeatureList}
+          selectedStatus={selectedStatus}
           handleFeatureSelected={handleFeatureSelected}
         />
       );
@@ -262,22 +248,24 @@ class FeatureListContainer extends Component {
   }
 
   render() {
-    const { product, version, build, userName, selectedFeatureId, handleFeatureSelected, classes } = this.props;
+    const { product, version, build, userName, selectedFeatureId, classes } = this.props;
+    const { loading, warningArgs, selectedStatus } = this.state;
     const restId = `${product}/${version}/${build}`;
     if (this.state.featureList) {
       return (
         <>
+          <Loading loading={loading} />
           <ConfirmationDialog
-            open={!!this.state.warningArgs}
+            open={!!warningArgs}
             title={'Warning!!'}
             msg={'Reassigning The Tag'}
-            handleConfirmed={() => this.state.warningArgs && this.handleTagAssigned(...this.state.warningArgs)}
+            handleConfirmed={() => warningArgs && this.handleTagAssigned(...warningArgs)}
             handleClosed={this.handleWarningClosed}
           />
-          <FeatureFilterButtons selectedStatus={this.state.selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
+          <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
           <div className={classes.xbddTagListContainer}>
-            {this.renderFeatureListTitle(classes)}
-            {this.renderFeatureList(userName, restId, selectedFeatureId, handleFeatureSelected)}
+            {this.renderFeatureListTitle()}
+            {this.renderFeatureList(userName, restId, selectedFeatureId)}
           </div>
         </>
       );

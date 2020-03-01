@@ -10,8 +10,8 @@ export interface UniqueNotification extends Notification {
   id: string;
 }
 
-export const notificationsStream$ = new Subject<UniqueNotification>();
+export const notifications$ = new Subject<UniqueNotification>();
 
 export const showNotification = (nextNotification: Notification): void => {
-  notificationsStream$.next({ ...nextNotification, id: uuid.v4() });
+  notifications$.next({ ...nextNotification, id: uuid.v4() });
 };

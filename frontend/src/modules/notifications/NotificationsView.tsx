@@ -3,7 +3,7 @@ import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
-import { notificationsStream$, UniqueNotification } from './notifications';
+import { notifications$, UniqueNotification } from './notifications';
 import useClickOutside from 'hooks/useClickOutside';
 
 const useStyles = makeStyles({
@@ -18,35 +18,36 @@ const useStyles = makeStyles({
 });
 
 const NotificationsView: FC = () => {
-  const [visibleNotifications, setVisibleNotifications] = useState([] as UniqueNotification[]);
-  const styles = useStyles();
-  const ref = useRef(null);
   const { t } = useTranslation();
+  const styles = useStyles();
 
-  useClickOutside(ref, () => setVisibleNotifications([]));
+  const [currentNotifications, setCurrentNotifications] = useState([] as UniqueNotification[]);
+  const ref = useRef(null);
+
+  useClickOutside(ref, () => setCurrentNotifications([]));
 
   useEffect(() => {
-    notificationsStream$.subscribe((notification: UniqueNotification): void => {
-      setVisibleNotifications(oldState => [...oldState, notification]);
+    notifications$.subscribe((notification: UniqueNotification): void => {
+      setCurrentNotifications(oldState => [...oldState, notification]);
     });
 
-    return (): void => notificationsStream$.unsubscribe();
+    return (): void => notifications$.unsubscribe();
   }, []);
 
   return (
     <div ref={ref} className={styles.root}>
-      {visibleNotifications.map(note => (
+      {currentNotifications.map(notification => (
         <Alert
-          key={note.id}
+          key={notification.id}
           className={styles.alert}
           elevation={6}
           variant="filled"
-          severity={note.severity}
+          severity={notification.severity}
           onClose={(): void => {
-            setVisibleNotifications(visibleNotifications.filter(vis => vis.id !== note.id));
+            setCurrentNotifications(currentNotifications.filter(note => note.id !== notification.id));
           }}
         >
-          {t(note.message)}
+          {t(notification.message)}
         </Alert>
       ))}
     </div>

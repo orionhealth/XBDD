@@ -22,16 +22,11 @@ class ReportContainer extends Component {
       selectedFeature: null,
       executionHistory: null,
     };
-
-    this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
-    this.handleScenarioCommentChanged = this.handleScenarioCommentChanged.bind(this);
-    this.handleStatusChange = this.handleStatusChange.bind(this);
-    this.handleScreenshotClicked = this.handleScreenshotClicked.bind(this);
-    this.handleDialogClosed = this.handleDialogClosed.bind(this);
   }
 
-  handleFeatureSelected(feature) {
-    if (!this.state.selectedFeature || this.state.selectedFeature.id !== feature.id) {
+  handleFeatureSelected = feature => {
+    const { selectedFeature } = this.state;
+    if (selectedFeature?.id !== feature.id) {
       getFeatureReport(feature._id).then(data => {
         if (data) {
           const selectedFeature = new Feature(data);
@@ -47,7 +42,7 @@ class ReportContainer extends Component {
         }
       });
     }
-  }
+  };
 
   updateScenariosComment(scenarios, scenarioId, label, content) {
     const newScenarios = [...scenarios];
@@ -66,19 +61,20 @@ class ReportContainer extends Component {
     });
   }
 
-  handleScenarioCommentChanged(scenarioId, label, requestLabel, prevContent, newContent) {
-    const featureId = this.state.selectedFeature._id;
-    updateComments(featureId, new InputFieldPatch(scenarioId, requestLabel, newContent)).then(response => {
+  handleScenarioCommentChanged = (scenarioId, label, requestLabel, prevContent, newContent) => {
+    const { selectedFeature } = this.state;
+    updateComments(selectedFeature._id, new InputFieldPatch(scenarioId, requestLabel, newContent)).then(response => {
       if (!response || !response.ok) {
         this.setStateForComment(scenarioId, label, prevContent);
       }
     });
     this.setStateForComment(scenarioId, label, newContent);
-  }
+  };
 
   updateExecutionHistory(executions, status) {
+    const { build } = this.props;
     const newExecutions = [...executions];
-    const newExecution = newExecutions.find(execution => execution.build === this.props.build);
+    const newExecution = newExecutions.find(execution => execution.build === build);
 
     newExecution.calculatedStatus = status;
     return newExecutions;
@@ -128,39 +124,40 @@ class ReportContainer extends Component {
     });
   }
 
-  handleStatusChange(scenarioId, prevStatusMap, newStatusMap) {
-    const featureId = this.state.selectedFeature._id;
+  handleStatusChange = (scenarioId, prevStatusMap, newStatusMap) => {
+    const { selectedFeature } = this.state;
     const firstStepId = newStatusMap[0].stepId;
     const firstStatus = newStatusMap[0].status;
     if (newStatusMap.length === 1) {
-      updateStepPatch(featureId, new StepStatusPatch(scenarioId, firstStepId, firstStatus)).then(response =>
+      updateStepPatch(selectedFeature._id, new StepStatusPatch(scenarioId, firstStepId, firstStatus)).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap)
       );
     } else {
-      updateAllStepPatch(featureId, new StepStatusPatch(scenarioId, null, firstStatus)).then(response =>
+      updateAllStepPatch(selectedFeature._id, new StepStatusPatch(scenarioId, null, firstStatus)).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap)
       );
     }
     this.setStateForStep(scenarioId, newStatusMap);
-  }
+  };
 
-  handleScreenshotClicked(content) {
+  handleScreenshotClicked = content => {
     this.setState({ screenshotDialogContent: content });
-  }
+  };
 
-  handleDialogClosed() {
+  handleDialogClosed = () => {
     this.setState({ screenshotDialogContent: null });
-  }
+  };
 
   render() {
     const { product, version, build } = this.props;
+    const { screenshotDialogContent, selectedFeature, executionHistory, hoveredStepId } = this.state;
     return (
       <>
         <Card elevation={0}>
           <SimpleDialog
-            open={!!this.state.screenshotDialogContent}
+            open={!!screenshotDialogContent}
             title="Full Size Screenshot"
-            content={this.state.screenshotDialogContent}
+            content={screenshotDialogContent}
             handleClosed={this.handleDialogClosed}
           />
           <Grid container>
@@ -169,16 +166,16 @@ class ReportContainer extends Component {
                 product={product}
                 version={version}
                 build={build}
-                selectedFeatureId={this.state.selectedFeature ? this.state.selectedFeature._id : null}
+                selectedFeatureId={selectedFeature?.id}
                 handleFeatureSelected={this.handleFeatureSelected}
               />
             </Grid>
             <Grid item xs={8} lg={8}>
-              {this.state.selectedFeature && this.state.executionHistory ? (
+              {selectedFeature && executionHistory ? (
                 <FeatureReportContainer
-                  feature={this.state.selectedFeature}
-                  executionHistory={this.state.executionHistory}
-                  hoveredStepId={this.state.hoveredStepId}
+                  feature={selectedFeature}
+                  executionHistory={executionHistory}
+                  hoveredStepId={hoveredStepId}
                   handleScenarioCommentChanged={this.handleScenarioCommentChanged}
                   handleStatusChange={this.handleStatusChange}
                   handleScreenshotClicked={this.handleScreenshotClicked}
