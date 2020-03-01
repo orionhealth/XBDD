@@ -1,17 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, MutableRefObject } from 'react';
 
-const useClickOutside = (ref, callback): void => {
-  const handleClick = (event: MouseEvent): void => {
-    if (ref.current && !ref.current.contains(event.target)) {
-      callback();
-    }
-  };
+const handleClick = (event: MouseEvent, ref: MutableRefObject<HTMLElement | null>, callback: () => void): void => {
+  if (ref.current && event.target instanceof HTMLElement && !ref.current.contains(event.target)) {
+    callback();
+  }
+};
 
+const useClickOutside = (ref: MutableRefObject<HTMLElement | null>, callback: () => void): void => {
   useEffect(() => {
-    document.addEventListener('click', handleClick);
-
-    return (): void => document.removeEventListener('click', handleClick);
-  });
+    const eventHandler = (event: MouseEvent) => handleClick(event, ref, callback);
+    document.addEventListener('click', eventHandler);
+    return (): void => document.removeEventListener('click', eventHandler);
+  }, [ref, callback]);
 };
 
 export default useClickOutside;
