@@ -124,7 +124,7 @@ class ReportContainer extends Component {
       const prevCalculatedStatus = newFeature.calculatedStatus;
       const scenario = newFeature.scenarios.find(scenario => scenario.id === scenarioId);
       this.updateStepsStatus(scenario, statusMap);
-      calculateFeatureStatus(newFeature);
+      newFeature.calculatedStatus = calculateFeatureStatus(newFeature);
       if (prevCalculatedStatus !== newFeature.calculatedStatus) {
         const newExecutionHistory = this.updateExecutionHistory(prevState.executionHistory, newFeature.calculatedStatus);
         return Object.assign({}, prevState, {

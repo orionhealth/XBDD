@@ -7,20 +7,14 @@ type ScenarioDetails = {
   steps: Step[];
 };
 
-export const calculateFeatureStatus = (feature: Feature): void => {
-  const statuses: Record<string, Status> = {}; // TODO change string to Status
-
-  if (feature.scenarios) {
-    feature.scenarios.forEach(scenario => {
-      if (scenario.calculatedStatus) {
-        statuses[scenario.calculatedStatus] = scenario.calculatedStatus;
-      } else {
-        statuses[scenario.originalAutomatedStatus] = scenario.originalAutomatedStatus;
-      }
-    });
+export const calculateFeatureStatus = (feature: Feature): Status => {
+  const STATUS_PRIORITY_ORDER = [Status.Failed, Status.Undefined, Status.Skipped, Status.Passed];
+  const scenarioStatuses = feature.scenarios.map(scenario => scenario.calculatedStatus || scenario.originalAutomatedStatus);
+  const featureStatus = STATUS_PRIORITY_ORDER.find(status => scenarioStatuses.includes(status));
+  if (featureStatus) {
+    return featureStatus;
   }
-
-  feature.calculatedStatus = statuses.failed || statuses.undefined || statuses.skipped || statuses.passed;
+  return Status.Passed;
 };
 
 export const calculateManualStatus = (scenario: ScenarioDetails): Status => {
