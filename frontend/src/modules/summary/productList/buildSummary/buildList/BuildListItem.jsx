@@ -2,27 +2,23 @@ import React from 'react';
 import { ListItem, ListItemIcon, ListItemText, Checkbox } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbtack } from '@fortawesome/free-solid-svg-icons';
-import { withStyles } from '@material-ui/core/styles';
-
-import { buildListItemStyles } from './styles/BuildListStyles';
+import { grey } from '@material-ui/core/colors';
 
 const BuildListItem = props => {
-  const { product, version, isPinned, buildList, handlePinChange, clickEventWrapper, classes } = props;
+  const { product, version, isPinned, buildList, handlePinChange, clickEventWrapper } = props;
 
   return buildList.map(build => (
-    <ListItem
-      button
-      divider
-      key={build}
-      className={classes.buildListItem}
-      onClick={e => clickEventWrapper(e, product, version, build, isPinned, handlePinChange)}
-    >
+    <ListItem button key={build} onClick={e => clickEventWrapper(e, product, version, build, isPinned, handlePinChange)}>
       <ListItemText>Build {build}</ListItemText>
-      <ListItemIcon className={classes.listItemIcon}>
-        <Checkbox icon={<FontAwesomeIcon icon={faThumbtack} />} checkedIcon={<FontAwesomeIcon icon={faThumbtack} />} checked={isPinned} />
+      <ListItemIcon>
+        <Checkbox
+          icon={<FontAwesomeIcon icon={faThumbtack} style={{ color: grey[300] }} />}
+          checkedIcon={<FontAwesomeIcon icon={faThumbtack} style={{ color: grey[700] }} />}
+          checked={isPinned}
+        />
       </ListItemIcon>
     </ListItem>
   ));
 };
 
-export default withStyles(buildListItemStyles)(BuildListItem);
+export default BuildListItem;

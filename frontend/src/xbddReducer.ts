@@ -15,7 +15,21 @@ type ProductVersionBuildAction = PayloadAction<ProductVersionBuildState | null>;
 
 type XbddState = ProductVersionBuildState & UserState;
 
-const userReducer: CaseReducer<XbddState, UserAction> = (state, action) => ({ ...state, user: action.payload });
+const initialState: XbddState = {
+  user: null,
+  product: null,
+  version: null,
+  build: null,
+};
+
+const userReducer: CaseReducer<XbddState, UserAction> = (state, action) => {
+  if (action.payload) {
+    state.user = action.payload;
+  } else {
+    return initialState;
+  }
+};
+
 const selectProductBuildAndVersionReducer: CaseReducer<XbddState, ProductVersionBuildAction> = (state, action) => {
   if (action.payload) {
     const { product, version, build } = action.payload;
@@ -23,13 +37,6 @@ const selectProductBuildAndVersionReducer: CaseReducer<XbddState, ProductVersion
   }
 
   return { ...state, product: null, version: null, build: null };
-};
-
-const initialState: XbddState = {
-  user: null,
-  product: null,
-  version: null,
-  build: null,
 };
 
 const { actions, reducer } = createSlice({

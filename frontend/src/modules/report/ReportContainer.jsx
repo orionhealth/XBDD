@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { withTranslation } from 'react-i18next';
 
 import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
 import Feature from 'models/Feature';
@@ -21,31 +22,28 @@ class ReportContainer extends Component {
       screenshotDialogContent: null,
       selectedFeature: null,
       executionHistory: null,
-      isNetworkError: false,
     };
-
-    this.handleFeatureSelected = this.handleFeatureSelected.bind(this);
-    this.handleScenarioCommentChanged = this.handleScenarioCommentChanged.bind(this);
-    this.handleStatusChange = this.handleStatusChange.bind(this);
-    this.handleErrorMessageDisplay = this.handleErrorMessageDisplay.bind(this);
-    this.handleScreenshotClicked = this.handleScreenshotClicked.bind(this);
-    this.handleDialogClosed = this.handleDialogClosed.bind(this);
   }
 
-  handleFeatureSelected(feature) {
-    if (!this.state.selectedFeature || this.state.selectedFeature.id !== feature.id) {
+  handleFeatureSelected = feature => {
+    const { selectedFeature } = this.state;
+    if (selectedFeature?.id !== feature.id) {
       getFeatureReport(feature._id).then(data => {
-        const selectedFeature = new Feature(data);
-        getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
-          const executionHistory = data.rollup.map(build => new Execution(build));
-          this.setState({
-            selectedFeature,
-            executionHistory,
+        if (data) {
+          const selectedFeature = new Feature(data);
+          getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
+            if (data) {
+              const executionHistory = data.rollup.map(build => build && new Execution(build)).filter(Boolean);
+              this.setState({
+                selectedFeature,
+                executionHistory,
+              });
+            }
           });
-        });
+        }
       });
     }
-  }
+  };
 
   updateScenariosComment(scenarios, scenarioId, label, content) {
     const newScenarios = [...scenarios];
@@ -64,39 +62,28 @@ class ReportContainer extends Component {
     });
   }
 
-  handleScenarioCommentChanged(scenarioId, label, requestLabel, prevContent, newContent) {
-    const featureId = this.state.selectedFeature._id;
-    updateComments(featureId, new InputFieldPatch(scenarioId, requestLabel, newContent)).then(response => {
-      if (!response || response.status !== 200) {
-        this.setState({ isNetworkError: true });
+  handleScenarioCommentChanged = (scenarioId, label, requestLabel, prevContent, newContent) => {
+    const { selectedFeature } = this.state;
+    updateComments(selectedFeature._id, new InputFieldPatch(scenarioId, requestLabel, newContent)).then(response => {
+      if (!response || !response.ok) {
         this.setStateForComment(scenarioId, label, prevContent);
-        setTimeout(() => {
-          this.setState({ isNetworkError: false });
-        }, 4000);
       }
     });
     this.setStateForComment(scenarioId, label, newContent);
-  }
+  };
 
   updateExecutionHistory(executions, status) {
+    const { build } = this.props;
     const newExecutions = [...executions];
-    const newExecution = newExecutions.find(execution => execution.build === this.props.build);
+    const newExecution = newExecutions.find(execution => execution.build === build);
 
     newExecution.calculatedStatus = status;
     return newExecutions;
   }
 
-  handleErrorMessageDisplay() {
-    this.setState({ isNetworkError: true });
-    setTimeout(() => {
-      this.setState({ isNetworkError: false });
-    }, 4000);
-  }
-
   processFailedResponse(response, scenarioId, prevStatusMap) {
-    if (!response || response.status !== 200) {
+    if (!response || !response.ok) {
       this.setStateForStep(scenarioId, prevStatusMap);
-      this.handleErrorMessageDisplay();
     }
   }
 
@@ -138,40 +125,40 @@ class ReportContainer extends Component {
     });
   }
 
-  handleStatusChange(scenarioId, prevStatusMap, newStatusMap) {
-    const featureId = this.state.selectedFeature._id;
+  handleStatusChange = (scenarioId, prevStatusMap, newStatusMap) => {
+    const { selectedFeature } = this.state;
     const firstStepId = newStatusMap[0].stepId;
     const firstStatus = newStatusMap[0].status;
     if (newStatusMap.length === 1) {
-      updateStepPatch(featureId, new StepStatusPatch(scenarioId, firstStepId, firstStatus)).then(response =>
+      updateStepPatch(selectedFeature._id, new StepStatusPatch(scenarioId, firstStepId, firstStatus)).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap)
       );
     } else {
-      updateAllStepPatch(featureId, new StepStatusPatch(scenarioId, null, firstStatus)).then(response =>
+      updateAllStepPatch(selectedFeature._id, new StepStatusPatch(scenarioId, null, firstStatus)).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap)
       );
     }
     this.setStateForStep(scenarioId, newStatusMap);
-  }
+  };
 
-  handleScreenshotClicked(content) {
+  handleScreenshotClicked = content => {
     this.setState({ screenshotDialogContent: content });
-  }
+  };
 
-  handleDialogClosed() {
+  handleDialogClosed = () => {
     this.setState({ screenshotDialogContent: null });
-  }
+  };
 
   render() {
-    const { product, version, build, classes } = this.props;
+    const { product, version, build, t } = this.props;
+    const { screenshotDialogContent, selectedFeature, executionHistory, hoveredStepId } = this.state;
     return (
       <>
-        {this.state.isNetworkError ? <Card className={classes.errorMessageBox}>Network Error!</Card> : null}
         <Card elevation={0}>
           <SimpleDialog
-            open={!!this.state.screenshotDialogContent}
-            title="Full Size Screenshot"
-            content={this.state.screenshotDialogContent}
+            open={!!screenshotDialogContent}
+            title={t('report.fullSizedScreenshot')}
+            content={screenshotDialogContent}
             handleClosed={this.handleDialogClosed}
           />
           <Grid container>
@@ -180,17 +167,16 @@ class ReportContainer extends Component {
                 product={product}
                 version={version}
                 build={build}
-                selectedFeatureId={this.state.selectedFeature ? this.state.selectedFeature._id : null}
+                selectedFeatureId={selectedFeature?._id}
                 handleFeatureSelected={this.handleFeatureSelected}
-                handleErrorMessageDisplay={this.handleErrorMessageDisplay}
               />
             </Grid>
             <Grid item xs={8} lg={8}>
-              {this.state.selectedFeature && this.state.executionHistory ? (
+              {selectedFeature && executionHistory ? (
                 <FeatureReportContainer
-                  feature={this.state.selectedFeature}
-                  executionHistory={this.state.executionHistory}
-                  hoveredStepId={this.state.hoveredStepId}
+                  feature={selectedFeature}
+                  executionHistory={executionHistory}
+                  hoveredStepId={hoveredStepId}
                   handleScenarioCommentChanged={this.handleScenarioCommentChanged}
                   handleStatusChange={this.handleStatusChange}
                   handleScreenshotClicked={this.handleScreenshotClicked}
@@ -209,6 +195,7 @@ ReportContainer.propTypes = {
   version: PropTypes.string,
   build: PropTypes.string,
   classes: PropTypes.shape({}),
+  t: PropTypes.func.isRequired,
 };
 
-export default withStyles(reportContainerStyles)(ReportContainer);
+export default withTranslation()(withStyles(reportContainerStyles)(ReportContainer));

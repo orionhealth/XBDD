@@ -110,12 +110,7 @@ const TagListItem = props => {
 
   return isAssignedTagsView && tag.isIgnored ? null : (
     <>
-      <ListItem
-        button
-        divider
-        onClick={e => clickEventWrapper(e, null, tag.name, null, null, null, null, handleTagSelect)}
-        className={className}
-      >
+      <ListItem button onClick={e => clickEventWrapper(e, null, tag.name, null, null, null, null, handleTagSelect)} className={className}>
         {isEditMode ? renderCheckbox(tag, restId, handleTagIgnore, classes) : null}
         <ListItemIcon className={classes.listItemIcon}>
           <span className={tag.isIgnored ? classes.ignoredColor : null}>
