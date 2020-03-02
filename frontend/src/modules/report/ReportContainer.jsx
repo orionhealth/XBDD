@@ -5,15 +5,15 @@ import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
 
 import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
-import Feature from 'models/Feature';
+import { createFeatureFromFetchedData, cloneFeature } from 'models/Feature';
 import SimpleDialog from 'modules/utils/SimpleDialog';
-import Execution from 'models/Execution';
+import { createExecutionFromFetchedData } from 'models/Execution';
 import StepStatusPatch from 'models/StepStatusPatch';
 import { reportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
 import FeatureReportContainer from './FeatureReportContainer/FeatureReportContainer';
 import InputFieldPatch from 'models/InputFieldPatch';
-import { calculateManualStatus } from 'lib/ScenarioStatusCalculator';
+import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 
 class ReportContainer extends Component {
   constructor(props) {
@@ -30,10 +30,10 @@ class ReportContainer extends Component {
     if (selectedFeature?.id !== feature.id) {
       getFeatureReport(feature._id).then(data => {
         if (data) {
-          const selectedFeature = new Feature(data);
+          const selectedFeature = createFeatureFromFetchedData(data);
           getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
             if (data) {
-              const executionHistory = data.rollup.map(build => build && new Execution(build)).filter(Boolean);
+              const executionHistory = data.rollup.map(build => build && createExecutionFromFetchedData(build)).filter(Boolean);
               this.setState({
                 selectedFeature,
                 executionHistory,
@@ -54,7 +54,7 @@ class ReportContainer extends Component {
 
   setStateForComment(scenarioId, label, content) {
     this.setState(prevState => {
-      const newSelectedFeature = prevState.selectedFeature.clone();
+      const newSelectedFeature = cloneFeature(prevState.selectedFeature);
       this.updateScenariosComment(newSelectedFeature.scenarios, scenarioId, label, content);
       return Object.assign({}, prevState, {
         selectedFeature: newSelectedFeature,
@@ -107,11 +107,11 @@ class ReportContainer extends Component {
 
   setStateForStep(scenarioId, statusMap) {
     this.setState(prevState => {
-      const newFeature = prevState.selectedFeature.clone();
+      const newFeature = cloneFeature(prevState.selectedFeature);
       const prevCalculatedStatus = newFeature.calculatedStatus;
       const scenario = newFeature.scenarios.find(scenario => scenario.id === scenarioId);
       this.updateStepsStatus(scenario, statusMap);
-      newFeature.calculateStatus();
+      newFeature.calculatedStatus = calculateFeatureStatus(newFeature);
       if (prevCalculatedStatus !== newFeature.calculatedStatus) {
         const newExecutionHistory = this.updateExecutionHistory(prevState.executionHistory, newFeature.calculatedStatus);
         return Object.assign({}, prevState, {

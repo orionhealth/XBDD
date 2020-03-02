@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
+
 import FeatureSummary from './FeatureSummary/FeatureSummary';
 import ScenarioList from './ScenarioList/ScenarioList';
-import Feature from 'models/Feature';
-import Execution from 'models/Execution';
 
 class FeatureReportContainer extends Component {
   constructor(props) {
@@ -70,8 +69,8 @@ class FeatureReportContainer extends Component {
 }
 
 FeatureReportContainer.propTypes = {
-  feature: PropTypes.instanceOf(Feature),
-  executionHistory: PropTypes.arrayOf(PropTypes.instanceOf(Execution)),
+  feature: PropTypes.shape({}),
+  executionHistory: PropTypes.arrayOf(PropTypes.shape({})),
   handleScenarioCommentChanged: PropTypes.func.isRequired,
   handleStatusChange: PropTypes.func.isRequired,
   handleScreenshotClicked: PropTypes.func.isRequired,
