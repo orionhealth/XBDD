@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC, useRef } from 'react';
+import React, { useState, useEffect, FC, useRef, useCallback } from 'react';
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,8 @@ const NotificationsView: FC = () => {
   const [currentNotifications, setCurrentNotifications] = useState([] as UniqueNotification[]);
   const ref = useRef(null);
 
-  useClickOutside(ref, () => setCurrentNotifications([]));
+  const onClickOutside = useCallback(() => setCurrentNotifications([]), [setCurrentNotifications]);
+  useClickOutside(ref, onClickOutside);
 
   useEffect(() => {
     notifications$.subscribe((notification: UniqueNotification): void => {

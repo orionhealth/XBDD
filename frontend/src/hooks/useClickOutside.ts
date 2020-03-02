@@ -8,7 +8,7 @@ const handleClick = (event: MouseEvent, ref: MutableRefObject<HTMLElement | null
 
 const useClickOutside = (ref: MutableRefObject<HTMLElement | null>, callback: () => void): void => {
   useEffect(() => {
-    const eventHandler = (event: MouseEvent) => handleClick(event, ref, callback);
+    const eventHandler = (event: MouseEvent): void => handleClick(event, ref, callback);
     document.addEventListener('click', eventHandler);
     return (): void => document.removeEventListener('click', eventHandler);
   }, [ref, callback]);
