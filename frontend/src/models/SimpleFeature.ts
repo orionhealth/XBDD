@@ -4,7 +4,7 @@ import Tag from './Tag';
 interface SimpleFeature {
   id: string;
   _id: string;
-  name: String;
+  name: string;
   tags: Tag[];
   calculatedStatus: Status;
 }

@@ -106,14 +106,18 @@ export const getFeatureReport = id => doGetRequest(`/feature/${id}`);
 
 export const getRollUpData = (product, version, feature) => doGetRequest(`/feature/rollup/${product}/${version}/${feature}`);
 
+// path should be of type StepStatusPatch
 export const updateStepPatch = (featureId, patch) => doPutRequest(`/feature/step/${featureId}`, patch);
 
+// path should be of type StepStatusPatch
 export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/feature/steps/${featureId}`, patch);
 
+// patch should be of type InputFieldPatch
 export const updateComments = (featureId, patch) => doPutRequest(`/feature/comments/${featureId}`, patch);
 
 export const getTagAssignmentData = (product, version, build) => doGetRequest(`/user/tagAssignment/${product}/${version}/${build}`);
 
+// patch should be of type TagAssignment
 export const setTagAssignmentData = (restId, patch) => doPutRequest(`/user/tagAssignment/${restId}`, patch);
 
 export const getIgnoredTags = product => doGetRequest(`/user/ignoredTags/${product}`);

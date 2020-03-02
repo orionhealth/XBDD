@@ -8,11 +8,9 @@ import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, u
 import { createFeatureFromFetchedData, cloneFeature } from 'models/Feature';
 import SimpleDialog from 'modules/utils/SimpleDialog';
 import { createExecutionFromFetchedData } from 'models/Execution';
-import StepStatusPatch from 'models/StepStatusPatch';
 import { reportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
 import FeatureReportContainer from './FeatureReportContainer/FeatureReportContainer';
-import InputFieldPatch from 'models/InputFieldPatch';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 
 class ReportContainer extends Component {
@@ -64,7 +62,7 @@ class ReportContainer extends Component {
 
   handleScenarioCommentChanged = (scenarioId, label, requestLabel, prevContent, newContent) => {
     const { selectedFeature } = this.state;
-    updateComments(selectedFeature._id, new InputFieldPatch(scenarioId, requestLabel, newContent)).then(response => {
+    updateComments(selectedFeature._id, { scenarioId, label: requestLabel, content: newContent }).then(response => {
       if (!response || !response.ok) {
         this.setStateForComment(scenarioId, label, prevContent);
       }
@@ -130,11 +128,11 @@ class ReportContainer extends Component {
     const firstStepId = newStatusMap[0].stepId;
     const firstStatus = newStatusMap[0].status;
     if (newStatusMap.length === 1) {
-      updateStepPatch(selectedFeature._id, new StepStatusPatch(scenarioId, firstStepId, firstStatus)).then(response =>
+      updateStepPatch(selectedFeature._id, { scenarioId, line: firstStepId, status: firstStatus }).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap)
       );
     } else {
-      updateAllStepPatch(selectedFeature._id, new StepStatusPatch(scenarioId, null, firstStatus)).then(response =>
+      updateAllStepPatch(selectedFeature._id, { scenarioId, line: null, status: firstStatus }).then(response =>
         this.processFailedResponse(response, scenarioId, prevStatusMap)
       );
     }
