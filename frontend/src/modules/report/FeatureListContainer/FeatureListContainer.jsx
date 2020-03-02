@@ -9,7 +9,6 @@ import { withTranslation } from 'react-i18next';
 
 import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
 import FeatureList from 'models/FeatureList';
-import TagAssignmentPatch from 'models/TagAssignmentPatch';
 import {
   getFeatureListByTagData,
   getSimpleFeatureListData,
@@ -109,7 +108,7 @@ class FeatureListContainer extends Component {
     if (prevUserName === userName) {
       newUserName = null;
     }
-    setTagAssignmentData(restId, new TagAssignmentPatch(tag, newUserName)).then(response => {
+    setTagAssignmentData(restId, { tag, username: newUserName }).then(response => {
       if (!response || !response.ok) {
         this.setStateForTagUser(tag, prevUserName);
       }
