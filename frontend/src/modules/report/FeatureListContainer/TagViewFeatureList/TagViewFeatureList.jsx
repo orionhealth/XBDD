@@ -2,6 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { List, ListItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 
 const renderFeatureListItem = (feature, selectedFeatureId, statusClasses, handleFeatureSelected, classes) => {

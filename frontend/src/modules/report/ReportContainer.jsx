@@ -1,15 +1,15 @@
-import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Grid, Card } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+
+import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
 import { createFeatureFromFetchedData, cloneFeature } from 'models/Feature';
 import SimpleDialog from 'modules/utils/SimpleDialog';
 import { createExecutionFromFetchedData } from 'models/Execution';
 import StepStatusPatch from 'models/StepStatusPatch';
-import PropTypes from 'prop-types';
-import { Grid, Card } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import InputFieldPatch from 'models/InputFieldPatch';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
-
 import { reportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
 import FeatureReportContainer from './FeatureReportContainer/FeatureReportContainer';
@@ -35,14 +35,18 @@ class ReportContainer extends Component {
   handleFeatureSelected(feature) {
     if (!this.state.selectedFeature || this.state.selectedFeature.id !== feature.id) {
       getFeatureReport(feature._id).then(data => {
-        const selectedFeature = createFeatureFromFetchedData(data);
-        getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
-          const executionHistory = data.rollup.map(build => createExecutionFromFetchedData(build));
-          this.setState({
-            selectedFeature,
-            executionHistory,
+        if (data) {
+          const selectedFeature = createFeatureFromFetchedData(data);
+          getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
+            if (data) {
+              const executionHistory = data.rollup.map(build => build && createExecutionFromFetchedData(build)).filter(Boolean);
+              this.setState({
+                selectedFeature,
+                executionHistory,
+              });
+            }
           });
-        });
+        }
       });
     }
   }

@@ -1,28 +1,31 @@
-import ProductSummary from 'models/ProductSummary';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Card, Typography } from '@material-ui/core';
+import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { withTranslation } from 'react-i18next';
 
+import ProductSummary from 'models/ProductSummary';
 import ProductListContainer from './productList/ProductListContainer';
 import SummaryStyles from './styles/SummaryStyles';
 import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
+import Loading from 'modules/loading/Loading';
 
 class SummaryContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = { productList: null };
-
-    this.handleFavouriteChange = this.handleFavouriteChange.bind(this);
-    this.handlePinChange = this.handlePinChange.bind(this);
+    this.state = { productList: null, loading: false };
   }
 
   componentDidMount() {
+    this.setState({ loading: true });
     getSummaryOfReports().then(summaryData => {
-      const productList = new ProductSummary(summaryData).productList;
-      this.setState({
-        productList,
-      });
+      if (summaryData) {
+        const productList = new ProductSummary(summaryData).productList;
+        this.setState({
+          productList,
+        });
+      }
+      this.setState({ loading: false });
     });
   }
 
@@ -33,12 +36,12 @@ class SummaryContainer extends Component {
     return setProductFavouriteOn(product.name);
   }
 
-  handleFavouriteChange(product) {
+  handleFavouriteChange = product => {
     const isFavourite = product.favourite;
     const newProductList = this.state.productList;
 
     this.changeFavouriteStatus(isFavourite, product).then(response => {
-      if (response.status === 200) {
+      if (response && response.ok) {
         const newProduct = newProductList.find(item => item.name === product.name);
         newProduct.setFavouriteStatus(!isFavourite);
         this.setState({
@@ -46,7 +49,7 @@ class SummaryContainer extends Component {
         });
       }
     });
-  }
+  };
 
   changePinStatus(product, version, build, isPinned) {
     if (isPinned) {
@@ -55,7 +58,7 @@ class SummaryContainer extends Component {
     return pinABuild(product.name, version.major, version.minor, version.servicePack, build);
   }
 
-  handlePinChange(product, version, build, isPinned) {
+  handlePinChange = (product, version, build, isPinned) => {
     const newProductList = this.state.productList;
 
     this.changePinStatus(product, version, build, isPinned).then(response => {
@@ -67,45 +70,45 @@ class SummaryContainer extends Component {
         });
       }
     });
-  }
+  };
 
   render() {
-    if (this.state.productList) {
-      return (
-        <>
-          <Card>
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography variant="h3" className={this.props.classes.summaryTitle}>
-                  Welcome to XBDD
-                </Typography>
-              </Grid>
-              <Grid item xs={6} className={this.props.classes.productListContainer}>
+    const { classes, t } = this.props;
+    const { productList, loading } = this.state;
+
+    return (
+      <>
+        <Loading loading={loading} />
+        <Card elevation={0}>
+          <Grid container>
+            <Grid item xs={6} className={classes.productListContainer}>
+              {productList && (
                 <Card raised>
                   <ProductListContainer
-                    list={this.state.productList}
-                    title={'Product List'}
+                    list={productList}
+                    title={t('summary.productList')}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
                   />
                 </Card>
-              </Grid>
-              <Grid item xs={6} className={this.props.classes.productListContainer}>
-                <Card raised>
-                  <ProductListContainer
-                    list={this.state.productList.filter(product => product.favourite)}
-                    title={'Favourite'}
-                    handleFavouriteChange={this.handleFavouriteChange}
-                    handlePinChange={this.handlePinChange}
-                  />
-                </Card>
-              </Grid>
+              )}
             </Grid>
-          </Card>
-        </>
-      );
-    }
-    return null;
+            <Grid item xs={6} className={classes.productListContainer}>
+              {productList && (
+                <Card raised>
+                  <ProductListContainer
+                    list={productList.filter(product => product.favourite)}
+                    title={t('summary.favourites')}
+                    handleFavouriteChange={this.handleFavouriteChange}
+                    handlePinChange={this.handlePinChange}
+                  />
+                </Card>
+              )}
+            </Grid>
+          </Grid>
+        </Card>
+      </>
+    );
   }
 }
 
@@ -113,4 +116,4 @@ SummaryContainer.propTypes = {
   classes: PropTypes.shape({}),
 };
 
-export default withStyles(SummaryStyles)(SummaryContainer);
+export default withTranslation()(withStyles(SummaryStyles)(SummaryContainer));

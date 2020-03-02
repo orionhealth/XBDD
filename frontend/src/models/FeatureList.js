@@ -15,11 +15,15 @@ class FeatureList {
   }
 
   setFeatureListByTag(data) {
-    this.tagList = data.map(item => createTagFromFetchedData(item));
+    if (data) {
+      this.tagList = data.map(item => createTagFromFetchedData(item));
+    }
   }
 
   setSimpleFeatureList(data) {
-    this.simpleFeatureList = data.map(item => createSimpleFeatureFromFetchedData(item));
+    if (data) {
+      this.simpleFeatureList = data.map(item => createSimpleFeatureFromFetchedData(item));
+    }
   }
 
   setUserFromTagAssignments(data) {
