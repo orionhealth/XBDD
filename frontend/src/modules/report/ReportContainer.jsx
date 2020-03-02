@@ -84,7 +84,6 @@ class ReportContainer extends Component {
   processFailedResponse(response, scenarioId, prevStatusMap) {
     if (!response || !response.ok) {
       this.setStateForStep(scenarioId, prevStatusMap);
-      this.handleErrorMessageDisplay();
     }
   }
 
@@ -170,11 +169,10 @@ class ReportContainer extends Component {
                 build={build}
                 selectedFeatureId={selectedFeature?._id}
                 handleFeatureSelected={this.handleFeatureSelected}
-                handleErrorMessageDisplay={this.handleErrorMessageDisplay}
               />
             </Grid>
             <Grid item xs={8} lg={8}>
-              {this.state.selectedFeature && this.state.executionHistory ? (
+              {selectedFeature && executionHistory ? (
                 <FeatureReportContainer
                   feature={selectedFeature}
                   executionHistory={executionHistory}
