@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { withTranslation } from 'react-i18next';
 
 import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
 import Feature from 'models/Feature';
@@ -149,14 +150,14 @@ class ReportContainer extends Component {
   };
 
   render() {
-    const { product, version, build } = this.props;
+    const { product, version, build, t } = this.props;
     const { screenshotDialogContent, selectedFeature, executionHistory, hoveredStepId } = this.state;
     return (
       <>
         <Card elevation={0}>
           <SimpleDialog
             open={!!screenshotDialogContent}
-            title="Full Size Screenshot"
+            title={t('report.fullSizedScreenshot')}
             content={screenshotDialogContent}
             handleClosed={this.handleDialogClosed}
           />
@@ -166,7 +167,7 @@ class ReportContainer extends Component {
                 product={product}
                 version={version}
                 build={build}
-                selectedFeatureId={selectedFeature?.id}
+                selectedFeatureId={selectedFeature?._id}
                 handleFeatureSelected={this.handleFeatureSelected}
               />
             </Grid>
@@ -194,6 +195,7 @@ ReportContainer.propTypes = {
   version: PropTypes.string,
   build: PropTypes.string,
   classes: PropTypes.shape({}),
+  t: PropTypes.func.isRequired,
 };
 
-export default withStyles(reportContainerStyles)(ReportContainer);
+export default withTranslation()(withStyles(reportContainerStyles)(ReportContainer));

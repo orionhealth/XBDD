@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { withTranslation } from 'react-i18next';
 
 import ProductSummary from 'models/ProductSummary';
 import ProductListContainer from './productList/ProductListContainer';
@@ -72,7 +73,7 @@ class SummaryContainer extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     const { productList, loading } = this.state;
 
     return (
@@ -85,7 +86,7 @@ class SummaryContainer extends Component {
                 <Card raised>
                   <ProductListContainer
                     list={productList}
-                    title={'Product List'}
+                    title={t('summary.productList')}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
                   />
@@ -97,7 +98,7 @@ class SummaryContainer extends Component {
                 <Card raised>
                   <ProductListContainer
                     list={productList.filter(product => product.favourite)}
-                    title={'Favourite'}
+                    title={t('summary.favourites')}
                     handleFavouriteChange={this.handleFavouriteChange}
                     handlePinChange={this.handlePinChange}
                   />
@@ -115,4 +116,4 @@ SummaryContainer.propTypes = {
   classes: PropTypes.shape({}),
 };
 
-export default withStyles(SummaryStyles)(SummaryContainer);
+export default withTranslation()(withStyles(SummaryStyles)(SummaryContainer));

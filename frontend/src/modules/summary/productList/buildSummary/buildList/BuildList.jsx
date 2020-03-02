@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { withStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
+import { withTranslation } from 'react-i18next';
 
 import { selectProductBuildAndVersion } from 'xbddReducer';
 import { getString, getUnpinnedBuildList } from 'models/Version';
@@ -13,7 +14,7 @@ import { buildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
 
 const BuildList = props => {
-  const { product, version, expandedBuildList, handlePinChange, handleBuildListExpanded, classes } = props;
+  const { product, version, expandedBuildList, handlePinChange, handleBuildListExpanded, classes, t } = props;
   const dispatch = useDispatch();
   const pinnedBuildList = version.pinnedBuildList;
   let unpinnedBuildList = getUnpinnedBuildList(version);
@@ -52,7 +53,7 @@ const BuildList = props => {
           <ListItemIcon className={classes.arrowIcon}>
             <FontAwesomeIcon icon={isBuildListExpanded ? faAngleDoubleUp : faAngleDoubleDown} />
           </ListItemIcon>
-          <ListItemText>{isBuildListExpanded ? 'Show Less' : 'Show More...'}</ListItemText>
+          <ListItemText>{isBuildListExpanded ? t('summary.showLess') : t('summary.showMore')}</ListItemText>
         </ListItem>
       )}
     </List>
@@ -75,4 +76,4 @@ BuildList.propTypes = {
   classes: PropTypes.shape({}),
 };
 
-export default withStyles(buildListStyles)(BuildList);
+export default withTranslation()(withStyles(buildListStyles)(BuildList));

@@ -1,23 +1,40 @@
 {
+  "errors": {
+    "unexpected": "An unexpected error has occurred, please reload.\nIf the problem persists please create an issue with any errors logged in your console to https://github.com/orionhealth/XBDD/issues."
+  },
   "navbar": {
     "login": "Login",
     "logout": "Logout",
     "userName": "User Name"
   },
-  "errors": {
-    "unexpected": "An unexpected error has occurred, please reload.\nIf the problem persists please create an issue with any errors logged in your console to https://github.com/orionhealth/XBDD/issues."
+  "report": {
+    "fullSizedScreenshot": "Full Size Screenshot",
+    "pleaseReassignTheTag": "Please reassign the tag.",
+    "showAllTags": "Show All Tags",
+    "showAssignedTags": "Show Assigned Tags",
+    "switchToListView": "Switch to List View",
+    "switchToTagView": "Switch to Tag View",
+    "turnEditModeOff": "Turn Edit Mode Off",
+    "turnEditModeOn": "Turn Edit Mode On",
+    "warning": "Warning"
   },
   "rest": {
     "error": {
-      "get": "Data retrieval failed.",
-      "put": "Data save failed",
       "delete": "Data deletion failed",
-      "summaryOfReports": "Failed to get summary of reports.",
       "favourite": "Failed to favourite the product.",
-      "unfavourite": "Failed to unfavourite the product.",
+      "featuresByTag": "Failed to get features by tag.",
+      "get": "Data retrieval failed.",
       "pin": "Failed to pin the build.",
-      "unpin": "Failed to unpin the build.",
-      "featuresByTag": "Failed to get features by tag."
+      "put": "Data save failed",
+      "summaryOfReports": "Failed to get summary of reports.",
+      "unfavourite": "Failed to unfavourite the product.",
+      "unpin": "Failed to unpin the build."
     }
+  },
+  "summary": {
+    "favourites": "Favourites",
+    "productList": "Product List",
+    "showLess": "Show less",
+    "showMore": "Show More"
   }
 }

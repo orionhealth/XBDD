@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
 
 import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
 import FeatureList from 'models/FeatureList';
@@ -159,11 +160,11 @@ class FeatureListContainer extends Component {
   }
 
   renderAssignedTagsSwitch() {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     const { isEditMode, isAssignedTagsView } = this.state;
     return (
       <>
-        <Tooltip title={isEditMode ? 'Turn Edit Mode Off' : 'Turn Edit Mode On'} placement="top">
+        <Tooltip title={isEditMode ? t('report.turnEditModeOff') : t('report.turnEditModeOn')} placement="top">
           <Checkbox
             onChange={this.handleEditModeSwitch}
             icon={<FontAwesomeIcon icon={faUserSlash} className={classes.unCheckedIcon} />}
@@ -171,7 +172,7 @@ class FeatureListContainer extends Component {
             checked={isEditMode}
           />
         </Tooltip>
-        <Tooltip title={isAssignedTagsView ? 'Show All Tags' : 'Show Only Assigned Tags'} placement="top">
+        <Tooltip title={isAssignedTagsView ? t('report.showAllTags') : t('report.showAssignedTags')} placement="top">
           <Checkbox
             onChange={this.handleTagsSwitch}
             icon={<FontAwesomeIcon icon={faUserTag} className={classes.unCheckedIcon} />}
@@ -184,10 +185,10 @@ class FeatureListContainer extends Component {
   }
 
   renderViewsSwitch() {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     const { isTagView } = this.state;
     return (
-      <Tooltip title={isTagView ? 'Switch to List View' : 'Switch to Tag View'} placement="top">
+      <Tooltip title={isTagView ? t('report.switchToListView') : t('report.switchToTagView')} placement="top">
         <Checkbox
           onChange={this.handleViewSwitch}
           icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
@@ -248,7 +249,7 @@ class FeatureListContainer extends Component {
   }
 
   render() {
-    const { product, version, build, userName, selectedFeatureId, classes } = this.props;
+    const { product, version, build, userName, selectedFeatureId, classes, t } = this.props;
     const { loading, warningArgs, selectedStatus } = this.state;
     const restId = `${product}/${version}/${build}`;
     if (this.state.featureList) {
@@ -257,8 +258,8 @@ class FeatureListContainer extends Component {
           <Loading loading={loading} />
           <ConfirmationDialog
             open={!!warningArgs}
-            title={'Warning!!'}
-            msg={'Reassigning The Tag'}
+            title={t('report.warning')}
+            msg={t('report.pleaseReassignTheTag')}
             handleConfirmed={() => warningArgs && this.handleTagAssigned(...warningArgs)}
             handleClosed={this.handleWarningClosed}
           />
@@ -288,4 +289,4 @@ const mapStateToProps = state => ({
   userName: state.app.user,
 });
 
-export default connect(mapStateToProps)(withStyles(featureListContainerStyles)(FeatureListContainer));
+export default connect(mapStateToProps)(withTranslation()(withStyles(featureListContainerStyles)(FeatureListContainer)));
