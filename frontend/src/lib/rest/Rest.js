@@ -29,7 +29,7 @@ const handleError = (error, url, message) => {
   showNotification({ message, severity: 'error' });
 };
 
-const doGetRequest = (path, errorMessage = 'rest.error.get') => {
+export const doGetRequest = (path, errorMessage = 'rest.error.get') => {
   const url = `${backendUrl}${path}`;
   const options = {
     method: 'GET',
@@ -49,7 +49,7 @@ const doGetRequest = (path, errorMessage = 'rest.error.get') => {
     .catch(error => handleError(error, url, errorMessage));
 };
 
-const doPutRequest = (path, data, errorMessage = 'rest.error.put') => {
+export const doPutRequest = (path, data, errorMessage = 'rest.error.put') => {
   const url = `${backendUrl}${path}`;
   const options = {
     method: 'PUT',
@@ -67,7 +67,7 @@ const doPutRequest = (path, data, errorMessage = 'rest.error.put') => {
     .catch(error => handleError(error, url, errorMessage));
 };
 
-const doDeleteRequest = (path, errorMessage = 'rest.error.delete') => {
+export const doDeleteRequest = (path, errorMessage = 'rest.error.delete') => {
   const url = `${backendUrl}${path}`;
   const options = {
     method: 'DELETE',
@@ -84,8 +84,6 @@ const doDeleteRequest = (path, errorMessage = 'rest.error.delete') => {
     })
     .catch(error => handleError(error, url, errorMessage));
 };
-
-export const getSummaryOfReports = () => doGetRequest('/report', 'rest.error.summaryOfReports');
 
 export const setProductFavouriteOn = project => doPutRequest(`/favourites/${project}/`, null, 'rest.error.favourite');
 
