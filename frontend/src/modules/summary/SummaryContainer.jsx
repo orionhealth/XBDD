@@ -9,6 +9,7 @@ import ProductListContainer from './productList/ProductListContainer';
 import SummaryStyles from './styles/SummaryStyles';
 import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
 import Loading from 'modules/loading/Loading';
+import { updateProductPinnedBuildList } from 'models/Product';
 
 class SummaryContainer extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class SummaryContainer extends Component {
     this.changeFavouriteStatus(isFavourite, product).then(response => {
       if (response && response.ok) {
         const newProduct = newProductList.find(item => item.name === product.name);
-        newProduct.setFavouriteStatus(!isFavourite);
+        newProduct.favourite = !isFavourite;
         this.setState({
           productList: newProductList,
         });
@@ -64,7 +65,7 @@ class SummaryContainer extends Component {
     this.changePinStatus(product, version, build, isPinned).then(response => {
       if (response.status === 200) {
         const newProduct = newProductList.find(item => item.name === product.name);
-        newProduct.updateProductPinnedBuildList(version, build, isPinned);
+        updateProductPinnedBuildList(newProduct, version, build, isPinned);
         this.setState({
           productList: newProductList,
         });

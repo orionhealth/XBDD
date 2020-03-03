@@ -1,4 +1,4 @@
-import Product from './Product';
+import { createProductFromFetchedData, addVersionFromFetchedData } from './Product';
 
 class ProductSummary {
   constructor(data) {
@@ -11,9 +11,9 @@ class ProductSummary {
     data.forEach(element => {
       const productName = element.coordinates.product;
       if (products[productName]) {
-        products[productName].addVersion(element);
+        addVersionFromFetchedData(products[productName], element);
       } else {
-        products[productName] = new Product(element);
+        products[productName] = createProductFromFetchedData(element);
       }
     });
     return Object.values(products);
