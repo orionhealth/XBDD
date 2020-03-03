@@ -36,16 +36,16 @@ const isExpectedResponse = (responseData: ResponseData): responseData is Respons
   if (responseData.some(element => element.pinned && typeof element.pinned !== 'string')) {
     return false;
   }
-  if (!responseData.some(element => element.coordinates?.major === undefined)) {
+  if (responseData.some(element => element.coordinates?.major === undefined)) {
     return false;
   }
-  if (!responseData.some(element => element.coordinates?.minor === undefined)) {
+  if (responseData.some(element => element.coordinates?.minor === undefined)) {
     return false;
   }
-  if (!responseData.some(element => element.coordinates?.servicePack === undefined)) {
+  if (responseData.some(element => element.coordinates?.servicePack === undefined)) {
     return false;
   }
-  if (!responseData.some(element => element.coordinates?.product === undefined)) {
+  if (responseData.some(element => element.coordinates?.product === undefined)) {
     return false;
   }
   return true;
