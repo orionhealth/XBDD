@@ -1,65 +1,56 @@
-import React, { useState, FC, ChangeEvent, KeyboardEvent } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Button, TextField, Avatar, Box, WithStyles } from '@material-ui/core';
+import React, { useState, FC } from 'react';
+import { AppBar, Toolbar, Button, Avatar, Box } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import { RootStore } from 'rootReducer';
-import navbarStyles from './styles/NavbarStyles';
 import { setUser, selectProductBuildAndVersion } from '../../xbddReducer';
+import LoginDialog from './LoginDialog';
+import { useNavbarStyles } from './styles/NavbarStyles';
 
-type Props = WithStyles<typeof navbarStyles>;
-
-const Navbar: FC<Props> = props => {
-  const { classes } = props;
+const Navbar: FC = () => {
   const { t } = useTranslation();
+  const classes = useNavbarStyles();
 
-  const [loginInput, setLoginInput] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
   const loggedInUser = useSelector((state: RootStore) => state.app.user);
 
   const dispatch = useDispatch();
-  const login = (): void => dispatch(setUser(loginInput)) && setLoginInput('');
-  const logout = (): void => {
-    dispatch(setUser(null));
+
+  const onLogin = (user: string, password: string): void => {
+    dispatch(setUser(user));
+    setOpenDialog(false);
   };
 
   return (
     <AppBar position="static">
       <Toolbar>
-        <Box className={classes.xbddLogoFlex}>
+        <Box className={classes.logoFlex}>
           <Button
-            className={classes.xbddLogo}
+            className={classes.logo}
             onClick={(): void => {
               dispatch(selectProductBuildAndVersion(null));
             }}
           >
-            XBDD
+            {'XBDD'}
           </Button>
         </Box>
-        <Box className={classes.xbddLogin}>
-          {!loggedInUser && (
-            <TextField
-              color="secondary"
-              InputLabelProps={{ className: classes.loginInput }}
-              InputProps={{ className: classes.loginInput }}
-              label={t('navbar.userName')}
-              margin="dense"
-              onChange={(event: ChangeEvent<HTMLInputElement>): void => setLoginInput(event.target.value)}
-              onKeyPress={(event: KeyboardEvent<HTMLDivElement>): void => {
-                event.key === 'Enter' && login();
-              }}
-              value={loginInput}
-              variant="outlined"
-            />
-          )}
-          <Button color="inherit" onClick={(): void => (loggedInUser ? logout() : login())}>
+        <Box className={classes.login}>
+          <Button
+            className={classes.loginButton}
+            color="secondary"
+            onClick={(): void => {
+              loggedInUser ? dispatch(setUser(null)) : setOpenDialog(true);
+            }}
+          >
             {loggedInUser ? t('navbar.logout') : t('navbar.login')}
           </Button>
           <Avatar>{loggedInUser}</Avatar>
         </Box>
       </Toolbar>
+      <LoginDialog open={openDialog} onLogin={onLogin} onCancel={(): void => setOpenDialog(false)} />
     </AppBar>
   );
 };
 
-export default withStyles(navbarStyles)(React.memo(Navbar));
+export default React.memo(Navbar);
