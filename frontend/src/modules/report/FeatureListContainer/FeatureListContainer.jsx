@@ -6,9 +6,16 @@ import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icon
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-
 import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
-import FeatureList from 'models/FeatureList';
+import {
+  setFeatureListByTagFromFetchedData,
+  setSimpleFeatureListFromFetchedData,
+  setUsersFromTagAssignmentsFromFetchedData,
+  setIgnoredTagsFromFetchedData,
+  toggleIgnoreForTagForFeatureList,
+  setUserForTagForFeatureList,
+  cloneFeatureList,
+} from 'models/FeatureList';
 import {
   getFeatureListByTagData,
   getSimpleFeatureListData,
@@ -45,7 +52,11 @@ class FeatureListContainer extends Component {
   }
 
   componentDidMount() {
-    const featureList = new FeatureList();
+    // :FeatureList
+    const featureList = {
+      tagList: [],
+      simpleFeatureList: [],
+    };
     const { product, version, build } = this.props;
     this.setState({ loading: true });
     Promise.all([
@@ -55,10 +66,10 @@ class FeatureListContainer extends Component {
       getIgnoredTags(product),
     ])
       .then(data => {
-        featureList.setFeatureListByTag(data[0]);
-        featureList.setSimpleFeatureList(data[1]);
-        featureList.setUserFromTagAssignments(data[2]);
-        featureList.setIgnoredTags(data[3]);
+        setFeatureListByTagFromFetchedData(featureList, data[0]);
+        setSimpleFeatureListFromFetchedData(featureList, data[1]);
+        setUsersFromTagAssignmentsFromFetchedData(featureList, data[2]);
+        setIgnoredTagsFromFetchedData(featureList, data[3]);
         this.setState({ featureList });
       })
       .finally(() => this.setState({ loading: false }));
@@ -97,8 +108,8 @@ class FeatureListContainer extends Component {
 
   setStateForTagUser(tag, userName) {
     this.setState(prevState => {
-      const newFeatureList = prevState.featureList.clone();
-      newFeatureList.setUserForTag(tag, userName);
+      const newFeatureList = cloneFeatureList(prevState.featureList);
+      setUserForTagForFeatureList(newFeatureList, tag, userName);
       return { ...prevState, featureList: newFeatureList, warningArgs: null };
     });
   }
@@ -135,8 +146,8 @@ class FeatureListContainer extends Component {
 
   setIgnoreStateForTag(tagName) {
     this.setState(prevState => {
-      const newFeatureList = prevState.featureList.clone();
-      newFeatureList.toggleIgnoreForTag(tagName);
+      const newFeatureList = cloneFeatureList(prevState.featureList);
+      toggleIgnoreForTagForFeatureList(newFeatureList, tagName);
       return { ...prevState, featureList: newFeatureList };
     });
   }

@@ -29,20 +29,15 @@ export const addVersionFromFetchedData = (product: Product, versionData: any): v
   product.versionList.sort(compareVersions);
 };
 
-export const getVersionFromString = (product: Product, versionString: string): Version => {
-  const version = product.versionList.find(version => getString(version) === versionString);
-  if (!version) {
-    throw 'error'; //TODO
-  }
-  return version;
+export const getVersionFromString = (product: Product, versionString: string): Version | undefined => {
+  return product.versionList.find(version => getString(version) === versionString);
 };
 
 export const updateProductPinnedBuildList = (product: Product, version: Version, build: string, isPinned: boolean): void => {
   const newVersion = product.versionList.find(item => item.id === version.id);
-  if (!newVersion) {
-    throw 'error'; // TODO
+  if (newVersion) {
+    updatePinnedBuildList(newVersion, build, isPinned);
   }
-  updatePinnedBuildList(newVersion, build, isPinned);
 };
 
 export default Product;
