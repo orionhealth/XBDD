@@ -17,8 +17,8 @@ const Navbar: FC = () => {
 
   const dispatch = useDispatch();
 
-  const onLogin = (user: string, password: string): void => {
-    dispatch(setUser(user));
+  const onLogin = (user: string, password: string, remember: boolean): void => {
+    dispatch(setUser({ user, remember }));
     setOpenDialog(false);
   };
 

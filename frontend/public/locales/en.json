@@ -6,8 +6,9 @@
     "cancel": "Cancel",
     "login": "Login",
     "logout": "Logout",
-    "password": "Password",
-    "userName": "User Name"
+    "password": "password",
+    "rememberMe": "remember me",
+    "user": "user"
   },
   "report": {
     "fullSizedScreenshot": "Full Size Screenshot",
