@@ -6,6 +6,7 @@ import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icon
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
+
 import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
 import {
   setFeatureListByTagFromFetchedData,
