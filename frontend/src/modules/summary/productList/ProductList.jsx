@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import { List, Typography, TextField, Grid, Box } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
-
 import ProductListStyles from './styles/ProductListStyles';
 import ProductListItem from './ProductListItem';
-import Product from 'models/Product';
 
 const ProductList = props => {
   const {
@@ -66,7 +64,7 @@ const ProductList = props => {
 };
 
 ProductList.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.instanceOf(Product)),
+  list: PropTypes.arrayOf(PropTypes.shape({})),
   title: PropTypes.string,
   expandedProductsList: PropTypes.arrayOf(PropTypes.string),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
