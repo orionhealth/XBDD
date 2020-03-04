@@ -29,7 +29,7 @@ const handleError = (error, url, message) => {
   showNotification({ message, severity: 'error' });
 };
 
-export const doGetRequest = (path, errorMessage = 'rest.error.get') => {
+export const doGetRequest = (path, errorMessage = 'rest.error.get', isExpectedResponse, onSuccess) => {
   const url = `${backendUrl}${path}`;
   const options = {
     method: 'GET',
@@ -45,6 +45,15 @@ export const doGetRequest = (path, errorMessage = 'rest.error.get') => {
       if (response.status !== 204) {
         return response.json();
       }
+    })
+    .then(responseData => {
+      if (isExpectedResponse && !isExpectedResponse(responseData)) {
+        throw new Error(`Unexpected response: ${JSON.stringify(responseData)}`);
+      }
+      if (onSuccess) {
+        return onSuccess(responseData);
+      }
+      return responseData;
     })
     .catch(error => handleError(error, url, errorMessage));
 };

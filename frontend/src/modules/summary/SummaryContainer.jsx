@@ -1,9 +1,10 @@
-import fetchProducts from 'lib/services/FetchProducts';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
+
+import fetchProducts from 'lib/services/FetchProducts';
 import ProductListContainer from './productList/ProductListContainer';
 import SummaryStyles from './styles/SummaryStyles';
 import { setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';

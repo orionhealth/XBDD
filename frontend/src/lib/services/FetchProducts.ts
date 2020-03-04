@@ -6,7 +6,7 @@ interface ResponseDataElement {
   _id: string;
   favourite: boolean;
   builds: string[];
-  pinned?: string[];
+  pinned: string[];
   coordinates: {
     product: string;
     major: string;
@@ -16,7 +16,7 @@ interface ResponseDataElement {
 }
 type ResponseData = ResponseDataElement[];
 
-const isExpectedResponse = (responseData: ResponseData): responseData is ResponseData => {
+const isExpectedResponse = (responseData: unknown): responseData is ResponseData => {
   if (!Array.isArray(responseData)) {
     return false;
   }
@@ -33,7 +33,11 @@ const isExpectedResponse = (responseData: ResponseData): responseData is Respons
   ) {
     return false;
   }
-  if (responseData.some(element => element.pinned && typeof element.pinned !== 'string')) {
+  if (
+    responseData.some(
+      element => element.pinned === undefined || !Array.isArray(element.pinned) || element.pinned.some(pinned => typeof pinned !== 'string')
+    )
+  ) {
     return false;
   }
   if (responseData.some(element => element.coordinates?.major === undefined)) {
@@ -97,10 +101,7 @@ const createProducts = (responseData: ResponseData): Product[] => {
 };
 
 const fetchProducts = (): Promise<Product[]> => {
-  return doGetRequest('/report', 'rest.error.summaryOfReports').then(responseData => {
-    if (!isExpectedResponse(responseData)) {
-      throw new Error(`Unexpected response: ${responseData}`);
-    }
+  return doGetRequest('/report', 'rest.error.summaryOfReports', isExpectedResponse, (responseData: ResponseData) => {
     return createProducts(responseData);
   });
 };
