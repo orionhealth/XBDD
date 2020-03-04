@@ -6,10 +6,8 @@ import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-
 import { withStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-
 import { selectProductBuildAndVersion } from 'xbddReducer';
 import { getString, getUnpinnedBuildList } from 'models/Version';
-import Product from 'models/Product';
 import { buildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
 
@@ -68,7 +66,7 @@ const BuildList = props => {
 };
 
 BuildList.propTypes = {
-  product: PropTypes.instanceOf(Product),
+  product: PropTypes.shape({}),
   version: PropTypes.shape({}),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handlePinChange: PropTypes.func.isRequired,
