@@ -1,27 +1,34 @@
-import { createStyles, Theme } from '@material-ui/core';
-import { StyleRules } from '@material-ui/core/styles/withStyles';
+import { createStyles, makeStyles, Theme, StyleRules } from '@material-ui/core';
 
-const navbarStyles = (theme: Theme): StyleRules =>
+export const useNavbarStyles = makeStyles(() =>
   createStyles({
-    xbddLogoFlex: {
+    logoFlex: {
       color: 'inherit',
       flexGrow: 1,
       textAlign: 'left',
     },
-    xbddLogo: {
+    logo: {
       fontSize: '20px',
       padding: '0px',
       color: 'inherit',
     },
-    xbddLogin: {
+    login: {
       display: 'contents',
       flexGrow: 1,
-      marginRight: '5px',
       textAlign: 'right',
     },
-    loginInput: {
-      color: theme.palette.secondary.main,
+    loginButton: {
+      marginRight: '8px',
+    },
+  })
+);
+
+export const loginDialogStyles = (theme: Theme): StyleRules =>
+  createStyles({
+    textField: {
+      display: 'block',
+    },
+    input: {
+      color: theme.palette.primary.main,
     },
   });
-
-export default navbarStyles;

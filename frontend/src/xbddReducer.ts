@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
 
+import { getUserFromLocalStorage, putUserInLocalStorage, clearUserFromLocalStorage } from 'lib/services/localStorageService';
+
 interface UserState {
   user: string | null;
 }
@@ -10,23 +12,29 @@ interface ProductVersionBuildState {
   build: string | null;
 }
 
-type UserAction = PayloadAction<string | null>;
+type UserAction = PayloadAction<{ user: string; remember: boolean } | null>;
 type ProductVersionBuildAction = PayloadAction<ProductVersionBuildState | null>;
 
 type XbddState = ProductVersionBuildState & UserState;
 
-const initialState: XbddState = {
-  user: null,
+const getInitialState = (): XbddState => ({
+  user: getUserFromLocalStorage(),
   product: null,
   version: null,
   build: null,
-};
+});
 
 const userReducer: CaseReducer<XbddState, UserAction> = (state, action) => {
+  clearUserFromLocalStorage();
+
   if (action.payload) {
-    state.user = action.payload;
+    const { user, remember } = action.payload;
+    state.user = user;
+    if (remember) {
+      putUserInLocalStorage(state.user, Date.now());
+    }
   } else {
-    return initialState;
+    return { ...getInitialState(), user: null };
   }
 };
 
@@ -41,7 +49,7 @@ const selectProductBuildAndVersionReducer: CaseReducer<XbddState, ProductVersion
 
 const { actions, reducer } = createSlice({
   name: 'xbdd',
-  initialState,
+  initialState: getInitialState(),
   reducers: {
     setUser: userReducer,
     selectProductBuildAndVersion: selectProductBuildAndVersionReducer,
