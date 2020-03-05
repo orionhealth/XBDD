@@ -1,0 +1,11 @@
+version: 1
+update_configs:
+  - package_manager: 'javascript'
+    directory: '/frontend'
+    update_schedule: 'weekly'
+  - package_manager: 'java:maven'
+    directory: '/frontend'
+    update_schedule: 'weekly'
+  - package_manager: 'java:maven'
+    directory: '/backend'
+    update_schedule: 'weekly'

@@ -1,0 +1,414 @@
+{
+  "coordinates": {
+    "product": "medman",
+    "major": 3,
+    "minor": 0,
+    "servicePack": 0,
+    "featureId": "associate-encounter-with-a-full-review",
+    "version": "3.0.0"
+  },
+  "rollup": [
+    {
+      "build": "2234",
+      "calculatedStatus": "failed",
+      "originalAutomatedStatus": "failed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2235",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2236",
+      "calculatedStatus": "failed",
+      "originalAutomatedStatus": "failed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2237",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2238",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2239",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2240",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2241",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2242",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2246",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2248",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2249",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2250",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2251",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2253",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2254",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2255",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2256",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2257",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2258",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2259",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2260",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2261",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2262",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2263",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2264",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2265",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2266",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2267",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2268",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2269",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2270",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2271",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2272",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2274",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2275",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2276",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2277",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2278",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2279",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2280",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2281",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2284",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2285",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "2",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "3",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "4",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "5",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "6",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "7",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "8",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "9",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "10",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "11",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "12",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "13",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "14",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "15",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "17",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "18",
+      "calculatedStatus": "failed",
+      "originalAutomatedStatus": "failed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "19",
+      "calculatedStatus": "failed",
+      "originalAutomatedStatus": "failed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "20",
+      "calculatedStatus": "failed",
+      "originalAutomatedStatus": "failed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "21",
+      "calculatedStatus": "failed",
+      "originalAutomatedStatus": "failed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "22",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "24",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "25",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "passed",
+      "statusLastEditedBy": null
+    },
+    {
+      "build": "emie-34",
+      "calculatedStatus": "passed",
+      "originalAutomatedStatus": "skipped",
+      "statusLastEditedBy": "teighep"
+    }
+  ]
+}

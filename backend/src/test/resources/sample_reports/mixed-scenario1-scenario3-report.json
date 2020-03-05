@@ -1,0 +1,142 @@
+[
+  {
+    "line": 2,
+    "elements": [
+      {
+        "line": 4,
+        "name": "Scenario three",
+        "description": "",
+        "id": "another-feature;scenario-three",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 5,
+            "name": "A scenario",
+            "match": {
+              "location": "MixedStepdefs.a_scenario()"
+            },
+            "keyword": "Given "
+          }
+        ]
+      },
+      {
+        "line": 7,
+        "name": "Scenario four",
+        "description": "",
+        "id": "another-feature;scenario-four",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 8,
+            "name": "A failed scenario",
+            "match": {
+              "location": "MixedStepdefs.A_scneario()"
+            },
+            "keyword": "And "
+          }
+        ]
+      }
+    ],
+    "name": "Another feature",
+    "description": "",
+    "id": "another-feature",
+    "keyword": "Feature",
+    "uri": "example/mixed-three.feature",
+    "tags": [
+      {
+        "line": 1,
+        "name": "@mixed"
+      },
+      {
+        "line": 1,
+        "name": "@two"
+      },
+      {
+        "line": 1,
+        "name": "@one"
+      }
+    ]
+  },
+  {
+    "line": 2,
+    "elements": [
+      {
+        "line": 7,
+        "name": "scenario1",
+        "description": "",
+        "id": "merging-reports-for-single-feature;scenario1",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 8,
+            "name": "A scenario",
+            "match": {
+              "location": "MixedStepdefs.a_scenario()"
+            },
+            "keyword": "Given "
+          }
+        ],
+        "tags": [
+          {
+            "line": 6,
+            "name": "@one"
+          },
+          {
+            "line": 6,
+            "name": "@two"
+          }
+        ]
+      },
+      {
+        "line": 15,
+        "name": "scenario3",
+        "description": "",
+        "id": "merging-reports-for-single-feature;scenario3",
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "status": "skipped"
+            },
+            "line": 16,
+            "name": "A scenario",
+            "match": {
+              "location": "MixedStepdefs.a_scenario()"
+            },
+            "keyword": "Given "
+          }
+        ],
+        "tags": [
+          {
+            "line": 14,
+            "name": "@one"
+          }
+        ]
+      }
+    ],
+    "name": "Merging reports for single feature",
+    "description": "\nExample feature containing three scenarios that are run by separate runners and merged in XBDD",
+    "id": "merging-reports-for-single-feature",
+    "keyword": "Feature",
+    "uri": "example/mixed.feature",
+    "tags": [
+      {
+        "line": 1,
+        "name": "@mixed"
+      }
+    ]
+  }
+]
