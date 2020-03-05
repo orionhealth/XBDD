@@ -13,7 +13,7 @@ XBDD is a tool to unite automated and manual testing efforts using Cucumber feat
 
 ## Installation
 
-See [INSTALL.md](/docs/INSTALL.md) for details on prerequisites, installation and configuration.
+See [INSTALL](/docs/INSTALL.md) for details on prerequisites, installation and configuration.
 
 ## For Performance / Production
 
@@ -21,8 +21,8 @@ Run the script contained within `mongoIndexes.txt` to create compound indexes re
 
 ## Uploading reports
 
-Cucumber JSON reports can be uploaded manually from the XBDD main page. See [UPLOAD.md](/docs/UPLOAD.md) for instructions on automating the upload with Maven.
+Cucumber JSON reports can be uploaded manually from the XBDD main page. See [UPLOAD](/docs/UPLOAD.md) for instructions on automating the upload with Maven.
 
 # Contributing
 
-For all those wishing to contribute to XBDD please fork the repository, and submit your changes via a pull request. See [INSTALL.md](/docs/INSTALL.md) for information on setting up a development environment.
+For all those wishing to contribute to XBDD please fork the repository, and submit your changes via a pull request. See [DEVELOPMENT](/docs/DEVELOPMENT.md) for information on setting up a development environment.
