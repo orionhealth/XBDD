@@ -6,7 +6,7 @@ interface ResponseDataElement {
   _id: string;
   favourite: boolean;
   builds: string[];
-  pinned: string[];
+  pinned?: string[];
   coordinates: {
     product: string;
     major: string;
@@ -26,16 +26,13 @@ const isExpectedResponse = (responseData: unknown): responseData is ResponseData
   if (responseData.some(element => element.favourite === undefined)) {
     return false;
   }
-  if (
-    responseData.some(
-      element => element.builds === undefined || !Array.isArray(element.builds) || element.builds.some(build => typeof build !== 'string')
-    )
-  ) {
+  if (responseData.some(element => !Array.isArray(element.builds) || element.builds.some(build => typeof build !== 'string'))) {
     return false;
   }
   if (
     responseData.some(
-      element => element.pinned === undefined || !Array.isArray(element.pinned) || element.pinned.some(pinned => typeof pinned !== 'string')
+      element =>
+        element.pinned !== undefined && (!Array.isArray(element.pinned) || element.pinned.some(pinned => typeof pinned !== 'string'))
     )
   ) {
     return false;
