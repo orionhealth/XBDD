@@ -6,9 +6,8 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
-
+import { red } from '@material-ui/core/colors';
 import ProductListStyles from './styles/ProductListStyles';
-import Product from 'models/Product';
 import BuildSummaryContainer from './buildSummary/BuildSummaryContainer';
 
 const clickEventWrapper = (event, product, handleFavouriteChange, handleProductClicked) => {
@@ -44,12 +43,11 @@ const ProductListItem = props => {
     <>
       <ListItem
         button
-        divider
         className={classes.productListItem}
         onClick={e => clickEventWrapper(e, product, handleFavouriteChange, handleProductClicked)}
       >
         <ListItemIcon>
-          <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={product.favourite} />
+          <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite style={{ color: red[300] }} />} checked={product.favourite} />
         </ListItemIcon>
         <ListItemText>{product.name}</ListItemText>
         {expandedProductsList.includes(product.name) ? <ExpandLess /> : <ExpandMore />}
@@ -69,7 +67,7 @@ const ProductListItem = props => {
 };
 
 ProductListItem.propTypes = {
-  product: PropTypes.instanceOf(Product),
+  product: PropTypes.shape({}),
   expandedProductsList: PropTypes.arrayOf(PropTypes.string),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   selectedVersionList: PropTypes.shape({}),

@@ -1,6 +1,6 @@
 import Step, { createStepFromFetchedData } from './Step';
 import Status from './Status';
-import { calculateManualStatus, calculateAutoStatus } from '../lib/ScenarioStatusCalculator';
+import { calculateManualStatus, calculateAutoStatus } from '../lib/StatusCalculator';
 
 interface Scenario {
   id: string;

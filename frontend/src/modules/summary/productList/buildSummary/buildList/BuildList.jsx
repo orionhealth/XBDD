@@ -1,7 +1,3 @@
-import Product from 'models/Product';
-import { getString, getUnpinnedBuildList } from 'models/Version';
-import { selectProductBuildAndVersion } from 'xbddReducer';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
@@ -9,11 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { withStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
+import { withTranslation } from 'react-i18next';
+import { selectProductBuildAndVersion } from 'xbddReducer';
+import { getString, getUnpinnedBuildList } from 'models/Version';
 import { buildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
 
 const BuildList = props => {
-  const { product, version, expandedBuildList, handlePinChange, handleBuildListExpanded, classes } = props;
+  const { product, version, expandedBuildList, handlePinChange, handleBuildListExpanded, classes, t } = props;
   const dispatch = useDispatch();
   const pinnedBuildList = version.pinnedBuildList;
   let unpinnedBuildList = getUnpinnedBuildList(version);
@@ -52,7 +51,7 @@ const BuildList = props => {
           <ListItemIcon className={classes.arrowIcon}>
             <FontAwesomeIcon icon={isBuildListExpanded ? faAngleDoubleUp : faAngleDoubleDown} />
           </ListItemIcon>
-          <ListItemText>{isBuildListExpanded ? 'Show Less' : 'Show More...'}</ListItemText>
+          <ListItemText>{isBuildListExpanded ? t('summary.showLess') : t('summary.showMore')}</ListItemText>
         </ListItem>
       )}
     </List>
@@ -67,7 +66,7 @@ const BuildList = props => {
 };
 
 BuildList.propTypes = {
-  product: PropTypes.instanceOf(Product),
+  product: PropTypes.shape({}),
   version: PropTypes.shape({}),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handlePinChange: PropTypes.func.isRequired,
@@ -75,4 +74,4 @@ BuildList.propTypes = {
   classes: PropTypes.shape({}),
 };
 
-export default withStyles(buildListStyles)(BuildList);
+export default withTranslation()(withStyles(buildListStyles)(BuildList));

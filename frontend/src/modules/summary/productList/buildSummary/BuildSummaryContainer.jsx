@@ -1,11 +1,8 @@
-import Product from 'models/Product';
-
-import { getString } from 'models/Version';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormControl, InputLabel, Select, MenuItem, OutlinedInput, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
+import { getString } from 'models/Version';
 import BuildSummaryStyles from './styles/BuildSummaryStyles';
 import BuildList from './buildList/BuildList';
 
@@ -45,7 +42,7 @@ const BuildSummaryContainer = props => {
 };
 
 BuildSummaryContainer.propTypes = {
-  product: PropTypes.instanceOf(Product),
+  product: PropTypes.shape({}),
   version: PropTypes.shape({}),
   expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handleVersionSelected: PropTypes.func.isRequired,

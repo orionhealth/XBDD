@@ -7,7 +7,6 @@ const SummaryStyles = () => ({
   productListContainer: {
     overflow: 'scroll',
     padding: '24px',
-    height: 'calc(100vh - 200px)',
   },
 });
 

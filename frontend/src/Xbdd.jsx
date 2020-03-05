@@ -1,23 +1,15 @@
 import React, { Suspense } from 'react';
 import { connect } from 'react-redux';
+import { ThemeProvider } from '@material-ui/core';
+
 import Navbar from 'modules/navbar/Navbar';
 import SummaryContainer from 'modules/summary/SummaryContainer';
 import ReportContainer from 'modules/report/ReportContainer';
+import ErrorBoundary from 'modules/errorBoundary/ErrorBoundary';
+import theme from 'AppTheme';
+import NotificationsView from 'modules/notifications/NotificationsView';
 
 import './Xbdd.css';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#457B9D',
-      contrastText: '#fefefe',
-    },
-    secondary: {
-      main: '#fefefe',
-    },
-  },
-});
 
 class Xbdd extends React.Component {
   switchPage() {
@@ -38,8 +30,11 @@ class Xbdd extends React.Component {
       <div className="xbdd-app">
         <Suspense fallback={<div />}>
           <ThemeProvider theme={theme}>
-            <Navbar />
-            {this.switchPage()}
+            <ErrorBoundary>
+              <Navbar />
+              {this.switchPage()}
+              <NotificationsView />
+            </ErrorBoundary>
           </ThemeProvider>
         </Suspense>
       </div>

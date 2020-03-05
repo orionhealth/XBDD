@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { RootStore } from 'rootReducer';
 import navbarStyles from './styles/NavbarStyles';
-import { setUser } from '../../xbddReducer';
+import { setUser, selectProductBuildAndVersion } from '../../xbddReducer';
 
 type Props = WithStyles<typeof navbarStyles>;
 
@@ -27,7 +27,12 @@ const Navbar: FC<Props> = props => {
     <AppBar position="static">
       <Toolbar>
         <Box className={classes.xbddLogoFlex}>
-          <Button href="/" className={classes.xbddLogo}>
+          <Button
+            className={classes.xbddLogo}
+            onClick={(): void => {
+              dispatch(selectProductBuildAndVersion(null));
+            }}
+          >
             XBDD
           </Button>
         </Box>

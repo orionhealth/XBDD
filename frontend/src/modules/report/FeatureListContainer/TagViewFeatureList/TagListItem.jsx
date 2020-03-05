@@ -6,7 +6,7 @@ import { Block, ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTag, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
-import Tag from 'models/Tag';
+
 import { tagListItemStyles } from './styles/TagListStyles';
 import TagViewFeatureList from './TagViewFeatureList';
 
@@ -110,12 +110,7 @@ const TagListItem = props => {
 
   return isAssignedTagsView && tag.isIgnored ? null : (
     <>
-      <ListItem
-        button
-        divider
-        onClick={e => clickEventWrapper(e, null, tag.name, null, null, null, null, handleTagSelect)}
-        className={className}
-      >
+      <ListItem button onClick={e => clickEventWrapper(e, null, tag.name, null, null, null, null, handleTagSelect)} className={className}>
         {isEditMode ? renderCheckbox(tag, restId, handleTagIgnore, classes) : null}
         <ListItemIcon className={classes.listItemIcon}>
           <span className={tag.isIgnored ? classes.ignoredColor : null}>
@@ -137,7 +132,7 @@ TagListItem.propTypes = {
   userName: PropTypes.string,
   isEditMode: PropTypes.bool,
   isAssignedTagsView: PropTypes.bool,
-  tag: PropTypes.instanceOf(Tag).isRequired,
+  tag: PropTypes.shape({}).isRequired,
   selectedFeatureId: PropTypes.string,
   isSelected: PropTypes.bool.isRequired,
   selectedStatus: PropTypes.shape({}).isRequired,
