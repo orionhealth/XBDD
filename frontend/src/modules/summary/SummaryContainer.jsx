@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
+
+import fetchProducts from 'lib/services/FetchProducts';
 import ProductListContainer from './productList/ProductListContainer';
 import SummaryStyles from './styles/SummaryStyles';
-import { getSummaryOfReports, setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
+import { setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
 import Loading from 'modules/loading/Loading';
 import { updateProductPinnedBuildList } from 'models/Product';
-import { createProductsFromFetchedData } from 'models/ProductSummary';
 
 class SummaryContainer extends Component {
   constructor(props) {
@@ -18,14 +19,11 @@ class SummaryContainer extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
-    getSummaryOfReports().then(summaryData => {
-      if (summaryData) {
-        const productList = createProductsFromFetchedData(summaryData);
-        this.setState({
-          productList,
-        });
-      }
-      this.setState({ loading: false });
+    fetchProducts().then(productList => {
+      this.setState({
+        productList, // :Product[]
+        loading: false,
+      });
     });
   }
 
