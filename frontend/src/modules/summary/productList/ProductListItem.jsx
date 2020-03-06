@@ -7,6 +7,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
+
 import ProductListStyles from './styles/ProductListStyles';
 import BuildSummaryContainer from './buildSummary/BuildSummaryContainer';
 
@@ -27,13 +28,11 @@ const ProductListItem = props => {
   const {
     product,
     expandedProductsList,
-    expandedBuildList,
     selectedVersionList,
     handleFavouriteChange,
     handleProductClicked,
     handleVersionSelected,
     handlePinChange,
-    handleBuildListExpanded,
     classes,
   } = props;
 
@@ -56,10 +55,8 @@ const ProductListItem = props => {
         <BuildSummaryContainer
           product={product}
           version={version}
-          expandedBuildList={expandedBuildList}
           handleVersionSelected={handleVersionSelected}
           handlePinChange={handlePinChange}
-          handleBuildListExpanded={handleBuildListExpanded}
         />
       </Collapse>
     </>
@@ -69,13 +66,11 @@ const ProductListItem = props => {
 ProductListItem.propTypes = {
   product: PropTypes.shape({}),
   expandedProductsList: PropTypes.arrayOf(PropTypes.string),
-  expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   selectedVersionList: PropTypes.shape({}),
   handleFavouriteChange: PropTypes.func.isRequired,
   handleProductClicked: PropTypes.func.isRequired,
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
-  handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

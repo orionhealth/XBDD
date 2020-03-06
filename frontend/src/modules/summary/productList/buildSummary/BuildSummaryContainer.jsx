@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormControl, InputLabel, Select, MenuItem, OutlinedInput, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+
 import { getString } from 'models/Version';
 import BuildSummaryStyles from './styles/BuildSummaryStyles';
 import BuildList from './buildList/BuildList';
@@ -16,7 +17,7 @@ const buildVersionList = version => {
 };
 
 const BuildSummaryContainer = props => {
-  const { product, version, expandedBuildList, handleVersionSelected, handlePinChange, handleBuildListExpanded, classes } = props;
+  const { product, version, handleVersionSelected, handlePinChange, classes } = props;
 
   return (
     <Grid container>
@@ -29,13 +30,7 @@ const BuildSummaryContainer = props => {
         </FormControl>
       </Grid>
       <Grid item xs={9}>
-        <BuildList
-          product={product}
-          version={version}
-          expandedBuildList={expandedBuildList}
-          handlePinChange={handlePinChange}
-          handleBuildListExpanded={handleBuildListExpanded}
-        />
+        <BuildList product={product} version={version} handlePinChange={handlePinChange} />
       </Grid>
     </Grid>
   );
@@ -44,10 +39,8 @@ const BuildSummaryContainer = props => {
 BuildSummaryContainer.propTypes = {
   product: PropTypes.shape({}),
   version: PropTypes.shape({}),
-  expandedBuildList: PropTypes.arrayOf(PropTypes.string),
   handleVersionSelected: PropTypes.func.isRequired,
   handlePinChange: PropTypes.func.isRequired,
-  handleBuildListExpanded: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
 };
 

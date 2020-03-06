@@ -35,6 +35,7 @@
     }
   },
   "summary": {
+    "buildDisplay": "Build {{build}}",
     "favourites": "Favourites",
     "productList": "Product List",
     "showLess": "Show less",

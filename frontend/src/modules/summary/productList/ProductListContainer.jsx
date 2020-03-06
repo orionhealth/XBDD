@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from '@material-ui/core';
+
 import ProductList from './ProductList';
+import { getVersionFromString } from 'models/Product';
 
 class ProductListContainer extends Component {
   constructor(props) {
@@ -11,13 +13,11 @@ class ProductListContainer extends Component {
       searchContent: null,
       expandedProductsList: [],
       selectedVersionList: {},
-      expandedBuildList: [],
     };
 
     this.handleSearchProduct = this.handleSearchProduct.bind(this);
     this.handleProductClicked = this.handleProductClicked.bind(this);
     this.handleVersionSelected = this.handleVersionSelected.bind(this);
-    this.handleBuildListExpanded = this.handleBuildListExpanded.bind(this);
   }
 
   handleSearchProduct(event) {
@@ -39,21 +39,10 @@ class ProductListContainer extends Component {
     this.setState(prevState =>
       Object.assign({}, prevState, {
         selectedVersionList: Object.assign({}, prevState.selectedVersionList, {
-          [product.name]: product.getVersionFromString(event.target.value),
+          [product.name]: getVersionFromString(product, event.target.value),
         }),
       })
     );
-  }
-
-  handleBuildListExpanded(productVersionId) {
-    if (this.state.expandedBuildList.includes(productVersionId)) {
-      const newExpandedBuildList = [...this.state.expandedBuildList];
-      const index = newExpandedBuildList.indexOf(productVersionId);
-      newExpandedBuildList.splice(index, 1);
-      this.setState({ expandedBuildList: newExpandedBuildList });
-    } else {
-      this.setState({ expandedBuildList: [...this.state.expandedBuildList, productVersionId] });
-    }
   }
 
   render() {
@@ -69,7 +58,6 @@ class ProductListContainer extends Component {
         <ProductList
           list={filteredList}
           expandedProductsList={this.state.expandedProductsList}
-          expandedBuildList={this.state.expandedBuildList}
           selectedVersionList={this.state.selectedVersionList}
           title={this.props.title}
           handleFavouriteChange={this.props.handleFavouriteChange}
@@ -77,7 +65,6 @@ class ProductListContainer extends Component {
           handleSearchProduct={this.handleSearchProduct}
           handleProductClicked={this.handleProductClicked}
           handleVersionSelected={this.handleVersionSelected}
-          handleBuildListExpanded={this.handleBuildListExpanded}
         />
       </Card>
     );
