@@ -10,16 +10,12 @@
         <module name="backend" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="xbdd-backend" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="backend" options="-Xlint:deprecation" />
       <module name="packager" options="-Xlint:deprecation" />
       <module name="xbdd" options="" />
-      <module name="xbdd-backend" options="-Xlint:deprecation" />
     </option>
   </component>
 </project>
