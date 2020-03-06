@@ -19,7 +19,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import org.apache.commons.lang.math.NumberUtils;
-import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
@@ -27,6 +26,7 @@ import javax.ws.rs.core.Context;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Factory for {@link MongoClient} that retrieves hostname and port parameters from the ServletContext. The {@link MongoClient} is designed
@@ -35,9 +35,8 @@ import java.util.Objects;
  * <code>sample_reports.mongo.hostname</code>, <code>sample_reports.monogo.port</code>, <code>sample_reports.monogo.username</code> and <code>sample_reports.monogo.password</code>.
  * The parameters are optional and will default to the mongo defaults {@link ServerAddress#defaultHost()} and
  * {@link ServerAddress#defaultPort()} respectively.
- *
  */
-public class ServletContextMongoClientFactory implements Factory<MongoDBAccessor> {
+public class ServletContextMongoClientFactory implements Supplier<MongoDBAccessor> {
 
 	private static final String XBDD_MONGO_HOSTNAME_INIT_PARAMETER = "xbdd.mongo.hostname";
 	private static final String XBDD_MONGO_USERNAME_INIT_PARAMETER = "xbdd.mongo.username";
@@ -72,12 +71,7 @@ public class ServletContextMongoClientFactory implements Factory<MongoDBAccessor
 	}
 
 	@Override
-	public void dispose(final MongoDBAccessor client) {
-		client.close();
-	}
-
-	@Override
-	public MongoDBAccessor provide() {
+	public MongoDBAccessor get() {
 		try {
 			return getMongoDBAccessor();
 		} catch (final UnknownHostException e) {
