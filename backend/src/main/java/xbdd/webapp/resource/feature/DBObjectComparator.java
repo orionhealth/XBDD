@@ -15,18 +15,18 @@
  */
 package xbdd.webapp.resource.feature;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import com.mongodb.DBObject;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 /**
  * Matcher that compares two DBObjects by the number of times they match a set of regular expressions
@@ -44,12 +44,8 @@ public class DBObjectComparator implements Comparator<DBObject> {
 	 * @throws PatternSyntaxException if any of the expressions are not valid regex
 	 */
 	public DBObjectComparator(final Collection<String> searchExpressions) {
-		final String regex = StringUtils.join(Collections2.transform(searchExpressions, new Function<String, String>() {
-			@Override
-			public String apply(final String input) {
-				return "(" + input + ")";
-			}
-		}), "|");
+		final List<String> inputsForRegex = searchExpressions.stream().map(input -> "(" + input + ")").collect(Collectors.toList());
+		final String regex = StringUtils.join(inputsForRegex, "|");
 		this.pattern = Pattern.compile(regex);
 	}
 
