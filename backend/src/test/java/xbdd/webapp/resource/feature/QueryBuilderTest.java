@@ -76,10 +76,10 @@ public class QueryBuilderTest {
 
 		@SuppressWarnings("unchecked") final List<DBObject> queryResults = (ArrayList<DBObject>) searchQuery.get("$or");
 
-		assertEquals("{ \"name\" : { \"$regex\" : \"hi\" , \"$options\" : \"i\"}}", queryResults.get(0).toString());
-		assertEquals("{ \"age\" : { \"$regex\" : \"hi\" , \"$options\" : \"i\"}}", queryResults.get(1).toString());
-		assertEquals("{ \"name\" : { \"$regex\" : \"there\" , \"$options\" : \"i\"}}", queryResults.get(2).toString());
-		assertEquals("{ \"age\" : { \"$regex\" : \"there\" , \"$options\" : \"i\"}}", queryResults.get(3).toString());
+		assertEquals("{\"name\": {\"$regex\": \"hi\", \"$options\": \"i\"}}", queryResults.get(0).toString());
+		assertEquals("{\"age\": {\"$regex\": \"hi\", \"$options\": \"i\"}}", queryResults.get(1).toString());
+		assertEquals("{\"name\": {\"$regex\": \"there\", \"$options\": \"i\"}}", queryResults.get(2).toString());
+		assertEquals("{\"age\": {\"$regex\": \"there\", \"$options\": \"i\"}}", queryResults.get(3).toString());
 
 	}
 }
