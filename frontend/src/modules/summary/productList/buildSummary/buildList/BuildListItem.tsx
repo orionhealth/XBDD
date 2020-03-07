@@ -11,9 +11,8 @@ interface Props {
   onClick(event: MouseEvent, build: string): void;
 }
 
-const BuildListItem: FC<Props> = props => {
+const BuildListItem: FC<Props> = ({ isPinned, buildList, onClick }) => {
   const { t } = useTranslation();
-  const { isPinned, buildList, onClick } = props;
 
   return (
     <>

@@ -17,9 +17,7 @@ interface Props {
   handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
 }
 
-const BuildList: FC<Props> = props => {
-  const { product, version, handlePinChange } = props;
-
+const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
   const { t } = useTranslation();
   const classes = useBuildListStyles();
   const dispatch = useDispatch();
