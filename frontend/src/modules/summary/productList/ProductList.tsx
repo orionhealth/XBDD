@@ -9,24 +9,20 @@ import Version from 'models/Version';
 
 interface Props {
   list: Product[];
+  selectedVersionMap: Record<string, Version | undefined>;
   title: string;
-  expandedProductsList: string[];
-  selectedVersionList: Record<string, Version>;
-  handleSearchProduct(event: ChangeEvent<HTMLInputElement>): void;
   handleFavouriteChange(product: Product): void;
-  handleProductClicked(product: Product): void;
-  handleVersionSelected(event: ChangeEvent<unknown>, product: Product): void;
   handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
+  handleSearchProduct(event: ChangeEvent<HTMLInputElement>): void;
+  handleVersionSelected(event: ChangeEvent<{ value: string }>, product: Product): void;
 }
 
 const ProductList: FC<Props> = ({
   list,
   title,
-  expandedProductsList,
-  selectedVersionList,
+  selectedVersionMap,
   handleSearchProduct,
   handleFavouriteChange,
-  handleProductClicked,
   handleVersionSelected,
   handlePinChange,
 }) => {
@@ -55,14 +51,12 @@ const ProductList: FC<Props> = ({
         {list.map(product => {
           return (
             <ProductListItem
-              product={product}
-              expandedProductsList={expandedProductsList}
-              selectedVersionList={selectedVersionList}
               key={product.name}
+              product={product}
+              version={selectedVersionMap[product.name] || product.versionList[0]}
               handleFavouriteChange={handleFavouriteChange}
-              handleProductClicked={handleProductClicked}
-              handleVersionSelected={handleVersionSelected}
               handlePinChange={handlePinChange}
+              handleVersionSelected={handleVersionSelected}
             />
           );
         })}

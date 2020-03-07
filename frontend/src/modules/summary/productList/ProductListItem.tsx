@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, ChangeEvent } from 'react';
+import React, { FC, MouseEvent, ChangeEvent, useState } from 'react';
 import { Checkbox, ListItem, ListItemText, ListItemIcon, Collapse } from '@material-ui/core';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
@@ -13,25 +13,15 @@ import Version from 'models/Version';
 
 interface Props {
   product: Product;
-  expandedProductsList: string[];
-  selectedVersionList: Record<string, Version>;
+  version: Version;
   handleFavouriteChange(product: Product): void;
-  handleProductClicked(product: Product): void;
   handleVersionSelected(event: ChangeEvent<unknown>, product: Product): void;
   handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
 }
 
-const ProductListItem: FC<Props> = ({
-  product,
-  expandedProductsList,
-  selectedVersionList,
-  handleFavouriteChange,
-  handleProductClicked,
-  handleVersionSelected,
-  handlePinChange,
-}) => {
+const ProductListItem: FC<Props> = ({ product, version, handleFavouriteChange, handleVersionSelected, handlePinChange }) => {
   const classes = useProductListStyles();
-  const version = selectedVersionList[product.name] ? selectedVersionList[product.name] : product.versionList[0];
+  const [expanded, setExpanded] = useState(false);
 
   const onItemClick = (event: MouseEvent): void => {
     let node: EventTarget | null = event.target;
@@ -47,7 +37,7 @@ const ProductListItem: FC<Props> = ({
         node = null;
       }
     }
-    handleProductClicked(product);
+    setExpanded(!expanded);
   };
 
   return (
@@ -57,9 +47,9 @@ const ProductListItem: FC<Props> = ({
           <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite style={{ color: red[300] }} />} checked={product.favourite} />
         </ListItemIcon>
         <ListItemText>{product.name}</ListItemText>
-        {expandedProductsList.includes(product.name) ? <ExpandLess /> : <ExpandMore />}
+        {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
-      <Collapse in={expandedProductsList.includes(product.name)} timeout="auto" unmountOnExit>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <BuildSummaryContainer
           product={product}
           version={version}
