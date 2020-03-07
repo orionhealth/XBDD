@@ -1,27 +1,38 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, ChangeEvent } from 'react';
 import { List, Typography, TextField, Grid, Box } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
-import { withStyles } from '@material-ui/core/styles';
 
-import ProductListStyles from './styles/ProductListStyles';
+import { useProductListStyles } from './styles/ProductListStyles';
 import ProductListItem from './ProductListItem';
+import Product from 'models/Product';
+import Version from 'models/Version';
 
-const ProductList = props => {
-  const {
-    list,
-    title,
-    expandedProductsList,
-    selectedVersionList,
-    handleSearchProduct,
-    handleFavouriteChange,
-    handleProductClicked,
-    handleVersionSelected,
-    handlePinChange,
-    classes,
-  } = props;
+interface Props {
+  list: Product[];
+  title: string;
+  expandedProductsList: string[];
+  selectedVersionList: Record<string, Version>;
+  handleSearchProduct(event: ChangeEvent<HTMLInputElement>): void;
+  handleFavouriteChange(product: Product): void;
+  handleProductClicked(product: Product): void;
+  handleVersionSelected(event: ChangeEvent<unknown>, product: Product): void;
+  handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
+}
 
-  if (!props.list) {
+const ProductList: FC<Props> = ({
+  list,
+  title,
+  expandedProductsList,
+  selectedVersionList,
+  handleSearchProduct,
+  handleFavouriteChange,
+  handleProductClicked,
+  handleVersionSelected,
+  handlePinChange,
+}) => {
+  const classes = useProductListStyles();
+
+  if (!list) {
     return null;
   }
   return (
@@ -36,7 +47,7 @@ const ProductList = props => {
           <Search />
         </Grid>
         <Grid item>
-          <TextField label="Search" onChange={e => handleSearchProduct(e)} />
+          <TextField label="Search" onChange={handleSearchProduct} />
         </Grid>
       </Grid>
 
@@ -60,16 +71,4 @@ const ProductList = props => {
   );
 };
 
-ProductList.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.shape({})),
-  title: PropTypes.string,
-  expandedProductsList: PropTypes.arrayOf(PropTypes.string),
-  selectedVersionList: PropTypes.shape({}),
-  handleSearchProduct: PropTypes.func.isRequired,
-  handleFavouriteChange: PropTypes.func.isRequired,
-  handleProductClicked: PropTypes.func.isRequired,
-  handleVersionSelected: PropTypes.func.isRequired,
-  handlePinChange: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}),
-};
-export default withStyles(ProductListStyles)(ProductList);
+export default ProductList;
