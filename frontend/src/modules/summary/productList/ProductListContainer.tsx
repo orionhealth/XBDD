@@ -1,5 +1,6 @@
 import React, { Component, ChangeEvent, ReactNode } from 'react';
 import { Card } from '@material-ui/core';
+import produce from 'immer';
 
 import ProductList from './ProductList';
 import Product, { getVersionFromString } from 'models/Product';
@@ -14,7 +15,6 @@ interface Props {
 
 interface State {
   searchContent: string;
-  expandedProductsList: string[];
   selectedVersionMap: Record<string, Version | undefined>;
 }
 
@@ -30,7 +30,6 @@ class ProductListContainer extends Component<Props, State> {
 
     this.state = {
       searchContent: '',
-      expandedProductsList: [],
       selectedVersionMap,
     };
   }
@@ -40,10 +39,11 @@ class ProductListContainer extends Component<Props, State> {
   };
 
   handleVersionSelected = (event: ChangeEvent<{ value: string }>, product: Product): void => {
-    this.setState(prevState => ({
-      ...prevState,
-      selectedVersionMap: { ...prevState.selectedVersionMap, [product.name]: getVersionFromString(product, event.target.value) },
-    }));
+    this.setState(
+      produce((draft: State) => {
+        draft.selectedVersionMap[product.name] = getVersionFromString(product, event.target.value);
+      })
+    );
   };
 
   render(): ReactNode {
