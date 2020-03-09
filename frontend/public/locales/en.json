@@ -35,9 +35,11 @@
     }
   },
   "summary": {
+    "buildDisplay": "Build {{build}}",
     "favourites": "Favourites",
     "productList": "Product List",
     "showLess": "Show less",
-    "showMore": "Show More"
+    "showMore": "Show More",
+    "versions": "Versions"
   }
 }

@@ -1,6 +1,6 @@
-import { createStyles } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core';
 
-const ProductListStyles = theme =>
+export const useProductListStyles = makeStyles(theme =>
   createStyles({
     productListTitle: {
       paddingTop: '10px',
@@ -20,6 +20,5 @@ const ProductListStyles = theme =>
       paddingTop: '2px',
       paddingBottom: '2px',
     },
-  });
-
-export default ProductListStyles;
+  })
+);
