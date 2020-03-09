@@ -15,7 +15,6 @@
  */
 package xbdd.webapp.resource;
 
-import org.glassfish.jersey.server.mvc.Viewable;
 import xbdd.webapp.util.Coordinates;
 
 import javax.servlet.ServletContext;
@@ -41,6 +40,6 @@ public class PrintableReport {
 		map.put("product", coordinates.getProduct());
 		map.put("version", coordinates.getVersionString());
 		map.put("build", coordinates.getBuild());
-		return Response.ok(new Viewable(VIEW_ID, map)).build();
+		return Response.ok().build();
 	}
 }
