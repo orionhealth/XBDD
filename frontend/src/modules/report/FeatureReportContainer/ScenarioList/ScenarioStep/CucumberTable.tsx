@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 import { Table, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
+import { StepRow } from 'models/Step';
+
 const useStyles = makeStyles(() =>
   createStyles({
     scrollableTable: {
@@ -15,7 +17,7 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-  rows: [{ cells: string[]; line: string }];
+  rows: StepRow[];
 }
 
 const CucumberTable: FC<Props> = ({ rows }) => {

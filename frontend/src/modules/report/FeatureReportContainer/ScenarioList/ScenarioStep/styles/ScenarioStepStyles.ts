@@ -1,4 +1,6 @@
-const stepStyles = {
+import { createStyles } from '@material-ui/core';
+
+const stepStyles = createStyles({
   stepIconBox: {
     padding: '3px',
   },
@@ -37,12 +39,12 @@ const stepStyles = {
   stepIconFailed: {
     backgroundColor: '#AC534F',
   },
-};
+});
 
-const inputFielsStyles = {
+const inputFieldStyles = createStyles({
   inputField: {
     margin: '0',
   },
-};
+});
 
-export { stepStyles, inputFielsStyles };
+export { stepStyles, inputFieldStyles };

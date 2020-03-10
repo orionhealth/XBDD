@@ -1,42 +1,51 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, ReactNode } from 'react';
 import { TextField } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { inputFielsStyles } from './styles/ScenarioStepStyles';
+import { inputFieldStyles } from './styles/ScenarioStepStyles';
 
-class ScenarioInputField extends Component {
+interface Props extends WithStyles {
+  scenarioId: string;
+  label: string;
+  placeholder: string;
+  value: string;
+  handleScenarioCommentChanged(scenarioId: string, label: string, requestLabel: string, prevContent: string, content: string): void;
+}
+
+interface State {
+  content: string;
+  prevContent: string;
+}
+
+class ScenarioInputField extends Component<Props, State> {
   constructor(props) {
     super(props);
-    const content = props.value;
-    this.state = {
-      prevContent: content,
-      content: content,
-    };
 
-    this.handleValueChanged = this.handleValueChanged.bind(this);
-    this.handleCommentFocused = this.handleCommentFocused.bind(this);
+    this.state = {
+      prevContent: this.props.value,
+      content: this.props.value,
+    };
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.value !== prevProps.value) {
-      const content = this.props.value;
+  componentDidUpdate(prevProps: Props): void {
+    const { value } = this.props;
+    if (value !== prevProps.value) {
       this.setState({
-        prevContent: content,
-        content: content,
+        prevContent: value,
+        content: value,
       });
     }
   }
 
-  handleValueChanged(event) {
+  handleValueChanged = (event): void => {
     this.setState({ content: event.target.value });
-  }
+  };
 
-  handleCommentFocused(event) {
+  handleCommentFocused = (event): void => {
     this.setState({ prevContent: event.target.value });
-  }
+  };
 
-  render() {
+  render(): ReactNode {
     const { scenarioId, label, placeholder, handleScenarioCommentChanged, classes } = this.props;
 
     const labelMap = {
@@ -60,9 +69,9 @@ class ScenarioInputField extends Component {
           rows="2"
           fullWidth={true}
           value={this.state.content}
-          onChange={e => this.handleValueChanged(e)}
-          onFocus={e => this.handleCommentFocused(e)}
-          onBlur={() =>
+          onChange={this.handleValueChanged}
+          onFocus={this.handleCommentFocused}
+          onBlur={(): void =>
             handleScenarioCommentChanged(scenarioId, labelMap[label], requestLabelMap[label], this.state.prevContent, this.state.content)
           }
           className={classes.textField}
@@ -74,13 +83,4 @@ class ScenarioInputField extends Component {
   }
 }
 
-ScenarioInputField.propTypes = {
-  scenarioId: PropTypes.string,
-  label: PropTypes.string,
-  placeholder: PropTypes.string,
-  value: PropTypes.string,
-  handleScenarioCommentChanged: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}),
-};
-
-export default withStyles(inputFielsStyles)(ScenarioInputField);
+export default withStyles(inputFieldStyles)(ScenarioInputField);
