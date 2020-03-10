@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography, Grid, Button, Box } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { scenarioListStyles } from './styles/ScenarioListStyles';
 import { ExpandMore } from '@material-ui/icons';
+
+import { scenarioListStyles } from './styles/ScenarioListStyles';
 import ScenarioStep from './ScenarioStep/ScenarioStep';
 import ScenarioInputField from './ScenarioStep/ScenarioInputField';
 import StatusIcons from '../FeatureSummary/StatusIcons';
@@ -34,14 +35,8 @@ const ScenarioList = props => {
   const {
     scenarioList,
     expandedScenarioIdList,
-    hoveredStepId,
-    anchor,
     handleScenarioClicked,
     handleScenarioCommentChanged,
-    handleStepHovered,
-    handleStepNotHovered,
-    handleMoreButtonHovered,
-    handleMoreButtonNotHovered,
     handleStatusChange,
     handleScreenshotClicked,
     classes,
@@ -51,13 +46,7 @@ const ScenarioList = props => {
     <ScenarioStep
       title={title}
       scenarioId={scenarioId}
-      hoveredStepId={hoveredStepId}
       steps={steps}
-      anchor={anchor}
-      handleStepHovered={handleStepHovered}
-      handleStepNotHovered={handleStepNotHovered}
-      handleMoreButtonHovered={handleMoreButtonHovered}
-      handleMoreButtonNotHovered={handleMoreButtonNotHovered}
       handleStatusChange={handleStatusChange}
       handleScreenshotClicked={handleScreenshotClicked}
     />
@@ -159,14 +148,8 @@ const ScenarioList = props => {
 ScenarioList.propTypes = {
   scenarioList: PropTypes.arrayOf(PropTypes.shape({})),
   expandedScenarioIdList: PropTypes.arrayOf(PropTypes.string),
-  hoveredStepId: PropTypes.string,
-  anchor: PropTypes.object,
   handleScenarioClicked: PropTypes.func.isRequired,
   handleScenarioCommentChanged: PropTypes.func.isRequired,
-  handleStepHovered: PropTypes.func.isRequired,
-  handleStepNotHovered: PropTypes.func.isRequired,
-  handleMoreButtonHovered: PropTypes.func.isRequired,
-  handleMoreButtonNotHovered: PropTypes.func.isRequired,
   handleStatusChange: PropTypes.func.isRequired,
   handleScreenshotClicked: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),

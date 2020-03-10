@@ -149,7 +149,7 @@ class ReportContainer extends Component {
 
   render() {
     const { product, version, build, t } = this.props;
-    const { screenshotDialogContent, selectedFeature, executionHistory, hoveredStepId } = this.state;
+    const { screenshotDialogContent, selectedFeature, executionHistory } = this.state;
     return (
       <>
         <Card elevation={0}>
@@ -174,7 +174,6 @@ class ReportContainer extends Component {
                 <FeatureReportContainer
                   feature={selectedFeature}
                   executionHistory={executionHistory}
-                  hoveredStepId={hoveredStepId}
                   handleScenarioCommentChanged={this.handleScenarioCommentChanged}
                   handleStatusChange={this.handleStatusChange}
                   handleScreenshotClicked={this.handleScreenshotClicked}

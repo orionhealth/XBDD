@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, ReactNode } from 'react';
+import React, { FC, MouseEvent, ReactNode, useState, useRef } from 'react';
 import { IconButton, Popper, Fade, Card, List, ListItem } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
@@ -24,16 +24,15 @@ const useStyles = makeStyles(() =>
 
 interface Props {
   stepId: string;
-  anchor: HTMLElement;
   status: Status;
-  handleMoreButtonHovered(e: MouseEvent<HTMLElement>): void;
-  handleMoreButtonNotHovered(): void;
   onStepStatusChange(e: MouseEvent<HTMLElement>, stepId: string, status: Status, newStatus: Status): void;
 }
 
-const PopperMenu: FC<Props> = ({ stepId, anchor, status, handleMoreButtonHovered, handleMoreButtonNotHovered, onStepStatusChange }) => {
+const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const ref = useRef(null);
+  const [open, setOpen] = useState(false);
 
   const labelMap = {
     passed: t('report.pass'),
@@ -49,14 +48,11 @@ const PopperMenu: FC<Props> = ({ stepId, anchor, status, handleMoreButtonHovered
   );
 
   return (
-    <span
-      onMouseEnter={(e: MouseEvent<HTMLElement>): void => handleMoreButtonHovered(e)}
-      onMouseLeave={(): void => handleMoreButtonNotHovered()}
-    >
+    <span ref={ref} onMouseEnter={(): void => setOpen(true)} onMouseLeave={(): void => setOpen(false)}>
       <IconButton className={classes.moreButton}>
         <MoreHoriz className={classes.scenarioStepIcon} />
       </IconButton>
-      <Popper open={!!anchor} anchorEl={anchor} transition className={classes.popperMenu}>
+      <Popper open={open} anchorEl={ref?.current} transition className={classes.popperMenu}>
         {({ TransitionProps }): ReactNode => (
           <Fade {...TransitionProps} timeout={350}>
             <Card>

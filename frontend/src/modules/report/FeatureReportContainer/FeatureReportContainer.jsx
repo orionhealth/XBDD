@@ -7,13 +7,9 @@ import ScenarioList from './ScenarioList/ScenarioList';
 class FeatureReportContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = { expandedScenarioIdList: [], hoveredStepId: null, anchor: null };
+    this.state = { expandedScenarioIdList: [] };
 
     this.handleScenarioClicked = this.handleScenarioClicked.bind(this);
-    this.handleStepHovered = this.handleStepHovered.bind(this);
-    this.handleStepNotHovered = this.handleStepNotHovered.bind(this);
-    this.handleMoreButtonHovered = this.handleMoreButtonHovered.bind(this);
-    this.handleMoreButtonNotHovered = this.handleMoreButtonNotHovered.bind(this);
   }
 
   handleScenarioClicked(scenarioId) {
@@ -27,22 +23,6 @@ class FeatureReportContainer extends Component {
     }
   }
 
-  handleStepHovered(hoveredStepId) {
-    this.setState({ hoveredStepId: hoveredStepId });
-  }
-
-  handleStepNotHovered() {
-    this.setState({ hoveredStepId: null, anchor: null });
-  }
-
-  handleMoreButtonHovered(event) {
-    this.setState({ anchor: event.currentTarget });
-  }
-
-  handleMoreButtonNotHovered() {
-    this.setState({ anchor: null });
-  }
-
   render() {
     const { feature, executionHistory, handleScenarioCommentChanged, handleStatusChange, handleScreenshotClicked } = this.props;
 
@@ -52,14 +32,8 @@ class FeatureReportContainer extends Component {
         <ScenarioList
           scenarioList={feature.scenarios}
           expandedScenarioIdList={this.state.expandedScenarioIdList}
-          hoveredStepId={this.state.hoveredStepId}
-          anchor={this.state.anchor}
           handleScenarioClicked={this.handleScenarioClicked}
           handleScenarioCommentChanged={handleScenarioCommentChanged}
-          handleStepHovered={this.handleStepHovered}
-          handleStepNotHovered={this.handleStepNotHovered}
-          handleMoreButtonHovered={this.handleMoreButtonHovered}
-          handleMoreButtonNotHovered={this.handleMoreButtonNotHovered}
           handleStatusChange={handleStatusChange}
           handleScreenshotClicked={handleScreenshotClicked}
         />

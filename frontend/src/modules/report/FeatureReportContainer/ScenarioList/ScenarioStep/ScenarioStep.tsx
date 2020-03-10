@@ -22,32 +22,11 @@ interface Props extends WithStyles {
   title: string;
   scenarioId: string;
   steps: Step[];
-  hoveredStepId: string;
-  anchor: HTMLElement;
-  handleStepHovered(stepId: string): void;
-  handleStepNotHovered(stepId: string): void;
-  handleMoreButtonHovered(): void;
-  handleMoreButtonNotHovered(): void;
   handleStatusChange(scenarioId: string, oldStatusMap: StepChange[], newStatusMap: StepChange[]): void;
   handleScreenshotClicked(screenshot: ReactNode): void;
 }
 
-const ScenarioStep: FC<Props> = props => {
-  const {
-    title,
-    scenarioId,
-    steps,
-    hoveredStepId,
-    anchor,
-    handleStepHovered,
-    handleStepNotHovered,
-    handleMoreButtonHovered,
-    handleMoreButtonNotHovered,
-    handleStatusChange,
-    handleScreenshotClicked,
-    classes,
-  } = props;
-
+const ScenarioStep: FC<Props> = ({ title, scenarioId, steps, handleStatusChange, handleScreenshotClicked, classes }) => {
   const iconMap: { [key in Status]: ReactNode } = {
     passed: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
     failed: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
@@ -78,7 +57,7 @@ const ScenarioStep: FC<Props> = props => {
 
   const renderScreenshot = (embeddings: string): ReactNode => {
     const url = `http://localhost:28080/xbdd/rest/attachment/${embeddings}`;
-    const alt = `Screenshot Not Found`;
+    const alt = '';
     const style = { height: '100%', width: '100%' };
     const onClick = (): void => handleScreenshotClicked(<img src={url} alt={alt} style={style} />);
     return (
@@ -108,8 +87,6 @@ const ScenarioStep: FC<Props> = props => {
                   button
                   className={classes.step}
                   onClick={(e: MouseEvent<HTMLElement>): void => onStepStatusChange(e, step.id, status, null)}
-                  onMouseEnter={(): void => handleStepHovered(`${scenarioId} ${step.id}`)}
-                  onMouseLeave={(): void => handleStepNotHovered(`${scenarioId} ${step.id}`)}
                 >
                   <Box display="flex" flexDirection="row">
                     <Box p={1} className={getFailedClasses(status)}>
@@ -119,16 +96,7 @@ const ScenarioStep: FC<Props> = props => {
                       <div>
                         <span className={classes.stepKeyword}>{step.keyword}</span>
                         <span>{`${step.name} `}</span>
-                        {`${scenarioId} ${step.id}` === hoveredStepId && (
-                          <PopperMenu
-                            stepId={step.id}
-                            anchor={anchor}
-                            status={status}
-                            handleMoreButtonHovered={handleMoreButtonHovered}
-                            handleMoreButtonNotHovered={handleMoreButtonNotHovered}
-                            onStepStatusChange={onStepStatusChange}
-                          />
-                        )}
+                        <PopperMenu stepId={step.id} status={status} onStepStatusChange={onStepStatusChange} />
                       </div>
                       {step.rows ? <CucumberTable rows={step.rows} /> : null}
                     </Box>

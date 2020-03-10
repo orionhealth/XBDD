@@ -47,6 +47,7 @@ class ScenarioInputField extends Component<Props, State> {
 
   render(): ReactNode {
     const { scenarioId, label, placeholder, handleScenarioCommentChanged, classes } = this.props;
+    const { prevContent, content } = this.state;
 
     const labelMap = {
       Environment: 'environmentNotes',
@@ -68,12 +69,10 @@ class ScenarioInputField extends Component<Props, State> {
           multiline
           rows="2"
           fullWidth={true}
-          value={this.state.content}
+          value={content}
           onChange={this.handleValueChanged}
           onFocus={this.handleCommentFocused}
-          onBlur={(): void =>
-            handleScenarioCommentChanged(scenarioId, labelMap[label], requestLabelMap[label], this.state.prevContent, this.state.content)
-          }
+          onBlur={(): void => handleScenarioCommentChanged(scenarioId, labelMap[label], requestLabelMap[label], prevContent, content)}
           className={classes.textField}
           margin="normal"
           variant="outlined"
