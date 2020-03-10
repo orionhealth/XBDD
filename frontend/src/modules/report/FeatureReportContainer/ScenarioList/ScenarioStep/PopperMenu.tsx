@@ -1,30 +1,51 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FC } from 'react';
 import { IconButton, Popper, Fade, Card, List, ListItem } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-import { popperMenuStyles } from './styles/ScenarioStepStyles';
+const useStyles = makeStyles(() =>
+  createStyles({
+    scenarioStepIcon: {
+      fontSize: '16px',
+    },
+    moreButton: {
+      padding: '0px',
+    },
+    popperMenu: {
+      zIndex: 999,
+    },
+  })
+);
 
-const PopperMenu = props => {
-  const {
-    scenarioId,
-    stepId,
-    anchor,
-    status,
-    handleMoreButtonHovered,
-    handleMoreButtonNotHovered,
-    handleStatusChange,
-    clickEventWrapper,
-    classes,
-  } = props;
+interface Props {
+  scenarioId: string;
+  stepId: string;
+  anchor: object;
+  status: string;
+  handleMoreButtonHovered(): void;
+  handleMoreButtonNotHovered(): void;
+  handleStatusChange(): void;
+  clickEventWrapper(): void;
+}
 
-  const labelMap = {
-    passed: 'Pass',
-    failed: 'Fail',
-    skipped: 'Skip',
-    undefined: 'Undefine',
-  };
+const labelMap = {
+  passed: 'Pass',
+  failed: 'Fail',
+  skipped: 'Skip',
+  undefined: 'Undefine',
+};
+
+const PopperMenu: FC<Props> = ({
+  scenarioId,
+  stepId,
+  anchor,
+  status,
+  handleMoreButtonHovered,
+  handleMoreButtonNotHovered,
+  handleStatusChange,
+  clickEventWrapper,
+}) => {
+  const classes = useStyles();
 
   const renderListItem = newStatus => (
     <ListItem button onClick={e => clickEventWrapper(e, scenarioId, stepId, status, newStatus, handleStatusChange)}>
@@ -55,16 +76,4 @@ const PopperMenu = props => {
   );
 };
 
-PopperMenu.propTypes = {
-  scenarioId: PropTypes.string,
-  stepId: PropTypes.number,
-  anchor: PropTypes.object,
-  status: PropTypes.string,
-  handleMoreButtonHovered: PropTypes.func.isRequired,
-  handleMoreButtonNotHovered: PropTypes.func.isRequired,
-  handleStatusChange: PropTypes.func.isRequired,
-  clickEventWrapper: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}),
-};
-
-export default withStyles(popperMenuStyles)(PopperMenu);
+export default PopperMenu;

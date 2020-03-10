@@ -39,32 +39,10 @@ const stepStyles = {
   },
 };
 
-const popperMenuStyles = {
-  scenarioStepIcon: {
-    fontSize: '16px',
-  },
-  moreButton: {
-    padding: '0px',
-  },
-  popperMenu: {
-    zIndex: '999',
-  },
-};
-
-const cucumberTableStyles = {
-  scrollableTable: {
-    overflowX: 'scroll',
-  },
-  stepTable: {
-    width: 'auto',
-    margin: '4px 0 12px 0',
-  },
-};
-
 const inputFielsStyles = {
   inputField: {
     margin: '0',
   },
 };
 
-export { stepStyles, popperMenuStyles, cucumberTableStyles, inputFielsStyles };
+export { stepStyles, inputFielsStyles };
