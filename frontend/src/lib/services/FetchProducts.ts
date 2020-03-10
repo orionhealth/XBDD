@@ -98,7 +98,7 @@ const createProducts = (responseData: ResponseData): Product[] => {
 };
 
 const fetchProducts = (): Promise<Product[]> => {
-  return doGetRequest('/report', 'rest.error.summaryOfReports', isExpectedResponse, (responseData: ResponseData) => {
+  return doGetRequest('/reports', 'rest.error.summaryOfReports', isExpectedResponse, (responseData: ResponseData) => {
     return createProducts(responseData);
   });
 };
