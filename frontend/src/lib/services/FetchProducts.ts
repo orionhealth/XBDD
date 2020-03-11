@@ -1,6 +1,6 @@
 import Product from 'models/Product';
 import Version from 'models/Version';
-import { doGetRequest } from 'lib/rest/Rest';
+import { doGetRequestWithCallback } from 'lib/rest/RestRequests';
 
 interface ResponseDataElement {
   _id: string;
@@ -97,8 +97,8 @@ const createProducts = (responseData: ResponseData): Product[] => {
   return productList;
 };
 
-const fetchProducts = (): Promise<Product[]> => {
-  return doGetRequest('/report', 'rest.error.summaryOfReports', isExpectedResponse, (responseData: ResponseData) => {
+const fetchProducts = (): Promise<Product[] | void> => {
+  return doGetRequestWithCallback('/report', 'rest.error.summaryOfReports', isExpectedResponse, (responseData: ResponseData) => {
     return createProducts(responseData);
   });
 };
