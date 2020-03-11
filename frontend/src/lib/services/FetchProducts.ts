@@ -1,6 +1,7 @@
 import Product from 'models/Product';
 import Version from 'models/Version';
 import { doGetRequestWithCallback } from 'lib/rest/RestRequests';
+import FetchProductsTypes from './generated/FetchProductsTypes';
 
 interface ResponseDataElement {
   _id: string;
@@ -15,42 +16,6 @@ interface ResponseDataElement {
   };
 }
 type ResponseData = ResponseDataElement[];
-
-const isExpectedResponse = (responseData: unknown): responseData is ResponseData => {
-  if (!Array.isArray(responseData)) {
-    return false;
-  }
-  if (responseData.some(element => element._id === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => element.favourite === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => !Array.isArray(element.builds) || element.builds.some(build => typeof build !== 'string'))) {
-    return false;
-  }
-  if (
-    responseData.some(
-      element =>
-        element.pinned !== undefined && (!Array.isArray(element.pinned) || element.pinned.some(pinned => typeof pinned !== 'string'))
-    )
-  ) {
-    return false;
-  }
-  if (responseData.some(element => element.coordinates?.major === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => element.coordinates?.minor === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => element.coordinates?.servicePack === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => element.coordinates?.product === undefined)) {
-    return false;
-  }
-  return true;
-};
 
 const versionComparator = (a: Version, b: Version): number => {
   if (a.major !== b.major) {
@@ -98,7 +63,7 @@ const createProducts = (responseData: ResponseData): Product[] => {
 };
 
 const fetchProducts = (): Promise<Product[] | void> => {
-  return doGetRequestWithCallback('/report', 'rest.error.summaryOfReports', isExpectedResponse, (responseData: ResponseData) => {
+  return doGetRequestWithCallback('/report', 'rest.error.summaryOfReports', FetchProductsTypes, (responseData: ResponseData) => {
     return createProducts(responseData);
   });
 };

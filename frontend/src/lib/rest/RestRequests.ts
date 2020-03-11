@@ -22,6 +22,10 @@ const timeout = (promise: Promise<Response>, ms = DEFAULT_TIMEOUT): Promise<Resp
   return Promise.race([timerPromise, promise]);
 };
 
+const validateResponseData = (responseData: unknown, type: ITypeSuite): void => {
+  createCheckers(type).ResponseData.check(responseData);
+};
+
 const handleError = (error: Error, path: string, message: string): void => {
   console.error(`${path} failed: ${error.message}`);
   showNotification({ message, severity: 'error' });
@@ -48,13 +52,13 @@ const doRequestWithCallback = <T, R>(
   path: string,
   options: RequestInit,
   errorMessage: string,
-  isExpectedResponse: (responseData: unknown) => boolean,
+  type: ITypeSuite,
   onSuccess: (responseData: T) => R
 ): Promise<R | void> => {
   return makeCall<T>(path, options)
     .then((responseData: T | void) => {
-      if (isExpectedResponse && !isExpectedResponse(responseData)) {
-        throw new Error(`Unexpected response: ${JSON.stringify(responseData)}`);
+      if (type) {
+        validateResponseData(responseData, type);
       }
       if (!responseData) {
         throw new Error('Response data expected');
@@ -75,14 +79,14 @@ export const doGetRequest = <T>(path: string, errorMessage = 'rest.error.get'): 
 export const doGetRequestWithCallback = <T, R>(
   path: string,
   errorMessage = 'rest.error.get',
-  isExpectedResponse: (responseData: unknown) => boolean,
+  type: ITypeSuite,
   onSuccess: (responseData: T) => R
 ): Promise<R | void> => {
   const options = {
     method: 'GET',
     headers: getHeaders(),
   };
-  return doRequestWithCallback(path, options, errorMessage, isExpectedResponse, onSuccess);
+  return doRequestWithCallback(path, options, errorMessage, type, onSuccess);
 };
 
 export const doPutRequest = <T>(path: string, data: unknown, errorMessage = 'rest.error.put'): Promise<T | void> => {
