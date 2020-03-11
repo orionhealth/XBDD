@@ -34,11 +34,11 @@ const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
 
-  const labelMap = {
-    passed: t('report.pass'),
-    failed: t('report.fail'),
-    skipped: t('report.skip'),
-    undefined: t('report.undefined'),
+  const labelMap: { [key in Status]: string } = {
+    [Passed]: t('report.pass'),
+    [Failed]: t('report.fail'),
+    [Skipped]: t('report.skip'),
+    [Undefined]: t('report.undefined'),
   };
 
   const renderListItem = (newStatus: Status): ReactNode => (

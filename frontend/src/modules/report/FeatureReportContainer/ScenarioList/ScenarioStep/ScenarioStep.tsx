@@ -11,7 +11,7 @@ import CucumberTable from './CucumberTable';
 import Step from 'models/Step';
 import Status from 'models/Status';
 
-const { Passed, Failed } = Status;
+const { Passed, Failed, Skipped, Undefined } = Status;
 
 interface StepChange {
   stepId: string;
@@ -28,10 +28,10 @@ interface Props extends WithStyles {
 
 const ScenarioStep: FC<Props> = ({ title, scenarioId, steps, handleStatusChange, handleScreenshotClicked, classes }) => {
   const iconMap: { [key in Status]: ReactNode } = {
-    passed: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
-    failed: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
-    undefined: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
-    skipped: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
+    [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
+    [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
+    [Undefined]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
+    [Skipped]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
   };
 
   const getFailedClasses = (status: Status): string => {
@@ -42,10 +42,10 @@ const ScenarioStep: FC<Props> = ({ title, scenarioId, steps, handleStatusChange,
     event.stopPropagation();
 
     const nextStatus: { [key in Status]: Status } = {
-      passed: Failed,
-      failed: Passed,
-      undefined: Passed,
-      skipped: Passed,
+      [Passed]: Failed,
+      [Failed]: Passed,
+      [Undefined]: Passed,
+      [Skipped]: Passed,
     };
 
     const status = newStatus ? newStatus : nextStatus[prevStatus];
@@ -56,7 +56,7 @@ const ScenarioStep: FC<Props> = ({ title, scenarioId, steps, handleStatusChange,
   };
 
   const renderScreenshot = (embeddings: string): ReactNode => {
-    const url = `http://localhost:28080/xbdd/rest/attachment/${embeddings}`;
+    const url = `${process.env.REACT_APP_BACKEND_HOST}/attachment/${embeddings}`;
     const alt = '';
     const style = { height: '100%', width: '100%' };
     const onClick = (): void => handleScreenshotClicked(<img src={url} alt={alt} style={style} />);
