@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/report")
+@Path("/reports")
 public class Report {
 
 	private final MongoDBAccessor client;

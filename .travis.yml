@@ -1,5 +1,10 @@
 language: java
 
+# only run build on master, all other branches should go through a PR which also triggers a build
+branches:
+  only:
+    - master
+
 jdk:
   - openjdk8
 
@@ -7,7 +12,7 @@ cache:
   directories:
     - $HOME/.m2
 
-script: 
+script:
   - mvn clean package
   - mvn cobertura:cobertura
 

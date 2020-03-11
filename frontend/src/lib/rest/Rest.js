@@ -13,7 +13,7 @@ export const unPinABuild = (project, major, minor, servicePack, build) =>
 export const getFeatureListByTagData = (product, version, build) =>
   doGetRequest(`/tagview/featureTagIndex/${product}/${version}/${build}`, 'rest.error.featuresByTag');
 
-export const getSimpleFeatureListData = (product, version, build) => doGetRequest(`/report/featureIndex/${product}/${version}/${build}`);
+export const getSimpleFeatureListData = (product, version, build) => doGetRequest(`/reports/featureIndex/${product}/${version}/${build}`);
 
 export const getFeatureReport = id => doGetRequest(`/feature/${id}`);
 

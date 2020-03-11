@@ -15,8 +15,6 @@
  */
 package xbdd.webapp.resource.feature;
 
-import org.glassfish.jersey.server.mvc.Viewable;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -41,7 +39,7 @@ public class MultipleBuilds {
 		map.put("builds", builds);
 		map.put("version", version);
 		map.put("product", product);
-		return Response.ok(new Viewable(VIEW_ID, map)).build();
+		return Response.ok().build();
 	}
 
 	@GET

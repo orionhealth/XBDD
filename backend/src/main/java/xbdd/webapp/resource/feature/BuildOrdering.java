@@ -15,7 +15,6 @@
  */
 package xbdd.webapp.resource.feature;
 
-import org.glassfish.jersey.server.mvc.Viewable;
 import xbdd.webapp.util.Coordinates;
 
 import javax.servlet.ServletContext;
@@ -40,6 +39,6 @@ public class BuildOrdering {
 		final Map<String, Object> map = new HashMap<String, Object>();
 		map.put("product", coordinates.getProduct());
 		map.put("version", coordinates.getVersionString());
-		return Response.ok(new Viewable(VIEW_ID, map)).build();
+		return Response.ok().build();
 	}
 }

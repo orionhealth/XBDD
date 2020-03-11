@@ -10,7 +10,7 @@
           </option>
           <option name="goals">
             <list>
-              <option value="tomcat7:run" />
+              <option value="cargo:run" />
             </list>
           </option>
           <option name="pomFileName" />

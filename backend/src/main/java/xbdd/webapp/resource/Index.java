@@ -15,8 +15,6 @@
  */
 package xbdd.webapp.resource;
 
-import org.glassfish.jersey.server.mvc.Viewable;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -39,6 +37,6 @@ public class Index {
 			@Context final HttpServletRequest req) {
 		final Map<String, Object> map = new HashMap<String, Object>();
 		map.put("isAdmin", req.isUserInRole("admin"));
-		return Response.ok(new Viewable(VIEW_ID, map)).build();
+		return Response.ok().build();
 	}
 }
