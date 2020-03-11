@@ -1,14 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FC } from 'react';
 import { Table, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-import { cucumberTableStyles } from './styles/ScenarioStepStyles';
+import { StepRow } from 'models/Step';
 
-const CucumberTable = props => {
-  const { rows, classes } = props;
+const useStyles = makeStyles(() =>
+  createStyles({
+    scrollableTable: {
+      overflowX: 'scroll',
+    },
+    stepTable: {
+      width: 'auto',
+      margin: '4px 0 12px 0',
+    },
+  })
+);
 
-  var index = 0;
+interface Props {
+  rows: StepRow[];
+}
+
+const CucumberTable: FC<Props> = ({ rows }) => {
+  const classes = useStyles();
+
+  let index = 0;
   return (
     <div className={classes.scrollableTable}>
       <Table size="small" className={classes.stepTable}>
@@ -33,13 +48,4 @@ const CucumberTable = props => {
   );
 };
 
-CucumberTable.propTypes = {
-  rows: PropTypes.arrayOf(
-    PropTypes.shape({
-      cells: PropTypes.arrayOf(PropTypes.string),
-    })
-  ),
-  classes: PropTypes.shape({}),
-};
-
-export default withStyles(cucumberTableStyles)(CucumberTable);
+export default CucumberTable;
