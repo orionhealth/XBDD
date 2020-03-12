@@ -5,11 +5,9 @@ import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { inputFieldStyles } from './styles/ScenarioStepStyles';
 
 interface Props extends WithStyles {
-  scenarioId: string;
   label: string;
-  placeholder: string;
   value: string;
-  handleScenarioCommentChanged(scenarioId: string, label: string, requestLabel: string, prevContent: string, content: string): void;
+  handleCommentUpdate(label: string, requestLabel: string, prevContent: string, content: string): void;
 }
 
 interface State {
@@ -46,7 +44,7 @@ class ScenarioInputField extends Component<Props, State> {
   };
 
   render(): ReactNode {
-    const { scenarioId, label, placeholder, handleScenarioCommentChanged, classes } = this.props;
+    const { label, handleCommentUpdate, classes } = this.props;
     const { prevContent, content } = this.state;
 
     const labelMap = {
@@ -65,14 +63,13 @@ class ScenarioInputField extends Component<Props, State> {
       <div className={classes.inputField}>
         <TextField
           label={label}
-          placeholder={placeholder}
           multiline
           rows="2"
           fullWidth={true}
           value={content}
           onChange={this.handleValueChanged}
           onFocus={this.handleCommentFocused}
-          onBlur={(): void => handleScenarioCommentChanged(scenarioId, labelMap[label], requestLabelMap[label], prevContent, content)}
+          onBlur={(): void => handleCommentUpdate(labelMap[label], requestLabelMap[label], prevContent, content)}
           className={classes.textField}
           margin="normal"
           variant="outlined"

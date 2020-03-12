@@ -23,7 +23,14 @@
     "pass": "Pass",
     "fail": "Fail",
     "skip": "Skip",
-    "undefined": "Undefined"
+    "undefined": "Undefined",
+    "steps": "Steps",
+    "backgroundSteps": "Background Steps",
+    "skipAllSteps": "Skip All Steps",
+    "passAllSteps": "Pass All Steps",
+    "environment": "Environment",
+    "executionNotes": "Execution Notes",
+    "testingTips": "Testing Tips"
   },
   "rest": {
     "error": {
