@@ -45,19 +45,12 @@ const ScenarioDisplay: FC<Props> = ({ scenario, handleCommentUpdate, handleStatu
     className += ` ${classesMap[originalAutomatedStatus]}`;
   }
 
-  const generateStatusMap = (scenario: Scenario, status?: Status): StepChange[] => {
-    const statusMap: StepChange[] = [];
-
-    for (const step of [...scenario.backgroundSteps, ...scenario.steps]) {
-      const computedStatus = status || step.manualStatus || step.status;
-      statusMap.push({ stepId: step.id, status: computedStatus });
-    }
-
-    return statusMap;
-  };
-
   const getChangeAllSteps = (newStatus: Status) => (): void =>
-    handleStatusChange(id, generateStatusMap(scenario), generateStatusMap(scenario, newStatus));
+    handleStatusChange(
+      id,
+      [...backgroundSteps, ...steps].map(step => ({ stepId: step.id, status: step.manualStatus || step.status })),
+      [...backgroundSteps, ...steps].map(step => ({ stepId: step.id, status: newStatus }))
+    );
 
   const boundStatusChange = (oldStatusMap: StepChange[], newStatusMap: StepChange[]): void =>
     handleStatusChange(id, oldStatusMap, newStatusMap);
@@ -92,22 +85,22 @@ const ScenarioDisplay: FC<Props> = ({ scenario, handleCommentUpdate, handleStatu
             {steps && <ScenarioStep title={t('report.steps')} steps={steps} handleStatusChange={boundStatusChange} />}
           </Grid>
           <Grid item xs={5}>
-            <ScenarioInputField label={t('feature.environment')} value={environmentNotes} handleCommentUpdate={boundCommentUpdate} />
+            <ScenarioInputField label={t('report.environment')} value={environmentNotes} handleCommentUpdate={boundCommentUpdate} />
           </Grid>
           <Grid item xs={1} />
           <Grid item xs={5}>
-            <ScenarioInputField label={t('feature.executionNotes')} value={executionNotes} handleCommentUpdate={boundCommentUpdate} />
+            <ScenarioInputField label={t('report.executionNotes')} value={executionNotes} handleCommentUpdate={boundCommentUpdate} />
           </Grid>
           <Grid item xs={11}>
-            <ScenarioInputField label={t('feature.testingTips')} value={testingTips} handleCommentUpdate={boundCommentUpdate} />
+            <ScenarioInputField label={t('report.testingTips')} value={testingTips} handleCommentUpdate={boundCommentUpdate} />
           </Grid>
           <Grid item xs={11}>
             <div className={classes.buttons}>
               <Button variant="contained" size="small" onClick={getChangeAllSteps(Skipped)} className={classes.skipAllSteps}>
-                {t('feature.skipAllSteps')}
+                {t('report.skipAllSteps')}
               </Button>
               <Button variant="contained" size="small" onClick={getChangeAllSteps(Passed)} className={classes.skipAllSteps}>
-                {t('feature.passAllSteps')}
+                {t('report.passAllSteps')}
               </Button>
             </div>
           </Grid>
