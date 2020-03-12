@@ -1,5 +1,4 @@
 import { showNotification } from 'modules/notifications/notifications';
-import { createCheckers, ITypeSuite } from 'ts-interface-checker';
 
 const username = 'admin';
 const password = 'password';
