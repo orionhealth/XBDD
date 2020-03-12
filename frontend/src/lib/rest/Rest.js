@@ -1,4 +1,9 @@
-import { doGetRequest, doPutRequest, doDeleteRequest } from './RestRequests';
+import { doRequest, Method } from './RestRequests';
+
+const { GET, PUT, DELETE } = Method;
+const doGetRequest = (path, errorMessage) => doRequest(GET, path, errorMessage);
+const doPutRequest = (path, data, errorMessage) => doRequest(PUT, path, errorMessage, data);
+const doDeleteRequest = (path, errorMessage) => doRequest(DELETE, path, errorMessage);
 
 export const setProductFavouriteOn = project => doPutRequest(`/favourites/${project}/`, null, 'rest.error.favourite');
 
