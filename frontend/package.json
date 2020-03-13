@@ -67,7 +67,7 @@
     "start-server": "nodemon ./dev_proxy/index",
     "build": "react-scripts build",
     "buildCheckersClean": "rm -rf \"src/lib/services/generated\" && mkdir \"src/lib/services/generated\"",
-    "buildCheckersGenerate": "ts-interface-builder -o \"src/lib/services/generated\" --suffix Types \"src/lib/services/FetchProducts.ts\"",
+    "buildCheckersGenerate": "ls src/lib/services/*.ts | xargs ts-interface-builder -o \"src/lib/services/generated\" --suffix Types",
     "buildCheckersPrettier": "prettier --write \"src/lib/services/generated/*.ts\"",
     "buildCheckers": "run-s buildCheckersClean buildCheckersGenerate buildCheckersPrettier",
     "lint": "eslint ./src",

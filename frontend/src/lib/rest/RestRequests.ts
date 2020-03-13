@@ -71,7 +71,7 @@ export function doRequest<T, R>(
   path: string,
   errorMessage = `rest.error.${method.toLowerCase()}`,
   data: unknown,
-  isExpectedResponse?: (responseData: T | void) => boolean,
+  type?: ITypeSuite,
   onSuccess?: (responseData: T) => R
 ): Promise<T | R | void> {
   return call<T>(method, path, data)
