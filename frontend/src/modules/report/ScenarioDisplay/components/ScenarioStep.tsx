@@ -1,4 +1,4 @@
-import React, { FC, KeyboardEvent, MouseEvent, ReactNode } from 'react';
+import React, { FC, MouseEvent, ReactNode } from 'react';
 import { List, ListItem, Box } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,7 @@ import PopperMenu from './PopperMenu';
 import CucumberTable from './CucumberTable';
 import Step from 'models/Step';
 import Status from 'models/Status';
+import StepScreenshot from './StepScreenshot';
 
 const { Passed, Failed, Skipped, Undefined } = Status;
 
@@ -20,13 +21,11 @@ interface StepChange {
 
 interface Props extends WithStyles {
   title: string;
-  scenarioId: string;
   steps: Step[];
-  handleStatusChange(scenarioId: string, oldStatusMap: StepChange[], newStatusMap: StepChange[]): void;
-  handleScreenshotClicked(screenshot: ReactNode): void;
+  handleStatusChange(oldStatusMap: StepChange[], newStatusMap: StepChange[]): void;
 }
 
-const ScenarioStep: FC<Props> = ({ title, scenarioId, steps, handleStatusChange, handleScreenshotClicked, classes }) => {
+const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) => {
   const iconMap: { [key in Status]: ReactNode } = {
     [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
     [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
@@ -52,26 +51,7 @@ const ScenarioStep: FC<Props> = ({ title, scenarioId, steps, handleStatusChange,
     const prevStatusMap = [{ stepId: stepId, status: prevStatus }];
     const newStatusMap = [{ stepId: stepId, status: status }];
 
-    handleStatusChange(scenarioId, prevStatusMap, newStatusMap);
-  };
-
-  const renderScreenshot = (embeddings: string): ReactNode => {
-    const url = `${process.env.REACT_APP_BACKEND_HOST}/attachment/${embeddings}`;
-    const alt = '';
-    const style = { height: '100%', width: '100%' };
-    const onClick = (): void => handleScreenshotClicked(<img src={url} alt={alt} style={style} />);
-    return (
-      <span
-        onClick={onClick}
-        onKeyPress={(e: KeyboardEvent<HTMLElement>): void => {
-          if (e.key === 'Enter') {
-            onClick();
-          }
-        }}
-      >
-        <img src={url} alt={alt} className={classes.screenshot} />
-      </span>
-    );
+    handleStatusChange(prevStatusMap, newStatusMap);
   };
 
   return (
@@ -102,7 +82,7 @@ const ScenarioStep: FC<Props> = ({ title, scenarioId, steps, handleStatusChange,
                     </Box>
                   </Box>
                 </ListItem>
-                {step.embeddings ? renderScreenshot(step.embeddings) : null}
+                {step.embeddings && <StepScreenshot screenshotPath={step.embeddings} />}
               </div>
             );
           }
