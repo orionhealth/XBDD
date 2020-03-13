@@ -9,10 +9,8 @@ import { stepStyles } from './styles/ScenarioStepStyles';
 import PopperMenu from './PopperMenu';
 import CucumberTable from './CucumberTable';
 import Step from 'models/Step';
-import Status from 'models/Status';
+import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
 import StepScreenshot from './StepScreenshot';
-
-const { Passed, Failed, Skipped, Undefined } = Status;
 
 interface StepChange {
   stepId: string;
@@ -26,7 +24,7 @@ interface Props extends WithStyles {
 }
 
 const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) => {
-  const iconMap: { [key in Status]: ReactNode } = {
+  const iconMap: StatusMap<ReactNode> = {
     [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
     [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
     [Undefined]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
@@ -40,7 +38,7 @@ const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) 
   const onStepStatusChange = (event: MouseEvent<HTMLElement>, stepId: string, prevStatus: Status, newStatus: Status | null): void => {
     event.stopPropagation();
 
-    const nextStatus: { [key in Status]: Status } = {
+    const nextStatus: StatusMap<Status> = {
       [Passed]: Failed,
       [Failed]: Passed,
       [Undefined]: Passed,

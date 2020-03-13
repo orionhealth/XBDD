@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import produce from 'immer';
 
 import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
 import { createFeatureFromFetchedData, cloneFeature } from 'models/Feature';
@@ -19,6 +20,14 @@ class ReportContainer extends Component {
       selectedFeature: null,
       executionHistory: null,
     };
+  }
+
+  updatedLastUpdated() {
+    this.setState(oldState =>
+      produce(oldState, draft => {
+        draft.selectedFeature.lastEditedOn = new Date();
+      })
+    );
   }
 
   handleFeatureSelected = feature => {
@@ -66,6 +75,8 @@ class ReportContainer extends Component {
       }
     });
     this.setStateForComment(scenarioId, label, newContent);
+
+    this.updatedLastUpdated();
   };
 
   updateExecutionHistory(executions, status) {
@@ -80,6 +91,8 @@ class ReportContainer extends Component {
   processFailedResponse(response, scenarioId, prevStatusMap) {
     if (!response || !response.ok) {
       this.setStateForStep(scenarioId, prevStatusMap);
+    } else {
+      this.updatedLastUpdated();
     }
   }
 
@@ -138,7 +151,7 @@ class ReportContainer extends Component {
   };
 
   render() {
-    const { product, version, build } = this.props;
+    const { product, version, build, classes } = this.props;
     const { selectedFeature, executionHistory } = this.state;
     return (
       <>
@@ -155,7 +168,7 @@ class ReportContainer extends Component {
             </Grid>
             <Grid item xs={8} lg={8}>
               {selectedFeature && executionHistory && (
-                <>
+                <div className={classes.scenarioList}>
                   <FeatureSummary feature={selectedFeature} executionHistory={executionHistory} />
                   {selectedFeature.scenarios.map(scenario => (
                     <ScenarioDisplay
@@ -165,7 +178,7 @@ class ReportContainer extends Component {
                       handleStatusChange={this.handleStatusChange}
                     />
                   ))}
-                </>
+                </div>
               )}
             </Grid>
           </Grid>
@@ -180,7 +193,6 @@ ReportContainer.propTypes = {
   version: PropTypes.string,
   build: PropTypes.string,
   classes: PropTypes.shape({}),
-  t: PropTypes.func.isRequired,
 };
 
 export default withStyles(reportContainerStyles)(ReportContainer);

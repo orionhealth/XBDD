@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 import { Card, IconButton, Tooltip } from '@material-ui/core';
 import { CheckCircleOutline, ErrorOutline, RemoveCircleOutline, HelpOutline } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
+
 import { filterButtonStyles } from './styles/FeatureListContainerStyles';
 
 const createButton = variant => (
