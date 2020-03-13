@@ -1,4 +1,9 @@
-import { doGetRequest, doPutRequest, doDeleteRequest } from './RestRequests';
+import { doRequest, Method } from './RestRequests';
+
+const { GET, PUT, DELETE } = Method;
+const doGetRequest = (path, errorMessage) => doRequest(GET, path, errorMessage);
+const doPutRequest = (path, data, errorMessage) => doRequest(PUT, path, errorMessage, data);
+const doDeleteRequest = (path, errorMessage) => doRequest(DELETE, path, errorMessage);
 
 export const setProductFavouriteOn = project => doPutRequest(`/favourites/${project}/`, null, 'rest.error.favourite');
 
@@ -13,7 +18,7 @@ export const unPinABuild = (project, major, minor, servicePack, build) =>
 export const getFeatureListByTagData = (product, version, build) =>
   doGetRequest(`/tagview/featureTagIndex/${product}/${version}/${build}`, 'rest.error.featuresByTag');
 
-export const getSimpleFeatureListData = (product, version, build) => doGetRequest(`/report/featureIndex/${product}/${version}/${build}`);
+export const getSimpleFeatureListData = (product, version, build) => doGetRequest(`/reports/featureIndex/${product}/${version}/${build}`);
 
 export const getFeatureReport = id => doGetRequest(`/feature/${id}`);
 

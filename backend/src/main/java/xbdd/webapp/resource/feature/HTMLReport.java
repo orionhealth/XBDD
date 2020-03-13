@@ -15,7 +15,6 @@
  */
 package xbdd.webapp.resource.feature;
 
-import org.glassfish.jersey.server.mvc.Viewable;
 import xbdd.webapp.util.Coordinates;
 
 import javax.servlet.ServletContext;
@@ -42,7 +41,7 @@ public class HTMLReport {
 		map.put("build", coordinates.getBuild());
 		map.put("featureid", null);
 		map.put("isAdmin", req.isUserInRole("admin"));
-		return Response.ok(new Viewable(VIEW_ID, map)).build();
+		return Response.ok().build();
 	}
 
 	/**
@@ -63,6 +62,6 @@ public class HTMLReport {
 		map.put("build", coordinates.getBuild());
 		map.put("featureid", featureid);
 		map.put("isAdmin", req.isUserInRole("admin"));
-		return Response.ok(new Viewable(VIEW_ID, map)).build();
+		return Response.ok().build();
 	}
 }

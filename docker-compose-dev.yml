@@ -1,0 +1,14 @@
+# For testing the docker deploy locally, see docs/DEVELOPMENT.md
+version: "3"
+services:
+  xbdd:
+    container_name: xbdd
+    build: ./packager
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+  mongo:
+    container_name: xbdd_mongo
+    build: ./mongo
+    ports:
+      - "27017:27017"

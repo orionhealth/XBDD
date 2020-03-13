@@ -2,22 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { withTranslation } from 'react-i18next';
 
 import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
 import { createFeatureFromFetchedData, cloneFeature } from 'models/Feature';
-import SimpleDialog from 'modules/utils/SimpleDialog';
 import { createExecutionFromFetchedData } from 'models/Execution';
 import { reportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
-import FeatureReportContainer from './FeatureReportContainer/FeatureReportContainer';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
+import ScenarioDisplay from './ScenarioDisplay/ScenarioDisplay';
+import FeatureSummary from './FeatureSummary/FeatureSummary';
 
 class ReportContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      screenshotDialogContent: null,
       selectedFeature: null,
       executionHistory: null,
     };
@@ -60,7 +58,7 @@ class ReportContainer extends Component {
     });
   }
 
-  handleScenarioCommentChanged = (scenarioId, label, requestLabel, prevContent, newContent) => {
+  handleCommentUpdate = (scenarioId, label, requestLabel, prevContent, newContent) => {
     const { selectedFeature } = this.state;
     updateComments(selectedFeature._id, { scenarioId, label: requestLabel, content: newContent }).then(response => {
       if (!response || !response.ok) {
@@ -139,26 +137,12 @@ class ReportContainer extends Component {
     this.setStateForStep(scenarioId, newStatusMap);
   };
 
-  handleScreenshotClicked = content => {
-    this.setState({ screenshotDialogContent: content });
-  };
-
-  handleDialogClosed = () => {
-    this.setState({ screenshotDialogContent: null });
-  };
-
   render() {
-    const { product, version, build, t } = this.props;
-    const { screenshotDialogContent, selectedFeature, executionHistory, hoveredStepId } = this.state;
+    const { product, version, build } = this.props;
+    const { selectedFeature, executionHistory } = this.state;
     return (
       <>
         <Card elevation={0}>
-          <SimpleDialog
-            open={!!screenshotDialogContent}
-            title={t('report.fullSizedScreenshot')}
-            content={screenshotDialogContent}
-            handleClosed={this.handleDialogClosed}
-          />
           <Grid container>
             <Grid item xs={4} lg={4}>
               <FeatureListContainer
@@ -170,16 +154,19 @@ class ReportContainer extends Component {
               />
             </Grid>
             <Grid item xs={8} lg={8}>
-              {selectedFeature && executionHistory ? (
-                <FeatureReportContainer
-                  feature={selectedFeature}
-                  executionHistory={executionHistory}
-                  hoveredStepId={hoveredStepId}
-                  handleScenarioCommentChanged={this.handleScenarioCommentChanged}
-                  handleStatusChange={this.handleStatusChange}
-                  handleScreenshotClicked={this.handleScreenshotClicked}
-                />
-              ) : null}
+              {selectedFeature && executionHistory && (
+                <>
+                  <FeatureSummary feature={selectedFeature} executionHistory={executionHistory} />
+                  {selectedFeature.scenarios.map(scenario => (
+                    <ScenarioDisplay
+                      key={scenario.id}
+                      scenario={scenario}
+                      handleCommentUpdate={this.handleCommentUpdate}
+                      handleStatusChange={this.handleStatusChange}
+                    />
+                  ))}
+                </>
+              )}
             </Grid>
           </Grid>
         </Card>
@@ -196,4 +183,4 @@ ReportContainer.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withTranslation()(withStyles(reportContainerStyles)(ReportContainer));
+export default withStyles(reportContainerStyles)(ReportContainer);

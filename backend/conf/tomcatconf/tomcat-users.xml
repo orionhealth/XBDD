@@ -17,16 +17,16 @@
 
 -->
 <tomcat-users>
-<!--
-  NOTE:  By default, no user is included in the "manager-gui" role required
-  to operate the "/manager/html" web application.  If you wish to use this app,
-  you must define such a user - the username and password are arbitrary.
--->
+    <!--
+      NOTE:  By default, no user is included in the "manager-gui" role required
+      to operate the "/manager/html" web application.  If you wish to use this app,
+      you must define such a user - the username and password are arbitrary.
+    -->
 
-<role rolename ="manager-script"/>
-<role rolename = "manager-gui"/>
-<role rolename = "admin"/>
-<user username="bamboo" password="bamboo" roles="manager-script,manager-gui"/>
-<user username="test" password="password"/>
-<user username="admin" password="password" roles="admin"/>
+    <role rolename="manager-script"/>
+    <role rolename="manager-gui"/>
+    <role rolename="admin"/>
+    <user username="bamboo" password="bamboo" roles="manager-script,manager-gui"/>
+    <user username="test" password="password"/>
+    <user username="admin" password="password" roles="admin,manager-gui"/>
 </tomcat-users>

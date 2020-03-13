@@ -19,7 +19,18 @@
     "switchToTagView": "Switch to Tag View",
     "turnEditModeOff": "Turn Edit Mode Off",
     "turnEditModeOn": "Turn Edit Mode On",
-    "warning": "Warning"
+    "warning": "Warning",
+    "pass": "Pass",
+    "fail": "Fail",
+    "skip": "Skip",
+    "undefined": "Undefined",
+    "steps": "Steps",
+    "backgroundSteps": "Background Steps",
+    "skipAllSteps": "Skip All Steps",
+    "passAllSteps": "Pass All Steps",
+    "environment": "Environment",
+    "executionNotes": "Execution Notes",
+    "testingTips": "Testing Tips"
   },
   "rest": {
     "error": {
@@ -35,9 +46,11 @@
     }
   },
   "summary": {
+    "buildDisplay": "Build {{build}}",
     "favourites": "Favourites",
     "productList": "Product List",
     "showLess": "Show less",
-    "showMore": "Show More"
+    "showMore": "Show More",
+    "versions": "Versions"
   }
 }
