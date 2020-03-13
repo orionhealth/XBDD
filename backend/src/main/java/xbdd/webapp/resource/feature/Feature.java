@@ -209,7 +209,7 @@ public class Feature {
 				updateTestingTipsForScenario(tips, scenarioToUpdate, coordinates, featureId);
 			}
 			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
-			featureToUpdate.put("lastEditOn", req.getD);
+			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
 			if (label.equals("testing-tips")) {
