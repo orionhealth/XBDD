@@ -22,7 +22,7 @@ class ReportContainer extends Component {
     };
   }
 
-  updatedLastUpdated() {
+  updateLastUpdated() {
     this.setState(oldState =>
       produce(oldState, draft => {
         draft.selectedFeature.lastEditedOn = new Date();
@@ -76,7 +76,7 @@ class ReportContainer extends Component {
     });
     this.setStateForComment(scenarioId, label, newContent);
 
-    this.updatedLastUpdated();
+    this.updateLastUpdated();
   };
 
   updateExecutionHistory(executions, status) {
@@ -92,7 +92,7 @@ class ReportContainer extends Component {
     if (!response || !response.ok) {
       this.setStateForStep(scenarioId, prevStatusMap);
     } else {
-      this.updatedLastUpdated();
+      this.updateLastUpdated();
     }
   }
 
