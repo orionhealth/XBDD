@@ -79,7 +79,7 @@ const featureListItemStyles = createStyles({
     fontWeight: 'bold',
     backgroundColor: '#E0E0E0',
   },
-  xbddTagViewFeatureListItem: {
+  listItem: {
     paddingLeft: '40px',
   },
 });

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/styles';
 
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 import Feature from 'models/Feature';
-import { StatusMap } from 'models/Status';
+import { StatusMap, Passed, Skipped, Failed, Undefined } from 'models/Status';
 
 interface Props extends WithStyles {
   featureList: Feature[];
@@ -17,10 +17,10 @@ const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, select
   const filterFeatureList = featureList.filter(feature => selectedStatus[feature.calculatedStatus]);
 
   const classesMap: StatusMap<string> = {
-    passed: classes.itemPassed,
-    failed: classes.itemFailed,
-    undefined: classes.itemUndefined,
-    skipped: classes.itemSkipped,
+    [Passed]: classes.itemPassed,
+    [Failed]: classes.itemFailed,
+    [Undefined]: classes.itemUndefined,
+    [Skipped]: classes.itemSkipped,
   };
 
   const getItemClasses = (feature: Feature, statusClass: string): string =>
