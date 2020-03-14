@@ -1,4 +1,6 @@
-const featureListContainerStyles = {
+import { createStyles } from '@material-ui/core';
+
+const featureListContainerStyles = createStyles({
   featureListTitle: {
     display: 'flex',
     alignItems: 'center',
@@ -18,9 +20,9 @@ const featureListContainerStyles = {
   unCheckedIcon: {
     fontSize: '20px',
   },
-};
+});
 
-const filterButtonStyles = {
+const filterButtonStyles = createStyles({
   xbddFilterButtons: {
     padding: '24px 24px 12px 24px',
   },
@@ -48,38 +50,38 @@ const filterButtonStyles = {
   xbddFilterButtonUnselected: {
     color: '#E0E0E0',
   },
-};
+});
 
-const featureListItemStyles = {
+const featureListItemStyles = createStyles({
   tags: {
     height: '18px',
     margin: '0 2px',
     background: '#428bca',
     color: 'white',
   },
-  xbddFeatureListItem: {
+  item: {
     lineHeight: '22px',
     display: 'inline-block',
   },
-  xbddFeatureListItemPassed: {
+  itemPassed: {
     color: '#576E5D',
   },
-  xbddFeatureListItemFailed: {
+  itemFailed: {
     color: '#AC534F',
   },
-  xbddFeatureListItemUndefined: {
+  itemUndefined: {
     color: '#C39575',
   },
-  xbddFeatureListItemSkipped: {
+  itemSkipped: {
     color: '#457B9D',
   },
-  xbddFeatureListItemSelected: {
+  itemSelected: {
     fontWeight: 'bold',
     backgroundColor: '#E0E0E0',
   },
   xbddTagViewFeatureListItem: {
     paddingLeft: '40px',
   },
-};
+});
 
 export { featureListContainerStyles, filterButtonStyles, featureListItemStyles };
