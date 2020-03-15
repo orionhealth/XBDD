@@ -10,9 +10,9 @@ interface ResponseDataElement {
   pinned?: string[];
   coordinates: {
     product: string;
-    major: string;
-    minor: string;
-    servicePack: string;
+    major: number;
+    minor: number;
+    servicePack: number;
   };
 }
 type ResponseData = ResponseDataElement[];

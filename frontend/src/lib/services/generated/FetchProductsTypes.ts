@@ -11,9 +11,9 @@ export const ResponseDataElement = t.iface([], {
   pinned: t.opt(t.array('string')),
   coordinates: t.iface([], {
     product: 'string',
-    major: 'string',
-    minor: 'string',
-    servicePack: 'string',
+    major: 'number',
+    minor: 'number',
+    servicePack: 'number',
   }),
 });
 
