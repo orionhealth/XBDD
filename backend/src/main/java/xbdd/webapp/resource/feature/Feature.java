@@ -123,7 +123,7 @@ public class Feature {
 	/**
 	 * Uses the '.+' regexp on featureId to allow for symbols such as slashes in the id
 	 *
-	 * @param String featureId The featureId to get the history for
+	 * @param featureId String The featureId to get the history for
 	 * @return DBObjet Returns the the current features state and details (environments, tips, steps and scenarios)
 	 */
 	@GET
@@ -226,7 +226,7 @@ public class Feature {
 	/**
 	 * Uses the '.+' regexp on featureId to allow for symbols such as slashes in the id
 	 *
-	 * @param String featureId The featureId to make changes to
+	 * @param featureId String The featureId to make changes to
 	 * @return DBObjet Returns the the features new state if changes were made and returns null if bad JSON was sent
 	 */
 	@PUT

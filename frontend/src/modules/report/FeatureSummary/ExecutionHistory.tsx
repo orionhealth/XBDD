@@ -1,20 +1,23 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, ReactNode } from 'react';
 import { Tooltip, Typography, IconButton } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { executionHistoryStyles } from './styles/FeatureSummaryStyles';
+import Execution from 'models/Execution';
+import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 
-const ExecutionHistory = props => {
-  const { executionHistory, classes } = props;
+interface Props extends WithStyles {
+  executionHistory: Execution[];
+}
 
-  const iconMap = {
-    passed: <FontAwesomeIcon icon={faCheckCircle} className={classes.xbddFeaturePassed} />,
-    failed: <FontAwesomeIcon icon={faExclamationCircle} className={classes.xbddFeatureFailed} />,
-    undefined: <FontAwesomeIcon icon={faQuestionCircle} className={classes.xbddFeatureUndefined} />,
-    skipped: <FontAwesomeIcon icon={faMinusCircle} className={classes.xbddFeatureSkipped} />,
+const ExecutionHistory: FC<Props> = ({ executionHistory, classes }) => {
+  const iconMap: StatusMap<ReactNode> = {
+    [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={classes.featurePassed} />,
+    [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={classes.featureFailed} />,
+    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={classes.featureUndefined} />,
+    [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={classes.featureSkipped} />,
   };
 
   return (
@@ -29,11 +32,6 @@ const ExecutionHistory = props => {
       ))}
     </div>
   );
-};
-
-ExecutionHistory.propTypes = {
-  executionHistory: PropTypes.arrayOf(PropTypes.shape({})),
-  classes: PropTypes.shape({}).isRequired,
 };
 
 export default withStyles(executionHistoryStyles)(ExecutionHistory);

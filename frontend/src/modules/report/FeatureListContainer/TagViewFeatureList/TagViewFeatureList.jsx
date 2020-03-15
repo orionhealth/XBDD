@@ -6,9 +6,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 
 const renderFeatureListItem = (feature, selectedFeatureId, statusClasses, handleFeatureSelected, classes) => {
-  var className = `${classes.xbddTagViewFeatureListItem} ${statusClasses} ${classes.xbddFeatureListItem}`;
+  var className = `${classes.listItem} ${statusClasses} ${classes.item}`;
   if (feature._id === selectedFeatureId) {
-    className += ` ${classes.xbddFeatureListItemSelected}`;
+    className += ` ${classes.itemSelected}`;
   }
 
   return (
@@ -21,10 +21,10 @@ const renderFeatureListItem = (feature, selectedFeatureId, statusClasses, handle
 const TagViewFeatureList = props => {
   const { selectedFeatureId, featureList, handleFeatureSelected, classes } = props;
   const classesMap = {
-    passed: classes.xbddFeatureListItemPassed,
-    failed: classes.xbddFeatureListItemFailed,
-    undefined: classes.xbddFeatureListItemUndefined,
-    skipped: classes.xbddFeatureListItemSkipped,
+    passed: classes.itemPassed,
+    failed: classes.itemFailed,
+    undefined: classes.itemUndefined,
+    skipped: classes.itemSkipped,
   };
 
   return (

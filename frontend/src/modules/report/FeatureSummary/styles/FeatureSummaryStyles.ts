@@ -3,7 +3,7 @@ import { createStyles } from '@material-ui/core';
 const featureSummaryStyles = createStyles({
   featureSummary: {
     padding: '24px',
-    margin: '24px 24px 24px 12px',
+    margin: '24px 0',
   },
   featureEditInfo: {
     fontSize: '14px',
@@ -35,26 +35,26 @@ const executionHistoryStyles = createStyles({
   executionHistoryIcon: {
     padding: '4px',
   },
-  xbddFeaturePassed: {
+  featurePassed: {
     color: '#576E5D',
   },
-  xbddFeatureFailed: {
+  featureFailed: {
     color: '#AC534F',
   },
-  xbddFeatureUndefined: {
+  featureUndefined: {
     color: '#C39575',
   },
-  xbddFeatureSkipped: {
+  featureSkipped: {
     color: '#457B9D',
   },
-  xbddFeatureStatusArrow: {
+  featureStatusArrow: {
     fontSize: '24px',
     color: '#999',
   },
 });
 
 const statusIconStyles = createStyles({
-  xbddFeatureStatus: {
+  featureStatus: {
     display: 'inline-flex',
   },
   bigIcons: {
@@ -63,19 +63,19 @@ const statusIconStyles = createStyles({
   smallIcons: {
     fontSize: '17px',
   },
-  xbddFeaturePassed: {
+  featurePassed: {
     color: '#576E5D',
   },
-  xbddFeatureFailed: {
+  featureFailed: {
     color: '#AC534F',
   },
-  xbddFeatureUndefined: {
+  featureUndefined: {
     color: '#C39575',
   },
-  xbddFeatureSkipped: {
+  featureSkipped: {
     color: '#457B9D',
   },
-  xbddFeatureStatusArrow: {
+  featureStatusArrow: {
     color: '#999',
   },
 });
