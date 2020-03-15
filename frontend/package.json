@@ -10,7 +10,6 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
-    "concurrently": "^5.1.0",
     "cors": "^2.8.5",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
@@ -25,9 +24,11 @@
     "eslint-plugin-react-hooks": "^2.4.0",
     "http-proxy": "^1.17.0",
     "nodemon": "^2.0.2",
+    "npm-run-all": "^4.1.5",
     "prettier": "^1.19.1",
     "react-test-renderer": "^16.13.0",
-    "redux-mock-store": "^1.5.4"
+    "redux-mock-store": "^1.5.4",
+    "ts-interface-builder": "^0.2.1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
@@ -57,18 +58,23 @@
     "react-scripts": "^3.4.0",
     "redux": "^4.0.5",
     "rxjs": "^6.5.4",
+    "ts-interface-checker": "^0.1.10",
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"npm run start-server\"",
-    "start:debug": "concurrently \"react-scripts --inspect start --no-cache --runInBand\" \"npm run start-server\"",
+    "start": "npm run buildTypeCheckers && run-p start-web start-server",
+    "start-web": "react-scripts start",
+    "start-server": "nodemon ./dev_proxy/index",
     "build": "react-scripts build",
+    "buildTypeCheckersClean": "rm -rf \"src/lib/services/generated\" && mkdir \"src/lib/services/generated\"",
+    "buildTypeCheckersGenerate": "ls src/lib/services/*.ts | xargs ts-interface-builder -o \"src/lib/services/generated\" --suffix Types",
+    "buildTypeCheckersPrettier": "prettier --write \"src/lib/services/generated/*.ts\"",
+    "buildTypeCheckers": "run-s buildTypeCheckersClean buildTypeCheckersGenerate buildTypeCheckersPrettier",
     "lint": "eslint ./src",
     "test": "react-scripts test --env=jsdom",
     "testCI": "react-scripts test --coverage --watchAll=false --env=jsdom",
     "test:debug": "react-scripts --inspect-brk test --runInBand --env=jsdom",
-    "eject": "react-scripts eject",
-    "start-server": "nodemon ./dev_proxy/index"
+    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [

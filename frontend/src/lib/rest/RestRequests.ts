@@ -1,3 +1,5 @@
+import { createCheckers, ITypeSuite } from 'ts-interface-checker';
+
 import { showNotification } from 'modules/notifications/notifications';
 
 const username = 'admin';
@@ -26,6 +28,10 @@ const timeout = (promise: Promise<Response>, ms = DEFAULT_TIMEOUT): Promise<Resp
     }, ms);
   });
   return Promise.race([timerPromise, promise]);
+};
+
+const validateResponseData = (responseData: unknown, type: ITypeSuite): void => {
+  createCheckers(type).ResponseData.check(responseData);
 };
 
 const call = <T>(method: Method, path: string, data: unknown): Promise<T | void> => {
@@ -57,7 +63,7 @@ export function doRequest<T, R>(
   path: string,
   errorMessage: string,
   data: unknown,
-  isExpectedResponse: (responseData: T) => boolean,
+  type: ITypeSuite,
   onSuccess: (responseData: T) => R
 ): Promise<R | void>;
 
@@ -66,13 +72,13 @@ export function doRequest<T, R>(
   path: string,
   errorMessage = `rest.error.${method.toLowerCase()}`,
   data: unknown,
-  isExpectedResponse?: (responseData: T | void) => boolean,
+  type?: ITypeSuite,
   onSuccess?: (responseData: T) => R
 ): Promise<T | R | void> {
   return call<T>(method, path, data)
     .then((responseData: T | void) => {
-      if (isExpectedResponse && !isExpectedResponse(responseData)) {
-        throw new Error(`Unexpected response: ${JSON.stringify(responseData)}`);
+      if (type) {
+        validateResponseData(responseData, type);
       }
       if (onSuccess && responseData) {
         return onSuccess(responseData);

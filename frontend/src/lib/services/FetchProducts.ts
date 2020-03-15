@@ -1,6 +1,7 @@
 import Product from 'models/Product';
 import Version from 'models/Version';
 import { doRequest, Method } from 'lib/rest/RestRequests';
+import FetchProductsTypes from './generated/FetchProductsTypes';
 
 interface ResponseDataElement {
   _id: string;
@@ -9,48 +10,12 @@ interface ResponseDataElement {
   pinned?: string[];
   coordinates: {
     product: string;
-    major: string;
-    minor: string;
-    servicePack: string;
+    major: number;
+    minor: number;
+    servicePack: number;
   };
 }
 type ResponseData = ResponseDataElement[];
-
-const isExpectedResponse = (responseData: unknown): responseData is ResponseData => {
-  if (!Array.isArray(responseData)) {
-    return false;
-  }
-  if (responseData.some(element => element._id === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => element.favourite === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => !Array.isArray(element.builds) || element.builds.some(build => typeof build !== 'string'))) {
-    return false;
-  }
-  if (
-    responseData.some(
-      element =>
-        element.pinned !== undefined && (!Array.isArray(element.pinned) || element.pinned.some(pinned => typeof pinned !== 'string'))
-    )
-  ) {
-    return false;
-  }
-  if (responseData.some(element => element.coordinates?.major === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => element.coordinates?.minor === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => element.coordinates?.servicePack === undefined)) {
-    return false;
-  }
-  if (responseData.some(element => element.coordinates?.product === undefined)) {
-    return false;
-  }
-  return true;
-};
 
 const versionComparator = (a: Version, b: Version): number => {
   if (a.major !== b.major) {
@@ -98,7 +63,7 @@ const createProducts = (responseData: ResponseData): Product[] => {
 };
 
 const fetchProducts = (): Promise<Product[] | void> => {
-  return doRequest(Method.GET, '/reports', 'rest.error.summaryOfReports', null, isExpectedResponse, (responseData: ResponseData) => {
+  return doRequest(Method.GET, '/reports', 'rest.error.summaryOfReports', null, FetchProductsTypes, (responseData: ResponseData) => {
     return createProducts(responseData);
   });
 };
