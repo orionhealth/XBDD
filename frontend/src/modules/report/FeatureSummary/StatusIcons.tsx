@@ -20,16 +20,16 @@ const StatusIcons: FC<Props> = props => {
   }
 
   const iconMap = {
-    passed: <FontAwesomeIcon icon={faCheckCircle} className={`${classes.xbddFeaturePassed} ${sizeClasses}`} />,
-    failed: <FontAwesomeIcon icon={faExclamationCircle} className={`${classes.xbddFeatureFailed} ${sizeClasses}`} />,
-    undefined: <FontAwesomeIcon icon={faQuestionCircle} className={`${classes.xbddFeatureUndefined} ${sizeClasses}`} />,
-    skipped: <FontAwesomeIcon icon={faMinusCircle} className={`${classes.xbddFeatureSkipped} ${sizeClasses}`} />,
+    passed: <FontAwesomeIcon icon={faCheckCircle} className={`${classes.featurePassed} ${sizeClasses}`} />,
+    failed: <FontAwesomeIcon icon={faExclamationCircle} className={`${classes.featureFailed} ${sizeClasses}`} />,
+    undefined: <FontAwesomeIcon icon={faQuestionCircle} className={`${classes.featureUndefined} ${sizeClasses}`} />,
+    skipped: <FontAwesomeIcon icon={faMinusCircle} className={`${classes.featureSkipped} ${sizeClasses}`} />,
   };
 
   return (
-    <div className={classes.xbddFeatureStatus}>
+    <div className={classes.featureStatus}>
       {iconMap[firstStatus]}
-      <Forward className={`${classes.xbddFeatureStatusArrow} ${sizeClasses}`} />
+      <Forward className={`${classes.featureStatusArrow} ${sizeClasses}`} />
       {iconMap[secondStatus]}
     </div>
   );

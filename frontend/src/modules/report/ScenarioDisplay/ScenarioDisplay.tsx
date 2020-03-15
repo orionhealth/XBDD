@@ -4,13 +4,11 @@ import { ExpandMore } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
 
 import Scenario from 'models/Scenario';
-import Status from 'models/Status';
+import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
 import useScenarioDisplayStyles from './styles/ScenarioDisplayStyles';
 import StatusIcons from '../FeatureSummary/StatusIcons';
 import ScenarioStep from './components/ScenarioStep';
 import ScenarioInputField from './components/ScenarioInputField';
-
-const { Passed, Failed, Skipped, Undefined } = Status;
 
 interface StepChange {
   stepId: string;
@@ -28,7 +26,7 @@ const ScenarioDisplay: FC<Props> = ({ scenario, handleCommentUpdate, handleStatu
   const classes = useScenarioDisplayStyles();
   const { t } = useTranslation();
 
-  const classesMap: { [key in Status]: string } = {
+  const classesMap: StatusMap<string> = {
     [Passed]: classes.xbddScenarioPassed,
     [Failed]: classes.xbddScenarioFailed,
     [Undefined]: classes.xbddScenarioUndefined,

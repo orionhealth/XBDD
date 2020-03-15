@@ -12,6 +12,8 @@ interface Feature {
   originalAutomatedStatus: Status;
   tags: Tag[];
   scenarios: Scenario[];
+  lastEditedOn?: Date;
+  lastEditedBy?: string;
 }
 
 export const createFeatureFromFetchedData = (data: any): Feature => {
@@ -25,6 +27,8 @@ export const createFeatureFromFetchedData = (data: any): Feature => {
     originalAutomatedStatus: data.originalAutomatedStatus,
     tags: data.tags,
     scenarios: data.elements.map(element => createScenarioFromFetchedData(element)),
+    lastEditedBy: data.statusLastEditedBy || undefined,
+    lastEditedOn: data.lastEditOn?.$date && new Date(Date.parse(data.lastEditOn.$date)),
   };
 };
 
@@ -39,6 +43,8 @@ export const cloneFeature = (feature: Feature): Feature => {
     calculatedStatus: feature.calculatedStatus,
     tags: feature.tags,
     scenarios: feature.scenarios.map(scenario => cloneScenario(scenario)),
+    lastEditedBy: feature.lastEditedBy,
+    lastEditedOn: feature.lastEditedOn,
   };
 };
 

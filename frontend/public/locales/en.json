@@ -30,7 +30,9 @@
     "passAllSteps": "Pass All Steps",
     "environment": "Environment",
     "executionNotes": "Execution Notes",
-    "testingTips": "Testing Tips"
+    "testingTips": "Testing Tips",
+    "lastEditedOn": "Last edited on {{date, DD/MM/YYYY}}",
+    "lastEditedByOn": "Last edited by {{name}}, {{date, DD/MM/YYYY}}"
   },
   "rest": {
     "error": {

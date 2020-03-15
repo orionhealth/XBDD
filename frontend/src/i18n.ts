@@ -16,6 +16,21 @@ i18n
     debug: process.env.REACT_APP_DEBUG === 'ON',
     interpolation: {
       escapeValue: false,
+      format: (value: any, format?: string, lng?: string): string => {
+        if (value instanceof Date) {
+          const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          };
+          return new Intl.DateTimeFormat(lng, options).format(value);
+        }
+
+        return value;
+      },
     },
   });
 
