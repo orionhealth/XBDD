@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 interface Props {
   isPinned: boolean;
   buildList: string[];
-  onClick(event: MouseEvent, build: string): void;
+  onClick(event: MouseEvent, build: string, isPinned: boolean): void;
 }
 
 const BuildListItem: FC<Props> = ({ isPinned, buildList, onClick }) => {
@@ -17,7 +17,7 @@ const BuildListItem: FC<Props> = ({ isPinned, buildList, onClick }) => {
   return (
     <>
       {buildList.map(build => (
-        <ListItem button key={build} onClick={(event: MouseEvent): void => onClick(event, build)}>
+        <ListItem button key={build} onClick={(event: MouseEvent): void => onClick(event, build, isPinned)}>
           <ListItemText>{t('summary.buildDisplay', { build })}</ListItemText>
           <ListItemIcon>
             <Checkbox
