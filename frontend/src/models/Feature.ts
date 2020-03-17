@@ -1,4 +1,4 @@
-import Scenario, { createScenarioFromFetchedData, cloneScenario } from './Scenario';
+import Scenario, { cloneScenario } from './Scenario';
 import Status from './Status';
 import Tag from './Tag';
 
@@ -15,22 +15,6 @@ interface Feature {
   lastEditedOn?: Date;
   lastEditedBy?: string;
 }
-
-export const createFeatureFromFetchedData = (data: any): Feature => {
-  return {
-    id: data.id,
-    _id: data._id,
-    name: data.name,
-    description: data.description,
-    keyword: data.keyword,
-    calculatedStatus: data.calculatedStatus,
-    originalAutomatedStatus: data.originalAutomatedStatus,
-    tags: data.tags,
-    scenarios: data.elements.map(element => createScenarioFromFetchedData(element)),
-    lastEditedBy: data.statusLastEditedBy || undefined,
-    lastEditedOn: data.lastEditOn?.$date && new Date(Date.parse(data.lastEditOn.$date)),
-  };
-};
 
 export const cloneFeature = (feature: Feature): Feature => {
   return {

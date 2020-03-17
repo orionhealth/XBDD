@@ -20,8 +20,6 @@ export const getFeatureListByTagData = (product, version, build) =>
 
 export const getSimpleFeatureListData = (product, version, build) => doGetRequest(`/reports/featureIndex/${product}/${version}/${build}`);
 
-export const getFeatureReport = id => doGetRequest(`/feature/${id}`);
-
 export const getRollUpData = (product, version, feature) => doGetRequest(`/feature/rollup/${product}/${version}/${feature}`);
 
 // path should be of type StepStatusPatch
