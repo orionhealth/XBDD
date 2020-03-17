@@ -4,7 +4,7 @@ import { Block } from '@material-ui/icons';
 
 import Tag from 'models/Tag';
 
-const useClasses = makeStyles(() =>
+const useStyles = makeStyles(() =>
   createStyles({
     userAvatar: {
       height: '32px',
@@ -35,7 +35,7 @@ const getHSLFromString = (string: string): string => {
 };
 
 const TagAvatar: FC<Props> = ({ tag, onClick }) => {
-  const classes = useClasses();
+  const classes = useStyles();
 
   const { userName, isIgnored } = tag;
   const color = userName ? getHSLFromString(userName) : undefined;
