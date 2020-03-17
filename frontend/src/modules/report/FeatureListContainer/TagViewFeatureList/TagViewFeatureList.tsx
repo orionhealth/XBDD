@@ -1,14 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { List, ListItem } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
-import Feature from 'models/Feature';
 import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
+import SimpleFeature from 'models/SimpleFeature';
+import Feature from 'models/Feature';
 
 interface Props extends WithStyles {
-  featureList: Feature[];
-  handleFeatureSelected(): void;
+  selectedFeatureId: string;
+  featureList: SimpleFeature[];
+  handleFeatureSelected(feature: Feature): void;
 }
 
 const TagViewFeatureList: FC<Props> = ({ selectedFeatureId, featureList, handleFeatureSelected, classes }) => {

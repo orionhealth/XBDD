@@ -47,7 +47,6 @@ class FeatureListContainer extends Component {
         undefined: true,
         skipped: true,
       },
-      expandedTagsList: [],
       loading: false,
     };
   }
@@ -95,18 +94,6 @@ class FeatureListContainer extends Component {
     }));
   };
 
-  handleTagSelect = tag => {
-    const { expandedTagsList } = this.state;
-    if (expandedTagsList.includes(tag)) {
-      const newExpandTagsList = [...expandedTagsList];
-      const index = newExpandTagsList.indexOf(tag);
-      newExpandTagsList.splice(index, 1);
-      this.setState({ expandedTagsList: newExpandTagsList });
-    } else {
-      this.setState({ expandedTagsList: [...expandedTagsList, tag] });
-    }
-  };
-
   setStateForTagUser(tag, userName) {
     this.setState(prevState => {
       const newFeatureList = cloneFeatureList(prevState.featureList);
@@ -115,7 +102,7 @@ class FeatureListContainer extends Component {
     });
   }
 
-  handleTagAssigned = (restId, tag, prevUserName, userName) => {
+  handleTagAssigned = (restId, tag, userName, prevUserName) => {
     var newUserName = userName;
     if (prevUserName === userName) {
       newUserName = null;
@@ -228,19 +215,17 @@ class FeatureListContainer extends Component {
 
   renderFeatureList(userName, restId, selectedFeatureId) {
     const { handleFeatureSelected } = this.props;
-    const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, expandedTagsList, featureList } = this.state;
+    const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, featureList } = this.state;
     if (isTagView) {
       return (
         <TagList
-          userName={userName}
+          loggedInUserName={userName}
           isEditMode={isEditMode}
           isAssignedTagsView={isAssignedTagsView}
           tagList={this.filterTags(userName)}
           restId={restId}
           selectedFeatureId={selectedFeatureId}
           selectedStatus={selectedStatus}
-          expandedTagsList={expandedTagsList}
-          handleTagSelect={this.handleTagSelect}
           handleFeatureSelected={handleFeatureSelected}
           handleTagAssigned={this.handleTagAssigned}
           handleWarningShow={this.handleWarningShow}
