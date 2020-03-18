@@ -97,7 +97,7 @@ const createFeature = (data: ResponseData): Feature => {
 
 const fetchFeature = (featureId: string): Promise<Feature | void> => {
   const url = `/feature/${featureId}`;
-  return doRequest(Method.GET, url, 'rest.error.get', undefined, FetchFeatureTypes, (responseData: ResponseData) => {
+  return doRequest(Method.GET, url, 'rest.error.get', null, FetchFeatureTypes, (responseData: ResponseData) => {
     return createFeature(responseData);
   });
 };
