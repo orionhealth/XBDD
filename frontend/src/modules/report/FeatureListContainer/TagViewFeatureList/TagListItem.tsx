@@ -1,9 +1,9 @@
-import React, { FC, MouseEvent, useState, useEffect } from 'react';
+import React, { FC, MouseEvent, useState } from 'react';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
+import { ListItem, ListItemText, Collapse } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTag, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faMinusSquare } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
 
 import { tagListItemStyles } from './styles/TagListStyles';
@@ -44,12 +44,6 @@ const TagListItem: FC<Props> = ({
   const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
   const { userName, name, isIgnored } = tag;
 
-  useEffect(() => {
-    if (isIgnored && !isEditMode) {
-      setExpanded(false);
-    }
-  }, [isIgnored, isEditMode]);
-
   const onAvatarClick = (event: MouseEvent): void => {
     event.stopPropagation();
     if (userName && userName !== loggedInUserName) {
@@ -61,32 +55,22 @@ const TagListItem: FC<Props> = ({
 
   return isAssignedTagsView && isIgnored ? null : (
     <>
-      <ListItem
-        button
-        disabled={isIgnored && !isEditMode}
-        onClick={(): void => setExpanded(!expanded)}
-        className={isIgnored && !isEditMode ? classes.ignoredListItem : classes.listItem}
-      >
+      <ListItem button onClick={(): void => setExpanded(!expanded)} className={classes.listItem}>
         {isEditMode && (
           <FontAwesomeIcon
             icon={isIgnored ? faMinusSquare : faSquare}
-            className={isIgnored ? `${classes.checkboxIcons} ${classes.ignoredColor}` : classes.checkboxIcons}
+            className={classes.checkboxIcons}
             onClick={(event: MouseEvent): void => {
               event.stopPropagation();
               handleTagIgnore(restId.split('/')[0], name);
             }}
           />
         )}
-        <ListItemIcon className={classes.listItemIcon}>
-          <span className={isIgnored ? classes.ignoredColor : undefined}>
-            <FontAwesomeIcon icon={faTag} />
-          </span>
-        </ListItemIcon>
-        <ListItemText className={isIgnored ? classes.ignoredColor : undefined}>{tag.name}</ListItemText>
+        <ListItemText>{tag.name}</ListItemText>
         <TagAvatar tag={tag} onClick={(e: MouseEvent): void => onAvatarClick(e)} />
-        {!isIgnored && !isEditMode && (expanded ? <ExpandLess /> : <ExpandMore />)}
+        {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
-      <Collapse in={!(isIgnored && !isEditMode) && expanded} timeout="auto" unmountOnExit>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <TagViewFeatureList selectedFeatureId={selectedFeatureId} featureList={featureList} handleFeatureSelected={handleFeatureSelected} />
       </Collapse>
     </>

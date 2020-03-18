@@ -102,17 +102,15 @@ class FeatureListContainer extends Component {
     });
   }
 
-  handleTagAssigned = (restId, tag, userName, prevUserName) => {
-    var newUserName = userName;
-    if (prevUserName === userName) {
-      newUserName = null;
-    }
-    setTagAssignmentData(restId, { tag, username: newUserName }).then(response => {
+  handleTagAssigned = (restId, tag, newUserName, prevUserName) => {
+    const userName = prevUserName === newUserName ? null : newUserName;
+
+    setTagAssignmentData(restId, { tag, userName }).then(response => {
       if (!response || !response.ok) {
         this.setStateForTagUser(tag, prevUserName);
       }
     });
-    this.setStateForTagUser(tag, newUserName);
+    this.setStateForTagUser(tag, userName);
   };
 
   handleWarningShow = (...args) => {
