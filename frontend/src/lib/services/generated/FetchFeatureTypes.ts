@@ -5,20 +5,32 @@ import * as t from 'ts-interface-checker';
 // tslint:disable:object-literal-key-quotes
 
 export const StepResponseData = t.iface([], {
-  line: 'string',
+  line: 'number',
   keyword: 'string',
   name: 'string',
-  result: 'any',
-  rows: t.array('StepRow'),
-  embeddings: 'string',
+  result: t.iface([], {
+    status: 'string',
+    manualStatus: t.opt('string'),
+  }),
+  rows: t.opt(
+    t.array(
+      t.iface([], {
+        cells: t.array('string'),
+        line: 'number',
+      })
+    )
+  ),
+  embeddings: t.opt(t.array('string')),
 });
 
 export const ScenarioResponseData = t.iface([], {
   id: 'string',
   name: 'string',
-  background: t.iface([], {
-    steps: t.array('StepResponseData'),
-  }),
+  background: t.opt(
+    t.iface([], {
+      steps: t.array('StepResponseData'),
+    })
+  ),
   steps: t.array('StepResponseData'),
 });
 
@@ -28,11 +40,19 @@ export const ResponseData = t.iface([], {
   name: 'string',
   description: 'string',
   keyword: 'string',
-  calculatedStatus: 'Status',
-  originalAutomatedStatus: 'Status',
-  statusLastEditedBy: 'undefined',
-  lastEditOn: 'any',
-  tags: t.array('Tag'),
+  calculatedStatus: 'string',
+  originalAutomatedStatus: 'string',
+  statusLastEditedBy: t.opt(t.union('string', 'null')),
+  lastEditOn: t.opt(
+    t.iface([], {
+      $date: 'string',
+    })
+  ),
+  tags: t.array(
+    t.iface([], {
+      name: 'string',
+    })
+  ),
   elements: t.array('ScenarioResponseData'),
 });
 

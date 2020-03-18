@@ -2,17 +2,17 @@ import Status from './Status';
 
 export interface StepRow {
   cells: string[];
-  line: string;
+  line: number;
 }
 
 interface Step {
-  id: string;
+  id: number;
   keyword: string;
   name: string;
   status: Status;
-  manualStatus: Status;
-  rows: StepRow[];
-  embeddings: string;
+  manualStatus?: Status;
+  rows?: StepRow[];
+  embeddings?: string[];
 }
 
 export default Step;

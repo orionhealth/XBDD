@@ -1,6 +1,6 @@
 import Scenario, { cloneScenario } from './Scenario';
 import Status from './Status';
-import Tag from './Tag';
+import { SimpleTag } from './Tag';
 
 interface Feature {
   id: string;
@@ -10,7 +10,7 @@ interface Feature {
   keyword: string;
   calculatedStatus: Status;
   originalAutomatedStatus: Status;
-  tags: Tag[];
+  tags: SimpleTag[];
   scenarios: Scenario[];
   lastEditedOn?: Date;
   lastEditedBy?: string;

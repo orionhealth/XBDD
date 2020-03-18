@@ -1,6 +1,5 @@
-import Step, { createStepFromFetchedData } from './Step';
 import Status from './Status';
-import { calculateManualStatus, calculateAutoStatus } from '../lib/StatusCalculator';
+import Step from './Step';
 
 interface Scenario {
   id: string;
@@ -29,5 +28,5 @@ const cloneScenario = (scenario: Scenario): Scenario => {
   };
 };
 
-export { createScenarioFromFetchedData, cloneScenario };
+export { cloneScenario };
 export default Scenario;

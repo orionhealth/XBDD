@@ -3,22 +3,22 @@ import { calculateAutoStatus, calculateManualStatus } from 'lib/StatusCalculator
 import Scenario from 'models/Scenario';
 import Feature from 'models/Feature';
 import Step from 'models/Step';
-import Status from 'models/Status';
 import FetchFeatureTypes from './generated/FetchFeatureTypes';
+import { getStatusFromString } from 'models/Status';
 
 interface StepResponseData {
-  line: string;
+  line: number;
   keyword: string;
   name: string;
   result: {
-    status: Status;
-    manualStatus: Status;
+    status: string;
+    manualStatus?: string;
   };
-  rows: {
+  rows?: {
     cells: string[];
-    line: string;
+    line: number;
   }[];
-  embeddings: string;
+  embeddings?: string[];
 }
 
 interface ScenarioResponseData {
@@ -36,10 +36,12 @@ interface ResponseData {
   name: string;
   description: string;
   keyword: string;
-  calculatedStatus: Status;
-  originalAutomatedStatus: Status;
-  statusLastEditedBy: string | null;
-  lastEditOn: any;
+  calculatedStatus: string;
+  originalAutomatedStatus: string;
+  statusLastEditedBy?: string | null;
+  lastEditOn?: {
+    $date: string;
+  };
   tags: {
     name: string;
   }[];
@@ -51,8 +53,8 @@ const createStep = (data: StepResponseData): Step => {
     id: data.line,
     keyword: data.keyword,
     name: data.name,
-    status: data.result.status,
-    manualStatus: data.result.manualStatus,
+    status: getStatusFromString(data.result.status),
+    manualStatus: data.result.manualStatus ? getStatusFromString(data.result.manualStatus) : undefined,
     rows: data.rows,
     embeddings: data.embeddings,
   };
@@ -82,12 +84,14 @@ const createFeature = (data: ResponseData): Feature => {
     name: data.name,
     description: data.description,
     keyword: data.keyword,
-    calculatedStatus: data.calculatedStatus,
-    originalAutomatedStatus: data.originalAutomatedStatus,
-    tags: data.tags,
+    calculatedStatus: getStatusFromString(data.calculatedStatus),
+    originalAutomatedStatus: getStatusFromString(data.originalAutomatedStatus),
+    tags: data.tags.map(tag => ({
+      name: tag.name,
+    })),
     scenarios: data.elements.map(element => createScenario(element)),
     lastEditedBy: data.statusLastEditedBy || undefined,
-    lastEditedOn: data.lastEditOn?.$date && new Date(Date.parse(data.lastEditOn.$date)),
+    lastEditedOn: data.lastEditOn?.$date ? new Date(Date.parse(data.lastEditOn.$date)) : undefined,
   };
 };
 
