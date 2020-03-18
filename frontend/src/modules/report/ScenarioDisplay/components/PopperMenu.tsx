@@ -21,9 +21,9 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-  stepId: string;
+  stepId: number;
   status: Status;
-  onStepStatusChange(e: MouseEvent<HTMLElement>, stepId: string, status: Status, newStatus: Status): void;
+  onStepStatusChange(e: MouseEvent<HTMLElement>, stepId: number, status: Status, newStatus: Status): void;
 }
 
 const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {

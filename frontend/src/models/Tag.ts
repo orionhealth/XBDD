@@ -1,6 +1,10 @@
 import SimpleFeature, { createSimpleFeatureFromFetchedData, cloneSimpleFeature } from './SimpleFeature';
 import Status from './Status';
 
+export interface SimpleTag {
+  name: string;
+}
+
 interface StatusPresences {
   containsPassed: boolean;
   containsUndefined: boolean;
@@ -8,8 +12,7 @@ interface StatusPresences {
   containsSkipped: boolean;
 }
 
-interface Tag extends StatusPresences {
-  name: string;
+interface Tag extends SimpleTag, StatusPresences {
   features: SimpleFeature[];
   userName?: string;
   isIgnored?: boolean;

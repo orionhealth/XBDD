@@ -1,6 +1,5 @@
-import Step, { createStepFromFetchedData } from './Step';
 import Status from './Status';
-import { calculateManualStatus, calculateAutoStatus } from '../lib/StatusCalculator';
+import Step from './Step';
 
 interface Scenario {
   id: string;
@@ -13,23 +12,6 @@ interface Scenario {
   originalAutomatedStatus: Status;
   calculatedStatus: Status;
 }
-
-const createScenarioFromFetchedData = (data: any): Scenario => {
-  const scenarioBase = {
-    id: data.id,
-    name: data.name,
-    backgroundSteps: data.background ? data.background.steps.map((step: any) => createStepFromFetchedData(step)) : [],
-    steps: data.steps ? data.steps.map(step => createStepFromFetchedData(step)) : [],
-    environmentNotes: data['environment-notes'],
-    executionNotes: data['execution-notes'],
-    testingTips: data['testing-tips'],
-  };
-  return {
-    ...scenarioBase,
-    originalAutomatedStatus: calculateAutoStatus(scenarioBase),
-    calculatedStatus: calculateManualStatus(scenarioBase),
-  };
-};
 
 // TODO - once we move the state to redux and use createSlice and immer, we won't need these clone methods as we can mutate state directly.
 const cloneScenario = (scenario: Scenario): Scenario => {
@@ -46,5 +28,5 @@ const cloneScenario = (scenario: Scenario): Scenario => {
   };
 };
 
-export { createScenarioFromFetchedData, cloneScenario };
+export { cloneScenario };
 export default Scenario;
