@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useState } from 'react';
+import React, { FC, MouseEvent, useState, useEffect } from 'react';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
@@ -43,6 +43,12 @@ const TagListItem: FC<Props> = ({
   const [expanded, setExpanded] = useState(false);
   const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
   const { userName, name, isIgnored } = tag;
+
+  useEffect(() => {
+    if (isIgnored && !isEditMode) {
+      setExpanded(false);
+    }
+  }, [isIgnored, isEditMode]);
 
   const onAvatarClick = (event: MouseEvent): void => {
     event.stopPropagation();
