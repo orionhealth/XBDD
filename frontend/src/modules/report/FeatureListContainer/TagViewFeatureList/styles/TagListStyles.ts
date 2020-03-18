@@ -23,12 +23,6 @@ const tagListItemStyles = createStyles({
   listItem: {
     padding: '8px 16px',
   },
-  ignoredColor: {
-    color: '#bdbdbd',
-  },
-  ignoredListItem: {
-    padding: '8px 40px 8px 16px',
-  },
 });
 
 export { tagListStyles, tagListItemStyles };
