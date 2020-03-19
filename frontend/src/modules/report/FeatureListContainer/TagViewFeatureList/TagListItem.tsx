@@ -46,6 +46,11 @@ const TagListItem: FC<Props> = ({
     return null;
   }
 
+  const onTagIgnoreClick = (event: MouseEvent): void => {
+    event.stopPropagation();
+    handleTagIgnore(restId.split('/')[0], name);
+  };
+
   const onAvatarClick = (event: MouseEvent): void => {
     event.stopPropagation();
     handleTagAssigned(restId, name, loggedInUserName, userName);
@@ -55,17 +60,10 @@ const TagListItem: FC<Props> = ({
     <>
       <ListItem button onClick={(): void => setExpanded(!expanded)} className={classes.listItem}>
         {isEditMode && (
-          <FontAwesomeIcon
-            icon={isIgnored ? faMinusSquare : faSquare}
-            className={classes.checkboxIcons}
-            onClick={(event: MouseEvent): void => {
-              event.stopPropagation();
-              handleTagIgnore(restId.split('/')[0], name);
-            }}
-          />
+          <FontAwesomeIcon icon={isIgnored ? faMinusSquare : faSquare} className={classes.checkboxIcons} onClick={onTagIgnoreClick} />
         )}
         <ListItemText>{tag.name}</ListItemText>
-        <TagAvatar tag={tag} onClick={(e: MouseEvent): void => onAvatarClick(e)} />
+        <TagAvatar tag={tag} onClick={onAvatarClick} />
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
