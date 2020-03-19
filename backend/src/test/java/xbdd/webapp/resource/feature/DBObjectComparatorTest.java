@@ -22,9 +22,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DBObjectComparatorTest {
 	private DBObjectComparator dbObjectComparator;
@@ -44,9 +43,9 @@ public class DBObjectComparatorTest {
 	public void compareSingleNull() {
 		final BasicDBObject dbObj = new BasicDBObject("Attr1", "random");
 		final int comparison1 = this.dbObjectComparator.compare(dbObj, null);
-		assertThat(comparison1, lessThanOrEqualTo(-1));
+		assertTrue(comparison1 < 0);
 		final int comparison2 = this.dbObjectComparator.compare(null, dbObj);
-		assertThat(comparison2, greaterThanOrEqualTo(1));
+		assertTrue(comparison2 > 0);
 	}
 
 	@Test
@@ -61,9 +60,9 @@ public class DBObjectComparatorTest {
 		final BasicDBObject dbObj = new BasicDBObject("Attr1", "random");
 		final BasicDBObject otherDBObj = new BasicDBObject("Attr1", "other");
 		final int comparison1 = this.dbObjectComparator.compare(dbObj, otherDBObj);
-		assertThat(comparison1, lessThanOrEqualTo(-1));
+		assertTrue(comparison1 < 0);
 		final int comparison2 = this.dbObjectComparator.compare(otherDBObj, dbObj);
-		assertThat(comparison2, greaterThanOrEqualTo(1));
+		assertTrue(comparison2 > 0);
 	}
 
 	@Test
@@ -71,9 +70,9 @@ public class DBObjectComparatorTest {
 		final BasicDBObject dbObj = new BasicDBObject("Attr1", "these are some random words to test");
 		final BasicDBObject otherDBObj = new BasicDBObject("Attr1", "these are some other words to test");
 		final int comparison1 = this.dbObjectComparator.compare(dbObj, otherDBObj);
-		assertThat(comparison1, lessThanOrEqualTo(-1));
+		assertTrue(comparison1 < 0);
 		final int comparison2 = this.dbObjectComparator.compare(otherDBObj, dbObj);
-		assertThat(comparison2, greaterThanOrEqualTo(1));
+		assertTrue(comparison2 > 0);
 	}
 
 	@Test
@@ -85,9 +84,9 @@ public class DBObjectComparatorTest {
 				.append("Attr2", "these are some more none key string")
 				.append("Attr3", "they are boring to read");
 		final int comparison1 = this.dbObjectComparator.compare(dbObj, otherDBObj);
-		assertThat(comparison1, lessThanOrEqualTo(-1));
+		assertTrue(comparison1 < 0);
 		final int comparison2 = this.dbObjectComparator.compare(otherDBObj, dbObj);
-		assertThat(comparison2, greaterThanOrEqualTo(1));
+		assertTrue(comparison2 > 0);
 	}
 
 	@Test
@@ -100,7 +99,7 @@ public class DBObjectComparatorTest {
 		this.dbObjectComparator = new DBObjectComparator(Arrays.asList("random", ".*", "\\d+"));
 
 		final int comparison1 = this.dbObjectComparator.compare(dbObj, otherDBObj);
-		assertThat(comparison1, is(0));
+		assertEquals(comparison1, 0);
 	}
 
 	@Test
@@ -113,8 +112,8 @@ public class DBObjectComparatorTest {
 		this.dbObjectComparator = new DBObjectComparator(Collections.singletonList("\\d+"));
 
 		final int comparison1 = this.dbObjectComparator.compare(dbObj, otherDBObj);
-		assertThat(comparison1, lessThanOrEqualTo(-1));
+		assertTrue(comparison1 < 0);
 		final int comparison2 = this.dbObjectComparator.compare(otherDBObj, dbObj);
-		assertThat(comparison2, greaterThanOrEqualTo(1));
+		assertTrue(comparison2 > 0);
 	}
 }

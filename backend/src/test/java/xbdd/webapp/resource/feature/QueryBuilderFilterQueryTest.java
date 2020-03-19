@@ -17,12 +17,10 @@ package xbdd.webapp.resource.feature;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
-import org.junit.Assert;
 import org.junit.Test;
 import xbdd.webapp.util.Coordinates;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 
 public class QueryBuilderFilterQueryTest {
 	@Test
@@ -33,9 +31,9 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) JSON
+		final DBObject expected = (DBObject) BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$and' : null}");
-		Assert.assertThat(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 0, 0, null), equalTo(expected));
+		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 0, 0, null), expected);
 	}
 
 	@Test
@@ -46,9 +44,9 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) JSON
+		final DBObject expected = (DBObject) BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$or' : [ { 'calculatedStatus' : 'passed'}]}");
-		Assert.assertThat(QueryBuilder.getInstance().buildFilterQuery(co, "", 1, 0, 0, 0, null), equalTo(expected));
+		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 1, 0, 0, 0, null), expected);
 	}
 
 	@Test
@@ -59,9 +57,9 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) JSON
+		final DBObject expected = (DBObject) BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$or' : [ { 'calculatedStatus' : 'failed'}]}");
-		Assert.assertThat(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 1, 0, 0, null), equalTo(expected));
+		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 1, 0, 0, null), expected);
 	}
 
 	@Test
@@ -72,9 +70,9 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) JSON
+		final DBObject expected = (DBObject) BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$or' : [ { 'calculatedStatus' : 'skipped'}]}");
-		Assert.assertThat(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 0, 1, null), equalTo(expected));
+		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 0, 1, null), expected);
 	}
 
 	@Test
@@ -85,9 +83,9 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) JSON
+		final DBObject expected = (DBObject) BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$or' : [ { 'calculatedStatus' : 'undefined'}]}");
-		Assert.assertThat(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 1, 0, null), equalTo(expected));
+		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 1, 0, null), expected);
 	}
 
 	@Test
@@ -98,10 +96,10 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) JSON
+		final DBObject expected = (DBObject) BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$and' : [ { 'name' : { '$regex' : '.*this.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*is.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*a.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*test.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*filter.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*string.*' , '$options' : 'i'}}]}");
-		Assert.assertThat(QueryBuilder.getInstance().buildFilterQuery(co, "this is a test filter string", 0, 0, 0, 0, null),
-				equalTo(expected));
+		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "this is a test filter string", 0, 0, 0, 0, null),
+				expected);
 	}
 
 	@Test
@@ -112,10 +110,10 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) JSON
+		final DBObject expected = (DBObject) BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$and' : [ { 'tags.name' : { '$regex' : '.*@this.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*is.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*a.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*test.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*tag.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*filter.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*string.*' , '$options' : 'i'}}]}");
-		Assert.assertThat(QueryBuilder.getInstance().buildFilterQuery(co, "@this is a test tag filter string", 0, 0, 0, 0, null),
-				equalTo(expected));
+		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "@this is a test tag filter string", 0, 0, 0, 0, null),
+				expected);
 	}
 
 	@Test
@@ -134,7 +132,7 @@ public class QueryBuilderFilterQueryTest {
 		expected.put("coordinates.build", "test");
 		expected.put("uri", new BasicDBObject("$gt", ""));
 		expected.put("$and", null);
-		Assert.assertThat(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 0, 0, ""), equalTo(expected));
+		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 0, 0, ""), expected);
 	}
 
 }
