@@ -9,13 +9,11 @@ import { stepStyles } from './styles/ScenarioStepStyles';
 import PopperMenu from './PopperMenu';
 import CucumberTable from './CucumberTable';
 import Step from 'models/Step';
-import Status from 'models/Status';
+import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
 import StepScreenshot from './StepScreenshot';
 
-const { Passed, Failed, Skipped, Undefined } = Status;
-
 interface StepChange {
-  stepId: string;
+  stepId: number;
   status: Status;
 }
 
@@ -26,7 +24,7 @@ interface Props extends WithStyles {
 }
 
 const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) => {
-  const iconMap: { [key in Status]: ReactNode } = {
+  const iconMap: StatusMap<ReactNode> = {
     [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
     [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
     [Undefined]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
@@ -37,10 +35,10 @@ const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) 
     return status === Status.Failed ? `${classes.stepIconBox} ${classes.stepIconFailed}` : classes.stepIconBox;
   };
 
-  const onStepStatusChange = (event: MouseEvent<HTMLElement>, stepId: string, prevStatus: Status, newStatus: Status | null): void => {
+  const onStepStatusChange = (event: MouseEvent<HTMLElement>, stepId: number, prevStatus: Status, newStatus: Status | null): void => {
     event.stopPropagation();
 
-    const nextStatus: { [key in Status]: Status } = {
+    const nextStatus: StatusMap<Status> = {
       [Passed]: Failed,
       [Failed]: Passed,
       [Undefined]: Passed,
@@ -82,7 +80,7 @@ const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) 
                     </Box>
                   </Box>
                 </ListItem>
-                {step.embeddings && <StepScreenshot screenshotPath={step.embeddings} />}
+                {step.embeddings && step.embeddings.map(embedding => <StepScreenshot key={embedding} screenshotPath={embedding} />)}
               </div>
             );
           }

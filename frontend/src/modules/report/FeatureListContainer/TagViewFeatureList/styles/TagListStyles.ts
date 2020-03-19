@@ -1,4 +1,6 @@
-const tagListStyles = {
+import { createStyles } from '@material-ui/core';
+
+const tagListStyles = createStyles({
   xbddTagList: {
     borderRadius: '0 0 4px 4px',
     height: '100%',
@@ -6,9 +8,9 @@ const tagListStyles = {
     position: 'relative',
     width: '100%',
   },
-};
+});
 
-const tagListItemStyles = {
+const tagListItemStyles = createStyles({
   listItemIcon: {
     minWidth: '36px',
     fontSize: '20px',
@@ -54,6 +56,6 @@ const tagListItemStyles = {
   ignoredColor: {
     color: '#bdbdbd',
   },
-};
+});
 
 export { tagListStyles, tagListItemStyles };

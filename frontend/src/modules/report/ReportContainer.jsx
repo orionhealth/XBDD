@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import produce from 'immer';
 
-import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
-import { createFeatureFromFetchedData, cloneFeature } from 'models/Feature';
+import { getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
+import { cloneFeature } from 'models/Feature';
 import { createExecutionFromFetchedData } from 'models/Execution';
 import { reportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 import ScenarioDisplay from './ScenarioDisplay/ScenarioDisplay';
 import FeatureSummary from './FeatureSummary/FeatureSummary';
+import fetchFeature from 'lib/services/FetchFeature';
 
 class ReportContainer extends Component {
   constructor(props) {
@@ -21,17 +23,24 @@ class ReportContainer extends Component {
     };
   }
 
+  updateLastUpdated() {
+    this.setState(oldState =>
+      produce(oldState, draft => {
+        draft.selectedFeature.lastEditedOn = new Date();
+      })
+    );
+  }
+
   handleFeatureSelected = feature => {
     const { selectedFeature } = this.state;
     if (selectedFeature?.id !== feature.id) {
-      getFeatureReport(feature._id).then(data => {
-        if (data) {
-          const selectedFeature = createFeatureFromFetchedData(data);
+      fetchFeature(feature._id).then(newSelectedFeature => {
+        if (newSelectedFeature) {
           getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
             if (data) {
               const executionHistory = data.rollup.map(build => build && createExecutionFromFetchedData(build)).filter(Boolean);
               this.setState({
-                selectedFeature,
+                selectedFeature: newSelectedFeature,
                 executionHistory,
               });
             }
@@ -66,6 +75,8 @@ class ReportContainer extends Component {
       }
     });
     this.setStateForComment(scenarioId, label, newContent);
+
+    this.updateLastUpdated();
   };
 
   updateExecutionHistory(executions, status) {
@@ -80,6 +91,8 @@ class ReportContainer extends Component {
   processFailedResponse(response, scenarioId, prevStatusMap) {
     if (!response || !response.ok) {
       this.setStateForStep(scenarioId, prevStatusMap);
+    } else {
+      this.updateLastUpdated();
     }
   }
 
@@ -138,7 +151,7 @@ class ReportContainer extends Component {
   };
 
   render() {
-    const { product, version, build } = this.props;
+    const { product, version, build, classes } = this.props;
     const { selectedFeature, executionHistory } = this.state;
     return (
       <>
@@ -155,7 +168,7 @@ class ReportContainer extends Component {
             </Grid>
             <Grid item xs={8} lg={8}>
               {selectedFeature && executionHistory && (
-                <>
+                <div className={classes.scenarioList}>
                   <FeatureSummary feature={selectedFeature} executionHistory={executionHistory} />
                   {selectedFeature.scenarios.map(scenario => (
                     <ScenarioDisplay
@@ -165,7 +178,7 @@ class ReportContainer extends Component {
                       handleStatusChange={this.handleStatusChange}
                     />
                   ))}
-                </>
+                </div>
               )}
             </Grid>
           </Grid>
@@ -180,7 +193,6 @@ ReportContainer.propTypes = {
   version: PropTypes.string,
   build: PropTypes.string,
   classes: PropTypes.shape({}),
-  t: PropTypes.func.isRequired,
 };
 
 export default withStyles(reportContainerStyles)(ReportContainer);

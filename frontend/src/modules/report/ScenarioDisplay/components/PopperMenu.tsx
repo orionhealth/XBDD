@@ -4,9 +4,7 @@ import { MoreHoriz } from '@material-ui/icons';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 
-import Status from 'models/Status';
-
-const { Passed, Failed, Undefined, Skipped } = Status;
+import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -23,9 +21,9 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-  stepId: string;
+  stepId: number;
   status: Status;
-  onStepStatusChange(e: MouseEvent<HTMLElement>, stepId: string, status: Status, newStatus: Status): void;
+  onStepStatusChange(e: MouseEvent<HTMLElement>, stepId: number, status: Status, newStatus: Status): void;
 }
 
 const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
@@ -34,7 +32,7 @@ const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
 
-  const labelMap: { [key in Status]: string } = {
+  const labelMap: StatusMap<string> = {
     [Passed]: t('report.pass'),
     [Failed]: t('report.fail'),
     [Skipped]: t('report.skip'),

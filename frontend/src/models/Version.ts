@@ -1,8 +1,8 @@
 interface Version {
   id: string;
-  major: string;
-  minor: string;
-  servicePack: string;
+  major: number;
+  minor: number;
+  servicePack: number;
   buildList: string[];
   pinnedBuildList: string[];
 }

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, ReactNode } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
@@ -24,15 +24,14 @@ const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
   const [expanded, setExpanded] = useState(false);
 
   const pinnedBuildList = version.pinnedBuildList;
-  const isPinned = pinnedBuildList.length !== 0;
-  let listToRender = isPinned ? pinnedBuildList : getUnpinnedBuildList(version);
-  const isExpandable = listToRender.length > 5;
+  let unpinnedBuildList = getUnpinnedBuildList(version);
+  const isExpandable = unpinnedBuildList.length > 5;
 
   if (isExpandable && !expanded) {
-    listToRender = listToRender.slice(0, 5);
+    unpinnedBuildList = unpinnedBuildList.slice(0, 5);
   }
 
-  const onItemClick = (event, build: string): void => {
+  const onItemClick = (event, build: string, isPinned: boolean): void => {
     let node = event.target;
     while (node) {
       if (node.className === 'MuiIconButton-label') {
@@ -44,10 +43,10 @@ const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
     dispatch(selectProductBuildAndVersion({ product: product.name, version: getString(version), build }));
   };
 
-  return (
-    <div className={classes.buildListContainer}>
+  const renderBuildListByPin = (buildList: string[], isPinned: boolean): ReactNode => (
+    <List>
       <List>
-        <BuildListItem isPinned={isPinned} buildList={listToRender} onClick={onItemClick} />
+        <BuildListItem isPinned={isPinned} buildList={buildList} onClick={onItemClick} />
         {isPinned || !isExpandable ? null : (
           <ListItem button divider className={classes.buildListItem} onClick={(): void => setExpanded(!expanded)}>
             <ListItemIcon className={classes.arrowIcon}>
@@ -57,6 +56,13 @@ const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
           </ListItem>
         )}
       </List>
+    </List>
+  );
+
+  return (
+    <div className={classes.buildListContainer}>
+      {pinnedBuildList.length !== 0 ? renderBuildListByPin(pinnedBuildList, true) : null}
+      {unpinnedBuildList.length !== 0 ? renderBuildListByPin(unpinnedBuildList, false) : null}
     </div>
   );
 };
