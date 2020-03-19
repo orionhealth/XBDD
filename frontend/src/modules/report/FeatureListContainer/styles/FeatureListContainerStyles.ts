@@ -22,36 +22,6 @@ const featureListContainerStyles = createStyles({
   },
 });
 
-const filterButtonStyles = createStyles({
-  xbddFilterButtons: {
-    padding: '24px 24px 12px 24px',
-  },
-  xbddFilterButton: {
-    height: 'calc(100% - 4px)',
-    marginTop: '2px',
-    marginBottom: '2px',
-    borderRadius: 0,
-    width: '25%',
-    borderRight: '1px solid rgba(0, 0, 0, 0.23)',
-  },
-  xbddFilterButtonPassed: {
-    color: '#576E5D',
-  },
-  xbddFilterButtonFailed: {
-    color: '#AC534F',
-  },
-  xbddFilterButtonUndefined: {
-    color: '#C39575',
-  },
-  xbddFilterButtonSkipped: {
-    color: '#457B9D',
-    borderRight: 'hidden',
-  },
-  xbddFilterButtonUnselected: {
-    color: '#E0E0E0',
-  },
-});
-
 const featureListItemStyles = createStyles({
   tags: {
     height: '18px',
@@ -84,4 +54,4 @@ const featureListItemStyles = createStyles({
   },
 });
 
-export { featureListContainerStyles, filterButtonStyles, featureListItemStyles };
+export { featureListContainerStyles, featureListItemStyles };

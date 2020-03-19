@@ -26,7 +26,7 @@ import {
   setIgnoredTag,
 } from 'lib/rest/Rest';
 import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
-import FeatureFilterButtons from './FeatureFilterButtons';
+import FeatureFilterButtons from './FeatureFilterButtons/FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
 import TagList from './TagViewFeatureList/TagList';
 import Loading from 'modules/loading/Loading';
