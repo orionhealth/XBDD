@@ -22,7 +22,6 @@ interface Props extends WithStyles {
   selectedStatus: Status;
   handleFeatureSelected(): void;
   handleTagAssigned(restId: string, name: string, loggedInUserName: string, userName?: string): void;
-  handleWarningShow(restId: string, name: string, loggedInUserName: string, userName?: string): void;
   handleTagIgnore(productId: string, name: string): void;
 }
 
@@ -36,7 +35,6 @@ const TagListItem: FC<Props> = ({
   selectedStatus,
   handleFeatureSelected,
   handleTagAssigned,
-  handleWarningShow,
   handleTagIgnore,
   classes,
 }) => {
@@ -44,16 +42,16 @@ const TagListItem: FC<Props> = ({
   const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
   const { userName, name, isIgnored } = tag;
 
+  if (isAssignedTagsView && isIgnored) {
+    return null;
+  }
+
   const onAvatarClick = (event: MouseEvent): void => {
     event.stopPropagation();
-    if (userName && userName !== loggedInUserName) {
-      handleWarningShow(restId, name, loggedInUserName, userName);
-    } else {
-      handleTagAssigned(restId, name, loggedInUserName, userName);
-    }
+    handleTagAssigned(restId, name, loggedInUserName, userName);
   };
 
-  return isAssignedTagsView && isIgnored ? null : (
+  return (
     <>
       <ListItem button onClick={(): void => setExpanded(!expanded)} className={classes.listItem}>
         {isEditMode && (

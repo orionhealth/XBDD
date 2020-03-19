@@ -17,7 +17,6 @@ interface Props extends WithStyles {
   selectedStatus: Status;
   handleFeatureSelected(): void;
   handleTagAssigned(): void;
-  handleWarningShow(): void;
   handleTagIgnore(): void;
 }
 
@@ -31,7 +30,6 @@ const TagList: FC<Props> = ({
   selectedStatus,
   handleFeatureSelected,
   handleTagAssigned,
-  handleWarningShow,
   handleTagIgnore,
   classes,
 }) => {
@@ -50,7 +48,6 @@ const TagList: FC<Props> = ({
             selectedStatus={selectedStatus}
             handleFeatureSelected={handleFeatureSelected}
             handleTagAssigned={handleTagAssigned}
-            handleWarningShow={handleWarningShow}
             handleTagIgnore={handleTagIgnore}
           />
         ))}

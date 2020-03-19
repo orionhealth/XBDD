@@ -103,22 +103,18 @@ class FeatureListContainer extends Component {
   }
 
   handleTagAssigned = (restId, tag, newUserName, prevUserName) => {
-    const userName = prevUserName === newUserName ? null : newUserName;
+    if (newUserName && prevUserName && newUserName !== prevUserName) {
+      this.setState({ warningArgs: { restId, tag, newUserName, prevUserName } });
+    } else {
+      const userName = prevUserName === newUserName ? null : newUserName;
 
-    setTagAssignmentData(restId, { tag, userName }).then(response => {
-      if (!response || !response.ok) {
-        this.setStateForTagUser(tag, prevUserName);
-      }
-    });
-    this.setStateForTagUser(tag, userName);
-  };
-
-  handleWarningShow = (...args) => {
-    this.setState({ warningArgs: args });
-  };
-
-  handleWarningClosed = () => {
-    this.setState({ warningArgs: null });
+      setTagAssignmentData(restId, { tag, userName }).then(response => {
+        if (!response || !response.ok) {
+          this.setStateForTagUser(tag, prevUserName);
+        }
+      });
+      this.setStateForTagUser(tag, userName);
+    }
   };
 
   handleTagIgnore = (product, tagName) => {
@@ -226,7 +222,6 @@ class FeatureListContainer extends Component {
           selectedStatus={selectedStatus}
           handleFeatureSelected={handleFeatureSelected}
           handleTagAssigned={this.handleTagAssigned}
-          handleWarningShow={this.handleWarningShow}
           handleTagIgnore={this.handleTagIgnore}
         />
       );
@@ -245,7 +240,9 @@ class FeatureListContainer extends Component {
   render() {
     const { product, version, build, userName, selectedFeatureId, classes, t } = this.props;
     const { loading, warningArgs, selectedStatus } = this.state;
+
     const restId = `${product}/${version}/${build}`;
+
     if (this.state.featureList) {
       return (
         <>
@@ -254,8 +251,12 @@ class FeatureListContainer extends Component {
             open={!!warningArgs}
             title={t('report.warning')}
             msg={t('report.pleaseReassignTheTag')}
-            handleConfirmed={() => warningArgs && this.handleTagAssigned(...warningArgs)}
-            handleClosed={this.handleWarningClosed}
+            handleConfirmed={() =>
+              warningArgs && this.handleTagAssigned(warningArgs.restId, warningArgs.tag, warningArgs.newUserName, null)
+            }
+            handleClosed={() => {
+              this.setState({ warningArgs: null });
+            }}
           />
           <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
           <div className={classes.xbddTagListContainer}>
