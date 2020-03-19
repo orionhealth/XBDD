@@ -16,6 +16,7 @@
 package xbdd.webapp.factory;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import org.apache.commons.lang.math.NumberUtils;
@@ -24,7 +25,6 @@ import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -62,7 +62,7 @@ public class ServletContextMongoClientFactory implements Supplier<MongoDBAccesso
 		if (this.username != null) {
 			MongoCredential credentials = MongoCredential.createScramSha1Credential(this.username, "admin", this.password);
 			System.out.println(String.format("name: %s, pw: %s", this.username, this.password));
-			mc = new MongoClient(new ServerAddress(this.host, this.port), Arrays.asList(credentials));
+			mc = new MongoClient(new ServerAddress(this.host, this.port), credentials, MongoClientOptions.builder().build());
 		} else {
 			mc = new MongoClient(this.host, this.port);
 		}

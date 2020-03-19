@@ -20,16 +20,14 @@ import com.mongodb.DBObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import xbdd.webapp.util.Coordinates;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QueryBuilderTest {
@@ -55,20 +53,20 @@ public class QueryBuilderTest {
 	@Test
 	public void buildTestQueryWithEmptySearch() {
 		final String[] searchCategories = { "name", "age" };
-		final List<String> searchKeys = new ArrayList<String>();
+		final List<String> searchKeys = new ArrayList<>();
 		searchKeys.add("");
 
 		final BasicDBObject searchQuery = this.queryBuilder.getSearchQuery(searchKeys, this.coordinates, searchCategories);
 
 		@SuppressWarnings("unchecked") final List<DBObject> queryResults = (ArrayList<DBObject>) searchQuery.get("$or");
 
-		assertThat(queryResults, is(empty()));
+		assertTrue(queryResults.isEmpty());
 	}
 
 	@Test
 	public void buildSimpleTestQuery() {
 		final String[] searchCategories = { "name", "age" };
-		final List<String> searchKeys = new ArrayList<String>();
+		final List<String> searchKeys = new ArrayList<>();
 		searchKeys.add("hi");
 		searchKeys.add("there");
 

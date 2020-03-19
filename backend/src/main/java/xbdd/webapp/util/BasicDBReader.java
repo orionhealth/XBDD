@@ -15,8 +15,8 @@
  */
 package xbdd.webapp.util;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
 
@@ -36,7 +36,7 @@ import java.lang.reflect.Type;
 @Provider
 @Produces({ "application/json", "text/plain", "*/*" })
 @Consumes({ "application/json", "text/plain", "*/*" })
-public class BasicDBReader extends AbstractMessageReaderWriterProvider<DBObject> {
+public class BasicDBReader extends AbstractMessageReaderWriterProvider<BasicDBObject> {
 
 	@Override
 	public boolean isWriteable(Class<?> type, Type genericType,
@@ -45,7 +45,7 @@ public class BasicDBReader extends AbstractMessageReaderWriterProvider<DBObject>
 	}
 
 	@Override
-	public void writeTo(DBObject myBean,
+	public void writeTo(BasicDBObject myBean,
 			Class<?> type,
 			Type genericType,
 			Annotation[] annotations,
@@ -53,7 +53,7 @@ public class BasicDBReader extends AbstractMessageReaderWriterProvider<DBObject>
 			MultivaluedMap<String, Object> httpHeaders,
 			OutputStream entityStream)
 			throws IOException, WebApplicationException {
-		writeToAsString(JSON.serialize(myBean), entityStream, mediaType);
+		writeToAsString(myBean.toJson(), entityStream, mediaType);
 	}
 
 	@Override
@@ -63,14 +63,14 @@ public class BasicDBReader extends AbstractMessageReaderWriterProvider<DBObject>
 	}
 
 	@Override
-	public DBObject readFrom(Class<DBObject> arg0, Type arg1,
+	public BasicDBObject readFrom(Class<BasicDBObject> arg0, Type arg1,
 			Annotation[] arg2, MediaType arg3,
 			MultivaluedMap<String, String> arg4, InputStream entityStream)
 			throws IOException, WebApplicationException {
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(entityStream, writer, "UTF-8");
 		String theString = writer.toString();
-		return (DBObject) JSON.parse(theString);
+		return BasicDBObject.parse(theString);
 	}
 
 }

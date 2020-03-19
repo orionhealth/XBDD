@@ -21,16 +21,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -75,7 +74,7 @@ public class SearchTest {
 			private int count = Search.SEARCH_LIMIT + 10;
 
 			@Override
-			public Boolean answer(final InvocationOnMock invocation) throws Throwable {
+			public Boolean answer(final InvocationOnMock invocation) {
 				if (this.count < 0) {
 					return false;
 				} else {
@@ -88,7 +87,7 @@ public class SearchTest {
 
 		final BasicDBList searchResults = this.search.getSearchResults(this.coordinates, "hello");
 
-		assertThat(searchResults.size(), is(Search.SEARCH_LIMIT));
+		assertEquals(searchResults.size(), Search.SEARCH_LIMIT);
 	}
 
 	@Test
@@ -97,7 +96,7 @@ public class SearchTest {
 
 		final BasicDBList searchResults = this.search.getSearchResults(this.coordinates, "(");
 
-		assertThat(searchResults, is(empty()));
+		assertTrue(searchResults.isEmpty());
 
 	}
 }
