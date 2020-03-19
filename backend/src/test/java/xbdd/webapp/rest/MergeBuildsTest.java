@@ -16,22 +16,20 @@
 package xbdd.webapp.rest;
 
 import com.mongodb.*;
-import com.mongodb.util.JSON;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.rest.MergeBuilds.Merge;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,11 +53,11 @@ public class MergeBuildsTest {
 	public void setup() {
 		this.mergeBuilds = new MergeBuilds(this.client);
 
-		this.feature1 = (BasicDBObject) JSON
+		this.feature1 = BasicDBObject
 				.parse("{'_id' : 'p1/f1','id' : 'f1','description' : '', 'name' : 'f1', 'elements' : [{'id' : 'e1','description' : '','name' : 'e1','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'passed'},'name' : 's2'}]}, {'id' : 'e2','description' : '','name' : 'e2','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'undefined'},'name' : 's2',}]}], 'coordinates' : {'product' : 'p1','major' : 1,'minor' : 1,'servicePack' : 1,'build' : 'build1','version' : '1.1.1'},'calculatedStatus' : 'undefined', 'originalAutomatedStatus' : 'undefined'}");
-		this.feature2 = (BasicDBObject) JSON
+		this.feature2 = BasicDBObject
 				.parse("{'_id' : 'p1/f1','id' : 'f1','description' : '', 'name' : 'f1', 'elements' : [{'id' : 'e1','description' : '','name' : 'e1','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'failed'},'name' : 's2'}]}, {'id' : 'e2','description' : '','name' : 'e2','steps' : [{'result' : {'status' : 'failed'},'name' : 's1',},{'result' : {'status' : 'undefined'},'name' : 's2',}]}], 'coordinates' : {'product' : 'p1','major' : 1,'minor' : 1,'servicePack' : 1,'build' : 'build2','version' : '1.1.1'},'calculatedStatus' : 'failed', 'originalAutomatedStatus' : 'undefined'}");
-		this.feature3 = (BasicDBObject) JSON
+		this.feature3 = BasicDBObject
 				.parse("{'_id' : 'p1/f1','id' : 'f1','description' : '', 'name' : 'f1', 'elements' : [{'id' : 'e1','description' : '','name' : 'e1','steps' : [{'result' : {'status' : 'undefined'},'name' : 's1',},{'result' : {'status' : 'undefined'},'name' : 's2'}]}, {'id' : 'e2','description' : '','name' : 'e2','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'passed'},'name' : 's2',}]}], 'coordinates' : {'product' : 'p1','major' : 1,'minor' : 1,'servicePack' : 1,'build' : 'build3','version' : '1.1.1'},'calculatedStatus' : 'undefined', 'originalAutomatedStatus' : 'undefined'}");
 
 		when(this.client.getDB(anyString())).thenReturn(this.db);
@@ -77,8 +75,8 @@ public class MergeBuildsTest {
 
 		when(this.cursor.next()).thenReturn(this.feature1, this.feature2, this.feature3);
 
-		final DBObject result = (BasicDBObject) JSON
+		final DBObject result = (BasicDBObject) BasicDBObject
 				.parse("{'features' : [{'id' : 'f1', 'name' : 'f1', 'elements' : [ { 'id' : 'e1', 'name' : 'e1', 'statuses' : [ 'passed' , 'passed', 'failed', 'undefined']} , {'id' : 'e2', 'name' : 'e2', 'statuses' : ['failed', 'undefined' , 'failed', 'passed']}], 'statuses' : ['failed', 'undefined', 'failed', 'undefined'], 'url': 'reports/p1/1.1.1/{{BUILD_NAME}}/f1'}], 'builds':['Merged', 'build1', 'build2', 'build3']}");
-		assertThat(this.mergeBuilds.getMergedBuilds(merge), is(result));
+		assertEquals(this.mergeBuilds.getMergedBuilds(merge), result);
 	}
 }
