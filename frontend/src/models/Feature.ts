@@ -1,6 +1,6 @@
-import Scenario, { createScenarioFromFetchedData, cloneScenario } from './Scenario';
+import Scenario, { cloneScenario } from './Scenario';
 import Status from './Status';
-import Tag from './Tag';
+import { SimpleTag } from './Tag';
 
 interface Feature {
   id: string;
@@ -10,27 +10,11 @@ interface Feature {
   keyword: string;
   calculatedStatus: Status;
   originalAutomatedStatus: Status;
-  tags: Tag[];
+  tags: SimpleTag[];
   scenarios: Scenario[];
   lastEditedOn?: Date;
   lastEditedBy?: string;
 }
-
-export const createFeatureFromFetchedData = (data: any): Feature => {
-  return {
-    id: data.id,
-    _id: data._id,
-    name: data.name,
-    description: data.description,
-    keyword: data.keyword,
-    calculatedStatus: data.calculatedStatus,
-    originalAutomatedStatus: data.originalAutomatedStatus,
-    tags: data.tags,
-    scenarios: data.elements.map(element => createScenarioFromFetchedData(element)),
-    lastEditedBy: data.statusLastEditedBy || undefined,
-    lastEditedOn: data.lastEditOn?.$date && new Date(Date.parse(data.lastEditOn.$date)),
-  };
-};
 
 export const cloneFeature = (feature: Feature): Feature => {
   return {

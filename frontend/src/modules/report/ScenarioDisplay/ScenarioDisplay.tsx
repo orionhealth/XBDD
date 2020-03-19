@@ -11,7 +11,7 @@ import ScenarioStep from './components/ScenarioStep';
 import ScenarioInputField from './components/ScenarioInputField';
 
 interface StepChange {
-  stepId: string;
+  stepId: number;
   status: Status;
 }
 

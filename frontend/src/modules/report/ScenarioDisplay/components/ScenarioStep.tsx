@@ -13,7 +13,7 @@ import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/St
 import StepScreenshot from './StepScreenshot';
 
 interface StepChange {
-  stepId: string;
+  stepId: number;
   status: Status;
 }
 
@@ -35,7 +35,7 @@ const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) 
     return status === Status.Failed ? `${classes.stepIconBox} ${classes.stepIconFailed}` : classes.stepIconBox;
   };
 
-  const onStepStatusChange = (event: MouseEvent<HTMLElement>, stepId: string, prevStatus: Status, newStatus: Status | null): void => {
+  const onStepStatusChange = (event: MouseEvent<HTMLElement>, stepId: number, prevStatus: Status, newStatus: Status | null): void => {
     event.stopPropagation();
 
     const nextStatus: StatusMap<Status> = {
@@ -80,7 +80,7 @@ const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) 
                     </Box>
                   </Box>
                 </ListItem>
-                {step.embeddings && <StepScreenshot screenshotPath={step.embeddings} />}
+                {step.embeddings && step.embeddings.map(embedding => <StepScreenshot key={embedding} screenshotPath={embedding} />)}
               </div>
             );
           }

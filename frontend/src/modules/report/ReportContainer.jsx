@@ -4,14 +4,15 @@ import { Grid, Card } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import produce from 'immer';
 
-import { getFeatureReport, getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
-import { createFeatureFromFetchedData, cloneFeature } from 'models/Feature';
+import { getRollUpData, updateStepPatch, updateAllStepPatch, updateComments } from 'lib/rest/Rest';
+import { cloneFeature } from 'models/Feature';
 import { createExecutionFromFetchedData } from 'models/Execution';
 import { reportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 import ScenarioDisplay from './ScenarioDisplay/ScenarioDisplay';
 import FeatureSummary from './FeatureSummary/FeatureSummary';
+import fetchFeature from 'lib/services/FetchFeature';
 
 class ReportContainer extends Component {
   constructor(props) {
@@ -33,14 +34,13 @@ class ReportContainer extends Component {
   handleFeatureSelected = feature => {
     const { selectedFeature } = this.state;
     if (selectedFeature?.id !== feature.id) {
-      getFeatureReport(feature._id).then(data => {
-        if (data) {
-          const selectedFeature = createFeatureFromFetchedData(data);
+      fetchFeature(feature._id).then(newSelectedFeature => {
+        if (newSelectedFeature) {
           getRollUpData(this.props.product, this.props.version, feature.id).then(data => {
             if (data) {
               const executionHistory = data.rollup.map(build => build && createExecutionFromFetchedData(build)).filter(Boolean);
               this.setState({
-                selectedFeature,
+                selectedFeature: newSelectedFeature,
                 executionHistory,
               });
             }
