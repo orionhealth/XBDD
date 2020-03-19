@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 
-import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
+import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
 import {
   setFeatureListByTagFromFetchedData,
   setSimpleFeatureListFromFetchedData,
