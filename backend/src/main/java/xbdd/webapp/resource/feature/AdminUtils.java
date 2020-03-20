@@ -143,14 +143,14 @@ public class AdminUtils {
 				targetCollection.update(new BasicDBObject("_id", backupDoc.get("_id")),
 						new BasicDBObject("$push", new BasicDBObject("builds", build)));
 			} catch (Exception e) {
-				return Response.status(500).build();
+				return Response.serverError().build();
 			}
 			//Remove the build number from the current document and push it back into the collection
 			try {
 				collection.update(new BasicDBObject("_id", doc.get("_id")), new BasicDBObject("$pull", new BasicDBObject("builds", build)));
 			} catch (Exception e) {
 				LOGGER.error(e);
-				return Response.status(500).build();
+				return Response.serverError().build();
 			}
 		}
 		return Response.ok().build();
