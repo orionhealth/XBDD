@@ -17,17 +17,12 @@ package xbdd.webapp.resource.feature;
 
 import com.mongodb.*;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -64,39 +59,5 @@ public class SearchTest {
 		when(this.client.getDB(anyString())).thenReturn(this.db);
 		when(this.db.getCollection(anyString())).thenReturn(this.collection);
 		when(this.collection.find(any(DBObject.class))).thenReturn(this.cursor);
-	}
-
-	@Test
-	public void restrictingResultSize() {
-
-		final BasicDBObject dbObj = new BasicDBObject();
-		when(this.cursor.hasNext()).thenAnswer(new Answer<Boolean>() {
-			private int count = Search.SEARCH_LIMIT + 10;
-
-			@Override
-			public Boolean answer(final InvocationOnMock invocation) {
-				if (this.count < 0) {
-					return false;
-				} else {
-					this.count--;
-					return true;
-				}
-			}
-		});
-		when(this.cursor.next()).thenReturn(dbObj);
-
-		final BasicDBList searchResults = this.search.getSearchResults(this.coordinates, "hello");
-
-		assertEquals(searchResults.size(), Search.SEARCH_LIMIT);
-	}
-
-	@Test
-	public void testQueryWithSearchWordHavingSpecialRegexMeaning() {
-		when(this.cursor.hasNext()).thenReturn(false, false);
-
-		final BasicDBList searchResults = this.search.getSearchResults(this.coordinates, "(");
-
-		assertTrue(searchResults.isEmpty());
-
 	}
 }
