@@ -41,7 +41,7 @@ public class QueryBuilder {
 	}
 
 	public BasicDBObject getSearchQuery(final List<String> searchWords, final Coordinates coordinates, final String[] searchCategories) {
-		final List<BasicDBObject> searchParameters = new ArrayList<BasicDBObject>();
+		final List<BasicDBObject> searchParameters = new ArrayList<>();
 		for (int i = 0; i < searchWords.size(); i++) {
 			String key = searchWords.get(i);
 			if (!key.equals("")) {
@@ -71,7 +71,7 @@ public class QueryBuilder {
 		}
 		BasicDBList searchObject = null;
 		if (StringUtils.isNotEmpty(searchText)) {
-			final String searchTextArray[] = searchText.split("[\\s]+");
+			final String[] searchTextArray = searchText.split("[\\s]+");
 			searchObject = new BasicDBList();
 			for (final String str : searchTextArray) {
 				if (StringUtils.isNotEmpty(str)) {
@@ -86,7 +86,7 @@ public class QueryBuilder {
 			}
 		}
 
-		final Map<String, DBObject> statuses = new HashMap<String, DBObject>();
+		final Map<String, DBObject> statuses = new HashMap<>();
 		final String calculatedStatus = "calculatedStatus";
 		statuses.put(Statuses.PASSED.getTextName(), new BasicDBObject(calculatedStatus, Statuses.PASSED.getTextName()));
 		statuses.put(Statuses.FAILED.getTextName(), new BasicDBObject(calculatedStatus, Statuses.FAILED.getTextName()));
@@ -123,9 +123,9 @@ public class QueryBuilder {
 	}
 
 	public List<DBObject> buildHasTagsQuery() {
-		final List<DBObject> tagsQuery = new ArrayList<DBObject>();
+		final List<DBObject> tagsQuery = new ArrayList<>();
 		final DBObject tagsQueryObject = new BasicDBObject();
-		final List<DBObject> orQuery = new ArrayList<DBObject>();
+		final List<DBObject> orQuery = new ArrayList<>();
 		final DBObject exist = new BasicDBObject("$exists", true);
 		final DBObject featureTags = new BasicDBObject("tags", exist);
 		final DBObject scenarioTags = new BasicDBObject("elements.tags", exist);

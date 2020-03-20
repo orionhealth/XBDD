@@ -20,9 +20,11 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -36,19 +38,24 @@ public class BuildReOrdering {
 		this.client = client;
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}")
-	public List<String> getBuildsForProductVersion(@BeanParam Coordinates coordinates) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBuildsForProductVersion(@BeanParam Coordinates coordinates) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection summaryCollection = db.getCollection("summary");
 		final BasicDBObject query = new BasicDBObject("_id", coordinates.getProduct() + "/" + coordinates.getVersionString());
-		return (List<String>) summaryCollection.findOne(query).get("builds");
+		final Object builds = summaryCollection.findOne(query).get("builds");
+		if (builds instanceof List<?>) {
+			return Response.ok(SerializerUtil.serialise((List<String>) builds)).build();
+		}
+
+		return Response.noContent().build();
 	}
 
 	@PUT
 	@Path("/{product}/{major}.{minor}.{servicePack}")
-	@Consumes("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response setBuildOrderForProductVersion(@BeanParam Coordinates coordinates,
 			final Builds json) {
 		final DB db = this.client.getDB("bdd");

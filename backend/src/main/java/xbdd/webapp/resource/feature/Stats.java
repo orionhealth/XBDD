@@ -19,12 +19,15 @@ import com.mongodb.*;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,8 +58,8 @@ public class Stats {
 
 	@GET
 	@Path("/build/{product}/{major}.{minor}.{servicePack}/{build}")
-	@Produces("application/json")
-	public BasicDBObject getBuildStats(@BeanParam final Coordinates coordinates) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBuildStats(@BeanParam final Coordinates coordinates) {
 
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("features");
@@ -78,15 +81,14 @@ public class Stats {
 		final BasicDBObject ret = new BasicDBObject();
 		ret.put("automated", a);
 		ret.put("manual", m);
-		return ret;
+		return Response.ok(SerializerUtil.serialise(ret)).build();
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/product/{product}/{major}.{minor}.{servicePack}/{build}")
-	@Produces("application/json")
-	public List<BasicDBObject> getProductHistory(@BeanParam final Coordinates coordinates) {
-		List<String> buildList = new ArrayList<String>();
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getProductHistory(@BeanParam final Coordinates coordinates) {
+		List<String> buildList = new ArrayList<>();
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("summary");
 		final DBObject productQuery = coordinates.getQueryObject(Field.PRODUCT, Field.MAJOR, Field.MINOR, Field.SERVICEPACK);
@@ -98,7 +100,7 @@ public class Stats {
 
 		final DBCollection featureCollection = db.getCollection("features");
 
-		final List<BasicDBObject> buildDBObjectList = new ArrayList<BasicDBObject>();
+		final List<BasicDBObject> buildDBObjectList = new ArrayList<>();
 		for (final String build : buildList) {
 			coordinates.setBuild(build);
 			final DBObject buildQuery = coordinates.getQueryObject();
@@ -112,6 +114,6 @@ public class Stats {
 			buildDBObjectList.add(buildObj);
 		}
 
-		return buildDBObjectList;
+		return Response.ok(SerializerUtil.serialise(buildDBObjectList)).build();
 	}
 }

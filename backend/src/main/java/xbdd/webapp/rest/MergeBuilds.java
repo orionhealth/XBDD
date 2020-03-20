@@ -42,17 +42,17 @@ public class MergeBuilds {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public DBObject getMergedBuilds(final Merge merge) {
 		// Get features collection
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("features");
 
 		// A list of all the features in every build, where features have only the attributes the client requires
-		final List<Feature> featureList = new ArrayList<Feature>();
+		final List<Feature> featureList = new ArrayList<>();
 
 		// query wrapper object
-		final List<DBObject> or = new ArrayList<DBObject>();
+		final List<DBObject> or = new ArrayList<>();
 
 		for (int i = 0; i < merge.builds.size(); i++) {
 			final Pattern regex = Pattern.compile("^" + merge.product + "/" + merge.version + "/" + (merge.builds.get(i))
@@ -73,7 +73,7 @@ public class MergeBuilds {
 
 		// returns object containing all features and scenarios from all builds and the merged build
 		final DBObject buildObject = new BasicDBObject();
-		final List<DBObject> resultList = new ArrayList<DBObject>();
+		final List<DBObject> resultList = new ArrayList<>();
 
 		for (final Feature feature : featureList) {
 			resultList.add(buildMerge.getMergeFeature(feature.getId()).toDBObject());

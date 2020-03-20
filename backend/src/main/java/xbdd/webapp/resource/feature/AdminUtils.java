@@ -16,6 +16,7 @@
 package xbdd.webapp.resource.feature;
 
 import com.mongodb.*;
+import org.apache.log4j.Logger;
 import xbdd.webapp.factory.MongoDBAccessor;
 
 import javax.inject.Inject;
@@ -25,7 +26,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 public class AdminUtils {
 
 	private final MongoDBAccessor client;
+	private static final Logger LOGGER = Logger.getLogger(AdminUtils.class);
 
 	@Inject
 	public AdminUtils(final MongoDBAccessor client,
@@ -46,10 +47,10 @@ public class AdminUtils {
 
 	@DELETE
 	@Path("/delete/{product}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response softDeleteEntireProduct(@PathParam("product") final String product,
 			@Context final HttpServletRequest req,
-			@Context final HttpServletResponse response) throws IOException {
+			@Context final HttpServletResponse response) {
 
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("summary");
@@ -78,11 +79,11 @@ public class AdminUtils {
 
 	@DELETE
 	@Path("/delete/{product}/{version}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response softDeleteSingleVersion(@PathParam("product") final String product,
 			@PathParam("version") final String version,
 			@Context final HttpServletRequest req,
-			@Context final HttpServletResponse response) throws IOException {
+			@Context final HttpServletResponse response) {
 
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("summary");
@@ -112,12 +113,12 @@ public class AdminUtils {
 
 	@DELETE
 	@Path("/delete/{product}/{version}/{build}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response softDeleteSingleBuild(@PathParam("product") final String product,
 			@PathParam("build") final String build,
 			@PathParam("version") final String version,
 			@Context final HttpServletRequest req,
-			@Context final HttpServletResponse response) throws IOException {
+			@Context final HttpServletResponse response) {
 
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("summary");
@@ -148,7 +149,7 @@ public class AdminUtils {
 			try {
 				collection.update(new BasicDBObject("_id", doc.get("_id")), new BasicDBObject("$pull", new BasicDBObject("builds", build)));
 			} catch (Exception e) {
-				System.out.println(e);
+				LOGGER.error(e);
 				return Response.status(500).build();
 			}
 		}
@@ -168,7 +169,7 @@ public class AdminUtils {
 
 	@PUT @Consumes(MediaType.APPLICATION_JSON)
 	@Path("/{product}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response renameProduct(@PathParam("product") final String product,
 			final Product renameObject) {
 
@@ -207,15 +208,15 @@ public class AdminUtils {
 		final DBCollection[] noIDCollections = { db.getCollection("environments"), db.getCollection("deletedSummary") };
 		final BasicDBObject enviroQuery = new BasicDBObject("coordinates.product", product);
 
-		for (int i = 0; i < noIDCollections.length; i++) {
-			final DBCursor enviroCursor = noIDCollections[i].find(enviroQuery);
+		for (DBCollection noIDCollection : noIDCollections) {
+			final DBCursor enviroCursor = noIDCollection.find(enviroQuery);
 
 			while (enviroCursor.hasNext()) {
 				DBObject doc = enviroCursor.next();
 				DBObject coordinates = (DBObject) doc.get("coordinates");
 				coordinates.put("product", renameObject.name);
 				DBObject updateDoc = new BasicDBObject("$set", new BasicDBObject("coordinates", coordinates));
-				noIDCollections[i].update(new BasicDBObject("_id", doc.get("_id")), updateDoc);
+				noIDCollection.update(new BasicDBObject("_id", doc.get("_id")), updateDoc);
 			}
 		}
 

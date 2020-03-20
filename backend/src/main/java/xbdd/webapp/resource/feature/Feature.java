@@ -21,11 +21,13 @@ import xbdd.util.StatusHelper;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,12 +45,11 @@ public class Feature {
 		this.client = client;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void embedTestingTips(final DBObject feature, final Coordinates coordinates, final DB db) {
 		final DBCollection tips = db.getCollection("testingTips");
 		final List<DBObject> elements = (List<DBObject>) feature.get("elements");
 		for (final DBObject scenario : elements) {
-			DBObject oldTip = null;
+			DBObject oldTip;
 			final BasicDBObject tipQuery = coordinates
 					.getTestingTipsCoordinatesQueryObject((String) feature.get("id"), (String) scenario.get("id"));
 			// get the most recent tip that is LTE to the current coordinates. i.e. sort in reverse chronological order and take the first
@@ -67,17 +68,17 @@ public class Feature {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	/**
 	 * Uses the '.+' regexp on featureId to allow for symbols such as slashes in the id
 	 *
-	 * @param String featureId The featureId to get the history for
+	 * @param featureId String The featureId to get the history for
 	 * @return DBObjet Returns the past feature status for the given featureId
 	 */
 	@GET
 	@Path("/rollup/{product}/{major}.{minor}.{servicePack}/{featureId:.+}")
-	public DBObject getFeatureRollup(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
-		final List<BasicDBObject> features = new ArrayList<BasicDBObject>();
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFeatureRollup(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
+		final List<BasicDBObject> features = new ArrayList<>();
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("features");
 		final DBCollection summary = db.getCollection("summary");
@@ -104,7 +105,7 @@ public class Feature {
 
 		final DBObject buildOrder = summary.findOne(coordinates.getQueryObject());
 		final List<String> buildArray = (List<String>) buildOrder.get("builds");
-		final List<BasicDBObject> orderedFeatures = new ArrayList<BasicDBObject>();
+		final List<BasicDBObject> orderedFeatures = new ArrayList<>();
 
 		for (String build : buildArray) {
 			for (BasicDBObject feature : features) {
@@ -117,7 +118,7 @@ public class Feature {
 
 		returns.append("rollup", orderedFeatures);
 
-		return returns;
+		return Response.ok(SerializerUtil.serialise(returns)).build();
 	}
 
 	/**
@@ -128,7 +129,8 @@ public class Feature {
 	 */
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
-	public DBObject getFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection tips = db.getCollection("features");
 		final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
@@ -136,10 +138,9 @@ public class Feature {
 		if (feature != null) {
 			Feature.embedTestingTips(feature, coordinates, db);
 		}
-		return feature;
+		return Response.ok(SerializerUtil.serialise(feature)).build();
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void updateTestingTips(final DB db, final Coordinates coordinates, final String featureId, final DBObject feature) {
 		final DBCollection tips = db.getCollection("testingTips");
 		final List<DBObject> elements = (List<DBObject>) feature.get("elements");
@@ -187,7 +188,7 @@ public class Feature {
 
 	@PUT
 	@Path("/comments/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
-	@Consumes("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateCommentWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final DBObject patch) {
 		try {
@@ -231,38 +232,34 @@ public class Feature {
 	 */
 	@PUT
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
-	@Consumes("application/json")
-	public DBObject putFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response putFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final DBObject feature) {
 		feature.put("calculatedStatus", StatusHelper.getFeatureStatus(feature));
-		try {
-			final DB db = this.client.getDB("bdd");
-			final DBCollection collection = db.getCollection("features");
-			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
-			final DBObject report = collection.findOne(example);
+		final DB db = this.client.getDB("bdd");
+		final DBCollection collection = db.getCollection("features");
+		final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
+		final DBObject report = collection.findOne(example);
 
-			// get the differences/new edits
+		// get the differences/new edits
 
-			// Detect if the edits caused a change
-			feature.put("statusLastEditedBy", req.getRemoteUser());
-			feature.put("lastEditOn", new Date());
-			final BasicDBList edits = updateEdits(feature, report);
-			feature.put("edits", edits);
+		// Detect if the edits caused a change
+		feature.put("statusLastEditedBy", req.getRemoteUser());
+		feature.put("lastEditOn", new Date());
+		final BasicDBList edits = updateEdits(feature, report);
+		feature.put("edits", edits);
 
-			updateTestingTips(db, coordinates, featureId, feature); // save testing tips / strip them out of the document.
-			updateEnvironmentDetails(db, coordinates, feature);
-			collection.save(feature);
-			Feature.embedTestingTips(feature, coordinates, db); // rembed testing tips.
-			return feature;// pull back feature - will re-include tips that were extracted prior to saving
-		} catch (final Throwable th) {
-			th.printStackTrace();
-			return null;
-		}
+		updateTestingTips(db, coordinates, featureId, feature); // save testing tips / strip them out of the document.
+		updateEnvironmentDetails(db, coordinates, feature);
+		collection.save(feature);
+		Feature.embedTestingTips(feature, coordinates, db); // rembed testing tips.
+		return Response.ok(SerializerUtil.serialise(feature))
+				.build();// pull back feature - will re-include tips that were extracted prior to saving
 	}
 
 	@PUT
 	@Path("/step/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
-	@Consumes("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateStepWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final DBObject patch) {
 		try {
@@ -366,7 +363,7 @@ public class Feature {
 
 	@PUT
 	@Path("/steps/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
-	@Consumes("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateStepsWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final DBObject patch) {
 		try {
@@ -413,12 +410,8 @@ public class Feature {
 	/**
 	 * Goes through each environment detail on this feature and pushes each unique one to a per-product document in the 'environments'
 	 * collection.
-	 *
-	 * @param db
-	 * @param coordinates
-	 * @param feature
 	 */
-	@SuppressWarnings("unchecked")
+
 	public void updateEnvironmentDetails(final DB db, final Coordinates coordinates, final DBObject feature) {
 		final DBCollection env = db.getCollection("environments");
 		final List<DBObject> elements = (List<DBObject>) feature.get("elements");
@@ -437,7 +430,7 @@ public class Feature {
 			envs = new BasicDBList();
 			productEnvironments.put("environments", envs);
 		}
-		final List<String> titleCache = new ArrayList<String>();
+		final List<String> titleCache = new ArrayList<>();
 		// go through each scenario, pull out the environment details and add them to the back of the list.
 		for (final DBObject scenario : elements) {
 			String notes = (String) scenario.get("environment-notes");
@@ -503,7 +496,7 @@ public class Feature {
 		boolean prevManual = false;
 
 		// get all scenario steps
-		if ((BasicDBObject) scenario.get("background") != null) {
+		if (scenario.get("background") != null) {
 			for (int j = 0; j < ((BasicDBList) ((BasicDBObject) scenario.get("background")).get("steps")).size(); j++) {
 				final BasicDBObject step = (BasicDBObject) ((BasicDBList) ((BasicDBObject) scenario.get("background")).get("steps"))
 						.get(j);
@@ -525,7 +518,7 @@ public class Feature {
 			}
 		}
 
-		if ((BasicDBList) scenario.get("steps") != null) {
+		if (scenario.get("steps") != null) {
 			for (int j = 0; j < ((BasicDBList) scenario.get("steps")).size(); j++) {
 				final BasicDBObject step = (BasicDBObject) ((BasicDBList) scenario.get("steps")).get(j);
 				final BasicDBObject prevStep = (BasicDBObject) ((BasicDBList) previousScenario.get("steps")).get(j);
@@ -544,8 +537,8 @@ public class Feature {
 			}
 		}
 
-		for (int j = 0; j < allSteps.size(); j++) {
-			formatStep(changes, (BasicDBObject) allSteps.get(j), currManual, prevManual);
+		for (Object allStep : allSteps) {
+			formatStep(changes, (BasicDBObject) allStep, currManual, prevManual);
 		}
 
 		// only add if changes have been made

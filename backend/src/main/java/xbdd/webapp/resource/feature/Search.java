@@ -18,12 +18,14 @@ package xbdd.webapp.resource.feature;
 import com.mongodb.*;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Path("/search")
@@ -39,14 +41,14 @@ public class Search {
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
-	@Produces("application/json")
-	public BasicDBList getSearchResults(@BeanParam final Coordinates coordinates, @QueryParam("keywords") final String keyword) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSearchResults(@BeanParam final Coordinates coordinates, @QueryParam("keywords") final String keyword) {
 		final String[] searchCategories = { "name", "description", "tags.name", "elements.name", "elements.description",
 				"elements.steps.name", "elements.tags.name" };
 		final List<String> searchWords = Arrays.asList(keyword.split("\\s+"));
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("features");
-		final List<DBObject> searchResults = new ArrayList<DBObject>();
+		final List<DBObject> searchResults = new ArrayList<>();
 
 		final QueryBuilder queryBuilder = QueryBuilder.getInstance();
 		final DBCursor results = collection.find(queryBuilder.getSearchQuery(searchWords, coordinates, searchCategories));
@@ -56,7 +58,7 @@ public class Search {
 			searchResults.add(doc);
 		}
 
-		Collections.sort(searchResults, new DBObjectComparator(searchWords));
+		searchResults.sort(new DBObjectComparator(searchWords));
 
 		while (searchResults.size() > SEARCH_LIMIT) {
 			searchResults.remove(searchResults.size() - 1);
@@ -64,6 +66,7 @@ public class Search {
 
 		final BasicDBList basicDBList = new BasicDBList();
 		basicDBList.addAll(searchResults);
-		return basicDBList;
+
+		return Response.ok(SerializerUtil.serialise(basicDBList)).build();
 	}
 }

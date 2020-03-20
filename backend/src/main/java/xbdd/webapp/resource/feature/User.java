@@ -18,9 +18,11 @@ package xbdd.webapp.resource.feature;
 import com.mongodb.*;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/user")
@@ -35,8 +37,8 @@ public class User {
 
 	@GET
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
-	@Consumes("application/json")
-	public DBObject getTagsAssignment(@BeanParam final Coordinates coordinates) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTagsAssignment(@BeanParam final Coordinates coordinates) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("tagsAssignment");
 		final BasicDBObject coq = coordinates.getReportCoordinatesQueryObject();
@@ -44,37 +46,33 @@ public class User {
 
 		if (document != null) {
 			final BasicDBList tags = (BasicDBList) document.get("tags");
-			return tags;
+			return Response.ok(SerializerUtil.serialise(tags)).build();
 		}
-		return null;
+
+		return Response.noContent().build();
 	}
 
 	@PUT
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
-	@Consumes("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final DBObject patch) {
-		try {
-			final DB db = this.client.getDB("bdd");
-			final DBCollection collection = db.getCollection("tagsAssignment");
-			final BasicDBObject coq = coordinates.getReportCoordinatesQueryObject();
-			final BasicDBObject storedDocument = (BasicDBObject) collection.findOne(coq);
+		final DB db = this.client.getDB("bdd");
+		final DBCollection collection = db.getCollection("tagsAssignment");
+		final BasicDBObject coq = coordinates.getReportCoordinatesQueryObject();
+		final BasicDBObject storedDocument = (BasicDBObject) collection.findOne(coq);
 
-			final String tagName = (String) patch.get("tag");
-			final String userName = (String) patch.get("userName");
+		final String tagName = (String) patch.get("tag");
+		final String userName = (String) patch.get("userName");
 
-			if (storedDocument != null) {
-				final BasicDBObject documentToUpdate = (BasicDBObject) storedDocument.copy();
-				updateTagsAssignment(documentToUpdate, tagName, userName);
-				collection.save(documentToUpdate);
-			} else {
-				DBObject newDocument = generateNewTagAssignment(coordinates, tagName, userName);
-				collection.save(newDocument);
-			}
-			return Response.ok().build();
-		} catch (final Throwable th) {
-			th.printStackTrace();
-			return Response.serverError().build();
+		if (storedDocument != null) {
+			final BasicDBObject documentToUpdate = (BasicDBObject) storedDocument.copy();
+			updateTagsAssignment(documentToUpdate, tagName, userName);
+			collection.save(documentToUpdate);
+		} else {
+			DBObject newDocument = generateNewTagAssignment(coordinates, tagName, userName);
+			collection.save(newDocument);
 		}
+		return Response.ok().build();
 	}
 
 	private void updateTagsAssignment(final DBObject documentToUpdate, final String tagName, final String userName) {
@@ -114,8 +112,8 @@ public class User {
 
 	@GET
 	@Path("/ignoredTags/{product}")
-	@Consumes("application/json")
-	public DBObject getIgnoredTags(@BeanParam final Coordinates coordinates) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getIgnoredTags(@BeanParam final Coordinates coordinates) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("ignoredTags");
 		final BasicDBObject coq = coordinates.getProductCoordinatesQueryObject();
@@ -123,36 +121,31 @@ public class User {
 
 		if (document != null) {
 			final BasicDBList tags = (BasicDBList) document.get("tags");
-			return tags;
+			return Response.ok(SerializerUtil.serialise(tags)).build();
 		}
-		return null;
+		return Response.noContent().build();
 	}
 
 	@PUT
 	@Path("/ignoredTags/{product}")
-	@Consumes("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response putIgnoredTags(@BeanParam final Coordinates coordinates, final DBObject patch) {
-		try {
-			final DB db = this.client.getDB("bdd");
-			final DBCollection collection = db.getCollection("ignoredTags");
-			final BasicDBObject coq = coordinates.getProductCoordinatesQueryObject();
-			final BasicDBObject storedDocument = (BasicDBObject) collection.findOne(coq);
+		final DB db = this.client.getDB("bdd");
+		final DBCollection collection = db.getCollection("ignoredTags");
+		final BasicDBObject coq = coordinates.getProductCoordinatesQueryObject();
+		final BasicDBObject storedDocument = (BasicDBObject) collection.findOne(coq);
 
-			final String tagName = (String) patch.get("tagName");
+		final String tagName = (String) patch.get("tagName");
 
-			if (storedDocument != null) {
-				final BasicDBObject documentToUpdate = (BasicDBObject) storedDocument.copy();
-				updateIgnoredTag(documentToUpdate, tagName);
-				collection.save(documentToUpdate);
-			} else {
-				DBObject newDocument = generateNewIgnoredTags(coordinates, tagName);
-				collection.save(newDocument);
-			}
-			return Response.ok().build();
-		} catch (final Throwable th) {
-			th.printStackTrace();
-			return Response.serverError().build();
+		if (storedDocument != null) {
+			final BasicDBObject documentToUpdate = (BasicDBObject) storedDocument.copy();
+			updateIgnoredTag(documentToUpdate, tagName);
+			collection.save(documentToUpdate);
+		} else {
+			DBObject newDocument = generateNewIgnoredTags(coordinates, tagName);
+			collection.save(newDocument);
 		}
+		return Response.ok().build();
 	}
 
 	private void updateIgnoredTag(final BasicDBObject documentToUpdate, final String tagName) {

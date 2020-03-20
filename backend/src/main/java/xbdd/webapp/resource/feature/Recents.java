@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/recents")
@@ -35,15 +36,9 @@ public class Recents {
 		this.client = client;
 	}
 
-	/**
-	 * Uses the '.+' regexp on featureId to allow for symbols such as slashes in the id
-	 *
-	 * @param String id The featureId to get the history for
-	 * @return Response Either a 200 response or a 500
-	 */
 	@PUT
 	@Path("/feature/{product}/{major}.{minor}.{servicePack}/{build}/{id:.+}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addFeatureToRecents(@QueryParam("name") final String featureName,
 			@BeanParam Coordinates coordinates,
 			@PathParam("id") final String featureID,
@@ -85,7 +80,7 @@ public class Recents {
 
 	@PUT
 	@Path("/build/{product}/{major}.{minor}.{servicePack}/{build}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addBuildToRecents(@BeanParam Coordinates coordinates,
 			@Context final HttpServletRequest req) {
 
@@ -122,7 +117,7 @@ public class Recents {
 
 	@GET
 	@Path("/builds")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public DBObject getRecentBuilds(@Context final HttpServletRequest req) {
 
 		final DB db = this.client.getDB("bdd");
@@ -146,7 +141,7 @@ public class Recents {
 
 	@GET
 	@Path("/features")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public DBObject getRecentFeatures(@Context final HttpServletRequest req) {
 
 		final DB db = this.client.getDB("bdd");

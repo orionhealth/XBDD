@@ -20,11 +20,13 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import xbdd.webapp.factory.MongoDBAccessor;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 
 @Path("/environment")
 public class Environment {
@@ -38,10 +40,11 @@ public class Environment {
 
 	@GET
 	@Path("/{product}")
-	public DBObject getEnvironmentsForProduct(@PathParam("product") final String product) {
+	public Response getEnvironmentsForProduct(@PathParam("product") final String product) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("environments");
-		return collection.findOne(new BasicDBObject("coordinates.product", product));
-
+		final DBObject rtn = collection.findOne(new BasicDBObject("coordinates.product", product));
+		
+		return Response.ok(SerializerUtil.serialise(rtn)).build();
 	}
 }

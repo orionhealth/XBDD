@@ -18,11 +18,13 @@ package xbdd.webapp.resource.feature;
 import com.mongodb.*;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/favourites")
@@ -56,7 +58,8 @@ public class Favourites {
 
 	@PUT
 	@Path("/{product}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response productFavouriteStateOn(@PathParam("product") final String product,
 			@Context final HttpServletRequest req) {
 
@@ -66,18 +69,16 @@ public class Favourites {
 
 	@DELETE
 	@Path("/{product}")
-	@Produces("application/json")
 	public Response productFavouriteStateOff(@PathParam("product") final String product,
 			@Context final HttpServletRequest req) {
-
 		setFavouriteStateOfProduct(product, false, req);
 		return Response.ok().build();
 	}
 
 	@GET
 	@Path("/{product}")
-	@Produces("application/json")
-	public boolean getFavouriteStateOfProduct(@PathParam("product") final String product,
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFavouriteStateOfProduct(@PathParam("product") final String product,
 			@Context final HttpServletRequest req) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("users");
@@ -87,13 +88,13 @@ public class Favourites {
 
 		final DBObject favState = collection.findOne(query);
 
-		return (favState != null);
+		return Response.ok(favState != null).build();
 	}
 
 	@GET
 	@Path("/")
-	@Produces("application/json")
-	public DBObject getSummaryOfAllReports(@Context final HttpServletRequest req) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSummaryOfAllReports(@Context final HttpServletRequest req) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("summary");
 		final DBCollection usersCollection = db.getCollection("users");
@@ -127,7 +128,7 @@ public class Favourites {
 				}
 			}
 
-			return returns;
+			return Response.ok(SerializerUtil.serialise(returns)).build();
 		} finally {
 			cursor.close();
 		}
@@ -156,7 +157,7 @@ public class Favourites {
 
 	@PUT
 	@Path("/pin/{product}/{major}.{minor}.{servicePack}/{build}/")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response pinABuild(@BeanParam Coordinates coordinates) {
 
 		setPinStateOfBuild(coordinates.getProduct(), coordinates.getVersionString(), coordinates.getBuild(), true);
@@ -165,7 +166,7 @@ public class Favourites {
 
 	@DELETE
 	@Path("/pin/{product}/{major}.{minor}.{servicePack}/{build}/")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response unPinABuild(@BeanParam Coordinates coordinates) {
 
 		setPinStateOfBuild(coordinates.getProduct(), coordinates.getVersionString(), coordinates.getBuild(), false);

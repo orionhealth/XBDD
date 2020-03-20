@@ -19,13 +19,12 @@ import com.mongodb.*;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
-import javax.ws.rs.BeanParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import java.net.UnknownHostException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/automation-statistics")
 public class AutomationStatistics {
@@ -39,7 +38,7 @@ public class AutomationStatistics {
 
 	@GET
 	@Path("/recent-builds/{product}")
-	public DBObject getRecentBuildStatsForProduct(@BeanParam final Coordinates coordinates, @QueryParam("limit") final Integer limit) {
+	public Response getRecentBuildStatsForProduct(@BeanParam final Coordinates coordinates, @QueryParam("limit") final Integer limit) {
 		final BasicDBList returns = new BasicDBList();
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("reportStats");
@@ -56,21 +55,17 @@ public class AutomationStatistics {
 		} finally {
 			cursor.close();
 		}
-		return returns;
+		return Response.ok(SerializerUtil.serialise(returns)).build();
 	}
 
 	/**
 	 * Go through the prior versions of this product; for each version, find the latest build and contribute the stats for that to the
 	 * returned list.
-	 *
-	 * @param coordinates
-	 * @param limit
-	 * @return A list of report stats in reverse version order.
-	 * @throws UnknownHostException
 	 */
 	@GET
 	@Path("/recent-versions/{product}")
-	public DBObject getRecentVersionStatsForProduct(@BeanParam final Coordinates coordinates, @QueryParam("limit") final Integer limit) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRecentVersionStatsForProduct(@BeanParam final Coordinates coordinates, @QueryParam("limit") final Integer limit) {
 		final BasicDBList returns = new BasicDBList();
 
 		final DB db = this.client.getDB("bdd");
@@ -94,7 +89,7 @@ public class AutomationStatistics {
 			versions.close();
 		}
 
-		return returns;
+		return Response.ok(SerializerUtil.serialise(returns)).build();
 	}
 
 }

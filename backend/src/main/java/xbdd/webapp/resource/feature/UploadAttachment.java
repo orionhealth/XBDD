@@ -51,7 +51,6 @@ public class UploadAttachment {
 		this.client = client;
 	}
 
-	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/{elementId}/{report}/{version}/{build}/{id}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -83,7 +82,7 @@ public class UploadAttachment {
 						// get steps
 						final BasicDBList steps = (BasicDBList) scenario.get("steps");
 						final DBObject laststep = (DBObject) steps.get(steps.size() - 1);
-						List<String> embeddings = new ArrayList<String>();
+						List<String> embeddings = new ArrayList<>();
 						if (laststep.containsField("embeddings")) {
 							embeddings = (ArrayList<String>) laststep.get("embeddings");
 						}

@@ -26,6 +26,7 @@ import xbdd.util.StatusHelper;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.Field;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +50,8 @@ public class Report {
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
-	@Produces("application/json")
-	public DBObject getReportByProductVersionId(@BeanParam final Coordinates coordinates,
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getReportByProductVersionId(@BeanParam final Coordinates coordinates,
 			@QueryParam("searchText") final String searchText, @QueryParam("viewPassed") final Integer viewPassed,
 			@QueryParam("viewFailed") final Integer viewFailed,
 			@QueryParam("viewUndefined") final Integer viewUndefined, @QueryParam("viewSkipped") final Integer viewSkipped,
@@ -72,15 +72,15 @@ public class Report {
 				featuresToReturn.add(cursor.next());
 			}
 			embedTestingTips(featuresToReturn, coordinates, db);
-			return featuresToReturn;
+			return Response.ok(SerializerUtil.serialise(featuresToReturn)).build();
 		} finally {
 			cursor.close();
 		}
 	}
 
 	@GET
-	@Produces("application/json")
-	public DBObject getSummaryOfAllReports(@Context final HttpServletRequest req) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSummaryOfAllReports(@Context final HttpServletRequest req) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("summary");
 		final DBCollection usersCollection = db.getCollection("users");
@@ -119,16 +119,16 @@ public class Report {
 				returns.add(doc);
 			}
 
-			return returns;
+			return Response.ok(SerializerUtil.serialise(returns)).build();
 		} finally {
 			cursor.close();
 		}
 	}
 
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/featureIndex/{product}/{major}.{minor}.{servicePack}/{build}")
-	public DBObject getFeatureIndexForReport(@BeanParam final Coordinates coordinates,
+	public Response getFeatureIndexForReport(@BeanParam final Coordinates coordinates,
 			@QueryParam("searchText") final String searchText, @QueryParam("viewPassed") final Integer viewPassed,
 			@QueryParam("viewFailed") final Integer viewFailed,
 			@QueryParam("viewUndefined") final Integer viewUndefined, @QueryParam("viewSkipped") final Integer viewSkipped,
@@ -150,7 +150,7 @@ public class Report {
 		} finally {
 			features.close();
 		}
-		return featureIndex;
+		return Response.ok(SerializerUtil.serialise(featureIndex)).build();
 	}
 
 	protected void embedTestingTips(final BasicDBList featureList, final Coordinates coordinates, final DB db) {
@@ -178,13 +178,13 @@ public class Report {
 		final BasicDBList elements = (BasicDBList) feature.get("elements");
 		final String featureId = (String) feature.get("_id");
 		if (elements != null) {
-			for (int j = 0; j < elements.size(); j++) {
-				final DBObject scenario = (DBObject) elements.get(j);
+			for (Object element : elements) {
+				final DBObject scenario = (DBObject) element;
 				final String scenarioId = (String) scenario.get("_id");
 				final BasicDBList steps = (BasicDBList) scenario.get("steps");
 				if (steps != null) {
-					for (int k = 0; k < steps.size(); k++) {
-						final DBObject step = (DBObject) steps.get(k);
+					for (Object o : steps) {
+						final DBObject step = (DBObject) o;
 						final BasicDBList embeddings = (BasicDBList) step.get("embeddings");
 						if (embeddings != null) {
 							for (int l = 0; l < embeddings.size(); l++) {
@@ -207,7 +207,6 @@ public class Report {
 									embeddings.put(l, image.getFilename());
 								} catch (ClassCastException e) {
 									log.warn("Embedding was malformatted and will be skipped");
-									continue;
 								}
 
 							}
@@ -222,7 +221,7 @@ public class Report {
 	 * go through find all the backgrounds elements and nest them in their scenarios (simplifies application logic downstream)
 	 */
 	protected void packBackgroundsInToScenarios(final DBObject feature) {
-		final List<DBObject> packedScenarios = new ArrayList<DBObject>();
+		final List<DBObject> packedScenarios = new ArrayList<>();
 		// go through all the backgrounds /scenarios
 		final BasicDBList elements = (BasicDBList) feature.get("elements");
 		if (elements != null) {
@@ -247,7 +246,7 @@ public class Report {
 		final DBCollection summary = bdd.getCollection("summary");
 		final DBObject summaryObject = summary.findOne(summaryQuery);
 		if (summaryObject != null) { // lookup the summary document
-			@SuppressWarnings("unchecked") final List<String> buildArray = (List<String>) summaryObject.get("builds");
+			final List<String> buildArray = (List<String>) summaryObject.get("builds");
 			if (!buildArray.contains(coordinates.getBuild())) { // only update it if this build hasn't been added to it before.
 				// Update index document version.
 				summary.update(summaryQuery,
@@ -266,12 +265,12 @@ public class Report {
 	}
 
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/tags/{product}/{major}.{minor}.{servicePack}/{build}")
-	public DBObject getTagList(@BeanParam final Coordinates coordinates) {
+	public Response getTagList(@BeanParam final Coordinates coordinates) {
 		final DB bdd = this.client.getDB("bdd");
 		final DBCollection features = bdd.getCollection("features");
-		List<BasicDBObject> objectList = new ArrayList<BasicDBObject>();
+		List<BasicDBObject> objectList = new ArrayList<>();
 		// Build objects for aggregation pipeline
 		// id option: returns each tag with a list of associated feature ids
 		objectList.add(new BasicDBObject("$match", coordinates.getReportCoordinatesQueryObject()));
@@ -294,7 +293,7 @@ public class Report {
 		while (output.hasNext()) {
 			returns.add(output.next().get("_id").toString());
 		}
-		return returns;
+		return Response.ok(SerializerUtil.serialise(returns)).build();
 	}
 
 	protected void updateStatsDocument(final DB bdd, final Coordinates coordinates, final BasicDBList features) {
@@ -327,7 +326,9 @@ public class Report {
 
 	@PUT
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
-	public DBObject putReport(@BeanParam final Coordinates coordinates, final DBObject root) throws IOException {
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response putReport(@BeanParam final Coordinates coordinates, final DBObject root) {
 		final BasicDBList doc = (BasicDBList) root;
 		final DB grid = this.client.getDB("grid");
 		final GridFS gridFS = new GridFS(grid);
@@ -335,9 +336,9 @@ public class Report {
 		final DBCollection features = bdd.getCollection("features");
 		updateSummaryDocument(bdd, coordinates);
 
-		for (int i = 0; i < doc.size(); i++) {
+		for (Object o : doc) {
 			// take each feature and give it a unique id.
-			final BasicDBObject feature = (BasicDBObject) doc.get(i);
+			final BasicDBObject feature = (BasicDBObject) o;
 			final String _id = coordinates.getFeature_Id((String) feature.get("id"));
 			feature.put("_id", _id);
 			embedSteps(feature, gridFS, coordinates); // extract embedded content and hyperlink to it.
@@ -358,7 +359,7 @@ public class Report {
 		final DBCursor cursor = features
 				.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the "version"
 		// field
-		final List<DBObject> returns = new ArrayList<DBObject>();
+		final List<DBObject> returns = new ArrayList<>();
 		try {
 			while (cursor.hasNext()) {
 				returns.add(cursor.next());
@@ -369,7 +370,7 @@ public class Report {
 		final BasicDBList list = new BasicDBList();
 		list.addAll(returns);
 		updateStatsDocument(bdd, coordinates, list);
-		return list;
+		return Response.ok(SerializerUtil.serialise(list)).build();
 	}
 
 	private BasicDBList mergeExistingScenarios(final DBCollection features, final DBObject feature, final String _id) {
@@ -377,10 +378,10 @@ public class Report {
 		if (newElements == null) {
 			newElements = new BasicDBList();
 		}
-		final List<String> newElementIds = new ArrayList<String>();
+		final List<String> newElementIds = new ArrayList<>();
 
-		for (int k = 0; k < newElements.size(); k++) {
-			final DBObject elem = (DBObject) newElements.get(k);
+		for (Object newElement : newElements) {
+			final DBObject elem = (DBObject) newElement;
 			final String elem_type = (String) elem.get("type");
 			if (elem_type.equalsIgnoreCase("scenario")) {
 				newElementIds.add((String) elem.get("id"));
@@ -391,8 +392,8 @@ public class Report {
 		if (existingFeature != null) {
 			final BasicDBList existingElements = (BasicDBList) existingFeature.get("elements");
 			if (existingElements != null) {
-				for (int j = 0; j < existingElements.size(); j++) {
-					final DBObject element = (DBObject) existingElements.get(j);
+				for (Object existingElement : existingElements) {
+					final DBObject element = (DBObject) existingElement;
 					final String element_type = (String) element.get("type");
 					if (element_type.equalsIgnoreCase("scenario")) {
 						final String element_id = (String) element.get("id");
@@ -413,9 +414,9 @@ public class Report {
 	public Response uploadFile(
 			@BeanParam final Coordinates coord,
 			@FormDataParam("file") final DBObject root,
-			@FormDataParam("file") final FormDataContentDisposition fileDetail) throws IOException {
+			@FormDataParam("file") final FormDataContentDisposition fileDetail) {
 		putReport(coord, root);
-		return Response.status(200).entity("success").build();
+		return Response.ok().build();
 
 	}
 }

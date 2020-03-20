@@ -40,7 +40,7 @@ public class Attachment {
 
 	@GET
 	@Path("/{id}")
-	public javax.ws.rs.core.Response getAttachment(@PathParam("id") final String id) throws IOException {
+	public Response getAttachment(@PathParam("id") final String id) throws IOException {
 		final DB db = this.client.getDB("grid");
 		final GridFS gridFS = new GridFS(db);
 		final GridFSDBFile file = gridFS.findOne(id);

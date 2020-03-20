@@ -18,9 +18,12 @@ package xbdd.webapp.resource.feature;
 import com.mongodb.*;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
+import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.*;
 
 @Path("/tagview")
@@ -35,7 +38,7 @@ public class TagView {
 
 	private BasicDBList getTagList(final DBCursor results) {
 		final Map<String, List<DBObject>> featureTagMapping = new HashMap<>();
-		final List<String> tagList = new ArrayList<String>();
+		final List<String> tagList = new ArrayList<>();
 
 		while (results.hasNext()) {
 			final DBObject doc = results.next();
@@ -43,7 +46,7 @@ public class TagView {
 				if (featureTagMapping.containsKey(tagName)) {
 					featureTagMapping.get(tagName).add(doc);
 				} else {
-					final List<DBObject> value = new ArrayList<DBObject>();
+					final List<DBObject> value = new ArrayList<>();
 					featureTagMapping.put(tagName, value);
 					tagList.add(tagName);
 					value.add(doc);
@@ -64,9 +67,8 @@ public class TagView {
 		return tagGroupList;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<String> getTags(final DBObject feature) {
-		final List<String> tags = new ArrayList<String>();
+		final List<String> tags = new ArrayList<>();
 		final List<DBObject> featuretags = (List<DBObject>) feature.get("tags");
 		if (featuretags != null) {
 			for (final DBObject tag : featuretags) {
@@ -94,9 +96,9 @@ public class TagView {
 	}
 
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/featureTagIndex/{product}/{major}.{minor}.{servicePack}/{build}")
-	public BasicDBList getFeatureTagIndexForReport(@BeanParam final Coordinates coordinates,
+	public Response getFeatureTagIndexForReport(@BeanParam final Coordinates coordinates,
 			@QueryParam("searchText") final String searchText, @QueryParam("viewPassed") final Integer viewPassed,
 			@QueryParam("viewFailed") final Integer viewFailed,
 			@QueryParam("viewUndefined") final Integer viewUndefined, @QueryParam("viewSkipped") final Integer viewSkipped,
@@ -114,6 +116,6 @@ public class TagView {
 				new BasicDBObject("tags", 1).append("elements.tags", 1).append("name", 1).append("calculatedStatus", 1)
 						.append("id", 1).append("elements.steps", 1).append("elements.name", 1).append("elements.id", 1));
 
-		return getTagList(results);
+		return Response.ok(SerializerUtil.serialise(getTagList(results))).build();
 	}
 }

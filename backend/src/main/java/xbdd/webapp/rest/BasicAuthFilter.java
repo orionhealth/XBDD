@@ -22,6 +22,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Simple authentication filter that checks for basic authentication headers and otherwise defers to the realm's authentication mechanism.
@@ -47,7 +48,8 @@ public class BasicAuthFilter implements Filter {
 			final String basicAuth = httpRequest.getHeader(AUTHORIZATION_HEADER);
 
 			if (basicAuth != null && StringUtils.startsWithIgnoreCase(basicAuth, BASIC_PREFIX)) {
-				final String usernamePassword = new String(Base64.decodeBase64(basicAuth.substring(BASIC_PREFIX.length()).trim()), "UTF-8");
+				final String usernamePassword = new String(Base64.decodeBase64(basicAuth.substring(BASIC_PREFIX.length()).trim()),
+						StandardCharsets.UTF_8);
 				final String[] args = usernamePassword.split(BASIC_AUTH_SEPARATOR, 2);
 				httpRequest.login(args[0], args[1]);
 			} else {
@@ -60,7 +62,7 @@ public class BasicAuthFilter implements Filter {
 	}
 
 	@Override
-	public void init(final FilterConfig arg0) throws ServletException {
+	public void init(final FilterConfig arg0) {
 
 	}
 

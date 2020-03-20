@@ -37,7 +37,6 @@ public class Feature {
 		return this.featureObject.getString("id");
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Scenario> getScenarios() {
 		final List<Scenario> scenarios = new ArrayList<Scenario>();
 		final List<BasicDBObject> elements = (ArrayList<BasicDBObject>) this.featureObject.get("elements");
