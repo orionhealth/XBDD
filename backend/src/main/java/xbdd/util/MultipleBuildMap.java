@@ -23,11 +23,11 @@ import java.util.Map;
  */
 public class MultipleBuildMap<T> {
 
-	private final Map<String, T> map = new HashMap<String, T>();
+	private final Map<String, T> map = new HashMap<>();
 
 	public T get(final String id, final String build) {
 		final String key = keyOf(id, build);
-		return this.map.containsKey(key) ? this.map.get(key) : null;
+		return this.map.getOrDefault(key, null);
 	}
 
 	private String keyOf(final String id, final String build) {
@@ -37,10 +37,6 @@ public class MultipleBuildMap<T> {
 	public MultipleBuildMap<T> put(final String id, final String build, final T obj) {
 		this.map.put(keyOf(id, build), obj);
 		return this;
-	}
-
-	public boolean isEmpty() {
-		return this.map.isEmpty();
 	}
 
 	public boolean containsKey(final String id, final String build) {

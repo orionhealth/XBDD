@@ -15,9 +15,6 @@
  */
 package xbdd.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public enum Statuses {
 	PASSED("passed"),
 	FAILED("failed"),
@@ -30,14 +27,6 @@ public enum Statuses {
 
 	Statuses(final String text) {
 		this.text = text;
-	}
-
-	public static Set<String> getStatusTextAsSet() {
-		final Set<String> set = new HashSet<String>();
-		for (final Statuses s : Statuses.values()) {
-			set.add(s.getTextName());
-		}
-		return set;
 	}
 
 	public String getTextName() {

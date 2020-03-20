@@ -32,12 +32,7 @@ public class XbddApplication extends ResourceConfig {
 	public XbddApplication() {
 		packages(getClass().getPackage().getName());
 
-		// MVC feature
-
 		register(MultiPartFeature.class);
-
-		// Logging.
-		// register(LoggingFilter.class);
 
 		property(ServerProperties.TRACING, TracingConfig.ON_DEMAND.name());
 

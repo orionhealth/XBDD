@@ -50,8 +50,6 @@ public class Coordinates {
 	/**
 	 * We only really want to order on URI, but prepending with the other co-ordinates allows the compound index that should exist for the
 	 * purposes of lookup to be re-used for sorting.
-	 *
-	 * @return
 	 */
 	public static BasicDBObject getFeatureSortingObject() {
 		return new BasicDBObject("coordinates.product", 1).append("coordinates.major", -1).append("coordinates.minor", -1)
@@ -124,8 +122,6 @@ public class Coordinates {
 	/**
 	 * Query object that can be used to find a report (can't use the raw co-ordinates object as that would require a direct match of all
 	 * fields inside co-ordinates and we only want to match a few fields.
-	 *
-	 * @return
 	 */
 	public BasicDBObject getReportCoordinatesQueryObject() {
 		return new BasicDBObject().append("coordinates.product", this.product).append("coordinates.major", this.major)
@@ -150,8 +146,6 @@ public class Coordinates {
 	/**
 	 * Query object that can be used to find a testing tip (can't use the raw co-ordinates object as that would require a direct match of
 	 * all fields inside co-ordinates and we only want to match a few fields. We are looking for the tip for the current build or earlier.
-	 *
-	 * @return
 	 */
 	public BasicDBObject getTestingTipsCoordinatesQueryObject(final String featureId, final String scenarioId) {
 		return new BasicDBObject().append("coordinates.product", this.product)
@@ -175,20 +169,7 @@ public class Coordinates {
 	}
 
 	/**
-	 * Returns a queryObject with the _id, product and version populated sufficient for both querying as well as an upsert operation.
-	 *
-	 * @return
-	 */
-	public BasicDBObject getSummaryReportQueryObject() {
-		return new BasicDBObject("_id", this.product + "/" + getVersionString()).append("product", this.product)
-				.append("version", getVersionString());
-	}
-
-	/**
 	 * Takes in a feature id, and qualifies it in to an _id (prefixed with co-ordinates) "product/version/buiid/id"
-	 *
-	 * @param id
-	 * @return
 	 */
 	public String getFeature_Id(final String id) {
 		return this.product + "/" + getVersionString() + "/" + getBuild() + "/" + id;
@@ -229,7 +210,6 @@ public class Coordinates {
 	 * Utility for creating DBObjects with coordinates. e.g. getObject(Field.PRODUCT,Field.BUILD); will return
 	 * {"product":<product>,"build",<build>}
 	 *
-	 * @param fields
 	 * @return a BasicDBOBject populated with the appropriate fields from this coordinate object.
 	 */
 	public BasicDBObject getObject(final Field... fields) {

@@ -24,7 +24,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
-import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -57,11 +57,11 @@ public class ServletContextMongoClientFactory implements Supplier<MongoDBAccesso
 				Integer.parseInt(context.getInitParameter(XBDD_MONGO_PORT_INIT_PARAMETER)) : ServerAddress.defaultPort();
 	}
 
-	private MongoDBAccessor getMongoDBAccessor() throws UnknownHostException {
+	private MongoDBAccessor getMongoDBAccessor() {
 		final MongoClient mc;
 		if (this.username != null) {
 			MongoCredential credentials = MongoCredential.createScramSha1Credential(this.username, "admin", this.password);
-			System.out.println(String.format("name: %s, pw: %s", this.username, this.password));
+			System.out.println(String.format("name: %s, pw: %s", this.username, Arrays.toString(this.password)));
 			mc = new MongoClient(new ServerAddress(this.host, this.port), credentials, MongoClientOptions.builder().build());
 		} else {
 			mc = new MongoClient(this.host, this.port);
@@ -72,11 +72,7 @@ public class ServletContextMongoClientFactory implements Supplier<MongoDBAccesso
 
 	@Override
 	public MongoDBAccessor get() {
-		try {
-			return getMongoDBAccessor();
-		} catch (final UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
+		return getMongoDBAccessor();
 	}
 
 }

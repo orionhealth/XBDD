@@ -38,7 +38,7 @@ public class Feature {
 	}
 
 	public List<Scenario> getScenarios() {
-		final List<Scenario> scenarios = new ArrayList<Scenario>();
+		final List<Scenario> scenarios = new ArrayList<>();
 		final List<BasicDBObject> elements = (ArrayList<BasicDBObject>) this.featureObject.get("elements");
 		if (elements != null) {
 			for (final BasicDBObject element : elements) {

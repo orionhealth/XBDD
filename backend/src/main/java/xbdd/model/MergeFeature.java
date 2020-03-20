@@ -63,13 +63,12 @@ public class MergeFeature {
 		return this.statuses;
 	}
 
-	public MergeFeature setStatuses(final List<String> statuses) {
+	public void setStatuses(final List<String> statuses) {
 		this.statuses = statuses;
-		return this;
 	}
 
 	public DBObject toDBObject() {
-		final List<DBObject> scenarioList = new ArrayList<DBObject>();
+		final List<DBObject> scenarioList = new ArrayList<>();
 		for (final MergeScenario scenario : this.scenarios) {
 			scenarioList.add(scenario.toDBObject());
 		}
@@ -82,12 +81,7 @@ public class MergeFeature {
 		return returnObject;
 	}
 
-	public String getUrl() {
-		return this.url;
-	}
-
-	public MergeFeature setUrl(final String url) {
+	public void setUrl(final String url) {
 		this.url = url;
-		return this;
 	}
 }

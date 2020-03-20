@@ -20,7 +20,6 @@ import com.mongodb.MongoClient;
 
 /**
  * Wrapper for {@link MongoClient} that provides a central point for applying authentication to {@link DB} connections.
- *
  */
 public class MongoDBAccessor {
 
@@ -30,12 +29,7 @@ public class MongoDBAccessor {
 		this.client = client;
 	}
 
-	public void close() {
-		this.client.close();
-	}
-
 	public DB getDB(final String dbName) {
-		final DB db = this.client.getDB(dbName);
-		return db;
+		return this.client.getDB(dbName);
 	}
 }
