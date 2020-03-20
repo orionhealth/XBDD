@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 
-import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
+import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
 import {
   setFeatureListByTagFromFetchedData,
   setSimpleFeatureListFromFetchedData,
@@ -26,7 +26,7 @@ import {
   setIgnoredTag,
 } from 'lib/rest/Rest';
 import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
-import FeatureFilterButtons from './FeatureFilterButtons';
+import FeatureFilterButtons from './FeatureFilterButtons/FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
 import TagList from './TagViewFeatureList/TagList';
 import Loading from 'modules/loading/Loading';
