@@ -17,6 +17,7 @@ package xbdd.webapp.factory;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
 /**
  * Wrapper for {@link MongoClient} that provides a central point for applying authentication to {@link DB} connections.
@@ -27,6 +28,10 @@ public class MongoDBAccessor {
 
 	public MongoDBAccessor(final MongoClient client) {
 		this.client = client;
+	}
+
+	public MongoDatabase getDatabase(final String dbName) {
+		return this.client.getDatabase(dbName);
 	}
 
 	public DB getDB(final String dbName) {

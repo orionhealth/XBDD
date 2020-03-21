@@ -16,16 +16,24 @@
 package xbdd.webapp.resource.feature;
 
 import com.mongodb.*;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSInputFile;
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.bson.conversions.Bson;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import xbdd.mappers.FeatureMapper;
+import xbdd.model.junit.JUnitFeature;
+import xbdd.model.simple.FeatureSummary;
+import xbdd.model.xbdd.XbddFeature;
+import xbdd.model.xbdd.XbddScenario;
 import xbdd.util.StatusHelper;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
-import xbdd.webapp.util.Field;
 import xbdd.webapp.util.SerializerUtil;
 
 import javax.inject.Inject;
@@ -36,6 +44,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Path("/reports")
 public class Report {
@@ -160,108 +170,21 @@ public class Report {
 		}
 	}
 
-	protected String s4() {
-		return Double.toHexString(Math.floor((1 + Math.random()) * 0x10000)).substring(1);
-	}
-
-	/**
-	 * Generates a GUID
-	 */
-	protected String guid() {
-		return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-				s4() + '-' + s4() + s4() + s4();
-	}
-
-	/**
-	 * go through all the embedded content, store it to GridFS, replace the doc embeddings with a hyperlink to the saved content.
-	 */
-	protected void embedSteps(final DBObject feature, final GridFS gridFS, final Coordinates coordinates) {
-		final BasicDBList elements = (BasicDBList) feature.get("elements");
-		final String featureId = (String) feature.get("_id");
-		if (elements != null) {
-			for (Object element : elements) {
-				final DBObject scenario = (DBObject) element;
-				final String scenarioId = (String) scenario.get("_id");
-				final BasicDBList steps = (BasicDBList) scenario.get("steps");
-				if (steps != null) {
-					for (Object o : steps) {
-						final DBObject step = (DBObject) o;
-						final BasicDBList embeddings = (BasicDBList) step.get("embeddings");
-						if (embeddings != null) {
-							for (int l = 0; l < embeddings.size(); l++) {
-
-								//handle a malformatted 'embedding' better.
-								//https://github.com/orionhealth/XBDD/issues/46
-								try {
-									final DBObject embedding = (DBObject) embeddings.get(l);
-									final GridFSInputFile image = gridFS
-											.createFile(Base64.decodeBase64(((String) embedding.get("data")).getBytes()));
-									image.setFilename(guid());
-									final BasicDBObject metadata = new BasicDBObject().append("product", coordinates.getProduct())
-											.append("major", coordinates.getMajor()).append("minor", coordinates.getMinor())
-											.append("servicePack", coordinates.getServicePack()).append("build", coordinates.getBuild())
-											.append("feature", featureId)
-											.append("scenario", scenarioId);
-									image.setMetaData(metadata);
-									image.setContentType((String) embedding.get("mime_type"));
-									image.save();
-									embeddings.put(l, image.getFilename());
-								} catch (ClassCastException e) {
-									log.warn("Embedding was malformatted and will be skipped");
-								}
-
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * go through find all the backgrounds elements and nest them in their scenarios (simplifies application logic downstream)
-	 */
-	protected void packBackgroundsInToScenarios(final DBObject feature) {
-		final List<DBObject> packedScenarios = new ArrayList<>();
-		// go through all the backgrounds /scenarios
-		final BasicDBList elements = (BasicDBList) feature.get("elements");
-		if (elements != null) {
-			for (int i = 0; i < elements.size(); i++) {
-				final DBObject element = (DBObject) elements.get(i);
-				if (element.get("type").equals("background")) { // if its a background
-					((DBObject) elements.get(i + 1)).put("background", element); // push it in to the next element.
-				} else {
-					// assume this is a scenario/other top level element and push it to the packed array.
-					packedScenarios.add(element);
-				}
-			}
-			elements.clear();
-			elements.addAll(packedScenarios);
-		}
-	}
-
-	protected void updateSummaryDocument(final DB bdd, final Coordinates coordinates) {
-		// product and version are redundant for search, but ensure they're populated if the upsert results in an insert.
-		final DBObject summaryQuery = new BasicDBObject("_id", coordinates.getProduct() + "/" + coordinates.getVersionString())
-				.append("coordinates", coordinates.getObject(Field.PRODUCT, Field.VERSION));
-		final DBCollection summary = bdd.getCollection("summary");
-		final DBObject summaryObject = summary.findOne(summaryQuery);
+	protected void updateSummaryDocument(final MongoDatabase bdd, final Coordinates coordinates) {
+		final MongoCollection summary = bdd.getCollection("summary", FeatureSummary.class);
+		final Bson query = Filters.eq("_id", coordinates.getProduct() + "/" + coordinates.getVersionString());
+		final FeatureSummary summaryObject = (FeatureSummary) summary.find(query, FeatureSummary.class).first();
 		if (summaryObject != null) { // lookup the summary document
-			final List<String> buildArray = (List<String>) summaryObject.get("builds");
-			if (!buildArray.contains(coordinates.getBuild())) { // only update it if this build hasn't been added to it before.
-				// Update index document version.
-				summary.update(summaryQuery,
-						new BasicDBObject("$push", new BasicDBObject("builds", coordinates.getBuild())),
-						true,
-						false
-				);
+			if (!summaryObject.getBuilds().contains(coordinates.getBuild())) { // only update it if this build hasn't been added to it before.
+				summaryObject.getBuilds().add(coordinates.getBuild());
+				summary.replaceOne(query, summaryObject);
 			}
-		} else {// if the report doesn't already exist... then add it.
-			summary.update(summaryQuery,
-					new BasicDBObject("$push", new BasicDBObject("builds", coordinates.getBuild())),
-					true,
-					false
-			);
+		} else {
+			FeatureSummary newSummary = new FeatureSummary();
+			newSummary.set_id(coordinates.getProduct() + "/" + coordinates.getVersionString());
+			newSummary.setBuilds(new ArrayList<>());
+			newSummary.getBuilds().add(coordinates.getBuild());
+			summary.insertOne(newSummary);
 		}
 	}
 
@@ -297,22 +220,22 @@ public class Report {
 		return Response.ok(SerializerUtil.serialise(returns)).build();
 	}
 
-	protected void updateStatsDocument(final DB bdd, final Coordinates coordinates, final BasicDBList features) {
+	protected void updateStatsDocument(final MongoDatabase bdd, final Coordinates coordinates, final List<XbddFeature> features) {
 		// product and version are redundant for search, but ensure they're populated if the upsert results in an insert.
-		final DBCollection statsCollection = bdd.getCollection("reportStats");
+		final MongoCollection statsCollection = bdd.getCollection("reportStats");
 		final String id = coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates.getBuild();
-		statsCollection.remove(new BasicDBObject("_id", id));
+		statsCollection.deleteOne(new BasicDBObject("_id", id));
 		final BasicDBObject stats = new BasicDBObject("coordinates", coordinates.getReportCoordinates());
 		stats.put("_id", id);
 		final BasicDBObject summary = new BasicDBObject();
 		stats.put("summary", summary);
 		final BasicDBObject feature = new BasicDBObject();
 		stats.put("feature", feature);
-		for (final Object ob : features) {
-			final BasicDBList scenarios = (BasicDBList) ((DBObject) ob).get("elements");
-			if (scenarios != null) {
-				for (final Object o : scenarios) {
-					final String status = StatusHelper.getFinalScenarioStatus((DBObject) o, false).getTextName();
+		for (final XbddFeature xbddFeature : features) {
+			if (xbddFeature.getElements() != null) {
+				for (final XbddScenario scenario : xbddFeature.getElements()) {
+					final List<String> stepStatuses = FeatureMapper.getStepStatusStream(scenario).collect(Collectors.toList());
+					final String status =  StatusHelper.reduceStatuses(stepStatuses).getTextName();
 					final Integer statusCounter = (Integer) summary.get(status);
 					if (statusCounter == null) {
 						summary.put(status, 1);
@@ -322,91 +245,51 @@ public class Report {
 				}
 			}
 		}
-		statsCollection.save(stats);
+		statsCollection.insertOne(stats);
 	}
 
 	@PUT
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response putReport(@BeanParam final Coordinates coordinates, final DBObject root) {
-		final BasicDBList doc = (BasicDBList) root;
+	public Response putReport(@BeanParam final Coordinates coordinates, final List<JUnitFeature> root) {
 		final DB grid = this.client.getDB("grid");
 		final GridFS gridFS = new GridFS(grid);
-		final DB bdd = this.client.getDB("bdd");
-		final DBCollection features = bdd.getCollection("features");
+		final MongoDatabase bdd = this.client.getDatabase("bdd");
+		final MongoCollection<XbddFeature> features = bdd.getCollection("features", XbddFeature.class);
+		final FeatureMapper featureMapper = new FeatureMapper(gridFS);
 		updateSummaryDocument(bdd, coordinates);
 
-		for (Object o : doc) {
-			// take each feature and give it a unique id.
-			final BasicDBObject feature = (BasicDBObject) o;
-			final String _id = coordinates.getFeature_Id((String) feature.get("id"));
-			feature.put("_id", _id);
-			embedSteps(feature, gridFS, coordinates); // extract embedded content and hyperlink to it.
-			packBackgroundsInToScenarios(feature); // nest background elements within their scenarios
-			final BasicDBObject featureCo = coordinates.getReportCoordinates();
-			feature.put("coordinates", featureCo);
+		for (JUnitFeature feature : root) {
+			final XbddFeature xbddFeature = featureMapper.map(feature, coordinates);
+			Bson featureQuery = Filters.eq("_id", xbddFeature.getEffectiveId());
+			final XbddFeature existing = features.find(featureQuery).first();
 
-			final BasicDBList newElements = mergeExistingScenarios(features, feature, _id);
-			feature.put("elements", newElements);
-
-			final String originalStatus = StatusHelper.getFeatureStatus(feature);
-			feature.put("calculatedStatus", originalStatus);
-			feature.put("originalAutomatedStatus", originalStatus);
-			this.log.info("Saving: " + feature.get("name") + " - " + feature.get("calculatedStatus"));
-			this.log.trace("Adding feature:" + feature.toJson());
-			features.save(feature);
-		}
-		final DBCursor cursor = features
-				.find(coordinates.getReportCoordinatesQueryObject()); // get new co-ordinates to exclude the "version"
-		// field
-		final List<DBObject> returns = new ArrayList<>();
-		try {
-			while (cursor.hasNext()) {
-				returns.add(cursor.next());
+			if (existing != null) {
+				updateExistingScenarios(existing, xbddFeature);
+				features.replaceOne(featureQuery, existing);
+			} else {
+				features.insertOne(xbddFeature);
 			}
-		} finally {
-			cursor.close();
 		}
-		final BasicDBList list = new BasicDBList();
-		list.addAll(returns);
-		updateStatsDocument(bdd, coordinates, list);
-		return Response.ok(SerializerUtil.serialise(list)).build();
+		final FindIterable<XbddFeature> savedFeatures = features
+				.find(coordinates.getReportCoordinatesQueryObject(), XbddFeature.class); // get new co-ordinates to exclude the "version"
+		// field
+
+		final List<XbddFeature> returns = new ArrayList<>();
+		Consumer<XbddFeature> addToReturns = feature -> returns.add(feature);
+
+		savedFeatures.forEach(addToReturns);
+		updateStatsDocument(bdd, coordinates, returns);
+		return Response.ok(SerializerUtil.serialise(returns)).build();
 	}
 
-	private BasicDBList mergeExistingScenarios(final DBCollection features, final DBObject feature, final String _id) {
-		BasicDBList newElements = (BasicDBList) feature.get("elements");
-		if (newElements == null) {
-			newElements = new BasicDBList();
-		}
-		final List<String> newElementIds = new ArrayList<>();
-
-		for (Object newElement : newElements) {
-			final DBObject elem = (DBObject) newElement;
-			final String elem_type = (String) elem.get("type");
-			if (elem_type.equalsIgnoreCase("scenario")) {
-				newElementIds.add((String) elem.get("id"));
+	private void updateExistingScenarios(final XbddFeature existing, final XbddFeature newFeature) {
+		for(XbddScenario scenario: newFeature.getElements()) {
+			if(existing.getElements().stream().noneMatch(old -> StringUtils.equals(old.getId(), scenario.getId()))) {
+				existing.getElements().add(scenario);
 			}
 		}
-
-		final DBObject existingFeature = features.findOne(_id);
-		if (existingFeature != null) {
-			final BasicDBList existingElements = (BasicDBList) existingFeature.get("elements");
-			if (existingElements != null) {
-				for (Object existingElement : existingElements) {
-					final DBObject element = (DBObject) existingElement;
-					final String element_type = (String) element.get("type");
-					if (element_type.equalsIgnoreCase("scenario")) {
-						final String element_id = (String) element.get("id");
-						if (!newElementIds.contains(element_id)) {
-							newElements.add(element);
-						}
-					}
-				}
-			}
-
-		}
-		return newElements;
 	}
 
 	@POST
@@ -414,7 +297,7 @@ public class Report {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFile(
 			@BeanParam final Coordinates coord,
-			@FormDataParam("file") final DBObject root,
+			@FormDataParam("file") final List<JUnitFeature> root,
 			@FormDataParam("file") final FormDataContentDisposition fileDetail) {
 		putReport(coord, root);
 		return Response.ok().build();

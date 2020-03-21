@@ -20,6 +20,8 @@ import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import org.apache.commons.lang.math.NumberUtils;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
@@ -27,6 +29,9 @@ import javax.ws.rs.core.Context;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Supplier;
+
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 /**
  * Factory for {@link MongoClient} that retrieves hostname and port parameters from the ServletContext. The {@link MongoClient} is designed
@@ -59,10 +64,12 @@ public class ServletContextMongoClientFactory implements Supplier<MongoDBAccesso
 
 	private MongoDBAccessor getMongoDBAccessor() {
 		final MongoClient mc;
+		CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),
+				fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 		if (this.username != null) {
 			MongoCredential credentials = MongoCredential.createScramSha1Credential(this.username, "admin", this.password);
 			System.out.println(String.format("name: %s, pw: %s", this.username, Arrays.toString(this.password)));
-			mc = new MongoClient(new ServerAddress(this.host, this.port), credentials, MongoClientOptions.builder().build());
+			mc = new MongoClient(new ServerAddress(this.host, this.port), credentials, MongoClientOptions.builder().codecRegistry(pojoCodecRegistry).build());
 		} else {
 			mc = new MongoClient(this.host, this.port);
 		}
