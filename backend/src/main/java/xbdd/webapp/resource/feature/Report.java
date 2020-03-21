@@ -79,6 +79,7 @@ public class Report {
 	}
 
 	@GET
+	@Path("/summary")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSummaryOfAllReports(@Context final HttpServletRequest req) {
 		final DB db = this.client.getDB("bdd");

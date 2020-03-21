@@ -16,6 +16,7 @@
 package xbdd.webapp.resource.feature;
 
 import com.mongodb.*;
+import xbdd.model.simple.TagAssignmentPatch;
 import xbdd.webapp.factory.MongoDBAccessor;
 import xbdd.webapp.util.Coordinates;
 import xbdd.webapp.util.SerializerUtil;
@@ -55,21 +56,18 @@ public class User {
 	@PUT
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final DBObject patch) {
+	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final TagAssignmentPatch tagPatch) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("tagsAssignment");
 		final BasicDBObject coq = coordinates.getReportCoordinatesQueryObject();
 		final BasicDBObject storedDocument = (BasicDBObject) collection.findOne(coq);
 
-		final String tagName = (String) patch.get("tag");
-		final String userName = (String) patch.get("userName");
-
 		if (storedDocument != null) {
 			final BasicDBObject documentToUpdate = (BasicDBObject) storedDocument.copy();
-			updateTagsAssignment(documentToUpdate, tagName, userName);
+			updateTagsAssignment(documentToUpdate, tagPatch.getTag(), tagPatch.getUserName());
 			collection.save(documentToUpdate);
 		} else {
-			DBObject newDocument = generateNewTagAssignment(coordinates, tagName, userName);
+			DBObject newDocument = generateNewTagAssignment(coordinates, tagPatch.getTag(), tagPatch.getUserName());
 			collection.save(newDocument);
 		}
 		return Response.ok().build();
@@ -129,7 +127,7 @@ public class User {
 	@PUT
 	@Path("/ignoredTags/{product}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response putIgnoredTags(@BeanParam final Coordinates coordinates, final DBObject patch) {
+	public Response putIgnoredTags(@BeanParam final Coordinates coordinates, final BasicDBObject patch) {
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("ignoredTags");
 		final BasicDBObject coq = coordinates.getProductCoordinatesQueryObject();
