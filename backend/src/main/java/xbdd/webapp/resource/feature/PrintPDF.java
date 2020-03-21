@@ -31,7 +31,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 @Path("/print-pdf")
 public class PrintPDF {
@@ -39,17 +38,6 @@ public class PrintPDF {
 	private static final String XBDD_PHANTOMJS_HOME_INIT_PARAMETER = "sample_reports.phantomjs.home";
 	private static final String XBDD_PHANTOMJS_USERNAME_INIT_PARAMETER = "sample_reports.phantomjs.username";
 	private static final String XBDD_PHANTOMJS_PASSWORD_INIT_PARAMETER = "sample_reports.phantomjs.password";
-
-	public static int randInt(final int min, final int max) {
-
-		final Random rand = new Random();
-
-		// nextInt is normally exclusive of the top value,
-		// so add 1 to make it inclusive
-		final int randomNum = rand.nextInt((max - min) + 1) + min;
-
-		return randomNum;
-	}
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/")
@@ -99,9 +87,9 @@ public class PrintPDF {
 			public void write(final OutputStream os) throws IOException, WebApplicationException {
 
 				final File tmpFile = File.createTempFile("report", ".pdf");
-				final List<String> commands = new ArrayList<String>();
+				final List<String> commands = new ArrayList<>();
 				final String osName = System.getProperty("os.name").toLowerCase();
-				if (osName.indexOf("win") >= 0) {// It's windows
+				if (osName.contains("win")) {// It's windows
 					commands.add("CMD");
 					commands.add("/c");
 					commands.add(phantomjsloc + "\\phantomjs");
