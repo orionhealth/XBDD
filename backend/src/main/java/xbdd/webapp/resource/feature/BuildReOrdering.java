@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/build-reorder")
@@ -50,7 +51,7 @@ public class BuildReOrdering {
 			return Response.ok(SerializerUtil.serialise((List<String>) builds)).build();
 		}
 
-		return Response.noContent().build();
+		return Response.ok(new ArrayList<>()).build();
 	}
 
 	@PUT
