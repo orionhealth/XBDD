@@ -6,30 +6,20 @@ import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icon
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-
 import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
-import {
-  setFeatureListByTagFromFetchedData,
-  setSimpleFeatureListFromFetchedData,
-  setUsersFromTagAssignmentsFromFetchedData,
-  setIgnoredTagsFromFetchedData,
-  toggleIgnoreForTagForFeatureList,
-  setUserForTagForFeatureList,
-  cloneFeatureList,
-} from 'models/FeatureList';
-import {
-  getFeatureListByTagData,
-  getSimpleFeatureListData,
-  getTagAssignmentData,
-  setTagAssignmentData,
-  getIgnoredTags,
-  setIgnoredTag,
-} from 'lib/rest/Rest';
+import { setTagAssignmentData, setIgnoredTag } from 'lib/rest/Rest';
 import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
 import FeatureFilterButtons from './FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
 import TagList from './TagViewFeatureList/TagList';
 import Loading from 'modules/loading/Loading';
+import fetchSimpleFeaturesByTags from 'lib/services/FetchSimpleFeaturesByTags';
+import fetchSimpleFeatures from 'lib/services/FetchSimpleFeatures';
+import fetchTagAssignments from 'lib/services/FetchTagAssignments';
+import fetchTagsIgnored from 'lib/services/FetchTagsIgnored';
+import produce from 'immer';
+import { dispatch } from 'rxjs/internal/observable/range';
+import { receivedTagsIgnored } from 'xbddReducer';
 
 class FeatureListContainer extends Component {
   constructor(props) {
@@ -40,7 +30,10 @@ class FeatureListContainer extends Component {
       isEditMode: false,
       isAssignedTagsView: false,
       isTagView: true,
-      featureList: null,
+      tagList: [],
+      simpleFeatureList: [],
+      tagAssignments: {},
+      tagsIgnored: {},
       selectedStatus: {
         passed: true,
         failed: true,
@@ -52,25 +45,22 @@ class FeatureListContainer extends Component {
   }
 
   componentDidMount() {
-    // :FeatureList
-    const featureList = {
-      tagList: [],
-      simpleFeatureList: [],
-    };
     const { product, version, build } = this.props;
     this.setState({ loading: true });
     Promise.all([
-      getFeatureListByTagData(product, version, build),
-      getSimpleFeatureListData(product, version, build),
-      getTagAssignmentData(product, version, build),
-      getIgnoredTags(product),
+      fetchSimpleFeaturesByTags(product, version, build),
+      fetchSimpleFeatures(product, version, build),
+      fetchTagAssignments(product, version, build),
+      fetchTagsIgnored(product),
     ])
       .then(data => {
-        setFeatureListByTagFromFetchedData(featureList, data[0]);
-        setSimpleFeatureListFromFetchedData(featureList, data[1]);
-        setUsersFromTagAssignmentsFromFetchedData(featureList, data[2]);
-        setIgnoredTagsFromFetchedData(featureList, data[3]);
-        this.setState({ featureList });
+        this.setState({
+          tagList: data[0], // :Tag
+          simpleFeatureList: data[1], // :Feature[]
+          tagAssignments: data[2], //:TagAssignments
+        });
+        const tagsIgnored = data[3]; //:TagsIgnored
+        dispatch(receivedTagsIgnored, tagsIgnored);
       })
       .finally(() => this.setState({ loading: false }));
   }
@@ -95,11 +85,11 @@ class FeatureListContainer extends Component {
   };
 
   setStateForTagUser(tag, userName) {
-    this.setState(prevState => {
-      const newFeatureList = cloneFeatureList(prevState.featureList);
-      setUserForTagForFeatureList(newFeatureList, tag, userName);
-      return { ...prevState, featureList: newFeatureList, warningArgs: null };
-    });
+    this.setState(
+      produce(draft => {
+        draft.tagAssignments[tag] = userName;
+      })
+    );
   }
 
   handleTagAssigned = (restId, tag, newUserName, prevUserName) => {
@@ -127,28 +117,23 @@ class FeatureListContainer extends Component {
   };
 
   setIgnoreStateForTag(tagName) {
-    this.setState(prevState => {
-      const newFeatureList = cloneFeatureList(prevState.featureList);
-      toggleIgnoreForTagForFeatureList(newFeatureList, tagName);
-      return { ...prevState, featureList: newFeatureList };
-    });
+    this.setState(
+      produce(draft => {
+        draft.tagsIgnored[tagName] = !draft.tagsIgnored[tagName];
+      })
+    );
   }
 
   filterTags(userName) {
-    const { featureList, isAssignedTagsView, selectedStatus } = this.state;
-    var newTagList = featureList.tagList;
+    const { tagList, isAssignedTagsView, selectedStatus, tagAssignments } = this.state;
+    let filteredTagList = tagList;
 
     if (isAssignedTagsView) {
-      newTagList = newTagList.filter(tag => tag.userName === userName);
+      filteredTagList = filteredTagList.filter(tag => tagAssignments[tag.name] === userName);
     }
+    filteredTagList = filteredTagList.filter(tag => tag.features.find(feature => selectedStatus[feature.calculatedStatus]));
 
-    return newTagList.filter(
-      tag =>
-        (selectedStatus.passed && tag.containsPassed) ||
-        (selectedStatus.failed && tag.containsFailed) ||
-        (selectedStatus.undefined && tag.containsUndefined) ||
-        (selectedStatus.skipped && tag.containsSkipped)
-    );
+    return filteredTagList;
   }
 
   renderAssignedTagsSwitch() {
@@ -231,7 +216,7 @@ class FeatureListContainer extends Component {
       return (
         <ListViewFeatureList
           selectedFeatureId={selectedFeatureId}
-          featureList={featureList.simpleFeatureList}
+          featureList={simpleFeatureList}
           selectedStatus={selectedStatus}
           handleFeatureSelected={handleFeatureSelected}
         />
@@ -245,30 +230,25 @@ class FeatureListContainer extends Component {
 
     const restId = `${product}/${version}/${build}`;
 
-    if (this.state.featureList) {
-      return (
-        <>
-          <Loading loading={loading} />
-          <ConfirmationDialog
-            open={!!warningArgs}
-            title={t('report.warning')}
-            msg={t('report.pleaseReassignTheTag')}
-            handleConfirmed={() =>
-              warningArgs && this.handleTagAssigned(warningArgs.restId, warningArgs.tag, warningArgs.newUserName, null)
-            }
-            handleClosed={() => {
-              this.setState({ warningArgs: null });
-            }}
-          />
-          <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
-          <div className={classes.xbddTagListContainer}>
-            {this.renderFeatureListTitle()}
-            {this.renderFeatureList(userName, restId, selectedFeatureId)}
-          </div>
-        </>
-      );
-    }
-    return null;
+    return (
+      <>
+        <Loading loading={loading} />
+        <ConfirmationDialog
+          open={!!warningArgs}
+          title={t('report.warning')}
+          msg={t('report.pleaseReassignTheTag')}
+          handleConfirmed={() => warningArgs && this.handleTagAssigned(warningArgs.restId, warningArgs.tag, warningArgs.newUserName, null)}
+          handleClosed={() => {
+            this.setState({ warningArgs: null });
+          }}
+        />
+        <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
+        <div className={classes.xbddTagListContainer}>
+          {this.renderFeatureListTitle()}
+          {this.renderFeatureList(userName, restId, selectedFeatureId)}
+        </div>
+      </>
+    );
   }
 }
 
