@@ -6,7 +6,6 @@ import TagListItem from './TagListItem';
 import Tag from 'models/Tag';
 import Status from 'models/Status';
 import TagAssignments from 'models/TagAssignments';
-import TagsIgnored from 'models/TagsIgnored';
 import { useSelector } from 'react-redux';
 import { RootStore } from 'rootReducer';
 import { UserName } from 'models/User';
@@ -39,7 +38,7 @@ const TagList: FC<Props> = ({
   handleTagIgnore,
   classes,
 }) => {
-  const tagsIgnored = useSelector((state: RootStore) => state.app.tagsIgnored);
+  const tagsIgnored = useSelector((state: RootStore) => state.tagsIgnored);
   return (
     <Card raised className={classes.tagList}>
       <List component="ul">
