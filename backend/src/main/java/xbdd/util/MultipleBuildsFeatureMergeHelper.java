@@ -15,8 +15,8 @@
  */
 package xbdd.util;
 
-import xbdd.model.MergeFeature;
-import xbdd.model.MergeScenario;
+import xbdd.model.merge.MergeFeature;
+import xbdd.model.merge.MergeScenario;
 import xbdd.model.simple.Feature;
 import xbdd.model.simple.Scenario;
 

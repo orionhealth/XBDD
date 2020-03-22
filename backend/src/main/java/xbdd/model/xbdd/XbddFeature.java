@@ -3,8 +3,8 @@ package xbdd.model.xbdd;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import xbdd.model.simple.CoordinatesDto;
-import xbdd.model.simple.Tag;
+import xbdd.model.common.CoordinatesDto;
+import xbdd.model.common.Tag;
 
 import java.util.List;
 
@@ -24,7 +24,10 @@ public class XbddFeature {
 	private String description;
 	private String keyword;
 	private String uri;
+
+	// Need to keep this as elements as that's already in the db
 	private List<XbddScenario> elements;
+
 	private CoordinatesDto coordinates;
 	private String calculatedStatus;
 	private String originalAutomatedStatus;

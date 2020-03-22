@@ -16,7 +16,7 @@
 package xbdd.model.simple;
 
 import com.mongodb.BasicDBObject;
-import xbdd.webapp.util.Coordinates;
+import xbdd.util.Coordinates;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package xbdd.mappers;
 
-import xbdd.model.simple.CoordinatesDto;
-import xbdd.webapp.util.Coordinates;
+import xbdd.model.common.CoordinatesDto;
+import xbdd.util.Coordinates;
 
 public class CoordinatesMapper {
 

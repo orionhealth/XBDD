@@ -1,18 +1,17 @@
 package xbdd.mappers;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSInputFile;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import xbdd.model.junit.*;
-import xbdd.model.xbdd.*;
+import xbdd.model.xbdd.XbddFeature;
+import xbdd.model.xbdd.XbddScenario;
+import xbdd.model.xbdd.XbddStep;
+import xbdd.model.xbdd.XbddStepResult;
+import xbdd.persistence.ImageDao;
+import xbdd.util.Coordinates;
 import xbdd.util.StatusHelper;
-import xbdd.webapp.util.Coordinates;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,10 +33,10 @@ public class FeatureMapper {
 		return allSteps.stream().map(step -> step.getResult().getStatus()).filter(status -> status != null);
 	}
 
-	GridFS gridFS;
+	private final ImageDao imageDao;
 
-	public FeatureMapper(GridFS gridFS) {
-		this.gridFS = gridFS;
+	public FeatureMapper(ImageDao imageDao) {
+		this.imageDao = imageDao;
 	}
 
 	public XbddFeature map(JUnitFeature jUnitFeature, Coordinates coordinates) {
@@ -111,20 +110,12 @@ public class FeatureMapper {
 		xbddStep.setLine(jUnitStep.getLine());
 		xbddStep.setKeyword(jUnitStep.getKeyword());
 		xbddStep.setMatchedColumns(jUnitStep.getMatchedColumns());
-		xbddStep.setMatch(mapMatch(jUnitStep.getMatch()));
+		xbddStep.setMatch(jUnitStep.getMatch());
 		xbddStep.setResult(mapResult(jUnitStep.getResult()));
 
 		mapEmbeddings(jUnitStep, xbddStep, coordinates, featureId, scenarioId);
 
 		return xbddStep;
-	}
-
-	private XbddStepMatch mapMatch(JUnitStepMatch jUnitStepMatch) {
-		XbddStepMatch xbddStepMatch = new XbddStepMatch();
-
-		xbddStepMatch.setLocation(jUnitStepMatch.getLocation());
-
-		return xbddStepMatch;
 	}
 
 	private XbddStepResult mapResult(JUnitStepResult jUnitStepResult) {
@@ -140,23 +131,9 @@ public class FeatureMapper {
 	private void mapEmbeddings(JUnitStep junitStep, XbddStep xbddStep, Coordinates coordinates, String featureId, String scenarioId) {
 		if (junitStep.getEmbeddings() != null) {
 			for (JUnitEmbedding embedding : junitStep.getEmbeddings()) {
-				//handle a malformatted 'embedding' better.
-				//https://github.com/orionhealth/XBDD/issues/46
-				try {
-					final GridFSInputFile image = gridFS
-							.createFile(Base64.decodeBase64((embedding.getData()).getBytes()));
-					image.setFilename(UUID.randomUUID().toString());
-					final BasicDBObject metadata = new BasicDBObject().append("product", coordinates.getProduct())
-							.append("major", coordinates.getMajor()).append("minor", coordinates.getMinor())
-							.append("servicePack", coordinates.getServicePack()).append("build", coordinates.getBuild())
-							.append("feature", featureId)
-							.append("scenario", scenarioId);
-					image.setMetaData(metadata);
-					image.setContentType(embedding.getMime_type());
-					image.save();
-					xbddStep.getEmbeddings().add(image.getFilename());
-				} catch (ClassCastException e) {
-					LOGGER.warn("Embedding was malformatted and will be skipped");
+				String filename = this.imageDao.saveImageAndReturnFilename(embedding, coordinates, featureId, scenarioId);
+				if (filename != null) {
+					xbddStep.getEmbeddings().add(filename);
 				}
 			}
 		}

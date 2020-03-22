@@ -3,7 +3,7 @@ package xbdd.model.xbdd;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import xbdd.model.simple.Tag;
+import xbdd.model.common.Tag;
 
 import java.util.List;
 

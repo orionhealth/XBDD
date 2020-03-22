@@ -1,6 +1,6 @@
 package xbdd.model.junit;
 
-import xbdd.model.simple.Tag;
+import xbdd.model.common.Tag;
 
 import java.util.List;
 

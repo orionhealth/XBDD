@@ -22,6 +22,7 @@ import org.bson.BSONObject;
 import java.util.Map;
 import java.util.Set;
 
+@Deprecated
 public class Scenario implements DBObject {
 
 	private final BasicDBObject scenarioObject;

@@ -1,12 +1,14 @@
 package xbdd.model.xbdd;
 
+import xbdd.model.common.StepMatch;
+
 import java.util.List;
 
 public class XbddStep {
 	private Integer line;
 	private String name;
 	private XbddStepResult result;
-	private XbddStepMatch match;
+	private StepMatch match;
 	private List<Integer> matchedColumns;
 	private String keyword;
 	private List<String> embeddings;
@@ -35,11 +37,11 @@ public class XbddStep {
 		this.result = result;
 	}
 
-	public XbddStepMatch getMatch() {
+	public StepMatch getMatch() {
 		return match;
 	}
 
-	public void setMatch(XbddStepMatch match) {
+	public void setMatch(StepMatch match) {
 		this.match = match;
 	}
 
