@@ -209,7 +209,7 @@ class FeatureListContainer extends Component {
 
   renderFeatureList(userName, restId, selectedFeatureId) {
     const { handleFeatureSelected } = this.props;
-    const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, featureList } = this.state;
+    const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, simpleFeatureList, tagAssignments, tagsIgnored } = this.state;
     if (isTagView) {
       return (
         <TagList
@@ -217,6 +217,8 @@ class FeatureListContainer extends Component {
           isEditMode={isEditMode}
           isAssignedTagsView={isAssignedTagsView}
           tagList={this.filterTags(userName)}
+          tagAssignments={tagAssignments}
+          tagsIgnored={tagsIgnored}
           restId={restId}
           selectedFeatureId={selectedFeatureId}
           selectedStatus={selectedStatus}

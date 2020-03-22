@@ -1,8 +1,7 @@
 import React, { FC, MouseEvent } from 'react';
 import { makeStyles, createStyles, Avatar } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
-
-import Tag from 'models/Tag';
+import { UserName } from 'models/User';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -22,7 +21,8 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-  tag: Tag;
+  userName: UserName;
+  isIgnored: boolean;
   onClick(event: MouseEvent): void;
 }
 
@@ -34,10 +34,9 @@ const getHSLFromString = (string: string): string => {
   return 'hsl(' + ((val * val) % 360) + ', 21%, 63%)';
 };
 
-const TagAvatar: FC<Props> = ({ tag, onClick }) => {
+const TagAvatar: FC<Props> = ({ userName, isIgnored, onClick }) => {
   const classes = useStyles();
 
-  const { userName, isIgnored } = tag;
   const color = userName ? getHSLFromString(userName) : undefined;
 
   if (isIgnored) {
