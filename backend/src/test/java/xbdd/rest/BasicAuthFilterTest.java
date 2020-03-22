@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import xbdd.auth.BasicAuthFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;

@@ -22,7 +22,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import xbdd.factory.MongoDBAccessor;
-import xbdd.rest.MergeBuilds.Merge;
+import xbdd.resources.MergeBuilds;
+import xbdd.resources.MergeBuilds.Merge;
 
 import java.util.ArrayList;
 import java.util.Arrays;

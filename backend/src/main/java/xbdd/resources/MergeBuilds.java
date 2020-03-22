@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xbdd.rest;
+package xbdd.resources;
 
 import com.mongodb.*;
 import xbdd.model.simple.Feature;
