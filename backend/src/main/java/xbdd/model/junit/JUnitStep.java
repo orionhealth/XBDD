@@ -69,23 +69,3 @@ public class JUnitStep {
 		this.embeddings = embeddings;
 	}
 }
-
-/*
-Example
-{
-"result": {
-  "duration": 2301689,
-  "error_message": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:86)\n\tat org.junit.Assert.fail(Assert.java:95)\n\tat example.stepdefs.BasicStepdefs.this_step_fails(BasicStepdefs.java:31)\n\tat ✽.Given this step fails(example/failed.feature:4)\n",
-  "status": "failed"
-},
-"line": 4,
-"name": "this step fails",
-"match": {
-  "location": "BasicStepdefs.this_step_fails()"
-},
-"matchedColumns": [
-  0
-],
-"keyword": "Given "
-}
- */
