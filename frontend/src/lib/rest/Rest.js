@@ -15,11 +15,6 @@ export const pinABuild = (project, major, minor, servicePack, build) =>
 export const unPinABuild = (project, major, minor, servicePack, build) =>
   doDeleteRequest(`/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, 'rest.error.unpin');
 
-export const getFeatureListByTagData = (product, version, build) =>
-  doGetRequest(`/tagview/featureTagIndex/${product}/${version}/${build}`, 'rest.error.featuresByTag');
-
-export const getSimpleFeatureListData = (product, version, build) => doGetRequest(`/reports/featureIndex/${product}/${version}/${build}`);
-
 export const getRollUpData = (product, version, feature) => doGetRequest(`/feature/rollup/${product}/${version}/${feature}`);
 
 // path should be of type StepStatusPatch
