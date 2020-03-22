@@ -17,7 +17,6 @@ interface Props extends WithStyles {
   isAssignedTagsView: boolean;
   tagList: Tag[];
   tagAssignments: TagAssignments;
-  tagsIgnored: TagsIgnored;
   restId: string;
   selectedFeatureId: string;
   selectedStatus: Status;
@@ -40,6 +39,7 @@ const TagList: FC<Props> = ({
   handleTagIgnore,
   classes,
 }) => {
+  const tagsIgnored = useSelector((state: RootStore) => state.app.tagsIgnored);
   return (
     <Card raised className={classes.tagList}>
       <List component="ul">

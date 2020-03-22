@@ -19,7 +19,7 @@ import fetchTagAssignments from 'lib/services/FetchTagAssignments';
 import fetchTagsIgnored from 'lib/services/FetchTagsIgnored';
 import produce from 'immer';
 import { dispatch } from 'rxjs/internal/observable/range';
-import { receivedTagsIgnored } from 'xbddReducer';
+import { receivedTagsIgnored, tagIgnoreToggled } from 'xbddReducer';
 
 class FeatureListContainer extends Component {
   constructor(props) {
@@ -33,7 +33,6 @@ class FeatureListContainer extends Component {
       tagList: [],
       simpleFeatureList: [],
       tagAssignments: {},
-      tagsIgnored: {},
       selectedStatus: {
         passed: true,
         failed: true,
@@ -117,11 +116,7 @@ class FeatureListContainer extends Component {
   };
 
   setIgnoreStateForTag(tagName) {
-    this.setState(
-      produce(draft => {
-        draft.tagsIgnored[tagName] = !draft.tagsIgnored[tagName];
-      })
-    );
+    dispatch(tagIgnoreToggled, tagName);
   }
 
   filterTags(userName) {
@@ -194,7 +189,7 @@ class FeatureListContainer extends Component {
 
   renderFeatureList(userName, restId, selectedFeatureId) {
     const { handleFeatureSelected } = this.props;
-    const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, simpleFeatureList, tagAssignments, tagsIgnored } = this.state;
+    const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, simpleFeatureList, tagAssignments } = this.state;
     if (isTagView) {
       return (
         <TagList
@@ -203,7 +198,6 @@ class FeatureListContainer extends Component {
           isAssignedTagsView={isAssignedTagsView}
           tagList={this.filterTags(userName)}
           tagAssignments={tagAssignments}
-          tagsIgnored={tagsIgnored}
           restId={restId}
           selectedFeatureId={selectedFeatureId}
           selectedStatus={selectedStatus}
