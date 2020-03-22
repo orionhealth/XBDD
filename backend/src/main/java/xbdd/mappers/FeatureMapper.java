@@ -48,12 +48,12 @@ public class FeatureMapper {
 		xbddFeature.setLine(jUnitFeature.getLine());
 		xbddFeature.setName(jUnitFeature.getName());
 		xbddFeature.setUri(jUnitFeature.getUri());
-		xbddFeature.setCoordinates(mapCoordinates(coordinates));
+		xbddFeature.setCoordinates(CoordinatesMapper.mapCoordinates(coordinates));
 		xbddFeature.setTags(jUnitFeature.getTags());
 
 		// take each feature and give it a unique id.
 		final String _id = coordinates.getFeature_Id(jUnitFeature.getId());
-		xbddFeature.setEffectiveId(_id);
+		xbddFeature.setId(_id);
 
 		xbddFeature.setElements(new ArrayList<>());
 
@@ -84,22 +84,10 @@ public class FeatureMapper {
 		return xbddFeature;
 	}
 
-	private XbddCoodinates mapCoordinates(Coordinates coordinates) {
-		XbddCoodinates xbddCoodinates = new XbddCoodinates();
-
-		xbddCoodinates.setBuild(coordinates.getBuild());
-		xbddCoodinates.setMajor(coordinates.getMajor());
-		xbddCoodinates.setMinor(coordinates.getMinor());
-		xbddCoodinates.setProduct(coordinates.getProduct());
-		xbddCoodinates.setServicePack(coordinates.getServicePack());
-
-		return xbddCoodinates;
-	}
-
 	private XbddScenario mapScenario(JUnitElement jUnitElement, Coordinates coordinates, String featureId) {
 		XbddScenario xbddScenario = new XbddScenario();
 
-		xbddScenario.setId(jUnitElement.getId());
+		xbddScenario.setOriginalId(jUnitElement.getId());
 		xbddScenario.setDescription(jUnitElement.getDescription());
 		xbddScenario.setKeyword(jUnitElement.getKeyword());
 		xbddScenario.setLine(jUnitElement.getLine());
@@ -109,7 +97,7 @@ public class FeatureMapper {
 
 		if (jUnitElement.getSteps() != null) {
 			xbddScenario.setSteps(
-					jUnitElement.getSteps().stream().map(step -> mapStep(step, coordinates, featureId, xbddScenario.getId())).collect(
+					jUnitElement.getSteps().stream().map(step -> mapStep(step, coordinates, featureId, xbddScenario.getOriginalId())).collect(
 							Collectors.toList()));
 		}
 

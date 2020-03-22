@@ -1,15 +1,22 @@
 package xbdd.model.xbdd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import xbdd.model.simple.CoordinatesDto;
 import xbdd.model.simple.Tag;
 
 import java.util.List;
 
 public class XbddFeature {
+	// The id field is used in indexes in mongo and actually gets mapped to _id in the db.
+	@SerializedName("_id")
 	@JsonProperty("_id")
-	private String effectiveId;
+	private String id;
 
+	@SerializedName("id")
 	@JsonProperty("id")
+	@BsonProperty("id")
 	private String originalId;
 
 	private Integer line ;
@@ -18,17 +25,17 @@ public class XbddFeature {
 	private String keyword;
 	private String uri;
 	private List<XbddScenario> elements;
-	private XbddCoodinates coordinates;
+	private CoordinatesDto coordinates;
 	private String calculatedStatus;
 	private String originalAutomatedStatus;
 	private List<Tag> tags;
 
-	public String getEffectiveId() {
-		return effectiveId;
+	public String getId() {
+		return id;
 	}
 
-	public void setEffectiveId(String effectiveId) {
-		this.effectiveId = effectiveId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Integer getLine() {
@@ -87,11 +94,11 @@ public class XbddFeature {
 		this.elements = elements;
 	}
 
-	public XbddCoodinates getCoordinates() {
+	public CoordinatesDto getCoordinates() {
 		return coordinates;
 	}
 
-	public void setCoordinates(XbddCoodinates coordinates) {
+	public void setCoordinates(CoordinatesDto coordinates) {
 		this.coordinates = coordinates;
 	}
 

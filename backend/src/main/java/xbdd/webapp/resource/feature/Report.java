@@ -26,8 +26,10 @@ import org.apache.log4j.Logger;
 import org.bson.conversions.Bson;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import xbdd.mappers.CoordinatesMapper;
 import xbdd.mappers.FeatureMapper;
 import xbdd.model.junit.JUnitFeature;
+import xbdd.model.simple.CoordinatesDto;
 import xbdd.model.simple.FeatureSummary;
 import xbdd.model.xbdd.XbddFeature;
 import xbdd.model.xbdd.XbddScenario;
@@ -172,7 +174,7 @@ public class Report {
 
 	protected void updateSummaryDocument(final MongoDatabase bdd, final Coordinates coordinates) {
 		final MongoCollection summary = bdd.getCollection("summary", FeatureSummary.class);
-		final Bson query = Filters.eq("_id", coordinates.getProduct() + "/" + coordinates.getVersionString());
+		final Bson query = Filters.eq(coordinates.getProduct() + "/" + coordinates.getVersionString());
 		final FeatureSummary summaryObject = (FeatureSummary) summary.find(query, FeatureSummary.class).first();
 		if (summaryObject != null) { // lookup the summary document
 			if (!summaryObject.getBuilds().contains(coordinates.getBuild())) { // only update it if this build hasn't been added to it before.
@@ -181,9 +183,15 @@ public class Report {
 			}
 		} else {
 			FeatureSummary newSummary = new FeatureSummary();
-			newSummary.set_id(coordinates.getProduct() + "/" + coordinates.getVersionString());
+			newSummary.setId(coordinates.getProduct() + "/" + coordinates.getVersionString());
 			newSummary.setBuilds(new ArrayList<>());
 			newSummary.getBuilds().add(coordinates.getBuild());
+
+			// Summaries don't care about the build as they have a list of them.
+			CoordinatesDto coordDto = CoordinatesMapper.mapCoordinates(coordinates);
+			coordDto.setBuild(null);
+			newSummary.setCoordinates(coordDto);
+
 			summary.insertOne(newSummary);
 		}
 	}
@@ -262,7 +270,7 @@ public class Report {
 
 		for (JUnitFeature feature : root) {
 			final XbddFeature xbddFeature = featureMapper.map(feature, coordinates);
-			Bson featureQuery = Filters.eq("_id", xbddFeature.getEffectiveId());
+			Bson featureQuery = Filters.eq(xbddFeature.getId());
 			final XbddFeature existing = features.find(featureQuery).first();
 
 			if (existing != null) {
@@ -280,13 +288,13 @@ public class Report {
 		Consumer<XbddFeature> addToReturns = feature -> returns.add(feature);
 
 		savedFeatures.forEach(addToReturns);
-		updateStatsDocument(bdd, coordinates, returns);
+		//updateStatsDocument(bdd, coordinates, returns);
 		return Response.ok(SerializerUtil.serialise(returns)).build();
 	}
 
 	private void updateExistingScenarios(final XbddFeature existing, final XbddFeature newFeature) {
 		for(XbddScenario scenario: newFeature.getElements()) {
-			if(existing.getElements().stream().noneMatch(old -> StringUtils.equals(old.getId(), scenario.getId()))) {
+			if(existing.getElements().stream().noneMatch(old -> StringUtils.equals(old.getOriginalId(), scenario.getOriginalId()))) {
 				existing.getElements().add(scenario);
 			}
 		}

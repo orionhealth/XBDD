@@ -1,17 +1,24 @@
 package xbdd.model.simple;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class FeatureSummary {
-	String _id;
-	List<String> builds;
+	@SerializedName("_id")
+	@JsonProperty("_id")
+	String id;
 
-	public String get_id() {
-		return _id;
+	List<String> builds;
+	CoordinatesDto coordinates;
+
+	public String getId() {
+		return id;
 	}
 
-	public void set_id(String _id) {
-		this._id = _id;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public List<String> getBuilds() {
@@ -20,5 +27,13 @@ public class FeatureSummary {
 
 	public void setBuilds(List<String> builds) {
 		this.builds = builds;
+	}
+
+	public CoordinatesDto getCoordinates() {
+		return coordinates;
+	}
+
+	public void setCoordinates(CoordinatesDto coordinates) {
+		this.coordinates = coordinates;
 	}
 }

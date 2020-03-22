@@ -21,6 +21,7 @@ import xbdd.webapp.util.Coordinates;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class Feature {
 
 	private final BasicDBObject featureObject;

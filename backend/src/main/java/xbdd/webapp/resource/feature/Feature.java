@@ -190,7 +190,7 @@ public class Feature {
 	@Path("/comments/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateCommentWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final DBObject patch) {
+			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("features");
@@ -234,7 +234,7 @@ public class Feature {
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response putFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final DBObject feature) {
+			@Context final HttpServletRequest req, final BasicDBObject feature) {
 		feature.put("calculatedStatus", StatusHelper.getFeatureStatus(feature));
 		final DB db = this.client.getDB("bdd");
 		final DBCollection collection = db.getCollection("features");
@@ -261,7 +261,7 @@ public class Feature {
 	@Path("/step/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateStepWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final DBObject patch) {
+			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("features");
@@ -365,7 +365,7 @@ public class Feature {
 	@Path("/steps/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateStepsWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final DBObject patch) {
+			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
 			final DB db = this.client.getDB("bdd");
 			final DBCollection collection = db.getCollection("features");

@@ -1,6 +1,6 @@
-package xbdd.model.xbdd;
+package xbdd.model.simple;
 
-public class XbddCoodinates {
+public class CoordinatesDto {
 	private String product;
 	private Integer major;
 	private Integer minor;

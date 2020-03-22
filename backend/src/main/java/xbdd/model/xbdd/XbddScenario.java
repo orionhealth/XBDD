@@ -1,14 +1,22 @@
 package xbdd.model.xbdd;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import xbdd.model.simple.Tag;
 
 import java.util.List;
 
 public class XbddScenario {
+	// The id field gets mapped in _id in the mongo driver so we need to bypass that.
+	@SerializedName("id")
+	@JsonProperty("id")
+	@BsonProperty("id")
+	private String originalId;
+
 	private Integer line;
 	private String name;
 	private String description;
-	private String id;
 	private String type;
 	private String keyword;
 	private XbddScenario background;
@@ -39,12 +47,12 @@ public class XbddScenario {
 		this.description = description;
 	}
 
-	public String getId() {
-		return id;
+	public String getOriginalId() {
+		return originalId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setOriginalId(String originalId) {
+		this.originalId = originalId;
 	}
 
 	public String getType() {
