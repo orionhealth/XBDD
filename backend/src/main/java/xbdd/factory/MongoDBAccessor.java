@@ -34,6 +34,7 @@ public class MongoDBAccessor {
 		return this.client.getDatabase(dbName);
 	}
 
+	@Deprecated
 	public DB getDB(final String dbName) {
 		return this.client.getDB(dbName);
 	}
