@@ -16,8 +16,6 @@
 package xbdd.resources;
 
 import com.mongodb.*;
-import com.mongodb.client.MongoDatabase;
-import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import xbdd.factory.MongoDBAccessor;
@@ -37,9 +35,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -221,7 +216,7 @@ public class Report {
 		
 		this.statsDao.updateStatsForFeatures(coordinates, persistedFeatures);
 
-		return Response.ok(SerializerUtil.serialise(persistedFeatures)).build();
+		return Response.ok(persistedFeatures).build();
 	}
 
 	@POST
@@ -233,6 +228,5 @@ public class Report {
 			@FormDataParam("file") final FormDataContentDisposition fileDetail) {
 		putReport(coord, root);
 		return Response.ok().build();
-
 	}
 }

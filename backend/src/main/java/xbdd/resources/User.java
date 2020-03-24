@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 
 @Path("/user")
 public class User {
@@ -50,7 +51,7 @@ public class User {
 			return Response.ok(SerializerUtil.serialise(tags)).build();
 		}
 
-		return Response.noContent().build();
+		return Response.ok(new ArrayList<>()).build();
 	}
 
 	@PUT
@@ -121,7 +122,7 @@ public class User {
 			final BasicDBList tags = (BasicDBList) document.get("tags");
 			return Response.ok(SerializerUtil.serialise(tags)).build();
 		}
-		return Response.noContent().build();
+		return Response.ok(new ArrayList<>()).build();
 	}
 
 	@PUT
