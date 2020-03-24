@@ -17,6 +17,7 @@ package xbdd.resources;
 
 import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
+import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import xbdd.factory.MongoDBAccessor;
@@ -36,6 +37,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -222,15 +226,34 @@ public class Report {
 		return Response.ok(SerializerUtil.serialise(persistedFeatures)).build();
 	}
 
+//	@POST
+//	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
+//	@Consumes(MediaType.MULTIPART_FORM_DATA)
+//	public Response uploadFile(
+//			@BeanParam final Coordinates coord,
+//			@FormDataParam("file") final List<JUnitFeature> root,
+//			@FormDataParam("file") final FormDataContentDisposition fileDetail) {
+//		putReport(coord, root);
+//		return Response.ok().build();
+//
+//	}
+
 	@POST
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFile(
 			@BeanParam final Coordinates coord,
-			@FormDataParam("file") final List<JUnitFeature> root,
+			@FormDataParam("file") final InputStream inputStream,
 			@FormDataParam("file") final FormDataContentDisposition fileDetail) {
-		putReport(coord, root);
-		return Response.ok().build();
 
+		try {
+			String jsonRequest = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+			List<JUnitFeature> features = SerializerUtil.deserialiseListOf(jsonRequest, JUnitFeature.class);
+			putReport(coord, features);
+			return Response.ok().build();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
 	}
 }
