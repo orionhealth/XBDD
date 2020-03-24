@@ -42,15 +42,15 @@ public class StatusHelper {
 
 	// go through all the steps in a scenario and reduce to a status for the scenario.
 	public static Statuses getFinalScenarioStatus(final DBObject scenario, final boolean includeManualResults) {
-		final List<String> allStatuses = new ArrayList<String>();
+		final List<String> allStatuses = new ArrayList<>();
 		final BasicDBList steps = (BasicDBList) scenario.get("steps");
 		if (includeManualResults) { // if we have got a bunch of manual step executions
 			boolean hasManuallyExecutedSteps = false;
-			final List<String> manualSteps = new ArrayList<String>();
+			final List<String> manualSteps = new ArrayList<>();
 			// go through each step creating an array as though they were manual
 			if (steps != null) {
-				for (int i = 0; i < steps.size(); i++) {
-					final DBObject step = (DBObject) steps.get(i);
+				for (Object o : steps) {
+					final DBObject step = (DBObject) o;
 					final DBObject result = (DBObject) step.get("result");
 					if (result != null) {
 						if (result.get("manualStatus") != null) {
@@ -66,8 +66,8 @@ public class StatusHelper {
 			if (scenario.get("background") != null) {// only if there are background steps.
 				final BasicDBList backgroundSteps = (BasicDBList) ((DBObject) scenario.get("background")).get("steps");
 				if (backgroundSteps != null) {
-					for (int i = 0; i < backgroundSteps.size(); i++) {
-						final DBObject backGroundStep = (DBObject) backgroundSteps.get(i);
+					for (Object backgroundStep : backgroundSteps) {
+						final DBObject backGroundStep = (DBObject) backgroundStep;
 						final DBObject result = (DBObject) backGroundStep.get("result");
 						if (result != null) {
 							final String manualStatus = (String) result.get("manualStatus");
@@ -85,8 +85,8 @@ public class StatusHelper {
 				allStatuses.addAll(manualSteps);// then treat this scenario as though it has been manually executed.
 			} else {
 				if (steps != null) {
-					for (int i = 0; i < steps.size(); i++) {
-						final DBObject step = (DBObject) steps.get(i);
+					for (Object o : steps) {
+						final DBObject step = (DBObject) o;
 						final DBObject result = (DBObject) step.get("result");
 						if (result == null) {
 							throw new RuntimeException(
@@ -98,8 +98,8 @@ public class StatusHelper {
 				if (scenario.get("background") != null) {
 					final BasicDBList backgroundSteps = (BasicDBList) ((DBObject) scenario.get("background")).get("steps");
 					if (backgroundSteps != null) {
-						for (int i = 0; i < backgroundSteps.size(); i++) {
-							final DBObject step = (DBObject) backgroundSteps.get(i);
+						for (Object backgroundStep : backgroundSteps) {
+							final DBObject step = (DBObject) backgroundStep;
 							final DBObject result = (DBObject) step.get("result");
 							allStatuses.add((String) result.get("status"));// make sure to include the background steps too.
 						}
@@ -108,8 +108,8 @@ public class StatusHelper {
 			}
 		} else { // if we are not including manual steps then just include the automated statuses.
 			if (steps != null) {
-				for (int i = 0; i < steps.size(); i++) {
-					final DBObject step = (DBObject) steps.get(i);
+				for (Object o : steps) {
+					final DBObject step = (DBObject) o;
 					final DBObject result = (DBObject) step.get("result");
 					allStatuses.add((String) result.get("status"));
 				}
@@ -117,8 +117,8 @@ public class StatusHelper {
 			if (scenario.get("background") != null) {
 				final BasicDBList backgroundSteps = (BasicDBList) ((DBObject) scenario.get("background")).get("steps");
 				if (backgroundSteps != null) {
-					for (int i = 0; i < backgroundSteps.size(); i++) {
-						final DBObject step = (DBObject) backgroundSteps.get(i);
+					for (Object backgroundStep : backgroundSteps) {
+						final DBObject step = (DBObject) backgroundStep;
 						allStatuses.add((String) ((DBObject) step.get("result")).get("status"));// make sure to include the background steps
 						// too.
 					}
@@ -134,26 +134,21 @@ public class StatusHelper {
 	}
 
 	private static boolean isScenarioKeyword(final String keyword) {
-		if (keyword.equals("Scenario") || keyword.equals("Scenario Outline")) {
-			return true;
-		} else {
-			return false;
-		}
+		return keyword.equals("Scenario") || keyword.equals("Scenario Outline");
 	}
 
 	public static String getFeatureStatus(final DBObject feature) {
-		final List<String> allStatuses = new ArrayList<String>();
+		final List<String> allStatuses = new ArrayList<>();
 		final BasicDBList featureElements = (BasicDBList) feature.get("elements");
 		if (featureElements != null) {
-			for (int i = 0; i < featureElements.size(); i++) {
-				final DBObject scenario = (DBObject) featureElements.get(i);
+			for (Object featureElement : featureElements) {
+				final DBObject scenario = (DBObject) featureElement;
 				if (isScenarioKeyword((String) scenario.get("keyword"))) {
 					allStatuses.add(getScenarioStatus(scenario));
 				}
 			}
 		}
 
-		final String result = reduceStatuses(allStatuses).getTextName();
-		return result;
+		return reduceStatuses(allStatuses).getTextName();
 	}
 }
