@@ -1,5 +1,8 @@
 package xbdd.model.junit;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JUnitEmbedding {
 	String data;
 	String mime_type;

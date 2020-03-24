@@ -1,9 +1,11 @@
 package xbdd.model.junit;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import xbdd.model.common.Tag;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JUnitFeature {
 	private Integer line;
 	private String name;

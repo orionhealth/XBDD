@@ -1,16 +1,16 @@
 package xbdd.model.xbdd;
 
 public class XbddStepResult {
-	private Integer duration;
+	private Long duration;
 	private String error_message;
 	private String status;
 	private String manualStatus;
 
-	public Integer getDuration() {
+	public Long getDuration() {
 		return duration;
 	}
 
-	public void setDuration(Integer duration) {
+	public void setDuration(Long duration) {
 		this.duration = duration;
 	}
 

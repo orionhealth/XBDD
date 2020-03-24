@@ -1,9 +1,11 @@
 package xbdd.model.junit;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import xbdd.model.common.StepMatch;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JUnitStep {
 	private Integer line;
 	private String name;

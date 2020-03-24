@@ -129,6 +129,7 @@ public class FeatureMapper {
 	}
 
 	private void mapEmbeddings(JUnitStep junitStep, XbddStep xbddStep, Coordinates coordinates, String featureId, String scenarioId) {
+		xbddStep.setEmbeddings(new ArrayList<>());
 		if (junitStep.getEmbeddings() != null) {
 			for (JUnitEmbedding embedding : junitStep.getEmbeddings()) {
 				String filename = this.imageDao.saveImageAndReturnFilename(embedding, coordinates, featureId, scenarioId);

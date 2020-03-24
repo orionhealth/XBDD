@@ -1,5 +1,8 @@
 package xbdd.model.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StepMatch {
 	private String location;
 

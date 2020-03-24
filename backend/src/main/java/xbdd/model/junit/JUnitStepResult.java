@@ -1,15 +1,18 @@
 package xbdd.model.junit;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JUnitStepResult {
-	private Integer duration;
+	private Long duration;
 	private String error_message;
 	private String status;
 
-	public Integer getDuration() {
+	public Long getDuration() {
 		return duration;
 	}
 
-	public void setDuration(Integer duration) {
+	public void setDuration(Long duration) {
 		this.duration = duration;
 	}
 

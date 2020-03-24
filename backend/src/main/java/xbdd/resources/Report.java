@@ -211,8 +211,6 @@ public class Report {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response putReport(@BeanParam final Coordinates coordinates, final List<JUnitFeature> root) {
-		final MongoDatabase bdd = this.client.getDatabase("bdd");
-
 		final FeatureMapper featureMapper = new FeatureMapper(this.imageDao);
 		this.summaryDao.updateSummary(coordinates);
 
@@ -220,40 +218,21 @@ public class Report {
 		this.featureDao.saveFeatures(mappedFeatures);
 
 		List<XbddFeature> persistedFeatures = this.featureDao.getFeatures(coordinates);
-
+		
 		this.statsDao.updateStatsForFeatures(coordinates, persistedFeatures);
 
 		return Response.ok(SerializerUtil.serialise(persistedFeatures)).build();
 	}
-
-//	@POST
-//	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
-//	@Consumes(MediaType.MULTIPART_FORM_DATA)
-//	public Response uploadFile(
-//			@BeanParam final Coordinates coord,
-//			@FormDataParam("file") final List<JUnitFeature> root,
-//			@FormDataParam("file") final FormDataContentDisposition fileDetail) {
-//		putReport(coord, root);
-//		return Response.ok().build();
-//
-//	}
 
 	@POST
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFile(
 			@BeanParam final Coordinates coord,
-			@FormDataParam("file") final InputStream inputStream,
+			@FormDataParam("file") final List<JUnitFeature> root,
 			@FormDataParam("file") final FormDataContentDisposition fileDetail) {
+		putReport(coord, root);
+		return Response.ok().build();
 
-		try {
-			String jsonRequest = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-			List<JUnitFeature> features = SerializerUtil.deserialiseListOf(jsonRequest, JUnitFeature.class);
-			putReport(coord, features);
-			return Response.ok().build();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return Response.status(Response.Status.BAD_REQUEST).build();
-		}
 	}
 }
