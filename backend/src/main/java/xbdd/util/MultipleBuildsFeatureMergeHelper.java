@@ -15,8 +15,8 @@
  */
 package xbdd.util;
 
-import xbdd.model.MergeFeature;
-import xbdd.model.MergeScenario;
+import xbdd.model.merge.MergeFeature;
+import xbdd.model.merge.MergeScenario;
 import xbdd.model.simple.Feature;
 import xbdd.model.simple.Scenario;
 
@@ -30,8 +30,8 @@ public class MultipleBuildsFeatureMergeHelper {
 
 	private static final String MERGE = "{{MERGE}}";
 	private final List<String> orderedBuildList;
-	private final MultipleBuildMap<Feature> features = new MultipleBuildMap<Feature>();
-	private final MultipleBuildMap<Scenario> scenarios = new MultipleBuildMap<Scenario>();
+	private final MultipleBuildMap<Feature> features = new MultipleBuildMap<>();
+	private final MultipleBuildMap<Scenario> scenarios = new MultipleBuildMap<>();
 	private final MultipleBuildStatusMap scenarioStatusMap = new MultipleBuildStatusMap();
 
 	public MultipleBuildsFeatureMergeHelper(final List<String> orderedBuilds) {
@@ -52,9 +52,6 @@ public class MultipleBuildsFeatureMergeHelper {
 	/**
 	 * returns the mergeFeature with the given id using the features and scenarios that have been added. If the given feature has not been
 	 * added then will return null
-	 *
-	 * @param featureId
-	 * @return
 	 */
 	public MergeFeature getMergeFeature(final String featureId) {
 		if (!this.orderedBuildList.isEmpty() && this.features.containsKey(featureId, getLatestBuild())) {
@@ -80,9 +77,6 @@ public class MultipleBuildsFeatureMergeHelper {
 
 	/**
 	 * Adds scenarios that are to be built that belong to the given feature
-	 *
-	 * @param scenario
-	 * @param feature
 	 */
 	private void addScenario(final Scenario scenario, final Feature feature) {
 		final String scenarioId = getScenarioId(feature, scenario);
@@ -103,11 +97,7 @@ public class MultipleBuildsFeatureMergeHelper {
 
 				switch (scenarioStatus) {
 					case FAILED:
-						this.scenarioStatusMap.put(feature, scenario, MERGE, scenarioStatus.getTextName());
-						return scenarioStatus.getTextName();
 					case PASSED:
-						this.scenarioStatusMap.put(feature, scenario, MERGE, scenarioStatus.getTextName());
-						return scenarioStatus.getTextName();
 					case UNKNOWN:
 						this.scenarioStatusMap.put(feature, scenario, MERGE, scenarioStatus.getTextName());
 						return scenarioStatus.getTextName();
@@ -122,7 +112,7 @@ public class MultipleBuildsFeatureMergeHelper {
 	}
 
 	private String getFeatureMergeStatus(final String featureId) {
-		final List<String> mergeScenarioStatus = new ArrayList<String>();
+		final List<String> mergeScenarioStatus = new ArrayList<>();
 		final Feature feature = this.features.get(featureId, getLatestBuild());
 		for (final Scenario scenario : feature.getScenarios()) {
 			mergeScenarioStatus.add(getScenarioMergeStatus(scenario, feature));
@@ -131,10 +121,10 @@ public class MultipleBuildsFeatureMergeHelper {
 	}
 
 	private List<MergeScenario> getMergedScenarios(final Feature feature) {
-		final List<MergeScenario> scenarioList = new ArrayList<MergeScenario>();
+		final List<MergeScenario> scenarioList = new ArrayList<>();
 
 		for (final Scenario scenario : feature.getScenarios()) {
-			final List<String> scenarioStatuses = new ArrayList<String>();
+			final List<String> scenarioStatuses = new ArrayList<>();
 			scenarioStatuses.add(this.scenarioStatusMap.get(feature, scenario, MERGE));
 
 			for (final String build : this.orderedBuildList) {
@@ -159,7 +149,7 @@ public class MultipleBuildsFeatureMergeHelper {
 	}
 
 	private List<String> getFeatureStatuses(final Feature feature) {
-		final List<String> featureStatuses = new ArrayList<String>();
+		final List<String> featureStatuses = new ArrayList<>();
 
 		featureStatuses.add(getFeatureMergeStatus(feature.getId()));
 		for (final String build : this.orderedBuildList) {

@@ -63,9 +63,16 @@ const createProducts = (responseData: ResponseData): Product[] => {
 };
 
 const fetchProducts = (): Promise<Product[] | void> => {
-  return doRequest(Method.GET, '/reports', 'rest.error.summaryOfReports', null, FetchProductsTypes, (responseData: ResponseData) => {
-    return createProducts(responseData);
-  });
+  return doRequest(
+    Method.GET,
+    '/reports/summary',
+    'rest.error.summaryOfReports',
+    null,
+    FetchProductsTypes,
+    (responseData: ResponseData) => {
+      return createProducts(responseData);
+    }
+  );
 };
 
 export default fetchProducts;

@@ -13,23 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xbdd.util;
+package xbdd.factory;
 
-public enum Statuses {
-	PASSED("passed"),
-	FAILED("failed"),
-	SKIPPED("skipped"),
-	UNDEFINED("undefined"),
-	DONT_EXIST("dont exist"),
-	UNKNOWN("unknown status? - expected passed,failed or undefined");
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
-	private String text;
+/**
+ * Wrapper for {@link MongoClient} that provides a central point for applying authentication to {@link DB} connections.
+ */
+public class MongoDBAccessor {
 
-	Statuses(final String text) {
-		this.text = text;
+	private final MongoClient client;
+
+	public MongoDBAccessor(final MongoClient client) {
+		this.client = client;
 	}
 
-	public String getTextName() {
-		return this.text;
+	public MongoDatabase getDatabase(final String dbName) {
+		return this.client.getDatabase(dbName);
+	}
+
+	@Deprecated
+	public DB getDB(final String dbName) {
+		return this.client.getDB(dbName);
 	}
 }

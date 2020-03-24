@@ -16,11 +16,12 @@
 package xbdd.model.simple;
 
 import com.mongodb.BasicDBObject;
-import xbdd.webapp.util.Coordinates;
+import xbdd.util.Coordinates;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class Feature {
 
 	private final BasicDBObject featureObject;
@@ -37,9 +38,8 @@ public class Feature {
 		return this.featureObject.getString("id");
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Scenario> getScenarios() {
-		final List<Scenario> scenarios = new ArrayList<Scenario>();
+		final List<Scenario> scenarios = new ArrayList<>();
 		final List<BasicDBObject> elements = (ArrayList<BasicDBObject>) this.featureObject.get("elements");
 		if (elements != null) {
 			for (final BasicDBObject element : elements) {

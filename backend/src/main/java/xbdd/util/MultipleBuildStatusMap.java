@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class MultipleBuildStatusMap {
 
-	private final Map<String, String> map = new HashMap<String, String>();
+	private final Map<String, String> map = new HashMap<>();
 
 	public void put(final Feature feature, final Scenario scenario, final String build, final String status) {
 		this.map.put(feature.getId() + scenario.getId() + build, status);
