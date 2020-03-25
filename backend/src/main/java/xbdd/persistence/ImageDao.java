@@ -18,11 +18,12 @@ public class ImageDao {
 
 	private final MongoDBAccessor mongoDBAccessor;
 
-	public ImageDao(MongoDBAccessor mongoDBAccessor) {
+	public ImageDao(final MongoDBAccessor mongoDBAccessor) {
 		this.mongoDBAccessor = mongoDBAccessor;
 	}
 
-	public String saveImageAndReturnFilename(JUnitEmbedding embedding, Coordinates coordinates, String featureId, String scenarioId) {
+	public String saveImageAndReturnFilename(final JUnitEmbedding embedding, final Coordinates coordinates, final String featureId,
+			final String scenarioId) {
 		final GridFS gridFS = getGridFS();
 
 		try {
@@ -42,13 +43,13 @@ public class ImageDao {
 
 			return image.getFilename();
 
-		} catch (ClassCastException e) {
+		} catch (final ClassCastException e) {
 			LOGGER.warn("Embedding was malformed and will be skipped");
 			return null;
 		}
 	}
 
-	private GridFS getGridFS(){
+	private GridFS getGridFS() {
 		final DB grid = this.mongoDBAccessor.getDB("grid");
 		return new GridFS(grid);
 	}

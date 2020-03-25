@@ -15,19 +15,20 @@
  */
 package xbdd.resources;
 
-import com.mongodb.*;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import xbdd.factory.MongoDBAccessor;
 import xbdd.mappers.FeatureMapper;
+import xbdd.model.common.Summary;
+import xbdd.model.common.Tag;
+import xbdd.model.common.TestingTips;
 import xbdd.model.junit.JUnitFeature;
 import xbdd.model.xbdd.XbddFeature;
-import xbdd.persistence.FeatureDao;
-import xbdd.persistence.ImageDao;
-import xbdd.persistence.StatsDao;
-import xbdd.persistence.SummaryDao;
+import xbdd.model.xbdd.XbddFeatureSummary;
+import xbdd.model.xbdd.XbddScenario;
+import xbdd.persistence.*;
 import xbdd.util.Coordinates;
-import xbdd.util.SerializerUtil;
+import xbdd.util.TestingTipUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -35,170 +36,94 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Path("/reports")
 public class Report {
 
-	private final MongoDBAccessor client;
 	private final FeatureDao featureDao;
 	private final ImageDao imageDao;
 	private final SummaryDao summaryDao;
 	private final StatsDao statsDao;
+	private final UsersDao usersDao;
+	private final TestingTipsDao testingTipsDao;
 
 	@Inject
 	public Report(final MongoDBAccessor client) {
-		this.client = client;
 		this.featureDao = new FeatureDao(client);
 		this.imageDao = new ImageDao(client);
 		this.summaryDao = new SummaryDao(client);
 		this.statsDao = new StatsDao(client);
+		this.usersDao = new UsersDao(client);
+		this.testingTipsDao = new TestingTipsDao(client);
 	}
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getReportByProductVersionId(@BeanParam final Coordinates coordinates,
-			@QueryParam("searchText") final String searchText, @QueryParam("viewPassed") final Integer viewPassed,
-			@QueryParam("viewFailed") final Integer viewFailed,
-			@QueryParam("viewUndefined") final Integer viewUndefined, @QueryParam("viewSkipped") final Integer viewSkipped,
-			@QueryParam("start") final String start, @QueryParam("limit") final Integer limit) {
+	public Response getReportByProductVersionId(@BeanParam final Coordinates coordinates) {
+		final List<XbddFeature> features = this.featureDao.getFeatures(coordinates);
+		final Map<String, TestingTips> testingTips = this.testingTipsDao.getLatestTestingTips(coordinates);
 
-		final BasicDBObject example = xbdd.resources.QueryBuilder.getInstance().buildFilterQuery(coordinates, searchText, viewPassed,
-				viewFailed, viewUndefined, viewSkipped, start);
-
-		final DB db = this.client.getDB("bdd");
-		final DBCollection collection = db.getCollection("features");
-		final DBCursor cursor = collection.find(example).sort(Coordinates.getFeatureSortingObject());
-		try {
-			if (limit != null) {
-				cursor.limit(limit);
+		for (final XbddFeature feature : features) {
+			if (feature.getElements() != null) {
+				for (final XbddScenario scenario : feature.getElements()) {
+					final String tipKey = TestingTipUtil.getMapKey(feature, scenario);
+					if (testingTips.containsKey(tipKey)) {
+						scenario.setTestingTips(testingTips.get(tipKey).getTestingTips());
+					}
+				}
 			}
-			final BasicDBList featuresToReturn = new BasicDBList();
-			while (cursor.hasNext()) {
-				featuresToReturn.add(cursor.next());
-			}
-			embedTestingTips(featuresToReturn, coordinates, db);
-			return Response.ok(SerializerUtil.serialise(featuresToReturn)).build();
-		} finally {
-			cursor.close();
 		}
+
+		return Response.ok(features).build();
 	}
 
 	@GET
 	@Path("/summary")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSummaryOfAllReports(@Context final HttpServletRequest req) {
-		final DB db = this.client.getDB("bdd");
-		final DBCollection collection = db.getCollection("summary");
-		final DBCollection usersCollection = db.getCollection("users");
+		// TODO this doesn't actually do anything atm as we dont have users but this is how you would use it
+		final List<String> favourites = this.usersDao.getUserFavourites(req.getRemoteUser());
+		final List<Summary> summaries = this.summaryDao.getSummaries();
 
-		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", req.getRemoteUser());
+		summaries.forEach(summary -> summary.setFavourite(favourites.contains(summary.getCoordinates().getProduct())));
 
-		final DBCursor userCursor = usersCollection.find(user);
-		DBObject userFavourites;
-
-		if (userCursor.count() != 1) {
-			userFavourites = new BasicDBObject();
-		} else {
-			final DBObject uDoc = userCursor.next();
-			if (uDoc.containsField("favourites")) {
-				userFavourites = (DBObject) uDoc.get("favourites");
-			} else {
-				userFavourites = new BasicDBObject();
-			}
-		}
-
-		final DBCursor cursor = collection.find();
-
-		try {
-			final BasicDBList returns = new BasicDBList();
-			DBObject doc;
-
-			while (cursor.hasNext()) {
-				doc = cursor.next();
-				final String product = ((String) ((DBObject) doc.get("coordinates")).get("product"));
-				if (userFavourites.containsField(product)) {
-					doc.put("favourite", userFavourites.get(product));
-				} else {
-					doc.put("favourite", false);
-				}
-				returns.add(doc);
-			}
-
-			return Response.ok(SerializerUtil.serialise(returns)).build();
-		} finally {
-			cursor.close();
-		}
+		return Response.ok(summaries).build();
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/featureIndex/{product}/{major}.{minor}.{servicePack}/{build}")
-	public Response getFeatureIndexForReport(@BeanParam final Coordinates coordinates,
-			@QueryParam("searchText") final String searchText, @QueryParam("viewPassed") final Integer viewPassed,
-			@QueryParam("viewFailed") final Integer viewFailed,
-			@QueryParam("viewUndefined") final Integer viewUndefined, @QueryParam("viewSkipped") final Integer viewSkipped,
-			@QueryParam("start") final String start) {
-
-		final BasicDBObject example = QueryBuilder.getInstance().buildFilterQuery(coordinates, searchText, viewPassed,
-				viewFailed, viewUndefined, viewSkipped, start);
-		final DB db = this.client.getDB("bdd");
-		final DBCollection featuresCollection = db.getCollection("features");
-		final DBCursor features = featuresCollection.find(example,
-				new BasicDBObject("id", 1).append("name", 1).append("calculatedStatus", 1)
-						.append("originalAutomatedStatus", 1).append("tags", 1).append("uri", 1))
-				.sort(Coordinates.getFeatureSortingObject());
-		final BasicDBList featureIndex = new BasicDBList();
-		try {
-			for (final Object o : features) {
-				featureIndex.add(o);
-			}
-		} finally {
-			features.close();
-		}
-		return Response.ok(SerializerUtil.serialise(featureIndex)).build();
-	}
-
-	protected void embedTestingTips(final BasicDBList featureList, final Coordinates coordinates, final DB db) {
-		for (final Object feature : featureList) {
-			Feature.embedTestingTips((DBObject) feature, coordinates, db);
-		}
+	public Response getFeatureIndexForReport(@BeanParam final Coordinates coordinates) {
+		final List<XbddFeatureSummary> featureSummaries = this.featureDao.getFeatureSummaries(coordinates);
+		return Response.ok(featureSummaries).build();
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/tags/{product}/{major}.{minor}.{servicePack}/{build}")
 	public Response getTagList(@BeanParam final Coordinates coordinates) {
-		final DB bdd = this.client.getDB("bdd");
-		final DBCollection features = bdd.getCollection("features");
-		List<BasicDBObject> objectList = new ArrayList<>();
-		// Build objects for aggregation pipeline
-		// id option: returns each tag with a list of associated feature ids
-		objectList.add(new BasicDBObject("$match", coordinates.getReportCoordinatesQueryObject()));
-		final DBObject fields = new BasicDBObject("tags.name", 1);
-		fields.put("_id", 0); // comment out for id option
-		objectList.add(new BasicDBObject("$project", fields));
-		objectList.add(new BasicDBObject("$unwind", "$tags"));
-		final DBObject groupFields = new BasicDBObject("_id", "$tags.name");
-		// groupFields.put("features", new BasicDBObject("$addToSet", "$_id")); //comment in for id option
-		groupFields.put("amount", new BasicDBObject("$sum", 1));
-		objectList.add(new BasicDBObject("$group", groupFields));
-		objectList.add(new BasicDBObject("$sort", new BasicDBObject("amount", -1)));
+		final List<XbddFeature> features = this.featureDao.getFeatures(coordinates);
 
-		AggregationOptions options = AggregationOptions.builder().build();
+		final Set<Tag> tags = new TreeSet<>(Comparator.comparing(Tag::getName));
 
-		final Cursor output = features.aggregate(objectList, options);
+		for (final XbddFeature feature : features) {
+			if (feature.getTags() != null) {
+				tags.addAll(feature.getTags());
+			}
 
-		// get _ids from each entry of output.result
-		final BasicDBList returns = new BasicDBList();
-		while (output.hasNext()) {
-			returns.add(output.next().get("_id").toString());
+			if (feature.getElements() != null) {
+				for (final XbddScenario scenario : feature.getElements()) {
+					if (scenario.getTags() != null) {
+						tags.addAll(scenario.getTags());
+					}
+				}
+			}
 		}
-		return Response.ok(SerializerUtil.serialise(returns)).build();
+
+		return Response.ok(tags).build();
 	}
 
 	@PUT
@@ -209,11 +134,12 @@ public class Report {
 		final FeatureMapper featureMapper = new FeatureMapper(this.imageDao);
 		this.summaryDao.updateSummary(coordinates);
 
-		List<XbddFeature> mappedFeatures = root.stream().map(feature -> featureMapper.map(feature, coordinates)).collect(Collectors.toList());
+		final List<XbddFeature> mappedFeatures = root.stream().map(feature -> featureMapper.map(feature, coordinates))
+				.collect(Collectors.toList());
 		this.featureDao.saveFeatures(mappedFeatures);
 
-		List<XbddFeature> persistedFeatures = this.featureDao.getFeatures(coordinates);
-		
+		final List<XbddFeature> persistedFeatures = this.featureDao.getFeatures(coordinates);
+
 		this.statsDao.updateStatsForFeatures(coordinates, persistedFeatures);
 
 		return Response.ok(persistedFeatures).build();

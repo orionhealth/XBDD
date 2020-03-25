@@ -11,7 +11,7 @@ public class CoordinatesDto {
 		return product;
 	}
 
-	public void setProduct(String product) {
+	public void setProduct(final String product) {
 		this.product = product;
 	}
 
@@ -19,7 +19,7 @@ public class CoordinatesDto {
 		return major;
 	}
 
-	public void setMajor(Integer major) {
+	public void setMajor(final Integer major) {
 		this.major = major;
 	}
 
@@ -27,7 +27,7 @@ public class CoordinatesDto {
 		return minor;
 	}
 
-	public void setMinor(Integer minor) {
+	public void setMinor(final Integer minor) {
 		this.minor = minor;
 	}
 
@@ -35,7 +35,7 @@ public class CoordinatesDto {
 		return servicePack;
 	}
 
-	public void setServicePack(Integer servicePack) {
+	public void setServicePack(final Integer servicePack) {
 		this.servicePack = servicePack;
 	}
 
@@ -43,7 +43,7 @@ public class CoordinatesDto {
 		return build;
 	}
 
-	public void setBuild(String build) {
+	public void setBuild(final String build) {
 		this.build = build;
 	}
 }

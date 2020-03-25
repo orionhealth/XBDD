@@ -8,7 +8,7 @@ public class TagAssignmentPatch {
 		return tag;
 	}
 
-	public void setTag(String tag) {
+	public void setTag(final String tag) {
 		this.tag = tag;
 	}
 
@@ -16,7 +16,7 @@ public class TagAssignmentPatch {
 		return userName;
 	}
 
-	public void setUserName(String userName) {
+	public void setUserName(final String userName) {
 		this.userName = userName;
 	}
 }

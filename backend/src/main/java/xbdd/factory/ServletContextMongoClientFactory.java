@@ -67,8 +67,9 @@ public class ServletContextMongoClientFactory implements Supplier<MongoDBAccesso
 				fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
 		if (this.username != null) {
-			MongoCredential credentials = MongoCredential.createScramSha1Credential(this.username, "admin", this.password);
-			mc = new MongoClient(new ServerAddress(this.host, this.port), credentials, MongoClientOptions.builder().codecRegistry(pojoCodecRegistry).build());
+			final MongoCredential credentials = MongoCredential.createScramSha1Credential(this.username, "admin", this.password);
+			mc = new MongoClient(new ServerAddress(this.host, this.port), credentials,
+					MongoClientOptions.builder().codecRegistry(pojoCodecRegistry).build());
 		} else {
 			mc = new MongoClient(this.host, this.port);
 		}

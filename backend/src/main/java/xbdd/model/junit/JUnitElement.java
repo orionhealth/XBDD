@@ -20,7 +20,7 @@ public class JUnitElement {
 		return line;
 	}
 
-	public void setLine(Integer line) {
+	public void setLine(final Integer line) {
 		this.line = line;
 	}
 
@@ -28,7 +28,7 @@ public class JUnitElement {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -36,7 +36,7 @@ public class JUnitElement {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -44,7 +44,7 @@ public class JUnitElement {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
@@ -52,7 +52,7 @@ public class JUnitElement {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 
@@ -60,7 +60,7 @@ public class JUnitElement {
 		return keyword;
 	}
 
-	public void setKeyword(String keyword) {
+	public void setKeyword(final String keyword) {
 		this.keyword = keyword;
 	}
 
@@ -68,7 +68,7 @@ public class JUnitElement {
 		return steps;
 	}
 
-	public void setSteps(List<JUnitStep> steps) {
+	public void setSteps(final List<JUnitStep> steps) {
 		this.steps = steps;
 	}
 
@@ -76,7 +76,7 @@ public class JUnitElement {
 		return tags;
 	}
 
-	public void setTags(List<Tag> tags) {
+	public void setTags(final List<Tag> tags) {
 		this.tags = tags;
 	}
 }

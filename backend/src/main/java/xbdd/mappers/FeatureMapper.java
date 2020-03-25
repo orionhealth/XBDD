@@ -1,6 +1,5 @@
 package xbdd.mappers;
 
-import org.apache.log4j.Logger;
 import xbdd.model.junit.*;
 import xbdd.model.xbdd.XbddFeature;
 import xbdd.model.xbdd.XbddScenario;
@@ -12,15 +11,20 @@ import xbdd.util.StatusHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FeatureMapper {
 
-	private static final Logger LOGGER = Logger.getLogger(FeatureMapper.class);
+	private final ImageDao imageDao;
 
-	public static Stream<String> getStepStatusStream(XbddScenario element) {
-		List<XbddStep> allSteps = new ArrayList<>();
+	public FeatureMapper(final ImageDao imageDao) {
+		this.imageDao = imageDao;
+	}
+
+	public static Stream<String> getStepStatusStream(final XbddScenario element) {
+		final List<XbddStep> allSteps = new ArrayList<>();
 
 		if (element.getBackground() != null) {
 			allSteps.addAll(element.getBackground().getSteps());
@@ -30,16 +34,10 @@ public class FeatureMapper {
 			allSteps.addAll(element.getSteps());
 		}
 
-		return allSteps.stream().map(step -> step.getResult().getStatus()).filter(status -> status != null);
+		return allSteps.stream().map(step -> step.getResult().getStatus()).filter(Objects::nonNull);
 	}
 
-	private final ImageDao imageDao;
-
-	public FeatureMapper(ImageDao imageDao) {
-		this.imageDao = imageDao;
-	}
-
-	public XbddFeature map(JUnitFeature jUnitFeature, Coordinates coordinates) {
+	public XbddFeature map(final JUnitFeature jUnitFeature, final Coordinates coordinates) {
 		final XbddFeature xbddFeature = new XbddFeature();
 		xbddFeature.setOriginalId(jUnitFeature.getId());
 		xbddFeature.setDescription(jUnitFeature.getDescription());
@@ -48,7 +46,12 @@ public class FeatureMapper {
 		xbddFeature.setName(jUnitFeature.getName());
 		xbddFeature.setUri(jUnitFeature.getUri());
 		xbddFeature.setCoordinates(CoordinatesMapper.mapCoordinates(coordinates));
-		xbddFeature.setTags(jUnitFeature.getTags());
+
+		if (jUnitFeature.getTags() != null) {
+			xbddFeature.setTags(jUnitFeature.getTags());
+		} else {
+			xbddFeature.setTags(new ArrayList<>());
+		}
 
 		// take each feature and give it a unique id.
 		final String _id = coordinates.getFeature_Id(jUnitFeature.getId());
@@ -57,8 +60,8 @@ public class FeatureMapper {
 		xbddFeature.setElements(new ArrayList<>());
 
 		XbddScenario background = null;
-		for (JUnitElement element : jUnitFeature.getElements()) {
-			XbddScenario scenario = mapScenario(element, coordinates, jUnitFeature.getId());
+		for (final JUnitElement element : jUnitFeature.getElements()) {
+			final XbddScenario scenario = mapScenario(element, coordinates, jUnitFeature.getId());
 
 			if ("background".equals(scenario.getType())) {
 				background = scenario;
@@ -72,19 +75,19 @@ public class FeatureMapper {
 
 		}
 
-		List<String> allStatuses = xbddFeature.getElements().stream()
+		final List<String> allStatuses = xbddFeature.getElements().stream()
 				.flatMap(FeatureMapper::getStepStatusStream)
 				.collect(Collectors.toList());
 
-		String status = StatusHelper.reduceStatuses(allStatuses).getTextName();
+		final String status = StatusHelper.reduceStatuses(allStatuses).getTextName();
 		xbddFeature.setOriginalAutomatedStatus(status);
 		xbddFeature.setCalculatedStatus(status);
 
 		return xbddFeature;
 	}
 
-	private XbddScenario mapScenario(JUnitElement jUnitElement, Coordinates coordinates, String featureId) {
-		XbddScenario xbddScenario = new XbddScenario();
+	private XbddScenario mapScenario(final JUnitElement jUnitElement, final Coordinates coordinates, final String featureId) {
+		final XbddScenario xbddScenario = new XbddScenario();
 
 		xbddScenario.setOriginalId(jUnitElement.getId());
 		xbddScenario.setDescription(jUnitElement.getDescription());
@@ -92,19 +95,25 @@ public class FeatureMapper {
 		xbddScenario.setLine(jUnitElement.getLine());
 		xbddScenario.setName(jUnitElement.getName());
 		xbddScenario.setType(jUnitElement.getType());
-		xbddScenario.setTags(jUnitElement.getTags());
+
+		if (jUnitElement.getTags() != null) {
+			xbddScenario.setTags(jUnitElement.getTags());
+		} else {
+			xbddScenario.setTags(new ArrayList<>());
+		}
 
 		if (jUnitElement.getSteps() != null) {
 			xbddScenario.setSteps(
-					jUnitElement.getSteps().stream().map(step -> mapStep(step, coordinates, featureId, xbddScenario.getOriginalId())).collect(
-							Collectors.toList()));
+					jUnitElement.getSteps().stream().map(step -> mapStep(step, coordinates, featureId, xbddScenario.getOriginalId()))
+							.collect(
+									Collectors.toList()));
 		}
 
 		return xbddScenario;
 	}
 
-	private XbddStep mapStep(JUnitStep jUnitStep, Coordinates coordinates, String featureId, String scenarioId) {
-		XbddStep xbddStep = new XbddStep();
+	private XbddStep mapStep(final JUnitStep jUnitStep, final Coordinates coordinates, final String featureId, final String scenarioId) {
+		final XbddStep xbddStep = new XbddStep();
 
 		xbddStep.setName(jUnitStep.getName());
 		xbddStep.setLine(jUnitStep.getLine());
@@ -118,8 +127,8 @@ public class FeatureMapper {
 		return xbddStep;
 	}
 
-	private XbddStepResult mapResult(JUnitStepResult jUnitStepResult) {
-		XbddStepResult xbddStepResult = new XbddStepResult();
+	private XbddStepResult mapResult(final JUnitStepResult jUnitStepResult) {
+		final XbddStepResult xbddStepResult = new XbddStepResult();
 
 		xbddStepResult.setDuration(jUnitStepResult.getDuration());
 		xbddStepResult.setError_message(jUnitStepResult.getError_message());
@@ -128,11 +137,12 @@ public class FeatureMapper {
 		return xbddStepResult;
 	}
 
-	private void mapEmbeddings(JUnitStep junitStep, XbddStep xbddStep, Coordinates coordinates, String featureId, String scenarioId) {
+	private void mapEmbeddings(final JUnitStep junitStep, final XbddStep xbddStep, final Coordinates coordinates, final String featureId,
+			final String scenarioId) {
 		xbddStep.setEmbeddings(new ArrayList<>());
 		if (junitStep.getEmbeddings() != null) {
-			for (JUnitEmbedding embedding : junitStep.getEmbeddings()) {
-				String filename = this.imageDao.saveImageAndReturnFilename(embedding, coordinates, featureId, scenarioId);
+			for (final JUnitEmbedding embedding : junitStep.getEmbeddings()) {
+				final String filename = this.imageDao.saveImageAndReturnFilename(embedding, coordinates, featureId, scenarioId);
 				if (filename != null) {
 					xbddStep.getEmbeddings().add(filename);
 				}

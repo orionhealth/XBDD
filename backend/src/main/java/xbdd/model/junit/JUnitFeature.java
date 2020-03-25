@@ -20,7 +20,7 @@ public class JUnitFeature {
 		return line;
 	}
 
-	public void setLine(Integer line) {
+	public void setLine(final Integer line) {
 		this.line = line;
 	}
 
@@ -28,7 +28,7 @@ public class JUnitFeature {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -36,7 +36,7 @@ public class JUnitFeature {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -44,7 +44,7 @@ public class JUnitFeature {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
@@ -52,7 +52,7 @@ public class JUnitFeature {
 		return keyword;
 	}
 
-	public void setKeyword(String keyword) {
+	public void setKeyword(final String keyword) {
 		this.keyword = keyword;
 	}
 
@@ -60,7 +60,7 @@ public class JUnitFeature {
 		return uri;
 	}
 
-	public void setUri(String uri) {
+	public void setUri(final String uri) {
 		this.uri = uri;
 	}
 
@@ -68,7 +68,7 @@ public class JUnitFeature {
 		return elements;
 	}
 
-	public void setElements(List<JUnitElement> elements) {
+	public void setElements(final List<JUnitElement> elements) {
 		this.elements = elements;
 	}
 
@@ -76,7 +76,7 @@ public class JUnitFeature {
 		return tags;
 	}
 
-	public void setTags(List<Tag> tags) {
+	public void setTags(final List<Tag> tags) {
 		this.tags = tags;
 	}
 }

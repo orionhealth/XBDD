@@ -7,10 +7,12 @@ import org.bson.conversions.Bson;
 import xbdd.factory.MongoDBAccessor;
 import xbdd.mappers.CoordinatesMapper;
 import xbdd.model.common.CoordinatesDto;
-import xbdd.model.common.FeatureSummary;
+import xbdd.model.common.Summary;
 import xbdd.util.Coordinates;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class SummaryDao {
 
@@ -20,12 +22,21 @@ public class SummaryDao {
 		this.mongoDBAccessor = mongoDBAccessor;
 	}
 
-	public void updateSummary(Coordinates coordinates) {
-		final MongoCollection<FeatureSummary> summary = getSummaryCollection();
+	public List<Summary> getSummaries() {
+		final MongoCollection<Summary> summary = getSummaryCollection();
+		final List<Summary> rtn = new ArrayList<>();
+
+		final Consumer<Summary> addToRtn = rtn::add;
+		summary.find(Summary.class).forEach(addToRtn);
+
+		return rtn;
+	}
+
+	public void updateSummary(final Coordinates coordinates) {
+		final MongoCollection<Summary> summary = getSummaryCollection();
 
 		final Bson query = Filters.eq(coordinates.getProduct() + "/" + coordinates.getVersionString());
-
-		final FeatureSummary summaryObject = summary.find(query, FeatureSummary.class).first();
+		final Summary summaryObject = summary.find(query, Summary.class).first();
 
 		if (summaryObject != null) { // lookup the summary document
 			if (!summaryObject.getBuilds()
@@ -34,13 +45,13 @@ public class SummaryDao {
 				summary.replaceOne(query, summaryObject);
 			}
 		} else {
-			FeatureSummary newSummary = new FeatureSummary();
+			final Summary newSummary = new Summary();
 			newSummary.setId(coordinates.getProduct() + "/" + coordinates.getVersionString());
 			newSummary.setBuilds(new ArrayList<>());
 			newSummary.getBuilds().add(coordinates.getBuild());
 
 			// Summary's don't care about the build as they have a list of them.
-			CoordinatesDto coordDto = CoordinatesMapper.mapCoordinates(coordinates);
+			final CoordinatesDto coordDto = CoordinatesMapper.mapCoordinates(coordinates);
 			coordDto.setBuild(null);
 			newSummary.setCoordinates(coordDto);
 
@@ -48,8 +59,8 @@ public class SummaryDao {
 		}
 	}
 
-	private MongoCollection<FeatureSummary> getSummaryCollection() {
+	private MongoCollection<Summary> getSummaryCollection() {
 		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
-		return bdd.getCollection("summary", FeatureSummary.class);
+		return bdd.getCollection("summary", Summary.class);
 	}
 }

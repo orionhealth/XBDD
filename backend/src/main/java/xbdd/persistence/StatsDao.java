@@ -32,7 +32,7 @@ public class StatsDao {
 		final String id = coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates.getBuild();
 		statsCollection.deleteOne(Filters.eq(id));
 
-		Stats newStats = new Stats();
+		final Stats newStats = new Stats();
 		newStats.setCoordinates(CoordinatesMapper.mapCoordinates(coordinates));
 		newStats.setId(id);
 		newStats.setSummary(getNewStatsSummary());
@@ -41,7 +41,7 @@ public class StatsDao {
 			if (xbddFeature.getElements() != null) {
 				for (final XbddScenario scenario : xbddFeature.getElements()) {
 					final List<String> stepStatuses = FeatureMapper.getStepStatusStream(scenario).collect(Collectors.toList());
-					final String status =  StatusHelper.reduceStatuses(stepStatuses).getTextName();
+					final String status = StatusHelper.reduceStatuses(stepStatuses).getTextName();
 					newStats.getSummary().replace(status, newStats.getSummary().get(status) + 1);
 				}
 			}
@@ -55,7 +55,7 @@ public class StatsDao {
 	}
 
 	private HashMap<String, Integer> getNewStatsSummary() {
-		HashMap<String, Integer> summary = new HashMap<>();
+		final HashMap<String, Integer> summary = new HashMap<>();
 
 		summary.put(Statuses.PASSED.getTextName(), 0);
 		summary.put(Statuses.FAILED.getTextName(), 0);
