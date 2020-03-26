@@ -15,23 +15,29 @@
  */
 package xbdd.rest;
 
-import com.mongodb.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+
 import xbdd.factory.MongoDBAccessor;
 import xbdd.resources.MergeBuilds;
 import xbdd.resources.MergeBuilds.Merge;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MergeBuildsTest {
@@ -76,7 +82,7 @@ public class MergeBuildsTest {
 
 		when(this.cursor.next()).thenReturn(this.feature1, this.feature2, this.feature3);
 
-		final DBObject result = (BasicDBObject) BasicDBObject
+		final DBObject result = BasicDBObject
 				.parse("{'features' : [{'id' : 'f1', 'name' : 'f1', 'elements' : [ { 'id' : 'e1', 'name' : 'e1', 'statuses' : [ 'passed' , 'passed', 'failed', 'undefined']} , {'id' : 'e2', 'name' : 'e2', 'statuses' : ['failed', 'undefined' , 'failed', 'passed']}], 'statuses' : ['failed', 'undefined', 'failed', 'undefined'], 'url': 'reports/p1/1.1.1/{{BUILD_NAME}}/f1'}], 'builds':['Merged', 'build1', 'build2', 'build3']}");
 		assertEquals(this.mergeBuilds.getMergedBuilds(merge), result);
 	}

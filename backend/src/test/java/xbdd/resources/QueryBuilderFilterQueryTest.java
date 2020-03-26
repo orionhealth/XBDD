@@ -15,12 +15,14 @@
  */
 package xbdd.resources;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.junit.Test;
-import xbdd.util.Coordinates;
 
-import static org.junit.Assert.assertEquals;
+import xbdd.util.Coordinates;
 
 public class QueryBuilderFilterQueryTest {
 	@Test
@@ -31,7 +33,7 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) BasicDBObject
+		final DBObject expected = BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$and' : null}");
 		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 0, 0, null), expected);
 	}
@@ -44,7 +46,7 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) BasicDBObject
+		final DBObject expected = BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$or' : [ { 'calculatedStatus' : 'passed'}]}");
 		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 1, 0, 0, 0, null), expected);
 	}
@@ -57,7 +59,7 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) BasicDBObject
+		final DBObject expected = BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$or' : [ { 'calculatedStatus' : 'failed'}]}");
 		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 1, 0, 0, null), expected);
 	}
@@ -70,7 +72,7 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) BasicDBObject
+		final DBObject expected = BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$or' : [ { 'calculatedStatus' : 'skipped'}]}");
 		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 0, 1, null), expected);
 	}
@@ -83,7 +85,7 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) BasicDBObject
+		final DBObject expected = BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$or' : [ { 'calculatedStatus' : 'undefined'}]}");
 		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "", 0, 0, 1, 0, null), expected);
 	}
@@ -96,7 +98,7 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) BasicDBObject
+		final DBObject expected = BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$and' : [ { 'name' : { '$regex' : '.*this.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*is.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*a.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*test.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*filter.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*string.*' , '$options' : 'i'}}]}");
 		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "this is a test filter string", 0, 0, 0, 0, null),
 				expected);
@@ -110,7 +112,7 @@ public class QueryBuilderFilterQueryTest {
 		co.setMinor(1);
 		co.setProduct("test");
 		co.setServicePack(1);
-		final DBObject expected = (DBObject) BasicDBObject
+		final DBObject expected = BasicDBObject
 				.parse("{ 'coordinates.product' : 'test' , 'coordinates.major' : 1 , 'coordinates.minor' : 1 , 'coordinates.servicePack' : 1 , 'coordinates.build' : 'test' , '$and' : [ { 'tags.name' : { '$regex' : '.*@this.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*is.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*a.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*test.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*tag.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*filter.*' , '$options' : 'i'}} , { 'name' : { '$regex' : '.*string.*' , '$options' : 'i'}}]}");
 		assertEquals(QueryBuilder.getInstance().buildFilterQuery(co, "@this is a test tag filter string", 0, 0, 0, 0, null),
 				expected);
