@@ -1,5 +1,12 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.apache.commons.lang.StringUtils;
+import org.bson.conversions.Bson;
+
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -12,18 +19,11 @@ import io.github.orionhealth.xbdd.model.xbdd.XbddFeatureSummary;
 import io.github.orionhealth.xbdd.model.xbdd.XbddScenario;
 import io.github.orionhealth.xbdd.util.Coordinates;
 
-import org.apache.commons.lang.StringUtils;
-import org.bson.conversions.Bson;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 public class FeatureDao {
-	private MongoDBAccessor mongoDBAccessor;
+	private final MongoDBAccessor mongoDBAccessor;
 
-	public FeatureDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
+	public FeatureDao() {
+		this.mongoDBAccessor = new MongoDBAccessor();
 	}
 
 	public List<XbddFeatureSummary> getFeatureSummaries(final Coordinates coordinates) {
@@ -70,7 +70,7 @@ public class FeatureDao {
 	}
 
 	private MongoCollection<XbddFeature> getFeatureCollection() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
+		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase();
 		return bdd.getCollection("features", XbddFeature.class);
 	}
 

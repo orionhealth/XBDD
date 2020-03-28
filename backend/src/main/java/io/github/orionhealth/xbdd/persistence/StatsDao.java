@@ -1,5 +1,9 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -14,16 +18,12 @@ import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.StatusHelper;
 import io.github.orionhealth.xbdd.util.Statuses;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class StatsDao {
 
 	private final MongoDBAccessor mongoDBAccessor;
 
-	public StatsDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
+	public StatsDao() {
+		this.mongoDBAccessor = new MongoDBAccessor();
 	}
 
 	public void updateStatsForFeatures(final Coordinates coordinates, final List<XbddFeature> features) {
@@ -51,7 +51,7 @@ public class StatsDao {
 	}
 
 	private MongoCollection<Stats> getStatsCollection() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
+		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase();
 		return bdd.getCollection("reportStats", Stats.class);
 	}
 

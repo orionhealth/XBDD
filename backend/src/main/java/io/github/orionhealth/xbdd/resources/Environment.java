@@ -15,6 +15,12 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -23,29 +29,23 @@ import com.mongodb.DBObject;
 import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-
 @Path("/environment")
 public class Environment {
 
 	private final MongoDBAccessor client;
 
 	@Inject
-	public Environment(final MongoDBAccessor client) {
-		this.client = client;
+	public Environment() {
+		this.client = new MongoDBAccessor();
 	}
 
 	@GET
 	@Path("/{product}")
 	public Response getEnvironmentsForProduct(@PathParam("product") final String product) {
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("environments");
 		final DBObject rtn = collection.findOne(new BasicDBObject("coordinates.product", product));
-		
+
 		return Response.ok(SerializerUtil.serialise(rtn)).build();
 	}
 }

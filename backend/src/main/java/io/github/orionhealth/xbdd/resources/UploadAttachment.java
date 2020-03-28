@@ -15,14 +15,14 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import com.mongodb.*;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSInputFile;
-
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
-
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.MultipartConfig;
@@ -33,14 +33,19 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSInputFile;
+
+import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 
 @Path("/upload-attachment")
 @MultipartConfig
@@ -49,8 +54,8 @@ public class UploadAttachment {
 	private final MongoDBAccessor client;
 
 	@Inject
-	public UploadAttachment(final MongoDBAccessor client) {
-		this.client = client;
+	public UploadAttachment() {
+		this.client = new MongoDBAccessor();
 	}
 
 	@POST
@@ -63,13 +68,13 @@ public class UploadAttachment {
 			throws IOException {
 		try (final InputStream is = new FileInputStream(file.getAbsolutePath())) {
 			final String elementIdMod = elementId.replace("&2F", "/");
-			final DB gridDB = this.client.getDB("grid");
+			final DB gridDB = this.client.getGrid();
 			final GridFS gridFS = new GridFS(gridDB);
 			final GridFSInputFile gridFile = gridFS.createFile(is);
 			gridFile.setFilename(body.getMediaType().toString().split("/")[0] + ".x1.mu." + UUID.randomUUID().toString());
 			gridFile.setContentType(body.getMediaType().toString());
 			gridFile.save();
-			final DB bddDB = this.client.getDB("bdd");
+			final DB bddDB = this.client.getDB();
 			final DBCollection collection = bddDB.getCollection("features");
 			// // get object
 			final String featureId = report + "/" + version + "/" + build + "/" + id;

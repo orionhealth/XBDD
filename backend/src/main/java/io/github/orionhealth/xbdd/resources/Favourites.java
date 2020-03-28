@@ -15,18 +15,30 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import com.mongodb.*;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/favourites")
 public class Favourites {
@@ -34,15 +46,15 @@ public class Favourites {
 	private final MongoDBAccessor client;
 
 	@Inject
-	public Favourites(final MongoDBAccessor client) {
-		this.client = client;
+	public Favourites() {
+		this.client = new MongoDBAccessor();
 	}
 
 	public void setFavouriteStateOfProduct(final String product,
 			final boolean state,
 			final HttpServletRequest req) {
 
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
@@ -81,7 +93,7 @@ public class Favourites {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFavouriteStateOfProduct(@PathParam("product") final String product,
 			@Context final HttpServletRequest req) {
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("users");
 
 		final BasicDBObject query = new BasicDBObject("user_id", req.getRemoteUser());
@@ -96,7 +108,7 @@ public class Favourites {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSummaryOfAllReports(@Context final HttpServletRequest req) {
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("summary");
 		final DBCollection usersCollection = db.getCollection("users");
 
@@ -104,7 +116,7 @@ public class Favourites {
 		user.put("user_id", req.getRemoteUser());
 
 		final DBObject blank = new BasicDBObject();
-		DBObject uDoc = usersCollection.findAndModify(user, blank, blank, false,
+		final DBObject uDoc = usersCollection.findAndModify(user, blank, blank, false,
 				new BasicDBObject("$setOnInsert", new BasicDBObject("favourites", new BasicDBObject())), true, true);
 		DBObject userFavourites;
 
@@ -122,7 +134,7 @@ public class Favourites {
 
 			while (cursor.hasNext()) {
 				doc = cursor.next();
-				String product = ((String) ((DBObject) doc.get("coordinates")).get("product"));
+				final String product = ((String) ((DBObject) doc.get("coordinates")).get("product"));
 				if (userFavourites.containsField(product) && (boolean) userFavourites.get(product)) {
 					doc.put("favourite", userFavourites.get(product));
 					returns.add(doc);
@@ -140,7 +152,7 @@ public class Favourites {
 			final String build,
 			final boolean state) {
 
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("summary");
 
 		final BasicDBObject query = new BasicDBObject("_id", product + "/" + version);
@@ -159,7 +171,7 @@ public class Favourites {
 	@PUT
 	@Path("/pin/{product}/{major}.{minor}.{servicePack}/{build}/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response pinABuild(@BeanParam Coordinates coordinates) {
+	public Response pinABuild(@BeanParam final Coordinates coordinates) {
 
 		setPinStateOfBuild(coordinates.getProduct(), coordinates.getVersionString(), coordinates.getBuild(), true);
 		return Response.ok().build();
@@ -168,7 +180,7 @@ public class Favourites {
 	@DELETE
 	@Path("/pin/{product}/{major}.{minor}.{servicePack}/{build}/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response unPinABuild(@BeanParam Coordinates coordinates) {
+	public Response unPinABuild(@BeanParam final Coordinates coordinates) {
 
 		setPinStateOfBuild(coordinates.getProduct(), coordinates.getVersionString(), coordinates.getBuild(), false);
 		return Response.ok().build();

@@ -38,7 +38,6 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.mappers.FeatureMapper;
 import io.github.orionhealth.xbdd.model.common.Summary;
 import io.github.orionhealth.xbdd.model.common.Tag;
@@ -67,13 +66,13 @@ public class Report {
 	private final TestingTipsDao testingTipsDao;
 
 	@Inject
-	public Report(final MongoDBAccessor client) {
-		this.featureDao = new FeatureDao(client);
-		this.imageDao = new ImageDao(client);
-		this.summaryDao = new SummaryDao(client);
-		this.statsDao = new StatsDao(client);
-		this.usersDao = new UsersDao(client);
-		this.testingTipsDao = new TestingTipsDao(client);
+	public Report() {
+		this.featureDao = new FeatureDao();
+		this.imageDao = new ImageDao();
+		this.summaryDao = new SummaryDao();
+		this.statsDao = new StatsDao();
+		this.usersDao = new UsersDao();
+		this.testingTipsDao = new TestingTipsDao();
 	}
 
 	@GET

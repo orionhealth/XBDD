@@ -1,5 +1,10 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.UUID;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.gridfs.GridFS;
@@ -9,19 +14,14 @@ import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.model.junit.JUnitEmbedding;
 import io.github.orionhealth.xbdd.util.Coordinates;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
-
-import java.util.UUID;
-
 public class ImageDao {
 
 	private static final Logger LOGGER = Logger.getLogger(ImageDao.class);
 
 	private final MongoDBAccessor mongoDBAccessor;
 
-	public ImageDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
+	public ImageDao() {
+		this.mongoDBAccessor = new MongoDBAccessor();
 	}
 
 	public String saveImageAndReturnFilename(final JUnitEmbedding embedding, final Coordinates coordinates, final String featureId,
@@ -52,7 +52,7 @@ public class ImageDao {
 	}
 
 	private GridFS getGridFS() {
-		final DB grid = this.mongoDBAccessor.getDB("grid");
+		final DB grid = this.mongoDBAccessor.getGrid();
 		return new GridFS(grid);
 	}
 }

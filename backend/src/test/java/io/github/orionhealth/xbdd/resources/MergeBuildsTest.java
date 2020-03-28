@@ -57,7 +57,7 @@ public class MergeBuildsTest {
 
 	@Before
 	public void setup() {
-		this.mergeBuilds = new MergeBuilds(this.client);
+		this.mergeBuilds = new MergeBuilds();
 
 		this.feature1 = BasicDBObject
 				.parse("{'_id' : 'p1/f1','id' : 'f1','description' : '', 'name' : 'f1', 'elements' : [{'id' : 'e1','description' : '','name' : 'e1','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'passed'},'name' : 's2'}]}, {'id' : 'e2','description' : '','name' : 'e2','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'undefined'},'name' : 's2',}]}], 'coordinates' : {'product' : 'p1','major' : 1,'minor' : 1,'servicePack' : 1,'build' : 'build1','version' : '1.1.1'},'calculatedStatus' : 'undefined', 'originalAutomatedStatus' : 'undefined'}");
@@ -66,7 +66,7 @@ public class MergeBuildsTest {
 		this.feature3 = BasicDBObject
 				.parse("{'_id' : 'p1/f1','id' : 'f1','description' : '', 'name' : 'f1', 'elements' : [{'id' : 'e1','description' : '','name' : 'e1','steps' : [{'result' : {'status' : 'undefined'},'name' : 's1',},{'result' : {'status' : 'undefined'},'name' : 's2'}]}, {'id' : 'e2','description' : '','name' : 'e2','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'passed'},'name' : 's2',}]}], 'coordinates' : {'product' : 'p1','major' : 1,'minor' : 1,'servicePack' : 1,'build' : 'build3','version' : '1.1.1'},'calculatedStatus' : 'undefined', 'originalAutomatedStatus' : 'undefined'}");
 
-		when(this.client.getDB(anyString())).thenReturn(this.db);
+		when(this.client.getDB()).thenReturn(this.db);
 		when(this.db.getCollection(anyString())).thenReturn(this.collection);
 		when(this.collection.find(any(DBObject.class), any(DBObject.class))).thenReturn(this.cursor);
 		when(this.cursor.hasNext()).thenReturn(true, true, true, false);

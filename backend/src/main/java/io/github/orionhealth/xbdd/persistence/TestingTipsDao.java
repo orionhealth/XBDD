@@ -1,5 +1,11 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import org.bson.conversions.Bson;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -9,18 +15,12 @@ import io.github.orionhealth.xbdd.model.common.TestingTips;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.TestingTipUtil;
 
-import org.bson.conversions.Bson;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-
 public class TestingTipsDao {
 
 	private final MongoDBAccessor mongoDBAccessor;
 
-	public TestingTipsDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
+	public TestingTipsDao() {
+		this.mongoDBAccessor = new MongoDBAccessor();
 	}
 
 	public Map<String, TestingTips> getLatestTestingTips(final Coordinates coordinates) {
@@ -65,7 +65,7 @@ public class TestingTipsDao {
 	}
 
 	private MongoCollection<TestingTips> getTestingTipsColletions() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
+		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase();
 		return bdd.getCollection("testingTips", TestingTips.class);
 	}
 }

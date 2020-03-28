@@ -45,8 +45,8 @@ public class Search {
 	private final MongoDBAccessor client;
 
 	@Inject
-	public Search(final MongoDBAccessor client) {
-		this.client = client;
+	public Search() {
+		this.client = new MongoDBAccessor();
 	}
 
 	@GET
@@ -56,7 +56,7 @@ public class Search {
 		final String[] searchCategories = { "name", "description", "tags.name", "elements.name", "elements.description",
 				"elements.steps.name", "elements.tags.name" };
 		final List<String> searchWords = Arrays.asList(keyword.split("\\s+"));
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("features");
 		final List<DBObject> searchResults = new ArrayList<>();
 

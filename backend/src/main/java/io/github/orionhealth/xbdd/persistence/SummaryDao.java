@@ -1,5 +1,11 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.bson.conversions.Bson;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -10,18 +16,12 @@ import io.github.orionhealth.xbdd.model.common.CoordinatesDto;
 import io.github.orionhealth.xbdd.model.common.Summary;
 import io.github.orionhealth.xbdd.util.Coordinates;
 
-import org.bson.conversions.Bson;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 public class SummaryDao {
 
 	private final MongoDBAccessor mongoDBAccessor;
 
-	public SummaryDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
+	public SummaryDao() {
+		this.mongoDBAccessor = new MongoDBAccessor();
 	}
 
 	public List<Summary> getSummaries() {
@@ -62,7 +62,7 @@ public class SummaryDao {
 	}
 
 	private MongoCollection<Summary> getSummaryCollection() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
+		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase();
 		return bdd.getCollection("summary", Summary.class);
 	}
 }

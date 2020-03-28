@@ -15,22 +15,34 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import com.mongodb.*;
-
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
-
-import org.apache.log4j.Logger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.DuplicateKeyException;
+
+import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 
 @Path("/admin")
 public class AdminUtils {
@@ -39,12 +51,8 @@ public class AdminUtils {
 	private static final Logger LOGGER = Logger.getLogger(AdminUtils.class);
 
 	@Inject
-	public AdminUtils(final MongoDBAccessor client,
-			@Context final HttpServletRequest req) {
-		this.client = client;
-		if (!req.isUserInRole("admin")) {
-			throw new WebApplicationException();
-		}
+	public AdminUtils() {
+		this.client = new MongoDBAccessor();
 	}
 
 	@DELETE
@@ -54,7 +62,7 @@ public class AdminUtils {
 			@Context final HttpServletRequest req,
 			@Context final HttpServletResponse response) {
 
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("summary");
 		final DBCollection targetCollection = db.getCollection("deletedSummary");
 
@@ -69,7 +77,7 @@ public class AdminUtils {
 			doc.removeField("_id");
 			try {
 				targetCollection.insert(doc);
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				return Response.status(500).build();
 			}
 		}
@@ -87,7 +95,7 @@ public class AdminUtils {
 			@Context final HttpServletRequest req,
 			@Context final HttpServletResponse response) {
 
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("summary");
 		final DBCollection targetCollection = db.getCollection("deletedSummary");
 
@@ -103,7 +111,7 @@ public class AdminUtils {
 			doc.removeField("_id");
 			try {
 				targetCollection.insert(doc);
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				return Response.status(500).build();
 			}
 		}
@@ -122,7 +130,7 @@ public class AdminUtils {
 			@Context final HttpServletRequest req,
 			@Context final HttpServletResponse response) {
 
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("summary");
 		final DBCollection targetCollection = db.getCollection("deletedSummary");
 
@@ -132,25 +140,25 @@ public class AdminUtils {
 		final DBCursor cursor = collection.find(query);
 
 		while (cursor.hasNext()) {
-			DBObject doc = cursor.next();
-			DBObject backupDoc = doc;
+			final DBObject doc = cursor.next();
+			final DBObject backupDoc = doc;
 			//Make sure the backup document only has the deleted build number
 			try {
 				final String[] singleBuild = { build };
 				backupDoc.put("builds", singleBuild);
 				targetCollection.insert(backupDoc);
-			} catch (DuplicateKeyException e) {
+			} catch (final DuplicateKeyException e) {
 				//The backup document already exists, possibly already deleted a build
 				//Lets add the deleted build to the existing document
 				targetCollection.update(new BasicDBObject("_id", backupDoc.get("_id")),
 						new BasicDBObject("$push", new BasicDBObject("builds", build)));
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				return Response.serverError().build();
 			}
 			//Remove the build number from the current document and push it back into the collection
 			try {
 				collection.update(new BasicDBObject("_id", doc.get("_id")), new BasicDBObject("$pull", new BasicDBObject("builds", build)));
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				LOGGER.error(e);
 				return Response.serverError().build();
 			}
@@ -159,10 +167,10 @@ public class AdminUtils {
 	}
 
 	//Lets register the helper class that replaces the instances of the old product name with the new one
-	private DBObject renameDoc(String product, String newname, DBObject doc) {
+	private DBObject renameDoc(final String product, final String newname, final DBObject doc) {
 		doc.put("_id", ((String) doc.get("_id")).replaceAll(product + "/", newname + "/"));
 		if (doc.containsField("coordinates")) {
-			DBObject coordinates = (DBObject) doc.get("coordinates");
+			final DBObject coordinates = (DBObject) doc.get("coordinates");
 			coordinates.put("product", newname);
 			doc.put("coordinates", coordinates);
 		}
@@ -175,7 +183,7 @@ public class AdminUtils {
 	public Response renameProduct(@PathParam("product") final String product,
 			final Product renameObject) {
 
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final List<DBCollection> collections = Arrays
 				.asList(db.getCollection("summary"), db.getCollection("features"), db.getCollection("reportStats"),
 						db.getCollection("testingTips"));
@@ -195,11 +203,11 @@ public class AdminUtils {
 
 		//We need to rename the product everywhere
 		//First up are all the collection with the product in the _id attribute
-		for (DBCollection collectioni : collections) {
-			DBCursor cursor = collectioni.find(query);
+		for (final DBCollection collectioni : collections) {
+			final DBCursor cursor = collectioni.find(query);
 			while (cursor.hasNext()) {
 				DBObject doc = cursor.next();
-				String id = (String) doc.get("_id");
+				final String id = (String) doc.get("_id");
 				doc = renameDoc(product, renameObject.name, doc);
 				collectioni.insert(doc);
 				collectioni.remove(new BasicDBObject("_id", id));
@@ -210,14 +218,14 @@ public class AdminUtils {
 		final DBCollection[] noIDCollections = { db.getCollection("environments"), db.getCollection("deletedSummary") };
 		final BasicDBObject enviroQuery = new BasicDBObject("coordinates.product", product);
 
-		for (DBCollection noIDCollection : noIDCollections) {
+		for (final DBCollection noIDCollection : noIDCollections) {
 			final DBCursor enviroCursor = noIDCollection.find(enviroQuery);
 
 			while (enviroCursor.hasNext()) {
-				DBObject doc = enviroCursor.next();
-				DBObject coordinates = (DBObject) doc.get("coordinates");
+				final DBObject doc = enviroCursor.next();
+				final DBObject coordinates = (DBObject) doc.get("coordinates");
 				coordinates.put("product", renameObject.name);
-				DBObject updateDoc = new BasicDBObject("$set", new BasicDBObject("coordinates", coordinates));
+				final DBObject updateDoc = new BasicDBObject("$set", new BasicDBObject("coordinates", coordinates));
 				noIDCollection.update(new BasicDBObject("_id", doc.get("_id")), updateDoc);
 			}
 		}
@@ -228,10 +236,10 @@ public class AdminUtils {
 		final DBCursor users = userCollection.find(favouriteQuery);
 
 		while (users.hasNext()) {
-			DBObject doc = users.next();
-			DBObject favs = (DBObject) doc.get("favourites");
+			final DBObject doc = users.next();
+			final DBObject favs = (DBObject) doc.get("favourites");
 			favs.put(renameObject.name, favs.get(product));
-			BasicDBObject updateDoc = new BasicDBObject("$set", new BasicDBObject("favourites", favs));
+			final BasicDBObject updateDoc = new BasicDBObject("$set", new BasicDBObject("favourites", favs));
 			updateDoc.put("$unset", new BasicDBObject(product, ""));
 			userCollection.update(new BasicDBObject("_id", doc.get("_id")), updateDoc);
 		}

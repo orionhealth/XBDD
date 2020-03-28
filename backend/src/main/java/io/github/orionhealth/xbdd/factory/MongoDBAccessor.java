@@ -15,8 +15,11 @@
  */
 package io.github.orionhealth.xbdd.factory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
+
 import com.mongodb.DB;
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
 /**
@@ -24,18 +27,33 @@ import com.mongodb.client.MongoDatabase;
  */
 public class MongoDBAccessor {
 
-	private final MongoClient client;
+	@Autowired
+	MongoClient mongoClient;
 
-	public MongoDBAccessor(final MongoClient client) {
-		this.client = client;
-	}
+	private SimpleMongoClientDbFactory factory;
+	private SimpleMongoClientDbFactory gridFactory;
 
-	public MongoDatabase getDatabase(final String dbName) {
-		return this.client.getDatabase(dbName);
+	public MongoDatabase getDatabase() {
+		initialiseIfNull();
+		return this.factory.getDb();
 	}
 
 	@Deprecated
-	public DB getDB(final String dbName) {
-		return this.client.getDB(dbName);
+	public DB getDB() {
+		initialiseIfNull();
+		return this.factory.getLegacyDb();
+	}
+
+	@Deprecated
+	public DB getGrid() {
+		initialiseIfNull();
+		return this.gridFactory.getLegacyDb();
+	}
+
+	private void initialiseIfNull() {
+		if (this.factory == null || this.gridFactory == null) {
+			this.factory = new SimpleMongoClientDbFactory(this.mongoClient, "bdd");
+			this.gridFactory = new SimpleMongoClientDbFactory(this.mongoClient, "grid");
+		}
 	}
 }

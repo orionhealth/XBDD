@@ -15,18 +15,13 @@
  */
 package io.github.orionhealth.xbdd;
 
-import javax.inject.Singleton;
 import javax.ws.rs.ApplicationPath;
 
-import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.TracingConfig;
 import org.springframework.stereotype.Component;
-
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
-import io.github.orionhealth.xbdd.factory.ServletContextMongoClientFactory;
 
 @Component
 @ApplicationPath("/rest")
@@ -38,13 +33,5 @@ public class JerseyApplication extends ResourceConfig {
 		register(MultiPartFeature.class);
 
 		property(ServerProperties.TRACING, TracingConfig.ON_DEMAND.name());
-
-		register(new AbstractBinder() {
-			@Override
-			protected void configure() {
-				bindFactory(ServletContextMongoClientFactory.class).to(MongoDBAccessor.class).in(Singleton.class);
-			}
-		});
-
 	}
 }

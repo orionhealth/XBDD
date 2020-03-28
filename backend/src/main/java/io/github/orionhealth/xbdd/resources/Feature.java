@@ -54,8 +54,8 @@ public class Feature {
 	private final MongoDBAccessor client;
 
 	@Inject
-	public Feature(final MongoDBAccessor client) {
-		this.client = client;
+	public Feature() {
+		this.client = new MongoDBAccessor();
 	}
 
 	public static void embedTestingTips(final DBObject feature, final Coordinates coordinates, final DB db) {
@@ -92,7 +92,7 @@ public class Feature {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFeatureRollup(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
 		final List<BasicDBObject> features = new ArrayList<>();
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("features");
 		final DBCollection summary = db.getCollection("summary");
 		final BasicDBObject example = coordinates.getRollupQueryObject(featureId);
@@ -144,7 +144,7 @@ public class Feature {
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection tips = db.getCollection("features");
 		final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 		final DBObject feature = tips.findOne(example);
@@ -205,7 +205,7 @@ public class Feature {
 	public Response updateCommentWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
-			final DB db = this.client.getDB("bdd");
+			final DB db = this.client.getDB();
 			final DBCollection collection = db.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
@@ -249,7 +249,7 @@ public class Feature {
 	public Response putFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final BasicDBObject feature) {
 		feature.put("calculatedStatus", StatusHelper.getFeatureStatus(feature));
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("features");
 		final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 		final DBObject report = collection.findOne(example);
@@ -276,7 +276,7 @@ public class Feature {
 	public Response updateStepWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
-			final DB db = this.client.getDB("bdd");
+			final DB db = this.client.getDB();
 			final DBCollection collection = db.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
@@ -381,7 +381,7 @@ public class Feature {
 	public Response updateStepsWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
-			final DB db = this.client.getDB("bdd");
+			final DB db = this.client.getDB();
 			final DBCollection collection = db.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);

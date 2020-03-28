@@ -1,5 +1,10 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bson.conversions.Bson;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -7,17 +12,12 @@ import com.mongodb.client.model.Filters;
 import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.model.common.Users;
 
-import org.bson.conversions.Bson;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class UsersDao {
 
 	private final MongoDBAccessor mongoDBAccessor;
 
-	public UsersDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
+	public UsersDao() {
+		this.mongoDBAccessor = new MongoDBAccessor();
 	}
 
 	public List<String> getUserFavourites(final String userId) {
@@ -39,7 +39,7 @@ public class UsersDao {
 	}
 
 	private MongoCollection<Users> getUsersColletions() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
+		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase();
 		return bdd.getCollection("users", Users.class);
 	}
 }

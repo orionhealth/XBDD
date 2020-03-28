@@ -15,11 +15,7 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import com.mongodb.DB;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSDBFile;
-
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
+import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -27,7 +23,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+
+import com.mongodb.DB;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+
+import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 
 @Path("/attachment")
 public class Attachment {
@@ -35,14 +36,14 @@ public class Attachment {
 	private final MongoDBAccessor client;
 
 	@Inject
-	public Attachment(final MongoDBAccessor client) {
-		this.client = client;
+	public Attachment() {
+		this.client = new MongoDBAccessor();
 	}
 
 	@GET
 	@Path("/{id}")
 	public Response getAttachment(@PathParam("id") final String id) throws IOException {
-		final DB db = this.client.getDB("grid");
+		final DB db = this.client.getDB();
 		final GridFS gridFS = new GridFS(db);
 		final GridFSDBFile file = gridFS.findOne(id);
 		// log.info(file);

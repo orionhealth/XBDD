@@ -15,17 +15,26 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import com.mongodb.*;
+import javax.inject.Inject;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.Field;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
-
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/automation-statistics")
 public class AutomationStatistics {
@@ -33,15 +42,15 @@ public class AutomationStatistics {
 	private final MongoDBAccessor client;
 
 	@Inject
-	public AutomationStatistics(final MongoDBAccessor client) {
-		this.client = client;
+	public AutomationStatistics() {
+		this.client = new MongoDBAccessor();
 	}
 
 	@GET
 	@Path("/recent-builds/{product}")
 	public Response getRecentBuildStatsForProduct(@BeanParam final Coordinates coordinates, @QueryParam("limit") final Integer limit) {
 		final BasicDBList returns = new BasicDBList();
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection collection = db.getCollection("reportStats");
 		final BasicDBObject example = coordinates.getQueryObject(Field.PRODUCT);
 		final DBCursor cursor = collection.find(example).sort(Coordinates.getFeatureSortingObject());
@@ -69,7 +78,7 @@ public class AutomationStatistics {
 	public Response getRecentVersionStatsForProduct(@BeanParam final Coordinates coordinates, @QueryParam("limit") final Integer limit) {
 		final BasicDBList returns = new BasicDBList();
 
-		final DB db = this.client.getDB("bdd");
+		final DB db = this.client.getDB();
 		final DBCollection summaryCollection = db.getCollection("summary");
 		final DBCollection reportStatsCollection = db.getCollection("reportStats");
 		final DBCursor versions = summaryCollection.find(coordinates.getQueryObject(Field.PRODUCT))
