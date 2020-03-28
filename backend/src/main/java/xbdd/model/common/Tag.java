@@ -11,7 +11,7 @@ public class Tag {
 		return line;
 	}
 
-	public void setLine(Integer line) {
+	public void setLine(final Integer line) {
 		this.line = line;
 	}
 
@@ -19,7 +19,7 @@ public class Tag {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 }

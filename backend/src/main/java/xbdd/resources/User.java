@@ -16,8 +16,8 @@
 package xbdd.resources;
 
 import com.mongodb.*;
-import xbdd.model.common.TagAssignmentPatch;
 import xbdd.factory.MongoDBAccessor;
+import xbdd.model.common.TagAssignmentPatch;
 import xbdd.util.Coordinates;
 import xbdd.util.SerializerUtil;
 
@@ -68,7 +68,7 @@ public class User {
 			updateTagsAssignment(documentToUpdate, tagPatch.getTag(), tagPatch.getUserName());
 			collection.save(documentToUpdate);
 		} else {
-			DBObject newDocument = generateNewTagAssignment(coordinates, tagPatch.getTag(), tagPatch.getUserName());
+			final DBObject newDocument = generateNewTagAssignment(coordinates, tagPatch.getTag(), tagPatch.getUserName());
 			collection.save(newDocument);
 		}
 		return Response.ok().build();
@@ -76,8 +76,8 @@ public class User {
 
 	private void updateTagsAssignment(final DBObject documentToUpdate, final String tagName, final String userName) {
 		final BasicDBList tags = (BasicDBList) documentToUpdate.get("tags");
-		for (Object fetchTag : tags) {
-			String fetchTagName = (String) ((DBObject) fetchTag).get("tag");
+		for (final Object fetchTag : tags) {
+			final String fetchTagName = (String) ((DBObject) fetchTag).get("tag");
 			if (fetchTagName.equals(tagName)) {
 				((DBObject) fetchTag).put("userName", userName);
 				return;
@@ -100,7 +100,7 @@ public class User {
 		return newDocument;
 	}
 
-	private DBObject generateNewTag(String tagName, String userName) {
+	private DBObject generateNewTag(final String tagName, final String userName) {
 		final DBObject newTag = new BasicDBObject();
 
 		newTag.put("tag", tagName);
@@ -141,7 +141,7 @@ public class User {
 			updateIgnoredTag(documentToUpdate, tagName);
 			collection.save(documentToUpdate);
 		} else {
-			DBObject newDocument = generateNewIgnoredTags(coordinates, tagName);
+			final DBObject newDocument = generateNewIgnoredTags(coordinates, tagName);
 			collection.save(newDocument);
 		}
 		return Response.ok().build();

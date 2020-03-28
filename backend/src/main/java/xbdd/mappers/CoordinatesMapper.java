@@ -5,8 +5,8 @@ import xbdd.util.Coordinates;
 
 public class CoordinatesMapper {
 
-	public static CoordinatesDto mapCoordinates(Coordinates coordinates) {
-		CoordinatesDto xbddCoodinates = new CoordinatesDto();
+	public static CoordinatesDto mapCoordinates(final Coordinates coordinates) {
+		final CoordinatesDto xbddCoodinates = new CoordinatesDto();
 
 		xbddCoodinates.setBuild(coordinates.getBuild());
 		xbddCoodinates.setMajor(coordinates.getMajor());

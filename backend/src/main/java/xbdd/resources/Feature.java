@@ -15,24 +15,37 @@
  */
 package xbdd.resources;
 
-import com.mongodb.*;
-import xbdd.model.simple.Scenario;
-import xbdd.util.StatusHelper;
-import xbdd.factory.MongoDBAccessor;
-import xbdd.util.Coordinates;
-import xbdd.util.Field;
-import xbdd.util.SerializerUtil;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+
+import xbdd.factory.MongoDBAccessor;
+import xbdd.model.simple.Scenario;
+import xbdd.util.Coordinates;
+import xbdd.util.Field;
+import xbdd.util.SerializerUtil;
+import xbdd.util.StatusHelper;
 
 @Path("/feature")
 public class Feature {
@@ -107,8 +120,8 @@ public class Feature {
 		final List<String> buildArray = (List<String>) buildOrder.get("builds");
 		final List<BasicDBObject> orderedFeatures = new ArrayList<>();
 
-		for (String build : buildArray) {
-			for (BasicDBObject feature : features) {
+		for (final String build : buildArray) {
+			for (final BasicDBObject feature : features) {
 				if (feature.get("build").equals(build)) {
 					orderedFeatures.add(feature);
 					break;
@@ -297,8 +310,8 @@ public class Feature {
 		}
 	}
 
-	private boolean updateSteps(BasicDBList steps, int stepLine, String status) {
-		for (Object step : steps) {
+	private boolean updateSteps(final BasicDBList steps, final int stepLine, final String status) {
+		for (final Object step : steps) {
 			final BasicDBObject dbStep = (BasicDBObject) step;
 			if ((int) dbStep.get("line") == stepLine) {
 				final BasicDBObject result = (BasicDBObject) dbStep.get("result");
@@ -309,17 +322,17 @@ public class Feature {
 		return false;
 	}
 
-	private String calculateStatusForFeature(DBObject feature) {
+	private String calculateStatusForFeature(final DBObject feature) {
 		String currentBgStatus = "passed", currentStepsStatus = "passed";
 
-		BasicDBList scenarios = (BasicDBList) feature.get("elements");
-		for (Object scenario : scenarios) {
-			BasicDBObject background = (BasicDBObject) ((BasicDBObject) scenario).get("background");
+		final BasicDBList scenarios = (BasicDBList) feature.get("elements");
+		for (final Object scenario : scenarios) {
+			final BasicDBObject background = (BasicDBObject) ((BasicDBObject) scenario).get("background");
 			if (background != null) {
-				BasicDBList bgsteps = (BasicDBList) background.get("steps");
+				final BasicDBList bgsteps = (BasicDBList) background.get("steps");
 				currentBgStatus = calculateStatusForSteps(currentBgStatus, bgsteps);
 			}
-			BasicDBList steps = (BasicDBList) ((BasicDBObject) scenario).get("steps");
+			final BasicDBList steps = (BasicDBList) ((BasicDBObject) scenario).get("steps");
 			if (steps != null) {
 				currentStepsStatus = calculateStatusForSteps(currentStepsStatus, steps);
 			}
@@ -327,22 +340,23 @@ public class Feature {
 		return compareStatusPriority(currentBgStatus, currentStepsStatus);
 	}
 
-	private String calculateStatusForSteps(String currentStatus, BasicDBList steps) {
-		for (Object step : steps) {
-			BasicDBObject result = (BasicDBObject) ((BasicDBObject) step).get("result");
-			String status = (String) result.get("status");
-			String manualStatus = (String) result.get("manualStatus");
+	private String calculateStatusForSteps(final String currentStatus, final BasicDBList steps) {
+		String rtn = currentStatus;
+		for (final Object step : steps) {
+			final BasicDBObject result = (BasicDBObject) ((BasicDBObject) step).get("result");
+			final String status = (String) result.get("status");
+			final String manualStatus = (String) result.get("manualStatus");
 			if (manualStatus != null) {
-				currentStatus = compareStatusPriority(currentStatus, manualStatus);
+				rtn = compareStatusPriority(rtn, manualStatus);
 			} else {
-				currentStatus = compareStatusPriority(currentStatus, status);
+				rtn = compareStatusPriority(rtn, status);
 			}
 		}
-		return currentStatus;
+		return rtn;
 	}
 
-	private String compareStatusPriority(String firstStatus, String secondStatus) {
-		HashMap<String, Integer> statusPriority = new HashMap<>();
+	private String compareStatusPriority(final String firstStatus, final String secondStatus) {
+		final HashMap<String, Integer> statusPriority = new HashMap<>();
 		statusPriority.put("passed", 1);
 		statusPriority.put("skipped", 2);
 		statusPriority.put("undefined", 3);
@@ -350,9 +364,9 @@ public class Feature {
 		return statusPriority.get(firstStatus) > statusPriority.get(secondStatus) ? firstStatus : secondStatus;
 	}
 
-	private BasicDBObject getScenarioById(String scenarioId, DBObject feature) {
+	private BasicDBObject getScenarioById(final String scenarioId, final DBObject feature) {
 		final BasicDBList scenarios = (BasicDBList) feature.get("elements");
-		for (Object scenario : scenarios) {
+		for (final Object scenario : scenarios) {
 			if (new Scenario((BasicDBObject) scenario).getId().equals(scenarioId)) {
 				return (BasicDBObject) scenario;
 			}
@@ -399,8 +413,8 @@ public class Feature {
 		}
 	}
 
-	private void updateAllSteps(BasicDBList steps, String status) {
-		for (Object step : steps) {
+	private void updateAllSteps(final BasicDBList steps, final String status) {
+		for (final Object step : steps) {
 			final BasicDBObject dbStep = (BasicDBObject) step;
 			final BasicDBObject result = (BasicDBObject) dbStep.get("result");
 			result.put("manualStatus", status);
@@ -487,7 +501,7 @@ public class Feature {
 		return stepChanges;
 	}
 
-	private BasicDBList updateScenarioSteps(DBObject scenario, DBObject previousScenario) {
+	private BasicDBList updateScenarioSteps(final DBObject scenario, final DBObject previousScenario) {
 		final BasicDBList stepChanges = new BasicDBList();
 		final BasicDBList allSteps = new BasicDBList();
 		final BasicDBList changes = new BasicDBList();
@@ -537,7 +551,7 @@ public class Feature {
 			}
 		}
 
-		for (Object allStep : allSteps) {
+		for (final Object allStep : allSteps) {
 			formatStep(changes, (BasicDBObject) allStep, currManual, prevManual);
 		}
 

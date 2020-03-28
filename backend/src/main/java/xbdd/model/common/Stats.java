@@ -11,7 +11,7 @@ public class Stats {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
@@ -19,7 +19,7 @@ public class Stats {
 		return coordinates;
 	}
 
-	public void setCoordinates(CoordinatesDto coordinates) {
+	public void setCoordinates(final CoordinatesDto coordinates) {
 		this.coordinates = coordinates;
 	}
 
@@ -27,7 +27,7 @@ public class Stats {
 		return summary;
 	}
 
-	public void setSummary(HashMap<String, Integer> summary) {
+	public void setSummary(final HashMap<String, Integer> summary) {
 		this.summary = summary;
 	}
 }

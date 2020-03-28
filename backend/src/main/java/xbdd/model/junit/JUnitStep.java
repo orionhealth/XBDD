@@ -19,7 +19,7 @@ public class JUnitStep {
 		return line;
 	}
 
-	public void setLine(Integer line) {
+	public void setLine(final Integer line) {
 		this.line = line;
 	}
 
@@ -27,7 +27,7 @@ public class JUnitStep {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -35,7 +35,7 @@ public class JUnitStep {
 		return result;
 	}
 
-	public void setResult(JUnitStepResult result) {
+	public void setResult(final JUnitStepResult result) {
 		this.result = result;
 	}
 
@@ -43,7 +43,7 @@ public class JUnitStep {
 		return match;
 	}
 
-	public void setMatch(StepMatch match) {
+	public void setMatch(final StepMatch match) {
 		this.match = match;
 	}
 
@@ -51,7 +51,7 @@ public class JUnitStep {
 		return matchedColumns;
 	}
 
-	public void setMatchedColumns(List<Integer> matchedColumns) {
+	public void setMatchedColumns(final List<Integer> matchedColumns) {
 		this.matchedColumns = matchedColumns;
 	}
 
@@ -59,7 +59,7 @@ public class JUnitStep {
 		return keyword;
 	}
 
-	public void setKeyword(String keyword) {
+	public void setKeyword(final String keyword) {
 		this.keyword = keyword;
 	}
 
@@ -67,7 +67,7 @@ public class JUnitStep {
 		return embeddings;
 	}
 
-	public void setEmbeddings(List<JUnitEmbedding> embeddings) {
+	public void setEmbeddings(final List<JUnitEmbedding> embeddings) {
 		this.embeddings = embeddings;
 	}
 }

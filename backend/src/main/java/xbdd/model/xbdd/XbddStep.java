@@ -17,7 +17,7 @@ public class XbddStep {
 		return line;
 	}
 
-	public void setLine(Integer line) {
+	public void setLine(final Integer line) {
 		this.line = line;
 	}
 
@@ -25,7 +25,7 @@ public class XbddStep {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -33,7 +33,7 @@ public class XbddStep {
 		return result;
 	}
 
-	public void setResult(XbddStepResult result) {
+	public void setResult(final XbddStepResult result) {
 		this.result = result;
 	}
 
@@ -41,7 +41,7 @@ public class XbddStep {
 		return match;
 	}
 
-	public void setMatch(StepMatch match) {
+	public void setMatch(final StepMatch match) {
 		this.match = match;
 	}
 
@@ -49,7 +49,7 @@ public class XbddStep {
 		return matchedColumns;
 	}
 
-	public void setMatchedColumns(List<Integer> matchedColumns) {
+	public void setMatchedColumns(final List<Integer> matchedColumns) {
 		this.matchedColumns = matchedColumns;
 	}
 
@@ -57,7 +57,7 @@ public class XbddStep {
 		return keyword;
 	}
 
-	public void setKeyword(String keyword) {
+	public void setKeyword(final String keyword) {
 		this.keyword = keyword;
 	}
 
@@ -65,7 +65,7 @@ public class XbddStep {
 		return embeddings;
 	}
 
-	public void setEmbeddings(List<String> embeddings) {
+	public void setEmbeddings(final List<String> embeddings) {
 		this.embeddings = embeddings;
 	}
 }

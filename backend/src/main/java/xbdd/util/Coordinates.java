@@ -152,7 +152,6 @@ public class Coordinates {
 				.append("coordinates.major", new BasicDBObject("$lte", this.major))
 				.append("coordinates.minor", new BasicDBObject("$lte", this.minor))
 				.append("coordinates.servicePack", new BasicDBObject("$lte", this.servicePack))
-				.append("coordinates.build", new BasicDBObject("$lte", this.build))
 				.append("coordinates.featureId", featureId)
 				.append("coordinates.scenarioId", scenarioId);
 	}

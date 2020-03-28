@@ -2,6 +2,7 @@ package xbdd.model.xbdd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import xbdd.model.common.Tag;
 
@@ -23,11 +24,16 @@ public class XbddScenario {
 	private List<XbddStep> steps;
 	private List<Tag> tags;
 
+	@BsonIgnore
+	@SerializedName("testing-tips")
+	@JsonProperty("testing-tips")
+	private String testingTips;
+
 	public Integer getLine() {
 		return line;
 	}
 
-	public void setLine(Integer line) {
+	public void setLine(final Integer line) {
 		this.line = line;
 	}
 
@@ -35,7 +41,7 @@ public class XbddScenario {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -43,7 +49,7 @@ public class XbddScenario {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -51,7 +57,7 @@ public class XbddScenario {
 		return originalId;
 	}
 
-	public void setOriginalId(String originalId) {
+	public void setOriginalId(final String originalId) {
 		this.originalId = originalId;
 	}
 
@@ -59,7 +65,7 @@ public class XbddScenario {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 
@@ -67,7 +73,7 @@ public class XbddScenario {
 		return keyword;
 	}
 
-	public void setKeyword(String keyword) {
+	public void setKeyword(final String keyword) {
 		this.keyword = keyword;
 	}
 
@@ -75,7 +81,7 @@ public class XbddScenario {
 		return background;
 	}
 
-	public void setBackground(XbddScenario background) {
+	public void setBackground(final XbddScenario background) {
 		this.background = background;
 	}
 
@@ -83,7 +89,7 @@ public class XbddScenario {
 		return steps;
 	}
 
-	public void setSteps(List<XbddStep> steps) {
+	public void setSteps(final List<XbddStep> steps) {
 		this.steps = steps;
 	}
 
@@ -91,7 +97,15 @@ public class XbddScenario {
 		return tags;
 	}
 
-	public void setTags(List<Tag> tags) {
+	public void setTags(final List<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public String getTestingTips() {
+		return testingTips;
+	}
+
+	public void setTestingTips(final String testingTips) {
+		this.testingTips = testingTips;
 	}
 }
