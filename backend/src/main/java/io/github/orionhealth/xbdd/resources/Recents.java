@@ -15,7 +15,6 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
@@ -28,6 +27,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -35,18 +36,13 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.Coordinates;
 
 @Path("/recents")
 public class Recents {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public Recents() {
-		this.client = new MongoDBAccessor();
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	@PUT
 	@Path("/feature/{product}/{major}.{minor}.{servicePack}/{build}/{id:.+}")
@@ -62,8 +58,7 @@ public class Recents {
 		featureDetails.put("build", coordinates.getBuild());
 		featureDetails.put("id", featureID);
 
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("users");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
 		user.put("user_id", req.getRemoteUser());
@@ -98,8 +93,7 @@ public class Recents {
 
 		final DBObject buildCoords = coordinates.getReportCoordinates();
 
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("users");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
 		user.put("user_id", req.getRemoteUser());
@@ -110,7 +104,7 @@ public class Recents {
 		if (doc.containsField("recentBuilds")) {
 			final BasicDBList buildArray = (BasicDBList) doc.get("recentBuilds");
 			if (buildArray.contains(buildCoords)) {
-				//BasicDBObject toMove = (BasicDBObject) featureArray.get(featureArray.indexOf(featureDetails));
+				// BasicDBObject toMove = (BasicDBObject) featureArray.get(featureArray.indexOf(featureDetails));
 				buildArray.remove(buildCoords);
 				buildArray.add(buildCoords);
 				collection.update(user, new BasicDBObject("$set", new BasicDBObject("recentBuilds", buildArray)));
@@ -132,8 +126,7 @@ public class Recents {
 	@Produces(MediaType.APPLICATION_JSON)
 	public DBObject getRecentBuilds(@Context final HttpServletRequest req) {
 
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("users");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject("user_id", req.getRemoteUser());
 
@@ -156,8 +149,7 @@ public class Recents {
 	@Produces(MediaType.APPLICATION_JSON)
 	public DBObject getRecentFeatures(@Context final HttpServletRequest req) {
 
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("users");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject("user_id", req.getRemoteUser());
 

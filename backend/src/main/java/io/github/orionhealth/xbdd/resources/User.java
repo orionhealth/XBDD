@@ -17,7 +17,6 @@ package io.github.orionhealth.xbdd.resources;
 
 import java.util.ArrayList;
 
-import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -27,13 +26,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.model.common.TagAssignmentPatch;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
@@ -41,19 +41,14 @@ import io.github.orionhealth.xbdd.util.SerializerUtil;
 @Path("/user")
 public class User {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public User() {
-		this.client = new MongoDBAccessor();
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	@GET
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTagsAssignment(@BeanParam final Coordinates coordinates) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("tagsAssignment");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("tagsAssignment");
 		final BasicDBObject coq = coordinates.getReportCoordinatesQueryObject();
 		final DBObject document = collection.findOne(coq);
 
@@ -69,8 +64,7 @@ public class User {
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final TagAssignmentPatch tagPatch) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("tagsAssignment");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("tagsAssignment");
 		final BasicDBObject coq = coordinates.getReportCoordinatesQueryObject();
 		final BasicDBObject storedDocument = (BasicDBObject) collection.findOne(coq);
 
@@ -124,8 +118,7 @@ public class User {
 	@Path("/ignoredTags/{product}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getIgnoredTags(@BeanParam final Coordinates coordinates) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("ignoredTags");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("ignoredTags");
 		final BasicDBObject coq = coordinates.getProductCoordinatesQueryObject();
 		final DBObject document = collection.findOne(coq);
 
@@ -140,8 +133,7 @@ public class User {
 	@Path("/ignoredTags/{product}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response putIgnoredTags(@BeanParam final Coordinates coordinates, final BasicDBObject patch) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("ignoredTags");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("ignoredTags");
 		final BasicDBObject coq = coordinates.getProductCoordinatesQueryObject();
 		final BasicDBObject storedDocument = (BasicDBObject) collection.findOne(coq);
 

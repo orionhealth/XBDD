@@ -18,7 +18,6 @@ package io.github.orionhealth.xbdd.resources;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
@@ -32,6 +31,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -39,7 +40,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.Field;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
@@ -47,12 +47,8 @@ import io.github.orionhealth.xbdd.util.SerializerUtil;
 @Path("/presence")
 public class Presence {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public Presence() {
-		this.client = new MongoDBAccessor();
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	@POST
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId}")
@@ -60,13 +56,12 @@ public class Presence {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addPresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("presence");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("presence");
 		final BasicDBObject query = new BasicDBObject("coordinates",
 				coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
 						"featureId", featureId))
-				.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
-						.getBuild() + "/" + featureId);
+								.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
+										.getBuild() + "/" + featureId);
 		final Date now = Calendar.getInstance().getTime();
 		collection.update(query,
 				new BasicDBObject("$set", new BasicDBObject("users." + req.getRemoteUser(), now).append("lastUpdated", now)), true,
@@ -81,13 +76,12 @@ public class Presence {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("presence");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("presence");
 		final BasicDBObject query = new BasicDBObject("coordinates",
 				coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
 						"featureId", featureId))
-				.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
-						.getBuild() + "/" + featureId);
+								.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
+										.getBuild() + "/" + featureId);
 		final DBObject newPresence = collection.findOne(query);
 		newPresence.put("currentUser", req.getRemoteUser());
 		return Response.ok(SerializerUtil.serialise(newPresence)).build();
@@ -98,8 +92,7 @@ public class Presence {
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPresencesForBuild(@BeanParam final Coordinates coordinates) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("presence");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("presence");
 		final BasicDBObject query = coordinates.getQueryObject(Field.PRODUCT, Field.VERSION, Field.BUILD);
 		final BasicDBList presencesForBuild = new BasicDBList();
 		final DBCursor cursor = collection.find(query);
@@ -115,13 +108,12 @@ public class Presence {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deletePresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("presence");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("presence");
 		final BasicDBObject query = new BasicDBObject("coordinates",
 				coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
 						"featureId", featureId))
-				.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
-						.getBuild() + "/" + featureId);
+								.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
+										.getBuild() + "/" + featureId);
 		collection.update(query, new BasicDBObject("$unset", new BasicDBObject("users." + req.getRemoteUser(), 1)), true, false);
 		final DBObject newPresence = collection.findOne(query);
 		newPresence.put("currentUser", req.getRemoteUser());

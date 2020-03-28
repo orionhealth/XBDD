@@ -13,17 +13,26 @@ package io.github.orionhealth.xbdd.config;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
+import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
@@ -41,6 +50,11 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 	private String password;
 
 	@Override
+	protected String getDatabaseName() {
+		return "bdd";
+	}
+
+	@Override
 	@Bean
 	public com.mongodb.client.MongoClient mongoClient() {
 		final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),
@@ -56,8 +70,36 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 		return MongoClients.create(settings);
 	}
 
+	@Bean
+	public MongoClient legacyMongoClient() {
+		final CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),
+				fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+		final MongoClientOptions options = MongoClientOptions.builder().codecRegistry(pojoCodecRegistry).build();
+
+		final MongoCredential credentials = MongoCredential.createScramSha1Credential(this.username, "admin", this.password.toCharArray());
+		return new MongoClient(new ServerAddress(this.host, NumberUtils.toInt(this.port)), credentials, options);
+	}
+
 	@Override
-	protected String getDatabaseName() {
-		return "bdd";
+	@Bean
+	public MongoDbFactory mongoDbFactory() {
+		return new SimpleMongoClientDbFactory(mongoClient(), getDatabaseName());
+	}
+
+	@Bean(name = "mongoBddDatabase")
+	public MongoDatabase mongoBddDatabase() {
+		return mongoDbFactory().getDb();
+	}
+
+	@Deprecated
+	@Bean(name = "mongoLegacyGrid")
+	public DB mongoLegacyGrid() {
+		return new SimpleMongoDbFactory(legacyMongoClient(), "grid").getLegacyDb();
+	}
+
+	@Deprecated
+	@Bean(name = "mongoLegacyDb")
+	public DB mongoLegacyDb() {
+		return new SimpleMongoDbFactory(legacyMongoClient(), getDatabaseName()).getLegacyDb();
 	}
 }

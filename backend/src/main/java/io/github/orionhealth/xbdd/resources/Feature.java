@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
@@ -33,6 +32,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -40,7 +41,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.model.simple.Scenario;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.Field;
@@ -51,12 +51,9 @@ import io.github.orionhealth.xbdd.util.StatusHelper;
 public class Feature {
 
 	private static int MAX_ENVIRONMENTS_FOR_A_PRODUCT = 10;
-	private final MongoDBAccessor client;
 
-	@Inject
-	public Feature() {
-		this.client = new MongoDBAccessor();
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	public static void embedTestingTips(final DBObject feature, final Coordinates coordinates, final DB db) {
 		final DBCollection tips = db.getCollection("testingTips");
@@ -69,7 +66,8 @@ public class Feature {
 			// item (if one exists).
 			final DBCursor oldTipCursor = tips.find(tipQuery)
 					.sort(new BasicDBObject("coordinates.major", -1).append("coordinates.minor", -1)
-							.append("coordinates.servicePack", -1).append("coordinates.build", -1)).limit(1);
+							.append("coordinates.servicePack", -1).append("coordinates.build", -1))
+					.limit(1);
 			try {
 				if (oldTipCursor.hasNext()) {
 					oldTip = oldTipCursor.next();
@@ -92,9 +90,8 @@ public class Feature {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFeatureRollup(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
 		final List<BasicDBObject> features = new ArrayList<>();
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("features");
-		final DBCollection summary = db.getCollection("summary");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("features");
+		final DBCollection summary = this.mongoLegacyDb.getCollection("summary");
 		final BasicDBObject example = coordinates.getRollupQueryObject(featureId);
 		final DBCursor cursor = collection.find(example,
 				new BasicDBObject("id", 1).append("coordinates.build", 1).append("calculatedStatus", 1)
@@ -144,12 +141,11 @@ public class Feature {
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
-		final DB db = this.client.getDB();
-		final DBCollection tips = db.getCollection("features");
+		final DBCollection tips = this.mongoLegacyDb.getCollection("features");
 		final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 		final DBObject feature = tips.findOne(example);
 		if (feature != null) {
-			Feature.embedTestingTips(feature, coordinates, db);
+			Feature.embedTestingTips(feature, coordinates, this.mongoLegacyDb);
 		}
 		return Response.ok(SerializerUtil.serialise(feature)).build();
 	}
@@ -173,7 +169,8 @@ public class Feature {
 			// first item (if one exists).
 			final DBCursor oldTipCursor = tips.find(tipQuery)
 					.sort(new BasicDBObject("coordinates.major", -1).append("coordinates.minor", -1)
-							.append("coordinates.servicePack", -1).append("coordinates.build", -1)).limit(1);
+							.append("coordinates.servicePack", -1).append("coordinates.build", -1))
+					.limit(1);
 			try {
 				if (oldTipCursor.hasNext()) {
 					oldTip = oldTipCursor.next();
@@ -205,8 +202,7 @@ public class Feature {
 	public Response updateCommentWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
-			final DB db = this.client.getDB();
-			final DBCollection collection = db.getCollection("features");
+			final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
 
@@ -219,7 +215,7 @@ public class Feature {
 			scenarioToUpdate.put(label, content);
 
 			if (label.equals("testing-tips")) {
-				final DBCollection tips = db.getCollection("testingTips");
+				final DBCollection tips = this.mongoLegacyDb.getCollection("testingTips");
 				updateTestingTipsForScenario(tips, scenarioToUpdate, coordinates, featureId);
 			}
 			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
@@ -227,7 +223,7 @@ public class Feature {
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
 			if (label.equals("testing-tips")) {
-				Feature.embedTestingTips(featureToUpdate, coordinates, db);
+				Feature.embedTestingTips(featureToUpdate, coordinates, this.mongoLegacyDb);
 			}
 			return Response.ok().build();
 		} catch (final Throwable th) {
@@ -249,8 +245,7 @@ public class Feature {
 	public Response putFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final BasicDBObject feature) {
 		feature.put("calculatedStatus", StatusHelper.getFeatureStatus(feature));
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("features");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 		final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 		final DBObject report = collection.findOne(example);
 
@@ -262,10 +257,10 @@ public class Feature {
 		final BasicDBList edits = updateEdits(feature, report);
 		feature.put("edits", edits);
 
-		updateTestingTips(db, coordinates, featureId, feature); // save testing tips / strip them out of the document.
-		updateEnvironmentDetails(db, coordinates, feature);
+		updateTestingTips(this.mongoLegacyDb, coordinates, featureId, feature); // save testing tips / strip them out of the document.
+		updateEnvironmentDetails(this.mongoLegacyDb, coordinates, feature);
 		collection.save(feature);
-		Feature.embedTestingTips(feature, coordinates, db); // rembed testing tips.
+		Feature.embedTestingTips(feature, coordinates, this.mongoLegacyDb); // rembed testing tips.
 		return Response.ok(SerializerUtil.serialise(feature))
 				.build();// pull back feature - will re-include tips that were extracted prior to saving
 	}
@@ -276,8 +271,7 @@ public class Feature {
 	public Response updateStepWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
-			final DB db = this.client.getDB();
-			final DBCollection collection = db.getCollection("features");
+			final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
 
@@ -381,8 +375,7 @@ public class Feature {
 	public Response updateStepsWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
 			@Context final HttpServletRequest req, final BasicDBObject patch) {
 		try {
-			final DB db = this.client.getDB();
-			final DBCollection collection = db.getCollection("features");
+			final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
 			final BasicDBObject storedFeature = (BasicDBObject) collection.findOne(example);
 
@@ -516,7 +509,7 @@ public class Feature {
 						.get(j);
 				final BasicDBObject prevStep = (BasicDBObject) ((BasicDBList) ((BasicDBObject) previousScenario.get("background"))
 						.get("steps"))
-						.get(j);
+								.get(j);
 				final String id = (String) step.get("keyword") + (String) step.get("name");
 				if (((BasicDBObject) step.get("result")).get("manualStatus") != null) {
 					currManual = true;

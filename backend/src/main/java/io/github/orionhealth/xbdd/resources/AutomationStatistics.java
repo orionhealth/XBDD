@@ -15,7 +15,6 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,6 +23,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -31,7 +32,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.Field;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
@@ -39,19 +39,14 @@ import io.github.orionhealth.xbdd.util.SerializerUtil;
 @Path("/automation-statistics")
 public class AutomationStatistics {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public AutomationStatistics() {
-		this.client = new MongoDBAccessor();
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	@GET
 	@Path("/recent-builds/{product}")
 	public Response getRecentBuildStatsForProduct(@BeanParam final Coordinates coordinates, @QueryParam("limit") final Integer limit) {
 		final BasicDBList returns = new BasicDBList();
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("reportStats");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("reportStats");
 		final BasicDBObject example = coordinates.getQueryObject(Field.PRODUCT);
 		final DBCursor cursor = collection.find(example).sort(Coordinates.getFeatureSortingObject());
 		if (limit != null) {
@@ -78,9 +73,8 @@ public class AutomationStatistics {
 	public Response getRecentVersionStatsForProduct(@BeanParam final Coordinates coordinates, @QueryParam("limit") final Integer limit) {
 		final BasicDBList returns = new BasicDBList();
 
-		final DB db = this.client.getDB();
-		final DBCollection summaryCollection = db.getCollection("summary");
-		final DBCollection reportStatsCollection = db.getCollection("reportStats");
+		final DBCollection summaryCollection = this.mongoLegacyDb.getCollection("summary");
+		final DBCollection reportStatsCollection = this.mongoLegacyDb.getCollection("reportStats");
 		final DBCursor versions = summaryCollection.find(coordinates.getQueryObject(Field.PRODUCT))
 				.sort(Coordinates.getFeatureSortingObject());
 		if (limit != null) {

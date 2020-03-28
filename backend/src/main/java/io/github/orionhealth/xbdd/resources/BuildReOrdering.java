@@ -18,7 +18,6 @@ package io.github.orionhealth.xbdd.resources;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -28,30 +27,26 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/build-reorder")
 public class BuildReOrdering {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public BuildReOrdering() {
-		this.client = new MongoDBAccessor();
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getBuildsForProductVersion(@BeanParam final Coordinates coordinates) {
-		final DB db = this.client.getDB();
-		final DBCollection summaryCollection = db.getCollection("summary");
+		final DBCollection summaryCollection = this.mongoLegacyDb.getCollection("summary");
 		final BasicDBObject query = new BasicDBObject("_id", coordinates.getProduct() + "/" + coordinates.getVersionString());
 		final Object builds = summaryCollection.findOne(query).get("builds");
 		if (builds instanceof List<?>) {
@@ -66,8 +61,7 @@ public class BuildReOrdering {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response setBuildOrderForProductVersion(@BeanParam final Coordinates coordinates,
 			final Builds json) {
-		final DB db = this.client.getDB();
-		final DBCollection summaryCollection = db.getCollection("summary");
+		final DBCollection summaryCollection = this.mongoLegacyDb.getCollection("summary");
 		final BasicDBObject query = new BasicDBObject("_id", coordinates.getProduct() + "/" + coordinates.getVersionString());
 		summaryCollection.update(query, new BasicDBObject("$set", new BasicDBObject("builds", json.builds)));
 

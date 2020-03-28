@@ -15,7 +15,6 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
@@ -29,6 +28,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -36,26 +37,20 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/favourites")
 public class Favourites {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public Favourites() {
-		this.client = new MongoDBAccessor();
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	public void setFavouriteStateOfProduct(final String product,
 			final boolean state,
 			final HttpServletRequest req) {
 
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("users");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
 		user.put("user_id", req.getRemoteUser());
@@ -63,7 +58,7 @@ public class Favourites {
 		final DBObject blank = new BasicDBObject();
 		collection.findAndModify(user, blank, blank, false, new BasicDBObject("$set", user), true, true);
 
-		//User exists
+		// User exists
 		final DBObject favourites = new BasicDBObject("favourites." + product, state);
 		final DBObject update = new BasicDBObject("$set", favourites);
 		collection.update(user, update);
@@ -93,8 +88,7 @@ public class Favourites {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFavouriteStateOfProduct(@PathParam("product") final String product,
 			@Context final HttpServletRequest req) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("users");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject query = new BasicDBObject("user_id", req.getRemoteUser());
 		query.put("favourites." + product, true);
@@ -108,9 +102,8 @@ public class Favourites {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSummaryOfAllReports(@Context final HttpServletRequest req) {
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("summary");
-		final DBCollection usersCollection = db.getCollection("users");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("summary");
+		final DBCollection usersCollection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
 		user.put("user_id", req.getRemoteUser());
@@ -152,8 +145,7 @@ public class Favourites {
 			final String build,
 			final boolean state) {
 
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("summary");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("summary");
 
 		final BasicDBObject query = new BasicDBObject("_id", product + "/" + version);
 		final BasicDBObject toBePinned = new BasicDBObject("pinned", build);

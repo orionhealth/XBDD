@@ -19,13 +19,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -34,7 +35,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.Field;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
@@ -42,12 +42,8 @@ import io.github.orionhealth.xbdd.util.SerializerUtil;
 @Path("/stats")
 public class Stats {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public Stats() {
-		this.client = new MongoDBAccessor();
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	private Integer getNumberOfState(final DBCollection collection, final DBObject query, final String state) {
 		query.put("calculatedStatus", state);
@@ -68,8 +64,7 @@ public class Stats {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getBuildStats(@BeanParam final Coordinates coordinates) {
 
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("features");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 		final String manualTag = "undefined";
 
 		final BasicDBObject query = coordinates.getQueryObject();
@@ -96,8 +91,7 @@ public class Stats {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getProductHistory(@BeanParam final Coordinates coordinates) {
 		List<String> buildList = new ArrayList<>();
-		final DB db = this.client.getDB();
-		final DBCollection collection = db.getCollection("summary");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("summary");
 		final DBObject productQuery = coordinates.getQueryObject(Field.PRODUCT, Field.MAJOR, Field.MINOR, Field.SERVICEPACK);
 		final DBCursor results = collection.find(productQuery);
 
@@ -105,7 +99,7 @@ public class Stats {
 			buildList = (List<String>) results.next().get("builds");
 		}
 
-		final DBCollection featureCollection = db.getCollection("features");
+		final DBCollection featureCollection = this.mongoLegacyDb.getCollection("features");
 
 		final List<BasicDBObject> buildDBObjectList = new ArrayList<>();
 		for (final String build : buildList) {

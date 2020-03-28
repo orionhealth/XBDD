@@ -5,24 +5,23 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.mappers.CoordinatesMapper;
 import io.github.orionhealth.xbdd.model.common.CoordinatesDto;
 import io.github.orionhealth.xbdd.model.common.Summary;
 import io.github.orionhealth.xbdd.util.Coordinates;
 
+@Repository
 public class SummaryDao {
 
-	private final MongoDBAccessor mongoDBAccessor;
-
-	public SummaryDao() {
-		this.mongoDBAccessor = new MongoDBAccessor();
-	}
+	@Autowired
+	private MongoDatabase mongoBddDatabase;
 
 	public List<Summary> getSummaries() {
 		final MongoCollection<Summary> summary = getSummaryCollection();
@@ -62,7 +61,6 @@ public class SummaryDao {
 	}
 
 	private MongoCollection<Summary> getSummaryCollection() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase();
-		return bdd.getCollection("summary", Summary.class);
+		return this.mongoBddDatabase.getCollection("summary", Summary.class);
 	}
 }

@@ -26,7 +26,9 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.mongodb.BasicDBObject;
@@ -35,29 +37,30 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.resources.MergeBuilds.Merge;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MergeBuildsTest {
 
+	@InjectMocks
+	private MergeBuilds mergeBuilds;
+
 	@Mock
-	private MongoDBAccessor client;
-	@Mock
-	private DB db;
+	private DB mongoLegacyDb;
+
 	@Mock
 	private DBCollection collection;
+
 	@Mock
 	private DBCursor cursor;
 
-	private MergeBuilds mergeBuilds;
 	private BasicDBObject feature1;
 	private BasicDBObject feature2;
 	private BasicDBObject feature3;
 
 	@Before
 	public void setup() {
-		this.mergeBuilds = new MergeBuilds();
+		MockitoAnnotations.initMocks(this);
 
 		this.feature1 = BasicDBObject
 				.parse("{'_id' : 'p1/f1','id' : 'f1','description' : '', 'name' : 'f1', 'elements' : [{'id' : 'e1','description' : '','name' : 'e1','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'passed'},'name' : 's2'}]}, {'id' : 'e2','description' : '','name' : 'e2','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'undefined'},'name' : 's2',}]}], 'coordinates' : {'product' : 'p1','major' : 1,'minor' : 1,'servicePack' : 1,'build' : 'build1','version' : '1.1.1'},'calculatedStatus' : 'undefined', 'originalAutomatedStatus' : 'undefined'}");
@@ -66,8 +69,7 @@ public class MergeBuildsTest {
 		this.feature3 = BasicDBObject
 				.parse("{'_id' : 'p1/f1','id' : 'f1','description' : '', 'name' : 'f1', 'elements' : [{'id' : 'e1','description' : '','name' : 'e1','steps' : [{'result' : {'status' : 'undefined'},'name' : 's1',},{'result' : {'status' : 'undefined'},'name' : 's2'}]}, {'id' : 'e2','description' : '','name' : 'e2','steps' : [{'result' : {'status' : 'passed'},'name' : 's1',},{'result' : {'status' : 'passed'},'name' : 's2',}]}], 'coordinates' : {'product' : 'p1','major' : 1,'minor' : 1,'servicePack' : 1,'build' : 'build3','version' : '1.1.1'},'calculatedStatus' : 'undefined', 'originalAutomatedStatus' : 'undefined'}");
 
-		when(this.client.getDB()).thenReturn(this.db);
-		when(this.db.getCollection(anyString())).thenReturn(this.collection);
+		when(this.mongoLegacyDb.getCollection(anyString())).thenReturn(this.collection);
 		when(this.collection.find(any(DBObject.class), any(DBObject.class))).thenReturn(this.cursor);
 		when(this.cursor.hasNext()).thenReturn(true, true, true, false);
 	}

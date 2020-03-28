@@ -6,25 +6,25 @@ import java.util.function.Consumer;
 
 import org.apache.commons.lang.StringUtils;
 import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.mappers.CoordinatesMapper;
 import io.github.orionhealth.xbdd.model.xbdd.XbddFeature;
 import io.github.orionhealth.xbdd.model.xbdd.XbddFeatureSummary;
 import io.github.orionhealth.xbdd.model.xbdd.XbddScenario;
 import io.github.orionhealth.xbdd.util.Coordinates;
 
+@Repository
 public class FeatureDao {
-	private final MongoDBAccessor mongoDBAccessor;
 
-	public FeatureDao() {
-		this.mongoDBAccessor = new MongoDBAccessor();
-	}
+	@Autowired
+	private MongoDatabase mongoBddDatabase;
 
 	public List<XbddFeatureSummary> getFeatureSummaries(final Coordinates coordinates) {
 		final MongoCollection<XbddFeature> features = getFeatureCollection();
@@ -70,8 +70,7 @@ public class FeatureDao {
 	}
 
 	private MongoCollection<XbddFeature> getFeatureCollection() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase();
-		return bdd.getCollection("features", XbddFeature.class);
+		return this.mongoBddDatabase.getCollection("features", XbddFeature.class);
 	}
 
 	private void updateExistingScenarios(final XbddFeature existing, final XbddFeature newFeature) {
