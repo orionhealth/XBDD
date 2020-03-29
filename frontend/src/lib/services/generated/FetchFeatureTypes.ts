@@ -44,9 +44,12 @@ export const ResponseData = t.iface([], {
   originalAutomatedStatus: 'string',
   statusLastEditedBy: t.opt(t.union('string', 'null')),
   lastEditOn: t.opt(
-    t.iface([], {
-      $date: 'string',
-    })
+    t.union(
+      t.iface([], {
+        $date: 'string',
+      }),
+      'string'
+    )
   ),
   tags: t.array(
     t.iface([], {

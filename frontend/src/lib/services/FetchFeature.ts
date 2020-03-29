@@ -39,9 +39,7 @@ interface ResponseData {
   calculatedStatus: string;
   originalAutomatedStatus: string;
   statusLastEditedBy?: string | null;
-  lastEditOn?: {
-    $date: string;
-  };
+  lastEditOn?: { $date: string } | string;
   tags: {
     name: string;
   }[];
@@ -77,6 +75,19 @@ const createScenario = (data: ScenarioResponseData): Scenario => {
   };
 };
 
+// TODO We shouldn't need this but it seems we have some varying date representations coming out of the backed.
+const parseLastEditOn = (date?: { $date: string } | string): Date | undefined => {
+  if (typeof date === 'string') {
+    return new Date(Date.parse(date));
+  }
+
+  if (typeof date?.$date === 'string') {
+    return new Date(Date.parse(date.$date));
+  }
+
+  return undefined;
+};
+
 const createFeature = (data: ResponseData): Feature => {
   return {
     id: data.id,
@@ -91,7 +102,7 @@ const createFeature = (data: ResponseData): Feature => {
     })),
     scenarios: data.elements.map(element => createScenario(element)),
     lastEditedBy: data.statusLastEditedBy || undefined,
-    lastEditedOn: data.lastEditOn?.$date ? new Date(Date.parse(data.lastEditOn.$date)) : undefined,
+    lastEditedOn: parseLastEditOn(data.lastEditOn),
   };
 };
 

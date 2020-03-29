@@ -10,47 +10,11 @@
 In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory and is available as a ENV variable in the Dockerfile.
 As this solution is built using docker, the Dockerfile in the `package` directory will need to be modified for any of the following cusomisations.
 
-### SSL/TLS
-
-The XBDD application requires a secure connection. This can be setup using the Tomcat SSL connector.
-
-You must first have configured a keystore. You can [create one](http://java.dzone.com/articles/setting-ssl-tomcat-5-minutes) or skip ahead if you have an existing one.
-
-Open `$CATALINA_BASE/conf/server.xml` and uncomment the 8443 connector block. Add the `keystoreFile` and `keystorePass` attributes, e.g.:
-
-```xml
-<Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
-    maxThreads="150" scheme="https" secure="true" clientAuth="false"
-    sslProtocol="TLS"
-    keystoreFile="FILE_LOCATION"
-    keystorePass="PASSWORD_HERE" />
-```
-
-Replace `FILE_LOCATION` with the location of your security certificate and `PASSWORD_HERE` with the password.
+### HTTPS
 
 ### User Authentication
 
 #### Local Authentication
-
-To get started quickly without configuring enterprise authentication, it is possible to use Tomcat's default local UserDatabaseRealm with XBDD.
-
-Configure a user by editing `$CATALINA_BASE/conf/tomcat-users.xml` and adding a `user` element within the `tomcat-users` element, e.g.:
-
-```xml
-<user username="xbdd" password="xbdd"/>
-```
-
-To make a user an administrator, in `$CATALINA_BASE/conf/tomcat-users.xml` first add the admin role:
-
-```xml
-<role rolename="admin"/>
-```
-
-Then assign a user that role, e.g.:
-
-```xml
-<user username="xbdd-admin" password="something" roles="admin" />
-```
 
 #### LDAP
 
@@ -72,16 +36,7 @@ For example:
 
 By default XBDD will connect to MongoDB at its default address of `localhost:27017`.
 
-To configure an alternative server or to add authentication, add the following parameters to `$CATALINA_BASE/conf/context.xml`
-
-If you are deploying a full solution via the docker-compose setup, modify the `package/conf/context.xml` to your needs.
-
-```xml
-    <Parameter name="xbdd.mongo.hostname" value="<hostname>"/>
-    <Parameter name="xbdd.mongo.port" value="<port>"/>
-    <Parameter name="xbdd.mongo.username" value="<username>"/>
-    <Parameter name="xbdd.mongo.password" value="<password>"/>
-```
+To configure an alternative server or to change the admin user, modify `backen/src/main/resources/application.properties` with the required settings.
 
 #### A word on securing the connection to MongoDB
 

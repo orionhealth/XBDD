@@ -6,10 +6,13 @@ import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icon
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-import ConfirmationDialog from 'modules/utils/ConfirmationDialog';
+import produce from 'immer';
+import { dispatch } from 'rxjs/internal/observable/range';
+
+import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
 import { setTagAssignmentData, setIgnoredTag } from 'lib/rest/Rest';
 import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
-import FeatureFilterButtons from './FeatureFilterButtons';
+import FeatureFilterButtons from './FeatureFilterButtons/FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
 import TagList from './TagViewFeatureList/TagList';
 import Loading from 'modules/loading/Loading';
@@ -17,8 +20,6 @@ import fetchSimpleFeaturesByTags from 'lib/services/FetchSimpleFeaturesByTags';
 import fetchSimpleFeatures from 'lib/services/FetchSimpleFeatures';
 import fetchTagAssignments from 'lib/services/FetchTagAssignments';
 import fetchTagsIgnored from 'lib/services/FetchTagsIgnored';
-import produce from 'immer';
-import { dispatch } from 'rxjs/internal/observable/range';
 import { receivedTagsIgnored, tagIgnoreToggled } from 'xbddReducer';
 
 class FeatureListContainer extends Component {
