@@ -1,10 +1,16 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.mappers.CoordinatesMapper;
 import io.github.orionhealth.xbdd.mappers.FeatureMapper;
 import io.github.orionhealth.xbdd.model.common.Stats;
@@ -14,17 +20,11 @@ import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.StatusHelper;
 import io.github.orionhealth.xbdd.util.Statuses;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
+@Repository
 public class StatsDao {
 
-	private final MongoDBAccessor mongoDBAccessor;
-
-	public StatsDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
-	}
+	@Autowired
+	private MongoDatabase mongoBddDatabase;
 
 	public void updateStatsForFeatures(final Coordinates coordinates, final List<XbddFeature> features) {
 		final MongoCollection<Stats> statsCollection = getStatsCollection();
@@ -51,8 +51,7 @@ public class StatsDao {
 	}
 
 	private MongoCollection<Stats> getStatsCollection() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
-		return bdd.getCollection("reportStats", Stats.class);
+		return this.mongoBddDatabase.getCollection("reportStats", Stats.class);
 	}
 
 	private HashMap<String, Integer> getNewStatsSummary() {

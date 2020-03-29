@@ -1,27 +1,26 @@
 package io.github.orionhealth.xbdd.persistence;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
-import io.github.orionhealth.xbdd.model.common.TestingTips;
-import io.github.orionhealth.xbdd.util.Coordinates;
-import io.github.orionhealth.xbdd.util.TestingTipUtil;
-
-import org.bson.conversions.Bson;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+
+import io.github.orionhealth.xbdd.model.common.TestingTips;
+import io.github.orionhealth.xbdd.util.Coordinates;
+import io.github.orionhealth.xbdd.util.TestingTipUtil;
+
+@Repository
 public class TestingTipsDao {
 
-	private final MongoDBAccessor mongoDBAccessor;
-
-	public TestingTipsDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
-	}
+	@Autowired
+	private MongoDatabase mongoBddDatabase;
 
 	public Map<String, TestingTips> getLatestTestingTips(final Coordinates coordinates) {
 		final MongoCollection<TestingTips> collection = getTestingTipsColletions();
@@ -31,8 +30,7 @@ public class TestingTipsDao {
 				Filters.eq("coordinates.product", coordinates.getProduct()),
 				Filters.lte("coordinates.major", coordinates.getMajor()),
 				Filters.lte("coordinates.minor", coordinates.getMinor()),
-				Filters.lte("coordinates.servicePack", coordinates.getServicePack())
-		);
+				Filters.lte("coordinates.servicePack", coordinates.getServicePack()));
 
 		final Consumer<TestingTips> addToRtn = tt -> {
 			final String key = TestingTipUtil.getMapKey(tt);
@@ -65,7 +63,6 @@ public class TestingTipsDao {
 	}
 
 	private MongoCollection<TestingTips> getTestingTipsColletions() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
-		return bdd.getCollection("testingTips", TestingTips.class);
+		return this.mongoBddDatabase.getCollection("testingTips", TestingTips.class);
 	}
 }

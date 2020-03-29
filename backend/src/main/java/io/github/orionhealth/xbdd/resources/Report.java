@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
@@ -37,8 +36,8 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.mappers.FeatureMapper;
 import io.github.orionhealth.xbdd.model.common.Summary;
 import io.github.orionhealth.xbdd.model.common.Tag;
@@ -59,22 +58,23 @@ import io.github.orionhealth.xbdd.util.TestingTipUtil;
 @Path("/reports")
 public class Report {
 
-	private final FeatureDao featureDao;
-	private final ImageDao imageDao;
-	private final SummaryDao summaryDao;
-	private final StatsDao statsDao;
-	private final UsersDao usersDao;
-	private final TestingTipsDao testingTipsDao;
+	@Autowired
+	private FeatureDao featureDao;
 
-	@Inject
-	public Report(final MongoDBAccessor client) {
-		this.featureDao = new FeatureDao(client);
-		this.imageDao = new ImageDao(client);
-		this.summaryDao = new SummaryDao(client);
-		this.statsDao = new StatsDao(client);
-		this.usersDao = new UsersDao(client);
-		this.testingTipsDao = new TestingTipsDao(client);
-	}
+	@Autowired
+	private ImageDao imageDao;
+
+	@Autowired
+	private SummaryDao summaryDao;
+
+	@Autowired
+	private StatsDao statsDao;
+
+	@Autowired
+	private UsersDao usersDao;
+
+	@Autowired
+	private TestingTipsDao testingTipsDao;
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}")
