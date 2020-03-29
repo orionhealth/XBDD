@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
+
 import { TagName } from 'models/Tag';
 import TagsIgnored from 'models/TagsIgnored';
 
@@ -13,7 +14,7 @@ const setTagsIgnored: CaseReducer<TagsIgnoredState, ReceivedTagsIgnoredAction> =
 
 const toggleTagIgnore: CaseReducer<TagsIgnoredState, TagIgnoreToggledAction> = (state, action) => {
   const tagName = action.payload;
-  state.tagsIgnored[tagName] = !state.tagsIgnored[tagName];
+  state[tagName] = !state[tagName];
   return state;
 };
 
