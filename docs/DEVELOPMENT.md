@@ -15,9 +15,9 @@ This will give you a docker container named xbdd_mongo_dev which is accessible a
 
 ### Running XBDD
 
-1. Import the top level into either IntelliJ or Eclipse
+1. Import the top level into Eclipse (Intellij Community doesn't have the web server capabilities to run this properly).
 1. Run `mvn clean install` in the top level directory
-1. Create a run target that executes `tomcat7:run` in the backend directory (this starts the backend server)
+1. There is a Spring Boot Run Configuration called `Xbdd Run` that starts the backend.
 1. In the `frontend` directory run `npm start`
 1. Xbdd will be available at http://localhost:3000
 
