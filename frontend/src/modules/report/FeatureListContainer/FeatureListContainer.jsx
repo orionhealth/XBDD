@@ -56,7 +56,7 @@ class FeatureListContainer extends Component {
       .then(data => {
         this.setState(prevState => ({
           ...prevState,
-          tagList: data[0] || [], // :Tag
+          tagList: data[0] || [], // :Tag[]
           simpleFeatureList: data[1] || [], // :Feature[]
           tagAssignments: data[2] || {}, //:TagAssignments
         }));
