@@ -1,11 +1,12 @@
 import { doRequest, Method } from 'lib/rest/RestRequests';
-import FetchFeatureTypes from './generated/FetchFeatureTypes';
+import FetchSimpleFeaturesByTagsTypes from './generated/FetchSimpleFeaturesByTagsTypes';
+import FetchSimpleFeaturesTypes from './generated/FetchSimpleFeaturesTypes';
 import Tag from 'models/Tag';
-import { createSimpleFeatures, SimplefeatureResponseData } from './FetchSimpleFeatures';
+import { createSimpleFeatures, SimpleFeatureResponseData } from './FetchSimpleFeatures';
 
 interface ResponseDataElement {
   tag: string;
-  features: SimplefeatureResponseData[];
+  features: SimpleFeatureResponseData[];
 }
 type ResponseData = ResponseDataElement[];
 
@@ -22,9 +23,16 @@ const createTagViewData = (data: ResponseData): Tag[] => {
 
 const fetchSimpleFeaturesByTags = (product: string, version: string, build: string): Promise<Tag[] | void> => {
   const url = `/tagview/featureTagIndex/${product}/${version}/${build}`;
-  return doRequest(Method.GET, url, 'rest.error.featuresByTag', null, FetchFeatureTypes, (responseData: ResponseData) => {
-    return createTagViewData(responseData);
-  });
+  return doRequest(
+    Method.GET,
+    url,
+    'rest.error.featuresByTag',
+    null,
+    [FetchSimpleFeaturesTypes, FetchSimpleFeaturesByTagsTypes],
+    (responseData: ResponseData) => {
+      return createTagViewData(responseData);
+    }
+  );
 };
 
 export default fetchSimpleFeaturesByTags;

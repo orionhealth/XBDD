@@ -4,7 +4,7 @@
 import * as t from 'ts-interface-checker';
 // tslint:disable:object-literal-key-quotes
 
-export const SimplefeatureResponseData = t.iface([], {
+export const SimpleFeatureResponseData = t.iface([], {
   id: 'string',
   _id: 'string',
   name: 'string',
@@ -13,13 +13,13 @@ export const SimplefeatureResponseData = t.iface([], {
       name: 'string',
     })
   ),
-  calculatedStatus: 'Status',
+  calculatedStatus: 'string',
 });
 
-export const ResponseData = t.array('SimplefeatureResponseData');
+export const ResponseData = t.array('SimpleFeatureResponseData');
 
 const exportedTypeSuite: t.ITypeSuite = {
-  SimplefeatureResponseData,
+  SimpleFeatureResponseData,
   ResponseData,
 };
 export default exportedTypeSuite;

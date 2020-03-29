@@ -6,7 +6,7 @@ import * as t from 'ts-interface-checker';
 
 export const ResponseDataElement = t.iface([], {
   tag: 'string',
-  features: t.array('SimplefeatureResponseData'),
+  features: t.array('SimpleFeatureResponseData'),
 });
 
 export const ResponseData = t.array('ResponseDataElement');

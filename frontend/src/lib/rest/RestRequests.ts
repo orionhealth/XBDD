@@ -30,8 +30,9 @@ const timeout = (promise: Promise<Response>, ms = DEFAULT_TIMEOUT): Promise<Resp
   return Promise.race([timerPromise, promise]);
 };
 
-const validateResponseData = (responseData: unknown, type: ITypeSuite): void => {
-  createCheckers(type).ResponseData.check(responseData);
+const validateResponseData = (responseData: unknown, type: ITypeSuite | ITypeSuite[]): void => {
+  const types = Array.isArray(type) ? type : [type];
+  createCheckers(...types).ResponseData.check(responseData);
 };
 
 const call = <T>(method: Method, path: string, data: unknown): Promise<T | void> => {
@@ -63,7 +64,7 @@ export function doRequest<T, R>(
   path: string,
   errorMessage: string,
   data: unknown,
-  type: ITypeSuite,
+  type: ITypeSuite | ITypeSuite[],
   onSuccess: (responseData: T) => R
 ): Promise<R | void>;
 
@@ -72,7 +73,7 @@ export function doRequest<T, R>(
   path: string,
   errorMessage = `rest.error.${method.toLowerCase()}`,
   data: unknown,
-  type?: ITypeSuite,
+  type?: ITypeSuite | ITypeSuite[],
   onSuccess?: (responseData: T) => R
 ): Promise<T | R | void> {
   return call<T>(method, path, data)
