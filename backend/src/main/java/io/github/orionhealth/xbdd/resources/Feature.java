@@ -16,6 +16,7 @@
 package io.github.orionhealth.xbdd.resources;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -146,6 +147,11 @@ public class Feature {
 		final DBObject feature = tips.findOne(example);
 		if (feature != null) {
 			Feature.embedTestingTips(feature, coordinates, this.mongoLegacyDb);
+
+			// Ensure tags array is always present in the response, so the frontend receives [] instead of having to deal with null.
+			if (feature.get("tags") == null) {
+				feature.put("tags", Collections.emptyList());
+			}
 		}
 		return Response.ok(SerializerUtil.serialise(feature)).build();
 	}
