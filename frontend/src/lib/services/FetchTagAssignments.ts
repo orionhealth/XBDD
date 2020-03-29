@@ -4,7 +4,7 @@ import FetchTagAssignmentsTypes from './generated/FetchTagAssignmentsTypes';
 
 interface ResponseDataElement {
   tag: string;
-  userName: string;
+  userName?: string;
 }
 type ResponseData = ResponseDataElement[];
 

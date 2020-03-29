@@ -1,6 +1,7 @@
 import React, { FC, MouseEvent } from 'react';
 import { makeStyles, createStyles, Avatar } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
+
 import { UserName } from 'models/User';
 
 const useStyles = makeStyles(() =>
@@ -21,7 +22,7 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-  userName: UserName;
+  userName?: UserName;
   isIgnored: boolean;
   onClick(event: MouseEvent): void;
 }

@@ -6,7 +6,7 @@ import * as t from 'ts-interface-checker';
 
 export const ResponseDataElement = t.iface([], {
   tag: 'string',
-  userName: 'string',
+  userName: t.opt('string'),
 });
 
 export const ResponseData = t.array('ResponseDataElement');
