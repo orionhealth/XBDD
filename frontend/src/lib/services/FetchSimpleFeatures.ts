@@ -1,20 +1,20 @@
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import SimpleFeature from 'models/SimpleFeature';
-import Status, { getStatusFromString } from 'models/Status';
+import { getStatusFromString } from 'models/Status';
 import FetchSimpleFeaturesTypes from './generated/FetchSimpleFeaturesTypes';
 
-export interface SimplefeatureResponseData {
+export interface SimpleFeatureResponseData {
   id: string;
   _id: string;
   name: string;
   tags: {
     name: string;
   }[];
-  calculatedStatus: Status;
+  calculatedStatus: string;
 }
-type ResponseData = SimplefeatureResponseData[];
+type ResponseData = SimpleFeatureResponseData[];
 
-export const createSimpleFeatures = (data: SimplefeatureResponseData[]): SimpleFeature[] => {
+export const createSimpleFeatures = (data: SimpleFeatureResponseData[]): SimpleFeature[] => {
   return data.map(item => ({
     ...item,
     tags: item.tags.map(tag => ({
