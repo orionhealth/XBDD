@@ -1,24 +1,23 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.model.common.Users;
 
-import org.bson.conversions.Bson;
-
-import java.util.ArrayList;
-import java.util.List;
-
+@Repository
 public class UsersDao {
 
-	private final MongoDBAccessor mongoDBAccessor;
-
-	public UsersDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
-	}
+	@Autowired
+	private MongoDatabase mongoBddDatabase;
 
 	public List<String> getUserFavourites(final String userId) {
 		final MongoCollection<Users> users = getUsersColletions();
@@ -39,7 +38,6 @@ public class UsersDao {
 	}
 
 	private MongoCollection<Users> getUsersColletions() {
-		final MongoDatabase bdd = this.mongoDBAccessor.getDatabase("bdd");
-		return bdd.getCollection("users", Users.class);
+		return this.mongoBddDatabase.getCollection("users", Users.class);
 	}
 }

@@ -15,27 +15,37 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import com.mongodb.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
-import io.github.orionhealth.xbdd.util.Coordinates;
-import io.github.orionhealth.xbdd.util.SerializerUtil;
-
-import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+
+import io.github.orionhealth.xbdd.util.Coordinates;
+import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/tagview")
 public class TagView {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public TagView(final MongoDBAccessor client) {
-		this.client = client;
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	private BasicDBList getTagList(final DBCursor results) {
 		final Map<String, List<DBObject>> featureTagMapping = new HashMap<>();
@@ -105,8 +115,7 @@ public class TagView {
 			@QueryParam("viewUndefined") final Integer viewUndefined, @QueryParam("viewSkipped") final Integer viewSkipped,
 			@QueryParam("start") final String start) {
 
-		final DB db = this.client.getDB("bdd");
-		final DBCollection featuresCollection = db.getCollection("features");
+		final DBCollection featuresCollection = this.mongoLegacyDb.getCollection("features");
 
 		final BasicDBObject query = QueryBuilder.getInstance().buildFilterQuery(coordinates, searchText, viewPassed,
 				viewFailed, viewUndefined, viewSkipped, start);

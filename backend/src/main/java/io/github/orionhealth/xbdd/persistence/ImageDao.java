@@ -1,28 +1,27 @@
 package io.github.orionhealth.xbdd.persistence;
 
+import java.util.UUID;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
 import io.github.orionhealth.xbdd.model.junit.JUnitEmbedding;
 import io.github.orionhealth.xbdd.util.Coordinates;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
-
-import java.util.UUID;
-
+@Repository
 public class ImageDao {
 
 	private static final Logger LOGGER = Logger.getLogger(ImageDao.class);
 
-	private final MongoDBAccessor mongoDBAccessor;
-
-	public ImageDao(final MongoDBAccessor mongoDBAccessor) {
-		this.mongoDBAccessor = mongoDBAccessor;
-	}
+	@Autowired
+	private DB mongoLegacyGrid;
 
 	public String saveImageAndReturnFilename(final JUnitEmbedding embedding, final Coordinates coordinates, final String featureId,
 			final String scenarioId) {
@@ -52,7 +51,6 @@ public class ImageDao {
 	}
 
 	private GridFS getGridFS() {
-		final DB grid = this.mongoDBAccessor.getDB("grid");
-		return new GridFS(grid);
+		return new GridFS(this.mongoLegacyGrid);
 	}
 }

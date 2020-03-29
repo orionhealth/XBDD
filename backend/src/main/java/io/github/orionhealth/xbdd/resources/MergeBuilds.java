@@ -15,39 +15,39 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import com.mongodb.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
-import io.github.orionhealth.xbdd.model.simple.Feature;
-import io.github.orionhealth.xbdd.util.MultipleBuildsFeatureMergeHelper;
-
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+
+import io.github.orionhealth.xbdd.model.simple.Feature;
+import io.github.orionhealth.xbdd.util.MultipleBuildsFeatureMergeHelper;
 
 @Path("rest/reports/multiple")
 public class MergeBuilds {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public MergeBuilds(final MongoDBAccessor client) {
-		this.client = client;
-	}
+	@Autowired
+	private DB mongoLegacyDb;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public DBObject getMergedBuilds(final Merge merge) {
 		// Get features collection
-		final DB db = this.client.getDB("bdd");
-		final DBCollection collection = db.getCollection("features");
+		final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 
 		// A list of all the features in every build, where features have only the attributes the client requires
 		final List<Feature> featureList = new ArrayList<>();
@@ -55,8 +55,8 @@ public class MergeBuilds {
 		// query wrapper object
 		final List<DBObject> or = new ArrayList<>();
 
-		for (int i = 0; i < merge.builds.size(); i++) {
-			final Pattern regex = Pattern.compile("^" + merge.product + "/" + merge.version + "/" + (merge.builds.get(i))
+		for (final String element : merge.builds) {
+			final Pattern regex = Pattern.compile("^" + merge.product + "/" + merge.version + "/" + (element)
 					+ "/");
 			or.add(new BasicDBObject("_id", regex));
 		}

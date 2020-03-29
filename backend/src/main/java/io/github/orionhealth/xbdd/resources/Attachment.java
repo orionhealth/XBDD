@@ -15,35 +15,30 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import com.mongodb.DB;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSDBFile;
+import java.io.IOException;
 
-import io.github.orionhealth.xbdd.factory.MongoDBAccessor;
-
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mongodb.DB;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
 
 @Path("/attachment")
 public class Attachment {
 
-	private final MongoDBAccessor client;
-
-	@Inject
-	public Attachment(final MongoDBAccessor client) {
-		this.client = client;
-	}
+	@Autowired
+	private DB mongoLegacyGrid;
 
 	@GET
 	@Path("/{id}")
 	public Response getAttachment(@PathParam("id") final String id) throws IOException {
-		final DB db = this.client.getDB("grid");
-		final GridFS gridFS = new GridFS(db);
+		final GridFS gridFS = new GridFS(this.mongoLegacyGrid);
 		final GridFSDBFile file = gridFS.findOne(id);
 		// log.info(file);
 		if (file == null) {
