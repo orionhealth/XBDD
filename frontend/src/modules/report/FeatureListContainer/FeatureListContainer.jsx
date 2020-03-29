@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import produce from 'immer';
-import { dispatch } from 'rxjs/internal/observable/range';
+import { bindActionCreators } from 'redux';
 
 import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
 import { setTagAssignmentData, setIgnoredTag } from 'lib/rest/Rest';
@@ -20,7 +20,7 @@ import fetchSimpleFeaturesByTags from 'lib/services/FetchSimpleFeaturesByTags';
 import fetchSimpleFeatures from 'lib/services/FetchSimpleFeatures';
 import fetchTagAssignments from 'lib/services/FetchTagAssignments';
 import fetchTagsIgnored from 'lib/services/FetchTagsIgnored';
-import { receivedTagsIgnored, tagIgnoreToggled } from 'xbddReducer';
+import { receivedTagsIgnored, tagIgnoreToggled } from 'redux/TagsIgnoredReducer';
 
 class FeatureListContainer extends Component {
   constructor(props) {
@@ -45,7 +45,7 @@ class FeatureListContainer extends Component {
   }
 
   componentDidMount() {
-    const { product, version, build } = this.props;
+    const { product, version, build, dispatchReceivedTagsIgnored } = this.props;
     this.setState({ loading: true });
     Promise.all([
       fetchSimpleFeaturesByTags(product, version, build),
@@ -54,13 +54,14 @@ class FeatureListContainer extends Component {
       fetchTagsIgnored(product),
     ])
       .then(data => {
-        this.setState({
-          tagList: data[0], // :Tag
-          simpleFeatureList: data[1], // :Feature[]
-          tagAssignments: data[2], //:TagAssignments
-        });
-        const tagsIgnored = data[3]; //:TagsIgnored
-        dispatch(receivedTagsIgnored, tagsIgnored);
+        this.setState(prevState => ({
+          ...prevState,
+          tagList: data[0] || [], // :Tag
+          simpleFeatureList: data[1] | [], // :Feature[]
+          tagAssignments: data[2] || {}, //:TagAssignments
+        }));
+        const tagsIgnored = data[3] || {}; //:TagsIgnored
+        dispatchReceivedTagsIgnored(tagsIgnored);
       })
       .finally(() => this.setState({ loading: false }));
   }
@@ -117,7 +118,8 @@ class FeatureListContainer extends Component {
   };
 
   setIgnoreStateForTag(tagName) {
-    dispatch(tagIgnoreToggled, tagName);
+    const { dispatchTagIgnoreToggled } = this.props;
+    dispatchTagIgnoreToggled(tagName);
   }
 
   filterTags(userName) {
@@ -255,10 +257,20 @@ FeatureListContainer.propTypes = {
   selectedFeatureId: PropTypes.string,
   handleFeatureSelected: PropTypes.func.isRequired,
   classes: PropTypes.shape({}),
+  dispatchReceivedTagsIgnored: PropTypes.func.isRequired,
+  dispatchTagIgnoreToggled: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   userName: state.app.user,
 });
 
-export default connect(mapStateToProps)(withTranslation()(withStyles(featureListContainerStyles)(FeatureListContainer)));
+const mapDispatchToProps = dispatch => ({
+  dispatchReceivedTagsIgnored: bindActionCreators(receivedTagsIgnored, dispatch),
+  dispatchTagIgnoreToggled: bindActionCreators(tagIgnoreToggled, dispatch),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTranslation()(withStyles(featureListContainerStyles)(FeatureListContainer)));
