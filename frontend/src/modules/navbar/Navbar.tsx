@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
 import { RootStore } from 'rootReducer';
-import { setUser, selectProductBuildAndVersion } from '../../xbddReducer';
+import { setUser } from '../../xbddReducer';
 import LoginDialog from './LoginDialog';
 import { useNavbarStyles } from './styles/NavbarStyles';
 
@@ -36,7 +36,6 @@ const Navbar: FC = () => {
           <Button
             className={classes.logo}
             onClick={(): void => {
-              dispatch(selectProductBuildAndVersion(null));
               history.push('/');
             }}
           >
