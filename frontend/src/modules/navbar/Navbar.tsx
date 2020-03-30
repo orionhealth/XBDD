@@ -2,6 +2,7 @@ import React, { useState, FC } from 'react';
 import { AppBar, Toolbar, Button, Avatar, Box } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 
 import { RootStore } from 'rootReducer';
 import { setUser, selectProductBuildAndVersion } from '../../xbddReducer';
@@ -16,10 +17,16 @@ const Navbar: FC = () => {
   const loggedInUser = useSelector((state: RootStore) => state.app.user);
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const onLogin = (user: string, password: string, remember: boolean): void => {
     dispatch(setUser({ user, remember }));
     setOpenDialog(false);
+  };
+
+  const onLogout = (): void => {
+    dispatch(setUser(null));
+    history.push('/');
   };
 
   return (
@@ -30,6 +37,7 @@ const Navbar: FC = () => {
             className={classes.logo}
             onClick={(): void => {
               dispatch(selectProductBuildAndVersion(null));
+              history.push('/');
             }}
           >
             {'XBDD'}
@@ -40,7 +48,7 @@ const Navbar: FC = () => {
             className={classes.loginButton}
             color="secondary"
             onClick={(): void => {
-              loggedInUser ? dispatch(setUser(null)) : setOpenDialog(true);
+              loggedInUser ? onLogout() : setOpenDialog(true);
             }}
           >
             {loggedInUser ? t('navbar.logout') : t('navbar.login')}
