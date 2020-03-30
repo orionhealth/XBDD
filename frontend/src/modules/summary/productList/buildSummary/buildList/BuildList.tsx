@@ -39,7 +39,10 @@ const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
       }
       node = node.parentNode;
     }
-    history.push(`/reports/${product.name}/${getString(version)}/${build}`);
+    const productParam = encodeURIComponent(product.name);
+    const versionParam = encodeURIComponent(getString(version));
+    const buildParam = encodeURIComponent(build);
+    history.push(encodeURI(`/reports/${productParam}/${versionParam}/${buildParam}`));
   };
 
   const renderBuildListByPin = (buildList: string[], isPinned: boolean): ReactNode => (
