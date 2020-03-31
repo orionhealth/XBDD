@@ -5,22 +5,12 @@ interface UserState {
   user: string | null;
 }
 
-interface ProductVersionBuildState {
-  product: string | null;
-  version: string | null;
-  build: string | null;
-}
-
 type UserAction = PayloadAction<{ user: string; remember: boolean } | null>;
-type ProductVersionBuildAction = PayloadAction<ProductVersionBuildState | null>;
 
-type XbddState = ProductVersionBuildState & UserState;
+type XbddState = UserState;
 
 const getInitialState = (): XbddState => ({
   user: getUserFromLocalStorage(),
-  product: null,
-  version: null,
-  build: null,
 });
 
 const userReducer: CaseReducer<XbddState, UserAction> = (state, action) => {
@@ -37,24 +27,14 @@ const userReducer: CaseReducer<XbddState, UserAction> = (state, action) => {
   }
 };
 
-const selectProductBuildAndVersionReducer: CaseReducer<XbddState, ProductVersionBuildAction> = (state, action) => {
-  if (action.payload) {
-    const { product, version, build } = action.payload;
-    return { ...state, product, version, build };
-  }
-
-  return { ...state, product: null, version: null, build: null };
-};
-
 const { actions, reducer } = createSlice({
   name: 'xbdd',
   initialState: getInitialState(),
   reducers: {
     setUser: userReducer,
-    selectProductBuildAndVersion: selectProductBuildAndVersionReducer,
   },
 });
 
-export const { setUser, selectProductBuildAndVersion } = actions;
+export const { setUser } = actions;
 
 export default reducer;

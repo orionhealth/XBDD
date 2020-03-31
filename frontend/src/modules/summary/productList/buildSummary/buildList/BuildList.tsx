@@ -2,10 +2,9 @@ import React, { FC, useState, ReactNode } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 
-import { selectProductBuildAndVersion } from 'xbddReducer';
 import Version, { getString, getUnpinnedBuildList } from 'models/Version';
 import { useBuildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
@@ -20,7 +19,7 @@ interface Props {
 const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
   const { t } = useTranslation();
   const classes = useBuildListStyles();
-  const dispatch = useDispatch();
+  const history = useHistory();
   const [expanded, setExpanded] = useState(false);
 
   const pinnedBuildList = version.pinnedBuildList;
@@ -40,7 +39,10 @@ const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
       }
       node = node.parentNode;
     }
-    dispatch(selectProductBuildAndVersion({ product: product.name, version: getString(version), build }));
+    const productParam = encodeURIComponent(product.name);
+    const versionParam = encodeURIComponent(getString(version));
+    const buildParam = encodeURIComponent(build);
+    history.push(encodeURI(`/reports/${productParam}/${versionParam}/${buildParam}`));
   };
 
   const renderBuildListByPin = (buildList: string[], isPinned: boolean): ReactNode => (
