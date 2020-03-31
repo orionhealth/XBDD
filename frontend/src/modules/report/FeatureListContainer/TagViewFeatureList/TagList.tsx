@@ -1,17 +1,21 @@
 import React, { FC } from 'react';
 import { Card, List } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-
 import { tagListStyles } from './styles/TagListStyles';
 import TagListItem from './TagListItem';
 import Tag from 'models/Tag';
 import Status from 'models/Status';
+import TagAssignments from 'models/TagAssignments';
+import { useSelector } from 'react-redux';
+import { RootStore } from 'rootReducer';
+import { UserName } from 'models/User';
 
 interface Props extends WithStyles {
-  loggedInUserName: string;
+  loggedInUserName: UserName;
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tagList: Tag[];
+  tagAssignments: TagAssignments;
   restId: string;
   selectedFeatureId: string;
   selectedStatus: Status;
@@ -25,6 +29,7 @@ const TagList: FC<Props> = ({
   isEditMode,
   isAssignedTagsView,
   tagList,
+  tagAssignments,
   restId,
   selectedFeatureId,
   selectedStatus,
@@ -33,6 +38,7 @@ const TagList: FC<Props> = ({
   handleTagIgnore,
   classes,
 }) => {
+  const tagsIgnored = useSelector((state: RootStore) => state.tagsIgnored);
   return (
     <Card raised className={classes.tagList}>
       <List component="ul">
@@ -42,6 +48,8 @@ const TagList: FC<Props> = ({
             isEditMode={isEditMode}
             isAssignedTagsView={isAssignedTagsView}
             tag={tag}
+            tagAssignments={tagAssignments}
+            tagsIgnored={tagsIgnored}
             key={tag.name}
             restId={restId}
             selectedFeatureId={selectedFeatureId}

@@ -61,6 +61,11 @@ public class TagView {
 					featureTagMapping.put(tagName, value);
 					tagList.add(tagName);
 					value.add(doc);
+
+					// Ensure tags array is always present in the response, so the frontend receives [] instead of having to deal with null.
+					if (doc.get("tags") == null) {
+						doc.put("tags", Collections.emptyList());
+					}
 				}
 			}
 		}

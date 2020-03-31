@@ -5,23 +5,27 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
-
 import { tagListItemStyles } from './styles/TagListStyles';
 import TagViewFeatureList from './TagViewFeatureList';
 import Tag from 'models/Tag';
 import Status from 'models/Status';
 import TagAvatar from './TagAvatar';
+import TagAssignments from 'models/TagAssignments';
+import TagsIgnored from 'models/TagsIgnored';
+import { UserName } from 'models/User';
 
 interface Props extends WithStyles {
-  loggedInUserName: string;
+  loggedInUserName: UserName;
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tag: Tag;
+  tagAssignments: TagAssignments;
+  tagsIgnored: TagsIgnored;
   restId: string;
   selectedFeatureId: string;
   selectedStatus: Status;
   handleFeatureSelected(): void;
-  handleTagAssigned(restId: string, name: string, loggedInUserName: string, userName?: string): void;
+  handleTagAssigned(restId: string, name: string, loggedInUserName: UserName, userName?: UserName): void;
   handleTagIgnore(productId: string, name: string): void;
 }
 
@@ -30,6 +34,8 @@ const TagListItem: FC<Props> = ({
   isEditMode,
   isAssignedTagsView,
   tag,
+  tagAssignments,
+  tagsIgnored,
   selectedFeatureId,
   restId,
   selectedStatus,
@@ -40,7 +46,9 @@ const TagListItem: FC<Props> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
-  const { userName, name, isIgnored } = tag;
+  const { name } = tag;
+  const userName = tagAssignments[name];
+  const isIgnored = tagsIgnored[name];
 
   if (isAssignedTagsView && isIgnored) {
     return null;
@@ -63,7 +71,7 @@ const TagListItem: FC<Props> = ({
           <FontAwesomeIcon icon={isIgnored ? faMinusSquare : faSquare} className={classes.checkboxIcons} onClick={onTagIgnoreClick} />
         )}
         <ListItemText>{tag.name}</ListItemText>
-        <TagAvatar tag={tag} onClick={onAvatarClick} />
+        <TagAvatar userName={userName} isIgnored={isIgnored} onClick={onAvatarClick} />
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} timeout="auto" unmountOnExit>

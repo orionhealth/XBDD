@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
-
 import { getUserFromLocalStorage, putUserInLocalStorage, clearUserFromLocalStorage } from 'lib/services/localStorageService';
 
 interface UserState {

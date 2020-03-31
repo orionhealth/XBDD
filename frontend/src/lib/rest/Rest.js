@@ -15,11 +15,6 @@ export const pinABuild = (project, major, minor, servicePack, build) =>
 export const unPinABuild = (project, major, minor, servicePack, build) =>
   doDeleteRequest(`/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, 'rest.error.unpin');
 
-export const getFeatureListByTagData = (product, version, build) =>
-  doGetRequest(`/tagview/featureTagIndex/${product}/${version}/${build}`, 'rest.error.featuresByTag');
-
-export const getSimpleFeatureListData = (product, version, build) => doGetRequest(`/reports/featureIndex/${product}/${version}/${build}`);
-
 export const getRollUpData = (product, version, feature) => doGetRequest(`/feature/rollup/${product}/${version}/${feature}`);
 
 // path should be of type StepStatusPatch
@@ -31,11 +26,7 @@ export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/feature/s
 // patch should be of type InputFieldPatch
 export const updateComments = (featureId, patch) => doPutRequest(`/feature/comments/${featureId}`, patch);
 
-export const getTagAssignmentData = (product, version, build) => doGetRequest(`/user/tagAssignment/${product}/${version}/${build}`);
-
 // patch should be of type TagAssignment
 export const setTagAssignmentData = (restId, patch) => doPutRequest(`/user/tagAssignment/${restId}`, patch);
-
-export const getIgnoredTags = product => doGetRequest(`/user/ignoredTags/${product}`);
 
 export const setIgnoredTag = (product, patch) => doPutRequest(`/user/ignoredTags/${product}`, patch);
