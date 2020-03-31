@@ -55,7 +55,7 @@
     "react-dom": "^16.13.0",
     "react-i18next": "^11.3.4",
     "react-redux": "^7.2.0",
-    "react-scripts": "^3.4.0",
+    "react-scripts": "^3.4.1",
     "redux": "^4.0.5",
     "rxjs": "^6.5.4",
     "ts-interface-checker": "^0.1.10",
