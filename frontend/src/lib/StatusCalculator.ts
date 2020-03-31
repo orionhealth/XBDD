@@ -19,7 +19,9 @@ export const calculateFeatureStatus = (feature: Feature): Status => {
 
 const calculateStatus = (scenario: ScenarioDetails, getStepStatus: (step: Step) => Status): Status => {
   const statuses: Status[] = [];
-  statuses.push(...scenario.backgroundSteps.map(getStepStatus));
+  if (scenario.backgroundSteps) {
+    statuses.push(...scenario.backgroundSteps.map(getStepStatus));
+  }
   statuses.push(...scenario.steps.map(getStepStatus));
   statuses.sort((status1, status2) => STATUS_PRIORITY_ORDER.indexOf(status1) - STATUS_PRIORITY_ORDER.indexOf(status2));
   if (statuses.length > 0) {
