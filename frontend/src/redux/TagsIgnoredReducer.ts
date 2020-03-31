@@ -15,7 +15,6 @@ const setTagsIgnored: CaseReducer<TagsIgnoredState, ReceivedTagsIgnoredAction> =
 const toggleTagIgnore: CaseReducer<TagsIgnoredState, TagIgnoreToggledAction> = (state, action) => {
   const tagName = action.payload;
   state[tagName] = !state[tagName];
-  return state;
 };
 
 const { actions, reducer } = createSlice({

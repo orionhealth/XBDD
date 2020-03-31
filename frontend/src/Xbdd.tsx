@@ -14,12 +14,12 @@ import './Xbdd.css';
 
 import { RootStore } from 'rootReducer';
 
-const ReportPage: FC<{}> = () => {
+const ReportPage: FC = () => {
   const { product, version, build } = useParams();
   return <ReportContainer product={product} version={version} build={build} />;
 };
 
-const PageContent: FC<{}> = () => {
+const PageContent: FC = () => {
   const user = useSelector((state: RootStore) => state.app.user);
   if (!user) {
     return <div />;
@@ -36,7 +36,7 @@ const PageContent: FC<{}> = () => {
   );
 };
 
-const Xbdd: FC<{}> = () => {
+const Xbdd: FC = () => {
   return (
     <div className="xbdd-app">
       <Suspense fallback={<div />}>
