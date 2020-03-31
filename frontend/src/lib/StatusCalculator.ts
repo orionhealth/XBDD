@@ -7,8 +7,8 @@ type ScenarioDetails = {
   steps: Step[];
 };
 
+const STATUS_PRIORITY_ORDER = [Status.Failed, Status.Undefined, Status.Skipped, Status.Passed];
 export const calculateFeatureStatus = (feature: Feature): Status => {
-  const STATUS_PRIORITY_ORDER = [Status.Failed, Status.Undefined, Status.Skipped, Status.Passed];
   const scenarioStatuses = feature.scenarios.map(scenario => scenario.calculatedStatus || scenario.originalAutomatedStatus);
   const featureStatus = STATUS_PRIORITY_ORDER.find(status => scenarioStatuses.includes(status));
   if (featureStatus) {
@@ -17,38 +17,17 @@ export const calculateFeatureStatus = (feature: Feature): Status => {
   return Status.Passed;
 };
 
-export const calculateManualStatus = (scenario: ScenarioDetails): Status => {
-  if (scenario.backgroundSteps) {
-    const notPassedBgStep = scenario.backgroundSteps.find(step =>
-      step.manualStatus ? step.manualStatus !== Status.Passed : step.status !== Status.Passed
-    );
-    if (notPassedBgStep) {
-      return notPassedBgStep.manualStatus ? notPassedBgStep.manualStatus : notPassedBgStep.status;
-    }
-  }
-  if (scenario.steps) {
-    const notPassedStep = scenario.steps.find(step =>
-      step.manualStatus ? step.manualStatus !== Status.Passed : step.status !== Status.Passed
-    );
-    if (notPassedStep) {
-      return notPassedStep.manualStatus ? notPassedStep.manualStatus : notPassedStep.status;
-    }
+const calculateStatus = (scenario: ScenarioDetails, getStepStatus: (step: Step) => Status): Status => {
+  const statuses: Status[] = [];
+  statuses.push(...scenario.backgroundSteps.map(getStepStatus));
+  statuses.push(...scenario.steps.map(getStepStatus));
+  statuses.sort((status1, status2) => STATUS_PRIORITY_ORDER.indexOf(status1) - STATUS_PRIORITY_ORDER.indexOf(status2));
+  if (statuses.length > 0) {
+    return statuses[0];
   }
   return Status.Passed;
 };
 
-export const calculateAutoStatus = (scenario: ScenarioDetails): Status => {
-  if (scenario.backgroundSteps) {
-    const notPassedBgStep = scenario.backgroundSteps.find(step => step.status !== Status.Passed);
-    if (notPassedBgStep) {
-      return notPassedBgStep.status;
-    }
-  }
-  if (scenario.steps) {
-    const notPassedStep = scenario.steps.find(step => step.status !== Status.Passed);
-    if (notPassedStep) {
-      return notPassedStep.status;
-    }
-  }
-  return Status.Passed;
-};
+export const calculateManualStatus = (scenario: ScenarioDetails): Status =>
+  calculateStatus(scenario, step => step.manualStatus || step.status);
+export const calculateAutoStatus = (scenario: ScenarioDetails): Status => calculateStatus(scenario, step => step.status);
