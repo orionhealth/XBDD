@@ -19,11 +19,6 @@ const Navbar: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const onLogin = (user: string, password: string, remember: boolean): void => {
-    dispatch(setUser({ user, remember }));
-    setOpenDialog(false);
-  };
-
   const onLogout = (): void => {
     dispatch(setUser(null));
     history.push('/');
@@ -55,7 +50,7 @@ const Navbar: FC = () => {
           <Avatar>{loggedInUser}</Avatar>
         </Box>
       </Toolbar>
-      <LoginDialog open={openDialog} onLogin={onLogin} onCancel={(): void => setOpenDialog(false)} />
+      <LoginDialog open={openDialog} onClose={(): void => setOpenDialog(false)} />
     </AppBar>
   );
 };

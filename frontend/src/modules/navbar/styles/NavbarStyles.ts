@@ -22,13 +22,3 @@ export const useNavbarStyles = makeStyles(() =>
     },
   })
 );
-
-export const loginDialogStyles = (theme: Theme): StyleRules =>
-  createStyles({
-    textField: {
-      display: 'block',
-    },
-    input: {
-      color: theme.palette.primary.main,
-    },
-  });

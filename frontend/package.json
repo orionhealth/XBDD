@@ -51,6 +51,7 @@
     "i18next-xhr-backend": "^3.2.2",
     "immer": "^6.0.1",
     "prop-types": "^15.6.1",
+    "query-string": "^6.11.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-i18next": "^11.3.4",

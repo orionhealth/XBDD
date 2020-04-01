@@ -9,10 +9,9 @@ import ReportContainer from 'modules/report/ReportContainer';
 import ErrorBoundary from 'modules/errorBoundary/ErrorBoundary';
 import theme from 'AppTheme';
 import NotificationsView from 'modules/notifications/NotificationsView';
+import RedirectPage from 'modules/redirect/RedirectPage';
 
 import './Xbdd.css';
-
-import { RootStore } from 'rootReducer';
 
 const ReportPage: FC<{}> = () => {
   const { product, version, build } = useParams();
@@ -20,12 +19,11 @@ const ReportPage: FC<{}> = () => {
 };
 
 const PageContent: FC<{}> = () => {
-  const user = useSelector((state: RootStore) => state.app.user);
-  if (!user) {
-    return <div />;
-  }
   return (
     <Switch>
+      <Route path="/redirect">
+        <RedirectPage />
+      </Route>
       <Route path="/reports/:product/:version/:build">
         <ReportPage />
       </Route>
