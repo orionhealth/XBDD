@@ -21,7 +21,7 @@ const getHeaders = (): Headers => {
   });
 };
 
-const timeout = (promise: Promise<Response>, ms = DEFAULT_TIMEOUT): Promise<Response> => {
+export const timeout = (promise: Promise<Response>, ms = DEFAULT_TIMEOUT): Promise<Response> => {
   const timerPromise = new Promise<never>((_, reject) => {
     setTimeout(() => {
       reject(new Error('Timeout'));

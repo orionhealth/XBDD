@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { Dialog, WithStyles, DialogTitle, DialogContent, Button, DialogActions } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Button, DialogActions } from '@material-ui/core';
 import { GitHub } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
 
-interface Props extends WithStyles {
+interface Props {
   open: boolean;
   onClose(): void;
 }
@@ -16,7 +16,7 @@ const LoginDialog: FC<Props> = ({ open, onClose }) => {
       <DialogTitle>{t('navbar.loginToXbdd')}</DialogTitle>
       <DialogContent>
         <Button
-          href={`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`}
+          href={`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=user:email,read:user`}
           variant="contained"
           startIcon={<GitHub />}
         >

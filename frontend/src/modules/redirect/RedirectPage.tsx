@@ -1,6 +1,8 @@
 import React, { useState, FC } from 'react';
 import { parse } from 'query-string';
 
+import { authenticateWithGithubCode } from 'lib/services/FetchAuthToken';
+
 const getCodeFromQueryParam = (): string | undefined => {
   const { location } = window;
   const search = location.search.slice(1);
@@ -13,8 +15,6 @@ const RedirectPage: FC = () => {
   const [savedCode, setSavedCode] = useState('');
   const [savedToken, setSavedToken] = useState(null);
 
-  console.log('At redirect');
-
   if (!savedCode) {
     const code = getCodeFromQueryParam();
     console.log(code);
@@ -22,7 +22,13 @@ const RedirectPage: FC = () => {
   }
 
   if (savedCode) {
-    //send to backend to retrieve token
+    authenticateWithGithubCode(savedCode).then((response: Response) => {
+      if (response.ok) {
+        response.json().then(console.log);
+      } else {
+        console.log(response);
+      }
+    });
   }
 
   return <div>{savedCode ? 'Getting token' : 'Next'}</div>;

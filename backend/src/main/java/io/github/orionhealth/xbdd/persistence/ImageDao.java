@@ -3,7 +3,8 @@ package io.github.orionhealth.xbdd.persistence;
 import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,7 @@ import io.github.orionhealth.xbdd.util.Coordinates;
 @Repository
 public class ImageDao {
 
-	private static final Logger LOGGER = Logger.getLogger(ImageDao.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImageDao.class);
 
 	@Autowired
 	private DB mongoLegacyGrid;

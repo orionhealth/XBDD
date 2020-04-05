@@ -39,7 +39,7 @@ import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/user")
-public class User {
+public class UserResource {
 
 	@Autowired
 	private DB mongoLegacyDb;
