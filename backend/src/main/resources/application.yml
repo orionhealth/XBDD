@@ -1,0 +1,25 @@
+github:
+  client:
+    id: <put your github app id here>
+    secret: <put your github app secret here>
+
+spring:
+  data:
+    mongodb:
+      username: admin
+      password: password
+      host: xbdd_mongo
+      port: 27017
+      authentication-database: admin
+
+security:
+  oauth2:
+    client:
+      client-id: xbdd
+      client-secret: secret
+
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:certs/keystore.p12
+    key-store-password: password
