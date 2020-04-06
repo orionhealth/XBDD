@@ -13,12 +13,12 @@ import RedirectPage from 'modules/redirect/RedirectPage';
 
 import './Xbdd.css';
 
-const ReportPage: FC<{}> = () => {
+const ReportPage: FC = () => {
   const { product, version, build } = useParams();
   return <ReportContainer product={product} version={version} build={build} />;
 };
 
-const PageContent: FC<{}> = () => {
+const PageContent: FC = () => {
   return (
     <Switch>
       <Route path="/redirect">
@@ -34,7 +34,7 @@ const PageContent: FC<{}> = () => {
   );
 };
 
-const Xbdd: FC<{}> = () => {
+const Xbdd: FC = () => {
   return (
     <div className="xbdd-app">
       <Suspense fallback={<div />}>
