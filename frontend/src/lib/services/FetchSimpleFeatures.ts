@@ -25,7 +25,7 @@ export const createSimpleFeatures = (data: SimpleFeatureResponseData[]): SimpleF
 };
 
 const fetchSimpleFeatures = (product: string, version: string, build: string): Promise<SimpleFeature[] | void> => {
-  const url = `/reports/featureIndex/${product}/${version}/${build}`;
+  const url = `/rest/reports/featureIndex/${product}/${version}/${build}`;
   return doRequest(Method.GET, url, 'rest.error.get', null, FetchSimpleFeaturesTypes, (responseData: ResponseData) => {
     return createSimpleFeatures(responseData);
   });

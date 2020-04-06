@@ -1,5 +1,4 @@
 import React, { Suspense, FC } from 'react';
-import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route, useParams } from 'react-router-dom';
 

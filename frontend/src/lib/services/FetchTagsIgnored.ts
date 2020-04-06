@@ -11,7 +11,7 @@ const createIgnoredTags = (responseData: ResponseData): TagsIgnored => {
 };
 
 const fetchTagsIgnored = (product: string): Promise<TagsIgnored | void> => {
-  const url = `/user/ignoredTags/${product}`;
+  const url = `/rest/user/ignoredTags/${product}`;
   return doRequest(Method.GET, url, 'rest.error.get', null, FetchTagsIgnoredTypes, (responseData: ResponseData) => {
     return createIgnoredTags(responseData);
   });

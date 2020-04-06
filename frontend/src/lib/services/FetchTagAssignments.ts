@@ -15,7 +15,7 @@ const createTagAssignments = (responseData: ResponseData): TagAssignments => {
 };
 
 const fetchTagAssignments = (product: string, version: string, build: string): Promise<TagAssignments | void> => {
-  const url = `/user/tagAssignment/${product}/${version}/${build}`;
+  const url = `/rest/user/tagAssignment/${product}/${version}/${build}`;
   return doRequest(Method.GET, url, 'rest.error.get', null, FetchTagAssignmentsTypes, (responseData: ResponseData) => {
     return createTagAssignments(responseData);
   });

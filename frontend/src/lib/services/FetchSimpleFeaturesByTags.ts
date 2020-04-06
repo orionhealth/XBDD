@@ -22,7 +22,7 @@ const createTagViewData = (data: ResponseData): Tag[] => {
 };
 
 const fetchSimpleFeaturesByTags = (product: string, version: string, build: string): Promise<Tag[] | void> => {
-  const url = `/tagview/featureTagIndex/${product}/${version}/${build}`;
+  const url = `/rest/tagview/featureTagIndex/${product}/${version}/${build}`;
   return doRequest(
     Method.GET,
     url,

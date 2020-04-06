@@ -4,7 +4,7 @@ import { showNotification } from 'modules/notifications/notifications';
 
 const username = 'admin';
 const password = 'password';
-const backendUrl = process.env.REACT_APP_BACKEND_HOST;
+const backendUrl = process.env.REACT_APP_BACKEND_HOST || '';
 const DEFAULT_TIMEOUT = 10000;
 
 export enum Method {
@@ -35,14 +35,15 @@ const validateResponseData = (responseData: unknown, type: ITypeSuite | ITypeSui
   createCheckers(...types).ResponseData.check(responseData);
 };
 
-const call = <T>(method: Method, path: string, data: unknown): Promise<T | void> => {
+const call = <T>(method: Method, path: string, data: unknown, options?: RequestInit): Promise<T | void> => {
   const url = `${backendUrl}${path}`;
-  const options = {
+  const requestOptions = options || {
     method,
     headers: getHeaders(),
     body: data ? JSON.stringify(data) : null,
   };
-  return timeout(fetch(url, options)).then(response => {
+
+  return timeout(fetch(url, requestOptions)).then(response => {
     if (!response.ok) {
       throw new Error(`${response.status} ${response.body}`);
     }
@@ -67,6 +68,15 @@ export function doRequest<T, R>(
   type: ITypeSuite | ITypeSuite[],
   onSuccess: (responseData: T) => R
 ): Promise<R | void>;
+export function doRequest<T, R>(
+  method: Method,
+  path: string,
+  errorMessage: string,
+  data: unknown,
+  type: ITypeSuite | ITypeSuite[],
+  onSuccess: (responseData: T) => R,
+  options: RequestInit
+): Promise<R | void>;
 
 export function doRequest<T, R>(
   method: Method,
@@ -74,9 +84,10 @@ export function doRequest<T, R>(
   errorMessage = `rest.error.${method.toLowerCase()}`,
   data: unknown,
   type?: ITypeSuite | ITypeSuite[],
-  onSuccess?: (responseData: T) => R
+  onSuccess?: (responseData: T) => R,
+  options?: RequestInit
 ): Promise<T | R | void> {
-  return call<T>(method, path, data)
+  return call<T>(method, path, data, options)
     .then((responseData: T | void) => {
       if (type) {
         validateResponseData(responseData, type);

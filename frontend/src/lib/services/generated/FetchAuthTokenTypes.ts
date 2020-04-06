@@ -4,5 +4,15 @@
 import * as t from 'ts-interface-checker';
 // tslint:disable:object-literal-key-quotes
 
-const exportedTypeSuite: t.ITypeSuite = {};
+export const ResponseData = t.iface([], {
+  access_token: 'string',
+  token_type: t.lit('bearer'),
+  refresh_token: 'string',
+  expires_in: 'number',
+  scope: 'string',
+});
+
+const exportedTypeSuite: t.ITypeSuite = {
+  ResponseData,
+};
 export default exportedTypeSuite;

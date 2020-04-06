@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Theme, StyleRules } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core';
 
 export const useNavbarStyles = makeStyles(() =>
   createStyles({

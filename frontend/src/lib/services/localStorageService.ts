@@ -1,30 +1,24 @@
-const USER = 'USER';
-const USER_TIME = 'USER_TIME';
+import OAuthToken from 'models/OAuthToken';
 
-export const putUserInLocalStorage = (user: string, timeAcquired: number): void => {
+const TOKEN = 'TOKEN';
+
+export const putTokenInLocalStorage = (token: OAuthToken): void => {
   const { localStorage } = window;
-  localStorage.setItem(USER, user);
-  localStorage.setItem(USER_TIME, JSON.stringify(timeAcquired));
+  localStorage.setItem(TOKEN, JSON.stringify(token));
 };
 
-export const getUserFromLocalStorage = (): string | null => {
+export const getTokenFromLocalStorage = (): OAuthToken | null => {
   const { localStorage } = window;
-  const user = localStorage.getItem(USER);
-  const timeSaved = localStorage.getItem(USER_TIME);
+  const token = localStorage.getItem(TOKEN);
 
-  if (user && timeSaved) {
-    const timeValid = 21 * 24 * 60 * 60 * 1000;
-    const timeAlive = Date.now() - Number.parseInt(timeSaved);
-    if (timeAlive < timeValid) {
-      return user;
-    }
+  if (token) {
+    return JSON.parse(token) as OAuthToken;
   }
 
   return null;
 };
 
-export const clearUserFromLocalStorage = (): void => {
+export const clearTokenFromLocalStorage = (): void => {
   const { localStorage } = window;
-  localStorage.removeItem(USER);
-  localStorage.removeItem(USER_TIME);
+  localStorage.removeItem(TOKEN);
 };
