@@ -1,7 +1,11 @@
-import React, { useState, FC } from 'react';
+import React, { FC } from 'react';
 import { parse } from 'query-string';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-import { loginWithGithub } from 'lib/services/LoginService';
+import { loginWithGithub } from 'xbddReducer';
+import Loading from 'modules/loading/Loading';
+import { RootStore } from 'rootReducer';
 
 const getCodeFromQueryParam = (): string | undefined => {
   const { location } = window;
@@ -12,19 +16,19 @@ const getCodeFromQueryParam = (): string | undefined => {
 };
 
 const RedirectPage: FC = () => {
-  const [savedCode, setSavedCode] = useState('');
+  const user = useSelector((store: RootStore) => store.app.user);
+  const dispatch = useDispatch();
+  const code = getCodeFromQueryParam();
 
-  if (!savedCode) {
-    const code = getCodeFromQueryParam();
-    console.log(code);
-    code && setSavedCode(code);
+  if (code && !user) {
+    dispatch(loginWithGithub(code));
   }
 
-  if (savedCode) {
-    loginWithGithub(savedCode);
+  if (user) {
+    return <Redirect to="/" />;
   }
 
-  return <div>{savedCode ? 'Getting token' : 'Next'}</div>;
+  return <Loading loading={true} />;
 };
 
 export default RedirectPage;

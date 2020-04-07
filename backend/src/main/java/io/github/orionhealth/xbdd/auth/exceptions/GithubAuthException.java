@@ -10,9 +10,7 @@
  */
 package io.github.orionhealth.xbdd.auth.exceptions;
 
-import org.springframework.security.core.AuthenticationException;
-
-public class GithubAuthException extends AuthenticationException {
+public class GithubAuthException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

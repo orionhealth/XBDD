@@ -14,13 +14,17 @@ interface ResponseData {
  * Basically a straight conversion except we turn expires
  * in to ms and set the time it expires at minus two minutes.
  */
-const createToken = (data: ResponseData): OAuthToken => ({
-  accessToken: data.access_token,
-  tokenType: data.token_type,
-  refreshToken: data.refresh_token,
-  expiresAt: data.expires_in ** 1000 + Date.now() - 120000,
-  scope: data.scope,
-});
+const createToken = (data: ResponseData): OAuthToken => {
+  const expiresAt = data.expires_in * 1000 + Date.now() - 120000;
+  console.debug(`Token expires at ${expiresAt}`);
+  return {
+    accessToken: data.access_token,
+    tokenType: data.token_type,
+    refreshToken: data.refresh_token,
+    expiresAt,
+    scope: data.scope,
+  };
+};
 
 export const authenticateWithGithubCode = async (code: string): Promise<OAuthToken | void> => {
   const path = `/oauth/token`;

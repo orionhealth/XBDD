@@ -1,9 +1,8 @@
 import { createCheckers, ITypeSuite } from 'ts-interface-checker';
 
 import { showNotification } from 'modules/notifications/notifications';
+import { getTokenFromLocalStorage } from 'lib/services/LocalStorageService';
 
-const username = 'admin';
-const password = 'password';
 const backendUrl = process.env.REACT_APP_BACKEND_HOST || '';
 const DEFAULT_TIMEOUT = 10000;
 
@@ -15,8 +14,14 @@ export enum Method {
 }
 
 const getHeaders = (): Headers => {
+  const token = getTokenFromLocalStorage();
+
+  if (!token) {
+    throw Error("Can't make authenticated call if not logged in");
+  }
+
   return new Headers({
-    Authorization: `Basic ${btoa(`${username}:${password}`)})`,
+    Authorization: `${token.tokenType} ${token.accessToken}`,
     'Content-Type': 'application/json',
   });
 };

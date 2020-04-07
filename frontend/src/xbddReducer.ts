@@ -1,10 +1,16 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
 
+import { User } from 'models/User';
+import { putTokenInLocalStorage } from 'lib/services/LocalStorageService';
+import { authenticateWithGithubCode } from 'lib/services/FetchAuthToken';
+import { fetchLoggedInUser } from 'lib/services/FetchLoggedInUser';
+import { StoreDispatch } from 'rootReducer';
+
 interface UserState {
-  user: string | null;
+  user: User | null;
 }
 
-type UserAction = PayloadAction<{ user: string } | null>;
+type UserAction = PayloadAction<User | null>;
 
 type XbddState = UserState;
 
@@ -13,10 +19,7 @@ const initialState: XbddState = {
 };
 
 const userReducer: CaseReducer<XbddState, UserAction> = (state, action) => {
-  if (action.payload) {
-    const { user } = action.payload;
-    state.user = user;
-  }
+  state.user = action.payload;
 };
 
 const { actions, reducer } = createSlice({
@@ -28,5 +31,17 @@ const { actions, reducer } = createSlice({
 });
 
 export const { setUser } = actions;
+
+export const loginWithGithub = (code: string) => async (dispatch: StoreDispatch): Promise<void> => {
+  const token = await authenticateWithGithubCode(code);
+  if (token) {
+    putTokenInLocalStorage(token);
+    const user = await fetchLoggedInUser();
+
+    if (user) {
+      dispatch(setUser(user));
+    }
+  }
+};
 
 export default reducer;
