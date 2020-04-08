@@ -65,7 +65,7 @@
     "start": "npm run buildTypeCheckers && react-scripts start",
     "build": "react-scripts build",
     "buildTypeCheckersClean": "rm -rf \"src/lib/services/generated\" && mkdir \"src/lib/services/generated\"",
-    "buildTypeCheckersGenerate": "ls src/lib/services/*.ts | xargs ts-interface-builder -o \"src/lib/services/generated\" --suffix Types",
+    "buildTypeCheckersGenerate": "ls src/lib/services/Fetch*.ts | xargs ts-interface-builder -o \"src/lib/services/generated\" --suffix Types",
     "buildTypeCheckersPrettier": "prettier --write \"src/lib/services/generated/*.ts\"",
     "buildTypeCheckers": "run-s buildTypeCheckersClean buildTypeCheckersGenerate buildTypeCheckersPrettier",
     "lint": "eslint ./src",
