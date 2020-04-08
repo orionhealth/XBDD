@@ -3,13 +3,15 @@ import Enzyme, { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import Adapter from 'enzyme-adapter-react-16';
+import thunk from 'redux-thunk';
+
+const mockStore = configureStore([thunk]);
 
 import Xbdd from '../Xbdd';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 const renderApp = () => {
-  const mockStore = configureStore();
   const initialState = {
     app: {
       user: null,
