@@ -9,6 +9,7 @@ import { setUser } from '../../xbddReducer';
 import LoginDialog from './LoginDialog';
 import { useNavbarStyles } from './styles/NavbarStyles';
 import UserAvatar from './UserAvatar';
+import { clearTokenFromLocalStorage } from 'lib/services/LocalStorageService';
 
 const Navbar: FC = () => {
   const { t } = useTranslation();
@@ -21,6 +22,7 @@ const Navbar: FC = () => {
   const history = useHistory();
 
   const onLogout = (): void => {
+    clearTokenFromLocalStorage();
     dispatch(setUser(null));
     history.push('/');
   };
