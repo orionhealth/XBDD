@@ -14,11 +14,18 @@ This will give you a docker container named xbdd_mongo_dev which is accessible a
 http://localhost:27017
 
 ### Registering a Github OAuth App
+
 1. Go to https://github.com/settings/developers and register a new OAuth application
 1. Call the application xbdd-{your-github-user-id}
 1. For the homepage url use http://localhost:19080
-1. For the redirect url use http://localhost:19080
-1. In frontend/.env.development paste in your app's client id and secret into REACT_APP_GITHUB_CLIENT_ID and REACT_APP_GITHUB_CLIENT_SECRET respectively.
+1. For the redirect url use http://localhost:19080/redirect
+1. In frontend/.env.development paste in your app's client id into REACT_APP_GITHUB_CLIENT_ID.
+1. In backend/src/main/resources/application-dev.yml paste in your app's client id and secret into github.client.id and github.client.secret respectively.
+
+### Setup SSL Certificates
+
+1. Follow the instructions in [frontend/certs/README.md](../frontend/certs/README.md)
+1. Follow the instructions in [backend/src/main/resources/certs/README.md](../backend/src/main/resources/certs/README.md)
 
 ### Running XBDD
 
