@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import { AppBar, Toolbar, Button, Avatar, Box } from '@material-ui/core';
+import { AppBar, Toolbar, Button, Box } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { RootStore } from 'rootReducer';
 import { setUser } from '../../xbddReducer';
 import LoginDialog from './LoginDialog';
 import { useNavbarStyles } from './styles/NavbarStyles';
+import UserAvatar from './UserAvatar';
 
 const Navbar: FC = () => {
   const { t } = useTranslation();
@@ -47,7 +48,7 @@ const Navbar: FC = () => {
           >
             {loggedInUser ? t('navbar.logout') : t('navbar.login')}
           </Button>
-          <Avatar>{loggedInUser?.name}</Avatar>
+          <UserAvatar user={loggedInUser} />
         </Box>
       </Toolbar>
       <LoginDialog open={openDialog} onClose={(): void => setOpenDialog(false)} />

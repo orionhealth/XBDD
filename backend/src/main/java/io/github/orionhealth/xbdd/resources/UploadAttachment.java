@@ -25,12 +25,10 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
@@ -44,6 +42,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
+
+import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
 
 @Path("/upload-attachment")
 @MultipartConfig
@@ -60,8 +60,7 @@ public class UploadAttachment {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public String setAttachment(@PathParam("report") final String report, @PathParam("version") final String version,
 			@PathParam("build") final String build, @PathParam("id") final String id, @PathParam("elementId") final String elementId,
-			@FormDataParam("attachmentfile") final File file, @FormDataParam("attachmentfile") final FormDataBodyPart body,
-			@Context final HttpServletRequest req)
+			@FormDataParam("attachmentfile") final File file, @FormDataParam("attachmentfile") final FormDataBodyPart body)
 			throws IOException {
 		try (final InputStream is = new FileInputStream(file.getAbsolutePath())) {
 			final String elementIdMod = elementId.replace("&2F", "/");
@@ -97,7 +96,7 @@ public class UploadAttachment {
 				}
 			}
 			feature.put("elements", elements);
-			feature.put("statusLastEditedBy", req.getRemoteUser());
+			feature.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
 			feature.put("lastEditOn", new Date());
 
 			// add edit update

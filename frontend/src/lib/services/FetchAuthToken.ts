@@ -1,4 +1,4 @@
-import { Method, doRequest } from 'lib/rest/RestRequests';
+import { Method, doTokenRequest } from 'lib/rest/RestRequests';
 import OAuthToken from 'models/OAuthToken';
 import FetchAuthTokenTypes from './generated/FetchAuthTokenTypes';
 
@@ -15,7 +15,7 @@ interface ResponseData {
  * in to ms and set the time it expires at minus two minutes.
  */
 const createToken = (data: ResponseData): OAuthToken => {
-  const expiresAt = data.expires_in * 1000 + Date.now() - 120000;
+  const expiresAt = data.expires_in * 1000 + Date.now();
   console.debug(`Token expires at ${expiresAt}`);
   return {
     accessToken: data.access_token,
@@ -27,8 +27,6 @@ const createToken = (data: ResponseData): OAuthToken => {
 };
 
 export const authenticateWithGithubCode = async (code: string): Promise<OAuthToken | void> => {
-  const path = `/oauth/token`;
-
   const body = new FormData();
   body.set('username', 'github');
   body.set('password', code);
@@ -41,5 +39,20 @@ export const authenticateWithGithubCode = async (code: string): Promise<OAuthTok
     body,
   };
 
-  return doRequest(Method.POST, path, 'rest.error.post', null, FetchAuthTokenTypes, createToken, options);
+  return doTokenRequest(options, `rest.error.token`, FetchAuthTokenTypes, createToken);
+};
+
+export const fetchRefreshedToken = (token: OAuthToken): Promise<OAuthToken | void> => {
+  const body = new FormData();
+  body.set('refresh_token', token.refreshToken);
+  body.set('grant_type', 'refresh_token');
+  body.set('scope', token.scope);
+
+  const options = {
+    method: Method.POST,
+    headers: { Authorization: `Basic ${btoa('xbdd:secret')}` },
+    body,
+  };
+
+  return doTokenRequest(options, `rest.error.refreshToken`, FetchAuthTokenTypes, createToken);
 };

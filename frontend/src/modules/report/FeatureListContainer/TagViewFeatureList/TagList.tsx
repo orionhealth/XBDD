@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 import { Card, List } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
+
 import { tagListStyles } from './styles/TagListStyles';
 import TagListItem from './TagListItem';
 import Tag from 'models/Tag';
 import Status from 'models/Status';
 import TagAssignments from 'models/TagAssignments';
-import { useSelector } from 'react-redux';
 import { RootStore } from 'rootReducer';
 import { UserName } from 'models/User';
 

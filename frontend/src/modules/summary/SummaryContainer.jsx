@@ -71,8 +71,12 @@ class SummaryContainer extends Component {
   };
 
   render() {
-    const { classes, t } = this.props;
+    const { user, classes, t } = this.props;
     const { productList, loading } = this.state;
+
+    if (!user) {
+      return null;
+    }
 
     return (
       <>
@@ -111,6 +115,7 @@ class SummaryContainer extends Component {
 }
 
 SummaryContainer.propTypes = {
+  user: PropTypes.shape({}),
   classes: PropTypes.shape({}),
 };
 

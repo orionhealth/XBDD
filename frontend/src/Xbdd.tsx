@@ -1,7 +1,7 @@
 import React, { Suspense, FC } from 'react';
 import { ThemeProvider } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Navbar from 'modules/navbar/Navbar';
 import SummaryContainer from 'modules/summary/SummaryContainer';
@@ -11,28 +11,44 @@ import theme from 'AppTheme';
 import NotificationsView from 'modules/notifications/NotificationsView';
 import RedirectPage from 'modules/redirect/RedirectPage';
 import { RootStore } from 'rootReducer';
+import { getUserIfTokenIsValid } from 'xbddReducer';
+import { User } from 'models/User';
 
 import './Xbdd.css';
 
-const ReportPage: FC = () => {
+interface UserProps {
+  user: User | null;
+}
+
+const ReportPage: FC<UserProps> = ({ user }) => {
   const { product, version, build } = useParams();
-  return <ReportContainer product={product} version={version} build={build} />;
+  return <ReportContainer user={user} product={product} version={version} build={build} />;
 };
 
-const PageContent: FC = () => {
-  const loggedIn = useSelector((store: RootStore) => Boolean(store.app.user));
+const PageContent: FC<UserProps> = ({ user }) => {
   return (
     <Switch>
       <Route path="/redirect">
         <RedirectPage />
       </Route>
-      <Route path="/reports/:product/:version/:build">{loggedIn && <ReportPage />}</Route>
-      <Route path="/">{loggedIn && <SummaryContainer />}</Route>
+      <Route path="/reports/:product/:version/:build">
+        <ReportPage user={user} />
+      </Route>
+      <Route path="/">
+        <SummaryContainer user={user} />
+      </Route>
     </Switch>
   );
 };
 
 const Xbdd: FC = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((store: RootStore) => store.app.user);
+
+  if (!user) {
+    dispatch(getUserIfTokenIsValid());
+  }
+
   return (
     <div className="xbdd-app">
       <Suspense fallback={<div />}>
@@ -40,7 +56,7 @@ const Xbdd: FC = () => {
           <ErrorBoundary>
             <Router>
               <Navbar />
-              <PageContent />
+              <PageContent user={user} />
               <NotificationsView />
             </Router>
           </ErrorBoundary>

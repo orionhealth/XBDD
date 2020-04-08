@@ -1,3 +1,4 @@
+import { getValidToken } from './TokenService';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import TagsIgnored from 'models/TagsIgnored';
 import FetchTagsIgnoredTypes from './generated/FetchTagsIgnoredTypes';
@@ -10,11 +11,12 @@ const createIgnoredTags = (responseData: ResponseData): TagsIgnored => {
   return tagsIgnored;
 };
 
-const fetchTagsIgnored = (product: string): Promise<TagsIgnored | void> => {
+const fetchTagsIgnored = async (product: string): Promise<TagsIgnored | void> => {
   const url = `/rest/user/ignoredTags/${product}`;
-  return doRequest(Method.GET, url, 'rest.error.get', null, FetchTagsIgnoredTypes, (responseData: ResponseData) => {
-    return createIgnoredTags(responseData);
-  });
+  const token = await getValidToken();
+  if (token) {
+    return doRequest(Method.GET, url, 'rest.error.get', null, token, FetchTagsIgnoredTypes, createIgnoredTags);
+  }
 };
 
 export default fetchTagsIgnored;

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
+
 import xbddReducer from './xbddReducer';
 import tagsIgnoredReducer from 'redux/TagsIgnoredReducer';
 
@@ -15,5 +16,7 @@ const store = configureStore({
 });
 
 export type StoreDispatch = typeof store.dispatch;
+
+export const { dispatch } = store;
 
 export default store;

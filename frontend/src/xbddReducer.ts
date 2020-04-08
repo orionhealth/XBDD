@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
 
+import { getValidToken } from './lib/services/TokenService';
 import { User } from 'models/User';
 import { putTokenInLocalStorage } from 'lib/services/LocalStorageService';
 import { authenticateWithGithubCode } from 'lib/services/FetchAuthToken';
@@ -32,15 +33,26 @@ const { actions, reducer } = createSlice({
 
 export const { setUser } = actions;
 
+const fetchAndSaveUser = async (dispatch: StoreDispatch): Promise<void> => {
+  const user = await fetchLoggedInUser();
+
+  if (user) {
+    dispatch(setUser(user));
+  }
+};
+
+export const getUserIfTokenIsValid = () => async (dispatch: StoreDispatch): Promise<void> => {
+  const token = await getValidToken();
+  if (token) {
+    fetchAndSaveUser(dispatch);
+  }
+};
+
 export const loginWithGithub = (code: string) => async (dispatch: StoreDispatch): Promise<void> => {
   const token = await authenticateWithGithubCode(code);
   if (token) {
     putTokenInLocalStorage(token);
-    const user = await fetchLoggedInUser();
-
-    if (user) {
-      dispatch(setUser(user));
-    }
+    fetchAndSaveUser(dispatch);
   }
 };
 

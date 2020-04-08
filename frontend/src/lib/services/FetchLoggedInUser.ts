@@ -1,3 +1,4 @@
+import { getValidToken } from './TokenService';
 import { Method, doRequest } from 'lib/rest/RestRequests';
 import FetchLoggedInUserTypes from './generated/FetchLoggedInUserTypes';
 import { User } from 'models/User';
@@ -25,6 +26,8 @@ const createUser = ({ user_id, email, avatarUrl, name, socialLogin, loginType, f
 
 export const fetchLoggedInUser = async (): Promise<User | void> => {
   const path = `/rest/user/loggedin`;
-
-  return doRequest(Method.GET, path, 'rest.error.get', null, FetchLoggedInUserTypes, createUser);
+  const token = await getValidToken();
+  if (token) {
+    return doRequest(Method.GET, path, 'rest.error.get', null, token, FetchLoggedInUserTypes, createUser);
+  }
 };

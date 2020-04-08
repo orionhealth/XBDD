@@ -15,7 +15,6 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -24,7 +23,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -38,6 +36,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import io.github.orionhealth.xbdd.util.Coordinates;
+import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/favourites")
@@ -46,14 +45,12 @@ public class Favourites {
 	@Autowired
 	private DB mongoLegacyDb;
 
-	public void setFavouriteStateOfProduct(final String product,
-			final boolean state,
-			final HttpServletRequest req) {
+	public void setFavouriteStateOfProduct(final String product, final boolean state) {
 
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", req.getRemoteUser());
+		user.put("user_id", LoggedInUserUtil.getDisplayString());
 
 		final DBObject blank = new BasicDBObject();
 		collection.findAndModify(user, blank, blank, false, new BasicDBObject("$set", user), true, true);
@@ -68,29 +65,26 @@ public class Favourites {
 	@Path("/{product}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response productFavouriteStateOn(@PathParam("product") final String product,
-			@Context final HttpServletRequest req) {
+	public Response productFavouriteStateOn(@PathParam("product") final String product) {
 
-		setFavouriteStateOfProduct(product, true, req);
+		setFavouriteStateOfProduct(product, true);
 		return Response.ok().build();
 	}
 
 	@DELETE
 	@Path("/{product}")
-	public Response productFavouriteStateOff(@PathParam("product") final String product,
-			@Context final HttpServletRequest req) {
-		setFavouriteStateOfProduct(product, false, req);
+	public Response productFavouriteStateOff(@PathParam("product") final String product) {
+		setFavouriteStateOfProduct(product, false);
 		return Response.ok().build();
 	}
 
 	@GET
 	@Path("/{product}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFavouriteStateOfProduct(@PathParam("product") final String product,
-			@Context final HttpServletRequest req) {
+	public Response getFavouriteStateOfProduct(@PathParam("product") final String product) {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
-		final BasicDBObject query = new BasicDBObject("user_id", req.getRemoteUser());
+		final BasicDBObject query = new BasicDBObject("user_id", LoggedInUserUtil.getDisplayString());
 		query.put("favourites." + product, true);
 
 		final DBObject favState = collection.findOne(query);
@@ -101,12 +95,12 @@ public class Favourites {
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSummaryOfAllReports(@Context final HttpServletRequest req) {
+	public Response getSummaryOfAllReports() {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("summary");
 		final DBCollection usersCollection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", req.getRemoteUser());
+		user.put("user_id", LoggedInUserUtil.getDisplayString());
 
 		final DBObject blank = new BasicDBObject();
 		final DBObject uDoc = usersCollection.findAndModify(user, blank, blank, false,

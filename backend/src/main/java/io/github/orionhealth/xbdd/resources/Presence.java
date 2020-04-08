@@ -18,7 +18,6 @@ package io.github.orionhealth.xbdd.resources;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,7 +26,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -42,6 +40,7 @@ import com.mongodb.DBObject;
 
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.Field;
+import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/presence")
@@ -54,8 +53,7 @@ public class Presence {
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addPresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req) {
+	public Response addPresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("presence");
 		final BasicDBObject query = new BasicDBObject("coordinates",
 				coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
@@ -64,18 +62,19 @@ public class Presence {
 										.getBuild() + "/" + featureId);
 		final Date now = Calendar.getInstance().getTime();
 		collection.update(query,
-				new BasicDBObject("$set", new BasicDBObject("users." + req.getRemoteUser(), now).append("lastUpdated", now)), true,
+				new BasicDBObject("$set",
+						new BasicDBObject("users." + LoggedInUserUtil.getDisplayString(), now).append("lastUpdated", now)),
+				true,
 				false);
 		final DBObject newPresence = collection.findOne(query);
-		newPresence.put("currentUser", req.getRemoteUser());
+		newPresence.put("currentUser", LoggedInUserUtil.getDisplayString());
 		return Response.ok(SerializerUtil.serialise(newPresence)).build();
 	}
 
 	@GET
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req) {
+	public Response getPresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("presence");
 		final BasicDBObject query = new BasicDBObject("coordinates",
 				coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
@@ -83,7 +82,7 @@ public class Presence {
 								.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
 										.getBuild() + "/" + featureId);
 		final DBObject newPresence = collection.findOne(query);
-		newPresence.put("currentUser", req.getRemoteUser());
+		newPresence.put("currentUser", LoggedInUserUtil.getDisplayString());
 		return Response.ok(SerializerUtil.serialise(newPresence)).build();
 
 	}
@@ -106,17 +105,17 @@ public class Presence {
 	@DELETE
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deletePresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req) {
+	public Response deletePresence(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId) {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("presence");
 		final BasicDBObject query = new BasicDBObject("coordinates",
 				coordinates.getObject(Field.PRODUCT, Field.VERSION, Field.BUILD).append(
 						"featureId", featureId))
 								.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
 										.getBuild() + "/" + featureId);
-		collection.update(query, new BasicDBObject("$unset", new BasicDBObject("users." + req.getRemoteUser(), 1)), true, false);
+		collection.update(query, new BasicDBObject("$unset", new BasicDBObject("users." + LoggedInUserUtil.getDisplayString(), 1)),
+				true, false);
 		final DBObject newPresence = collection.findOne(query);
-		newPresence.put("currentUser", req.getRemoteUser());
+		newPresence.put("currentUser", LoggedInUserUtil.getDisplayString());
 		return Response.ok(SerializerUtil.serialise(newPresence)).build();
 	}
 }
