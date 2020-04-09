@@ -17,7 +17,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import io.github.orionhealth.xbdd.auth.providers.GithubAuthenticationProvider;
+import io.github.orionhealth.xbdd.auth.github.GithubAuthenticationProvider;
 import io.github.orionhealth.xbdd.dev.SimpleCORSFilter;
 
 @Configuration

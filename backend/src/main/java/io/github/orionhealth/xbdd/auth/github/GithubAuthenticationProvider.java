@@ -8,7 +8,7 @@
  * the publisher. Infringers of copyright render themselves liable for
  * prosecution.
  */
-package io.github.orionhealth.xbdd.auth.providers;
+package io.github.orionhealth.xbdd.auth.github;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -21,8 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import io.github.orionhealth.xbdd.auth.exceptions.GithubAuthException;
-import io.github.orionhealth.xbdd.auth.services.GithubAuthService;
 import io.github.orionhealth.xbdd.model.common.User;
 
 @Component

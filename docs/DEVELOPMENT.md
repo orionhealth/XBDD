@@ -17,8 +17,8 @@ http://localhost:27017
 
 1. Go to https://github.com/settings/developers and register a new OAuth application
 1. Call the application xbdd-{your-github-user-id}
-1. For the homepage url use http://localhost:19080
-1. For the redirect url use http://localhost:19080/redirect
+1. For the homepage url use http://localhost:3000
+1. For the redirect url use http://localhost:3000/redirect
 1. In frontend/.env.development paste in your app's client id into REACT_APP_GITHUB_CLIENT_ID.
 1. In backend/src/main/resources/application-dev.yml paste in your app's client id and secret into github.client.id and github.client.secret respectively.
 

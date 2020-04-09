@@ -8,7 +8,7 @@
  * the publisher. Infringers of copyright render themselves liable for
  * prosecution.
  */
-package io.github.orionhealth.xbdd.auth.exceptions;
+package io.github.orionhealth.xbdd.auth.github;
 
 public class GithubAuthException extends RuntimeException {
 
