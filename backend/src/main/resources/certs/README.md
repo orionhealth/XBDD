@@ -7,6 +7,7 @@ There are environment variables that use these to allow xbdd to use https while 
 
 1. Run `./createBackendCerts.sh`
 1. You will be prompted for a password 3 times, each time use `password` as the password.
+1. Make sure you update your maven project (including snapshots) after this.
 
 ### Configure your computer to allow this certificate
 
