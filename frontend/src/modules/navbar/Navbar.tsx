@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import { AppBar, Toolbar, Button, Avatar, Box } from '@material-ui/core';
+import { AppBar, Toolbar, Button, Box } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +8,8 @@ import { RootStore } from 'rootReducer';
 import { setUser } from '../../xbddReducer';
 import LoginDialog from './LoginDialog';
 import { useNavbarStyles } from './styles/NavbarStyles';
+import UserAvatar from './UserAvatar';
+import { clearTokenFromLocalStorage } from 'lib/services/LocalStorageService';
 
 const Navbar: FC = () => {
   const { t } = useTranslation();
@@ -19,12 +21,8 @@ const Navbar: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const onLogin = (user: string, password: string, remember: boolean): void => {
-    dispatch(setUser({ user, remember }));
-    setOpenDialog(false);
-  };
-
   const onLogout = (): void => {
+    clearTokenFromLocalStorage();
     dispatch(setUser(null));
     history.push('/');
   };
@@ -52,10 +50,10 @@ const Navbar: FC = () => {
           >
             {loggedInUser ? t('navbar.logout') : t('navbar.login')}
           </Button>
-          <Avatar>{loggedInUser}</Avatar>
+          <UserAvatar user={loggedInUser} />
         </Box>
       </Toolbar>
-      <LoginDialog open={openDialog} onLogin={onLogin} onCancel={(): void => setOpenDialog(false)} />
+      <LoginDialog open={openDialog} onClose={(): void => setOpenDialog(false)} />
     </AppBar>
   );
 };

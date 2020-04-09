@@ -5,10 +5,9 @@
   "navbar": {
     "cancel": "Cancel",
     "login": "Login",
-    "logout": "Logout",
-    "password": "password",
-    "rememberMe": "remember me",
-    "user": "user"
+    "loginWithGithub": "Log in with Github",
+    "loginToXbdd": "Log in to Xbdd",
+    "logout": "Logout"
   },
   "report": {
     "fullSizedScreenshot": "Full Size Screenshot",
@@ -45,6 +44,7 @@
       "get": "Data retrieval failed.",
       "pin": "Failed to pin the build.",
       "put": "Data save failed",
+      "post": "Data save failed",
       "summaryOfReports": "Failed to get summary of reports.",
       "unfavourite": "Failed to unfavourite the product.",
       "unpin": "Failed to unpin the build."

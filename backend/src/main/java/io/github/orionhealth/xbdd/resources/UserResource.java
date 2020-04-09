@@ -36,13 +36,21 @@ import com.mongodb.DBObject;
 
 import io.github.orionhealth.xbdd.model.common.TagAssignmentPatch;
 import io.github.orionhealth.xbdd.util.Coordinates;
+import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/user")
-public class User {
+public class UserResource {
 
 	@Autowired
 	private DB mongoLegacyDb;
+
+	@GET
+	@Path("/loggedin")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getLoggedInUser() {
+		return Response.ok(LoggedInUserUtil.getLoggedInUser()).build();
+	}
 
 	@GET
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")

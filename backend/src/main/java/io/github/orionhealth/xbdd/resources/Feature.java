@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -29,7 +28,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -45,6 +43,7 @@ import com.mongodb.DBObject;
 import io.github.orionhealth.xbdd.model.simple.Scenario;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.Field;
+import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 import io.github.orionhealth.xbdd.util.StatusHelper;
 
@@ -206,7 +205,7 @@ public class Feature {
 	@Path("/comments/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateCommentWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final BasicDBObject patch) {
+			final BasicDBObject patch) {
 		try {
 			final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
@@ -224,7 +223,7 @@ public class Feature {
 				final DBCollection tips = this.mongoLegacyDb.getCollection("testingTips");
 				updateTestingTipsForScenario(tips, scenarioToUpdate, coordinates, featureId);
 			}
-			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
+			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
@@ -249,7 +248,7 @@ public class Feature {
 	@Path("/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response putFeature(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final BasicDBObject feature) {
+			final BasicDBObject feature) {
 		feature.put("calculatedStatus", StatusHelper.getFeatureStatus(feature));
 		final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 		final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
@@ -258,7 +257,7 @@ public class Feature {
 		// get the differences/new edits
 
 		// Detect if the edits caused a change
-		feature.put("statusLastEditedBy", req.getRemoteUser());
+		feature.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
 		feature.put("lastEditOn", new Date());
 		final BasicDBList edits = updateEdits(feature, report);
 		feature.put("edits", edits);
@@ -275,7 +274,7 @@ public class Feature {
 	@Path("/step/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateStepWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final BasicDBObject patch) {
+			final BasicDBObject patch) {
 		try {
 			final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
@@ -299,7 +298,7 @@ public class Feature {
 				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
 				updateSteps(stepsToUpdate, stepLine, status);
 			}
-			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
+			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
@@ -379,7 +378,7 @@ public class Feature {
 	@Path("/steps/{product}/{major}.{minor}.{servicePack}/{build}/{featureId:.+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateStepsWithPatch(@BeanParam final Coordinates coordinates, @PathParam("featureId") final String featureId,
-			@Context final HttpServletRequest req, final BasicDBObject patch) {
+			final BasicDBObject patch) {
 		try {
 			final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 			final BasicDBObject example = coordinates.getReportCoordinatesQueryObject().append("id", featureId);
@@ -401,7 +400,7 @@ public class Feature {
 				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
 				updateAllSteps(stepsToUpdate, status);
 			}
-			featureToUpdate.put("statusLastEditedBy", req.getRemoteUser());
+			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);

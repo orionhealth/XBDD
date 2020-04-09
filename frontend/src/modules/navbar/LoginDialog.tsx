@@ -1,112 +1,35 @@
-import React, { Component, ChangeEvent, FormEvent, ReactNode } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  FormGroup,
-  FormControlLabel,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core';
-import CheckBox from '@material-ui/core/Checkbox';
-import { withTranslation, WithTranslation } from 'react-i18next';
+import React, { FC } from 'react';
+import { Dialog, DialogTitle, DialogContent, Button, DialogActions } from '@material-ui/core';
+import { GitHub } from '@material-ui/icons';
+import { useTranslation } from 'react-i18next';
 
-import { loginDialogStyles } from './styles/NavbarStyles';
-
-interface Props extends WithStyles, WithTranslation {
+interface Props {
   open: boolean;
-  onLogin(user: string, password: string, remember: boolean): void;
-  onCancel(): void;
+  onClose(): void;
 }
 
-interface State {
-  user: string;
-  password: string;
-  remember: boolean;
-}
+const LoginDialog: FC<Props> = ({ open, onClose }) => {
+  const { t } = useTranslation();
 
-const initialState = {
-  user: '',
-  password: '',
-  remember: false,
+  return (
+    <Dialog open={open} onEscapeKeyDown={onClose} onBackdropClick={onClose}>
+      <DialogTitle>{t('navbar.loginToXbdd')}</DialogTitle>
+      <DialogContent>
+        <Button
+          href={`https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=user:email,read:user`}
+          variant="contained"
+          startIcon={<GitHub />}
+        >
+          {t('navbar.loginWithGithub')}
+        </Button>
+      </DialogContent>
+      <DialogActions>
+        <Button color="primary" onClick={onClose}>
+          {t('navbar.cancel')}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 };
 
-class LoginDialog extends Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = initialState;
-  }
-
-  clearState(): void {
-    this.setState(initialState);
-  }
-
-  login = (event: FormEvent): void => {
-    const { onLogin } = this.props;
-    const { user, password, remember } = this.state;
-    event.preventDefault();
-    onLogin(user, password, remember);
-    this.clearState();
-  };
-
-  cancel = (): void => {
-    const { onCancel } = this.props;
-    onCancel();
-    this.clearState();
-  };
-
-  render(): ReactNode {
-    const { open, classes, t } = this.props;
-    const { user, password, remember } = this.state;
-
-    return (
-      <Dialog open={open} onEscapeKeyDown={this.cancel} onBackdropClick={this.cancel}>
-        <form onSubmit={this.login}>
-          <DialogContent>
-            <FormGroup>
-              <TextField
-                className={classes.textField}
-                label={t('navbar.user')}
-                margin="dense"
-                onChange={(event: ChangeEvent<HTMLInputElement>): void => this.setState({ user: event.target.value })}
-                value={user}
-                variant="outlined"
-              />
-              <TextField
-                className={classes.textField}
-                label={t('navbar.password')}
-                margin="dense"
-                onChange={(event: ChangeEvent<HTMLInputElement>): void => this.setState({ password: event.target.value })}
-                type="password"
-                value={password}
-                variant="outlined"
-              />
-              <FormControlLabel
-                control={
-                  <CheckBox
-                    color="primary"
-                    checked={remember}
-                    onChange={(event: ChangeEvent<HTMLInputElement>): void => this.setState({ remember: event.target.checked })}
-                  />
-                }
-                label={t('navbar.rememberMe')}
-              />
-            </FormGroup>
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary" onClick={this.cancel}>
-              {t('navbar.cancel')}
-            </Button>
-            <Button color="primary" type="submit">
-              {t('navbar.login')}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-    );
-  }
-}
-
-export default withTranslation()(withStyles(loginDialogStyles)(LoginDialog));
+export default LoginDialog;

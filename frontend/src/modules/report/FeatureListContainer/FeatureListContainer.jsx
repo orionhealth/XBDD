@@ -262,7 +262,7 @@ FeatureListContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  userName: state.app.user,
+  userName: state.app.user?.name,
 });
 
 const mapDispatchToProps = dispatch => ({

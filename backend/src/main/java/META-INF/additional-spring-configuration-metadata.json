@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "github.client.secret",
+    "type": "java.lang.String",
+    "description": "The client id as per your Github OAuth Application"
+  },
+  {
+    "name": "github.client.id",
+    "type": "java.lang.String",
+    "description": "The client secret as per your Github OAuth Application"
+  }
+]}

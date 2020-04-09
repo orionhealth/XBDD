@@ -1,3 +1,4 @@
+import { getValidToken } from './TokenService';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import TagAssignments from 'models/TagAssignments';
 import FetchTagAssignmentsTypes from './generated/FetchTagAssignmentsTypes';
@@ -14,11 +15,12 @@ const createTagAssignments = (responseData: ResponseData): TagAssignments => {
   return tagAssignments;
 };
 
-const fetchTagAssignments = (product: string, version: string, build: string): Promise<TagAssignments | void> => {
-  const url = `/user/tagAssignment/${product}/${version}/${build}`;
-  return doRequest(Method.GET, url, 'rest.error.get', null, FetchTagAssignmentsTypes, (responseData: ResponseData) => {
-    return createTagAssignments(responseData);
-  });
+const fetchTagAssignments = async (product: string, version: string, build: string): Promise<TagAssignments | void> => {
+  const url = `/rest/user/tagAssignment/${product}/${version}/${build}`;
+  const token = await getValidToken();
+  if (token) {
+    return doRequest(Method.GET, url, 'rest.error.get', null, token, FetchTagAssignmentsTypes, createTagAssignments);
+  }
 };
 
 export default fetchTagAssignments;

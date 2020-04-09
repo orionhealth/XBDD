@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Theme, StyleRules } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core';
 
 export const useNavbarStyles = makeStyles(() =>
   createStyles({
@@ -22,13 +22,3 @@ export const useNavbarStyles = makeStyles(() =>
     },
   })
 );
-
-export const loginDialogStyles = (theme: Theme): StyleRules =>
-  createStyles({
-    textField: {
-      display: 'block',
-    },
-    input: {
-      color: theme.palette.primary.main,
-    },
-  });

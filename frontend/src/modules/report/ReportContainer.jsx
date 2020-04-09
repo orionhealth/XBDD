@@ -24,9 +24,11 @@ class ReportContainer extends Component {
   }
 
   updateLastUpdated() {
+    const { user } = this.props;
     this.setState(oldState =>
       produce(oldState, draft => {
         draft.selectedFeature.lastEditedOn = new Date();
+        draft.selectedFeature.lastEditedBy = user.name;
       })
     );
   }
@@ -151,8 +153,13 @@ class ReportContainer extends Component {
   };
 
   render() {
-    const { product, version, build, classes } = this.props;
+    const { user, product, version, build, classes } = this.props;
     const { selectedFeature, executionHistory } = this.state;
+
+    if (!user) {
+      return null;
+    }
+
     return (
       <>
         <Card elevation={0}>
@@ -189,6 +196,7 @@ class ReportContainer extends Component {
 }
 
 ReportContainer.propTypes = {
+  user: PropTypes.shape({}),
   product: PropTypes.string,
   version: PropTypes.string,
   build: PropTypes.string,

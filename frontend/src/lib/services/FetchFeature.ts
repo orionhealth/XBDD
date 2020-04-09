@@ -1,3 +1,4 @@
+import { getValidToken } from './TokenService';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import { calculateAutoStatus, calculateManualStatus } from 'lib/StatusCalculator';
 import Scenario from 'models/Scenario';
@@ -106,11 +107,12 @@ const createFeature = (data: ResponseData): Feature => {
   };
 };
 
-const fetchFeature = (featureId: string): Promise<Feature | void> => {
-  const url = `/feature/${featureId}`;
-  return doRequest(Method.GET, url, 'rest.error.get', null, FetchFeatureTypes, (responseData: ResponseData) => {
-    return createFeature(responseData);
-  });
+const fetchFeature = async (featureId: string): Promise<Feature | void> => {
+  const url = `/rest/feature/${featureId}`;
+  const token = await getValidToken();
+  if (token) {
+    return doRequest(Method.GET, url, 'rest.error.get', null, token, FetchFeatureTypes, createFeature);
+  }
 };
 
 export default fetchFeature;

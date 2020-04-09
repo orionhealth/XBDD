@@ -15,7 +15,6 @@
  */
 package io.github.orionhealth.xbdd.resources;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -23,7 +22,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -37,6 +35,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import io.github.orionhealth.xbdd.util.Coordinates;
+import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
 
 @Path("/recents")
 public class Recents {
@@ -49,8 +48,7 @@ public class Recents {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addFeatureToRecents(@QueryParam("name") final String featureName,
 			@BeanParam final Coordinates coordinates,
-			@PathParam("id") final String featureID,
-			@Context final HttpServletRequest req) {
+			@PathParam("id") final String featureID) {
 
 		final BasicDBObject featureDetails = new BasicDBObject("name", featureName);
 		featureDetails.put("product", coordinates.getProduct());
@@ -61,7 +59,7 @@ public class Recents {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", req.getRemoteUser());
+		user.put("user_id", LoggedInUserUtil.getDisplayString());
 
 		final DBObject blank = new BasicDBObject();
 		final DBObject doc = collection.findAndModify(user, blank, blank, false, new BasicDBObject("$set", user), true, true);
@@ -88,15 +86,14 @@ public class Recents {
 	@PUT
 	@Path("/build/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addBuildToRecents(@BeanParam final Coordinates coordinates,
-			@Context final HttpServletRequest req) {
+	public Response addBuildToRecents(@BeanParam final Coordinates coordinates) {
 
 		final DBObject buildCoords = coordinates.getReportCoordinates();
 
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", req.getRemoteUser());
+		user.put("user_id", LoggedInUserUtil.getDisplayString());
 
 		final DBObject blank = new BasicDBObject();
 		final DBObject doc = collection.findAndModify(user, blank, blank, false, new BasicDBObject("$set", user), true, true);
@@ -124,11 +121,11 @@ public class Recents {
 	@GET
 	@Path("/builds")
 	@Produces(MediaType.APPLICATION_JSON)
-	public DBObject getRecentBuilds(@Context final HttpServletRequest req) {
+	public DBObject getRecentBuilds() {
 
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
-		final BasicDBObject user = new BasicDBObject("user_id", req.getRemoteUser());
+		final BasicDBObject user = new BasicDBObject("user_id", LoggedInUserUtil.getDisplayString());
 
 		final DBCursor cursor = collection.find(user);
 		DBObject doc;
@@ -147,11 +144,11 @@ public class Recents {
 	@GET
 	@Path("/features")
 	@Produces(MediaType.APPLICATION_JSON)
-	public DBObject getRecentFeatures(@Context final HttpServletRequest req) {
+	public DBObject getRecentFeatures() {
 
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
-		final BasicDBObject user = new BasicDBObject("user_id", req.getRemoteUser());
+		final BasicDBObject user = new BasicDBObject("user_id", LoggedInUserUtil.getDisplayString());
 
 		final DBCursor cursor = collection.find(user);
 		DBObject doc;

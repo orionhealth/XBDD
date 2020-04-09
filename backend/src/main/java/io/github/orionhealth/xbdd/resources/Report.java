@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,7 +29,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -53,6 +51,7 @@ import io.github.orionhealth.xbdd.persistence.SummaryDao;
 import io.github.orionhealth.xbdd.persistence.TestingTipsDao;
 import io.github.orionhealth.xbdd.persistence.UsersDao;
 import io.github.orionhealth.xbdd.util.Coordinates;
+import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
 import io.github.orionhealth.xbdd.util.TestingTipUtil;
 
 @Path("/reports")
@@ -100,9 +99,9 @@ public class Report {
 	@GET
 	@Path("/summary")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSummaryOfAllReports(@Context final HttpServletRequest req) {
+	public Response getSummaryOfAllReports() {
 		// TODO this doesn't actually do anything atm as we dont have users but this is how you would use it
-		final List<String> favourites = this.usersDao.getUserFavourites(req.getRemoteUser());
+		final List<String> favourites = this.usersDao.getUserFavourites(LoggedInUserUtil.getDisplayString());
 		final List<Summary> summaries = this.summaryDao.getSummaries();
 
 		summaries.forEach(summary -> summary.setFavourite(favourites.contains(summary.getCoordinates().getProduct())));

@@ -1,3 +1,4 @@
+import { getValidToken } from './TokenService';
 import Product from 'models/Product';
 import Version from 'models/Version';
 import { doRequest, Method } from 'lib/rest/RestRequests';
@@ -62,17 +63,11 @@ const createProducts = (responseData: ResponseData): Product[] => {
   return productList;
 };
 
-const fetchProducts = (): Promise<Product[] | void> => {
-  return doRequest(
-    Method.GET,
-    '/reports/summary',
-    'rest.error.summaryOfReports',
-    null,
-    FetchProductsTypes,
-    (responseData: ResponseData) => {
-      return createProducts(responseData);
-    }
-  );
+const fetchProducts = async (): Promise<Product[] | void> => {
+  const token = await getValidToken();
+  if (token) {
+    return doRequest(Method.GET, '/rest/reports/summary', 'rest.error.summaryOfReports', null, token, FetchProductsTypes, createProducts);
+  }
 };
 
 export default fetchProducts;

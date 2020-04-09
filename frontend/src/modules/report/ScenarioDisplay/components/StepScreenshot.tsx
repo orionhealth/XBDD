@@ -20,7 +20,7 @@ const StepScreenshot: FC<Props> = ({ screenshotPath }) => {
   const [enhanceScreenShot, setEnhanceScreenshot] = useState(false);
   const classes = useStyles();
 
-  const url = `${process.env.REACT_APP_BACKEND_HOST}/attachment/${screenshotPath}`;
+  const url = `${process.env.REACT_APP_BACKEND_HOST}/rest/attachment/${screenshotPath}`;
 
   return (
     <>

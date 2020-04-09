@@ -1,32 +1,33 @@
 import { doRequest, Method } from './RestRequests';
+import { getValidToken } from 'lib/services/TokenService';
 
 const { GET, PUT, DELETE } = Method;
-const doGetRequest = (path, errorMessage) => doRequest(GET, path, errorMessage);
-const doPutRequest = (path, data, errorMessage) => doRequest(PUT, path, errorMessage, data);
-const doDeleteRequest = (path, errorMessage) => doRequest(DELETE, path, errorMessage);
+const doGetRequest = async (path, errorMessage) => doRequest(GET, path, errorMessage, null, await getValidToken());
+const doPutRequest = async (path, data, errorMessage) => doRequest(PUT, path, errorMessage, data, await getValidToken());
+const doDeleteRequest = async (path, errorMessage) => doRequest(DELETE, path, errorMessage, null, await getValidToken());
 
-export const setProductFavouriteOn = project => doPutRequest(`/favourites/${project}/`, null, 'rest.error.favourite');
+export const setProductFavouriteOn = project => doPutRequest(`/rest/favourites/${project}/`, null, 'rest.error.favourite');
 
-export const setProductFavouriteOff = project => doDeleteRequest(`/favourites/${project}/`, 'rest.error.unfavourite');
+export const setProductFavouriteOff = project => doDeleteRequest(`/rest/favourites/${project}/`, 'rest.error.unfavourite');
 
 export const pinABuild = (project, major, minor, servicePack, build) =>
-  doPutRequest(`/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, null, 'rest.error.pin');
+  doPutRequest(`/rest/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, null, 'rest.error.pin');
 
 export const unPinABuild = (project, major, minor, servicePack, build) =>
-  doDeleteRequest(`/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, 'rest.error.unpin');
+  doDeleteRequest(`/rest/favourites/pin/${project}/${major}.${minor}.${servicePack}/${build}`, 'rest.error.unpin');
 
-export const getRollUpData = (product, version, feature) => doGetRequest(`/feature/rollup/${product}/${version}/${feature}`);
-
-// path should be of type StepStatusPatch
-export const updateStepPatch = (featureId, patch) => doPutRequest(`/feature/step/${featureId}`, patch);
+export const getRollUpData = (product, version, feature) => doGetRequest(`/rest/feature/rollup/${product}/${version}/${feature}`);
 
 // path should be of type StepStatusPatch
-export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/feature/steps/${featureId}`, patch);
+export const updateStepPatch = (featureId, patch) => doPutRequest(`/rest/feature/step/${featureId}`, patch);
+
+// path should be of type StepStatusPatch
+export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/rest/feature/steps/${featureId}`, patch);
 
 // patch should be of type InputFieldPatch
-export const updateComments = (featureId, patch) => doPutRequest(`/feature/comments/${featureId}`, patch);
+export const updateComments = (featureId, patch) => doPutRequest(`/rest/feature/comments/${featureId}`, patch);
 
 // patch should be of type TagAssignment
-export const setTagAssignmentData = (restId, patch) => doPutRequest(`/user/tagAssignment/${restId}`, patch);
+export const setTagAssignmentData = (restId, patch) => doPutRequest(`/rest/user/tagAssignment/${restId}`, patch);
 
-export const setIgnoredTag = (product, patch) => doPutRequest(`/user/ignoredTags/${product}`, patch);
+export const setIgnoredTag = (product, patch) => doPutRequest(`/rest/user/ignoredTags/${product}`, patch);

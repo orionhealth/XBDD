@@ -29,7 +29,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mongodb.BasicDBObject;
@@ -42,7 +43,7 @@ import com.mongodb.DuplicateKeyException;
 @Path("/admin")
 public class AdminUtils {
 
-	private static final Logger LOGGER = Logger.getLogger(AdminUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AdminUtils.class);
 
 	@Autowired
 	private DB mongoLegacyDb;
@@ -142,7 +143,7 @@ public class AdminUtils {
 			try {
 				collection.update(new BasicDBObject("_id", doc.get("_id")), new BasicDBObject("$pull", new BasicDBObject("builds", build)));
 			} catch (final Exception e) {
-				LOGGER.error(e);
+				LOGGER.error("Error deleting build", e);
 				return Response.serverError().build();
 			}
 		}
