@@ -13,3 +13,4 @@ There are environment variables that use these to allow xbdd to use https while 
 
 1. Import xbdd-backend-dev.crt into Keychain Access.
 1. Open xbdd-backend-dev certificate in Keychain Access, open trust and select always trust.
+1. You need to restart your browser once this is done for both certificates.
