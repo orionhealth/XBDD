@@ -67,15 +67,13 @@ public class UserResource {
 	@PUT
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final SingleTagAssignment tagOnly) {
+	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final SingleTagAssignment singleTagAssignment) {
 		final User user = LoggedInUserUtil.getLoggedInUser();
 
-		final SingleTagAssignment newAssignment = new SingleTagAssignment();
-		newAssignment.setTag(tagOnly.getTag());
-		newAssignment.setAvatarUrl(user.getAvatarUrl());
-		newAssignment.setUserName(user.getName());
+		singleTagAssignment.setAvatarUrl(user.getAvatarUrl());
+		singleTagAssignment.setUserName(user.getName());
 
-		this.tagAssignmentDao.saveTagAssignment(coordinates, newAssignment);
+		this.tagAssignmentDao.saveTagAssignment(coordinates, singleTagAssignment);
 		return Response.ok().build();
 	}
 
