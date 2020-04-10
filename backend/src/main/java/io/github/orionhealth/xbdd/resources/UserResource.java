@@ -34,7 +34,9 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
-import io.github.orionhealth.xbdd.model.common.TagAssignmentPatch;
+import io.github.orionhealth.xbdd.model.common.SingleTagAssignment;
+import io.github.orionhealth.xbdd.model.common.User;
+import io.github.orionhealth.xbdd.persistence.TagAssignmentDao;
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
@@ -44,6 +46,9 @@ public class UserResource {
 
 	@Autowired
 	private DB mongoLegacyDb;
+
+	@Autowired
+	private TagAssignmentDao tagAssignmentDao;
 
 	@GET
 	@Path("/loggedin")
@@ -56,70 +61,22 @@ public class UserResource {
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTagsAssignment(@BeanParam final Coordinates coordinates) {
-		final DBCollection collection = this.mongoLegacyDb.getCollection("tagsAssignment");
-		final BasicDBObject coq = coordinates.getReportCoordinatesQueryObject();
-		final DBObject document = collection.findOne(coq);
-
-		if (document != null) {
-			final BasicDBList tags = (BasicDBList) document.get("tags");
-			return Response.ok(SerializerUtil.serialise(tags)).build();
-		}
-
-		return Response.ok(new ArrayList<>()).build();
+		return Response.ok(this.tagAssignmentDao.getTagAssignments(coordinates)).build();
 	}
 
 	@PUT
 	@Path("/tagAssignment/{product}/{major}.{minor}.{servicePack}/{build}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final TagAssignmentPatch tagPatch) {
-		final DBCollection collection = this.mongoLegacyDb.getCollection("tagsAssignment");
-		final BasicDBObject coq = coordinates.getReportCoordinatesQueryObject();
-		final BasicDBObject storedDocument = (BasicDBObject) collection.findOne(coq);
+	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final SingleTagAssignment tagOnly) {
+		final User user = LoggedInUserUtil.getLoggedInUser();
 
-		if (storedDocument != null) {
-			final BasicDBObject documentToUpdate = (BasicDBObject) storedDocument.copy();
-			updateTagsAssignment(documentToUpdate, tagPatch.getTag(), tagPatch.getUserName());
-			collection.save(documentToUpdate);
-		} else {
-			final DBObject newDocument = generateNewTagAssignment(coordinates, tagPatch.getTag(), tagPatch.getUserName());
-			collection.save(newDocument);
-		}
+		final SingleTagAssignment newAssignment = new SingleTagAssignment();
+		newAssignment.setTag(tagOnly.getTag());
+		newAssignment.setAvatarUrl(user.getAvatarUrl());
+		newAssignment.setUserName(user.getName());
+
+		this.tagAssignmentDao.saveTagAssignment(coordinates, newAssignment);
 		return Response.ok().build();
-	}
-
-	private void updateTagsAssignment(final DBObject documentToUpdate, final String tagName, final String userName) {
-		final BasicDBList tags = (BasicDBList) documentToUpdate.get("tags");
-		for (final Object fetchTag : tags) {
-			final String fetchTagName = (String) ((DBObject) fetchTag).get("tag");
-			if (fetchTagName.equals(tagName)) {
-				((DBObject) fetchTag).put("userName", userName);
-				return;
-			}
-		}
-		tags.add(generateNewTag(tagName, userName));
-	}
-
-	private DBObject generateNewTagAssignment(final Coordinates coordinates, final String tagName, final String userName) {
-		final BasicDBObject co = coordinates.getReportCoordinates();
-		final BasicDBObject newDocument = new BasicDBObject();
-		final BasicDBList tags = new BasicDBList();
-		final DBObject tag = generateNewTag(tagName, userName);
-
-		tags.add(tag);
-
-		newDocument.put("coordinates", co);
-		newDocument.put("tags", tags);
-
-		return newDocument;
-	}
-
-	private DBObject generateNewTag(final String tagName, final String userName) {
-		final DBObject newTag = new BasicDBObject();
-
-		newTag.put("tag", tagName);
-		newTag.put("userName", userName);
-
-		return newTag;
 	}
 
 	@GET

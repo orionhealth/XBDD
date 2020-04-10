@@ -93,18 +93,19 @@ class FeatureListContainer extends Component {
     );
   }
 
-  handleTagAssigned = (restId, tag, newUserName, prevUserName) => {
-    if (newUserName && prevUserName && newUserName !== prevUserName) {
-      this.setState({ warningArgs: { restId, tag, newUserName, prevUserName } });
+  handleTagAssigned = (restId, tag, currentAssignee) => {
+    const { user } = this.props;
+    if (currentAssignee?.userName && user.name !== currentAssignee?.userName) {
+      this.setState({ warningArgs: { restId, tag, newUserName: user.name, prevUserName: currentAssignee?.userName } });
     } else {
-      const userName = prevUserName === newUserName ? null : newUserName;
+      const newAssignee = user.name === currentAssignee?.userName ? null : { userName: user.name, avatarUrl: user.avatarUrl };
 
-      setTagAssignmentData(restId, { tag, userName }).then(response => {
+      setTagAssignmentData(restId, tag).then(response => {
         if (!response || !response.ok) {
-          this.setStateForTagUser(tag, prevUserName);
+          this.setStateForTagUser(tag, currentAssignee);
         }
       });
-      this.setStateForTagUser(tag, userName);
+      this.setStateForTagUser(tag, newAssignee);
     }
   };
 
@@ -196,7 +197,6 @@ class FeatureListContainer extends Component {
     if (isTagView) {
       return (
         <TagList
-          loggedInUserName={userName}
           isEditMode={isEditMode}
           isAssignedTagsView={isAssignedTagsView}
           tagList={this.filterTags(userName)}
@@ -250,6 +250,7 @@ class FeatureListContainer extends Component {
 }
 
 FeatureListContainer.propTypes = {
+  user: PropTypes.shape({}),
   product: PropTypes.string,
   version: PropTypes.string,
   build: PropTypes.string,

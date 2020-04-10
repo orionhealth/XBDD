@@ -9,10 +9,8 @@ import Tag from 'models/Tag';
 import Status from 'models/Status';
 import TagAssignments from 'models/TagAssignments';
 import { RootStore } from 'rootReducer';
-import { UserName } from 'models/User';
 
 interface Props extends WithStyles {
-  loggedInUserName: UserName;
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tagList: Tag[];
@@ -26,7 +24,6 @@ interface Props extends WithStyles {
 }
 
 const TagList: FC<Props> = ({
-  loggedInUserName,
   isEditMode,
   isAssignedTagsView,
   tagList,
@@ -45,7 +42,6 @@ const TagList: FC<Props> = ({
       <List component="ul">
         {tagList.map(tag => (
           <TagListItem
-            loggedInUserName={loggedInUserName}
             isEditMode={isEditMode}
             isAssignedTagsView={isAssignedTagsView}
             tag={tag}

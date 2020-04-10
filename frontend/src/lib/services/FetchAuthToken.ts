@@ -50,7 +50,7 @@ export const fetchRefreshedToken = (token: OAuthToken): Promise<OAuthToken | voi
 
   const options = {
     method: Method.POST,
-    headers: { Authorization: `Basic ${btoa('xbdd:secret')}` },
+    headers: { Authorization: `Basic ${btoa(`${process.env.REACT_APP_XBDD_CLIENT_ID}:${process.env.REACT_APP_XBDD_CLIENT_SECRET}`)}` },
     body,
   };
 
