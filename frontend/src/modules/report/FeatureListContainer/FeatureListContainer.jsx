@@ -93,16 +93,17 @@ class FeatureListContainer extends Component {
     );
   }
 
-  handleTagAssigned = (restId, tag, currentAssignee) => {
+  handleTagAssigned = (restId, tag, currentlyAssignedUser) => {
     const { user } = this.props;
-    if (currentAssignee?.userName && user.name !== currentAssignee?.userName) {
-      this.setState({ warningArgs: { restId, tag, newUserName: user.name, prevUserName: currentAssignee?.userName } });
+    if (currentlyAssignedUser?.userId && user.userId !== currentlyAssignedUser.userId) {
+      this.setState({ warningArgs: { restId, tag, newUserName: user.name, prevUserName: currentlyAssignedUser?.userName } });
     } else {
-      const newAssignee = user.name === currentAssignee?.userName ? null : { userName: user.name, avatarUrl: user.avatarUrl };
+      // While we are just setting the whole user as the new assignee only id, name and avatar will be saved.
+      const newAssignee = user.userId === currentlyAssignedUser?.userId ? null : user;
 
       setTagAssignmentData(restId, tag).then(response => {
         if (!response || !response.ok) {
-          this.setStateForTagUser(tag, currentAssignee);
+          this.setStateForTagUser(tag, currentlyAssignedUser);
         }
       });
       this.setStateForTagUser(tag, newAssignee);

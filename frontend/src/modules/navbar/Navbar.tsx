@@ -50,7 +50,7 @@ const Navbar: FC = () => {
           >
             {loggedInUser ? t('navbar.logout') : t('navbar.login')}
           </Button>
-          <UserAvatar userName={loggedInUser?.name} avatarUrl={loggedInUser?.avatarUrl} />
+          <UserAvatar user={loggedInUser} />
         </Box>
       </Toolbar>
       <LoginDialog open={openDialog} onClose={(): void => setOpenDialog(false)} />

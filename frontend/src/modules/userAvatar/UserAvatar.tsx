@@ -1,7 +1,7 @@
 import React, { FC, MouseEvent } from 'react';
 import { Avatar } from '@material-ui/core';
 
-import { UserName } from 'models/User';
+import { User } from 'models/User';
 
 const getInitials = (userName): string => {
   let initials;
@@ -31,19 +31,18 @@ const getHSLFromString = (string: string): string => {
 };
 
 interface Props {
-  userName?: UserName;
-  avatarUrl?: string;
+  user: User | null;
   className?: string;
   onClick?(event: MouseEvent): void;
 }
 
-const UserAvatar: FC<Props> = ({ userName, avatarUrl, className, onClick }) => {
-  const initials = userName && getInitials(userName);
+const UserAvatar: FC<Props> = ({ user, className, onClick }) => {
+  const initials = user?.name && getInitials(user.name);
 
-  const color = userName && getHSLFromString(userName);
+  const color = user?.name && getHSLFromString(user.name);
 
-  if (avatarUrl) {
-    return <Avatar className={className} src={avatarUrl} alt={initials} onClick={onClick} style={{ backgroundColor: color }} />;
+  if (user?.avatarUrl) {
+    return <Avatar className={className} src={user.avatarUrl} alt={initials} onClick={onClick} style={{ backgroundColor: color }} />;
   } else if (initials) {
     return (
       <Avatar className={className} onClick={onClick} style={{ backgroundColor: color }}>

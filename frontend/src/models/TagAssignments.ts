@@ -1,6 +1,6 @@
 import { TagName } from './Tag';
-import { TagAssignee } from './TagAssignee';
+import { User } from './User';
 
-type TagAssignments = Record<TagName, TagAssignee | undefined>;
+type TagAssignments = Record<TagName, User | undefined>;
 
 export default TagAssignments;

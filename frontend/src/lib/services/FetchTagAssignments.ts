@@ -5,6 +5,7 @@ import FetchTagAssignmentsTypes from './generated/FetchTagAssignmentsTypes';
 
 interface ResponseDataElement {
   tag: string;
+  userId: string;
   userName?: string;
   avatarUrl?: string;
 }
@@ -12,7 +13,7 @@ type ResponseData = ResponseDataElement[];
 
 const createTagAssignments = (responseData: ResponseData): TagAssignments => {
   const tagAssignments: TagAssignments = {};
-  responseData.forEach(item => (tagAssignments[item.tag] = { userName: item.userName, avatarUrl: item.avatarUrl }));
+  responseData.forEach(item => (tagAssignments[item.tag] = { userId: item.userId, name: item.userName, avatarUrl: item.avatarUrl }));
   return tagAssignments;
 };
 

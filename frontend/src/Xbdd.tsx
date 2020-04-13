@@ -9,15 +9,15 @@ import ReportContainer from 'modules/report/ReportContainer';
 import ErrorBoundary from 'modules/errorBoundary/ErrorBoundary';
 import theme from 'AppTheme';
 import NotificationsView from 'modules/notifications/NotificationsView';
-import RedirectPage from 'modules/redirect/RedirectPage';
+import GithubLoginRedirectPage from 'modules/redirects/GithubLoginRedirectPage';
 import { RootStore } from 'rootReducer';
 import { getUserIfTokenIsValid } from 'xbddReducer';
-import { User } from 'models/User';
+import { LoggedInUser } from 'models/User';
 
 import './Xbdd.css';
 
 interface UserProps {
-  user: User | null;
+  user: LoggedInUser | null;
 }
 
 const ReportPage: FC<UserProps> = ({ user }) => {
@@ -29,7 +29,7 @@ const PageContent: FC<UserProps> = ({ user }) => {
   return (
     <Switch>
       <Route path="/redirect">
-        <RedirectPage />
+        <GithubLoginRedirectPage />
       </Route>
       <Route path="/reports/:product/:version/:build">
         <ReportPage user={user} />

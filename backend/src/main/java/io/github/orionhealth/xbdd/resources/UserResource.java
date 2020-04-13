@@ -70,6 +70,7 @@ public class UserResource {
 	public Response putTagsAssignment(@BeanParam final Coordinates coordinates, final SingleTagAssignment singleTagAssignment) {
 		final User user = LoggedInUserUtil.getLoggedInUser();
 
+		singleTagAssignment.setUserId(user.getUserId());
 		singleTagAssignment.setAvatarUrl(user.getAvatarUrl());
 		singleTagAssignment.setUserName(user.getName());
 

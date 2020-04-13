@@ -13,7 +13,7 @@ import Status from 'models/Status';
 import TagAvatar from './TagAvatar';
 import TagAssignments from 'models/TagAssignments';
 import TagsIgnored from 'models/TagsIgnored';
-import { TagAssignee } from 'models/TagAssignee';
+import { User } from 'models/User';
 
 interface Props extends WithStyles {
   isEditMode: boolean;
@@ -25,7 +25,7 @@ interface Props extends WithStyles {
   selectedFeatureId: string;
   selectedStatus: Status;
   handleFeatureSelected(): void;
-  handleTagAssigned(restId: string, name: string, currentAssignee?: TagAssignee): void;
+  handleTagAssigned(restId: string, name: string, currentlyAssignedUser?: User): void;
   handleTagIgnore(productId: string, name: string): void;
 }
 
@@ -46,7 +46,7 @@ const TagListItem: FC<Props> = ({
   const [expanded, setExpanded] = useState(false);
   const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
   const { name } = tag;
-  const tagAssignee = tagAssignments[name];
+  const user = tagAssignments[name];
   const isIgnored = tagsIgnored[name];
 
   if (isAssignedTagsView && isIgnored) {
@@ -62,7 +62,7 @@ const TagListItem: FC<Props> = ({
     event.stopPropagation();
 
     // TODO there is a potential but here as an undefined username can happen in two cases. Fix this when converting FeatureListContainer to TS
-    handleTagAssigned(restId, name, tagAssignee);
+    handleTagAssigned(restId, name, user);
   };
 
   return (
@@ -72,7 +72,7 @@ const TagListItem: FC<Props> = ({
           <FontAwesomeIcon icon={isIgnored ? faMinusSquare : faSquare} className={classes.checkboxIcons} onClick={onTagIgnoreClick} />
         )}
         <ListItemText>{tag.name}</ListItemText>
-        <TagAvatar tagAssignee={tagAssignee} isIgnored={isIgnored} onClick={onAvatarClick} />
+        <TagAvatar user={user} isIgnored={isIgnored} onClick={onAvatarClick} />
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} timeout="auto" unmountOnExit>

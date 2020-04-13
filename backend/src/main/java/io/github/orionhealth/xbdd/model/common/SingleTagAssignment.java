@@ -3,6 +3,8 @@ package io.github.orionhealth.xbdd.model.common;
 public class SingleTagAssignment {
 	private String tag;
 
+	private String userId;
+
 	private String userName;
 
 	private String avatarUrl;
@@ -13,6 +15,14 @@ public class SingleTagAssignment {
 
 	public void setTag(final String tag) {
 		this.tag = tag;
+	}
+
+	public String getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(final String userId) {
+		this.userId = userId;
 	}
 
 	public String getUserName() {

@@ -1,7 +1,7 @@
 import { getValidToken } from './TokenService';
 import { Method, doRequest } from 'lib/rest/RestRequests';
 import FetchLoggedInUserTypes from './generated/FetchLoggedInUserTypes';
-import { User } from 'models/User';
+import { LoggedInUser } from 'models/User';
 
 interface ResponseData {
   user_id: string;
@@ -14,7 +14,7 @@ interface ResponseData {
 }
 
 /* eslint-disable @typescript-eslint/camelcase */
-const createUser = ({ user_id, email, avatarUrl, name, socialLogin, loginType, favourites }: ResponseData): User => ({
+const createUser = ({ user_id, email, avatarUrl, name, socialLogin, loginType, favourites }: ResponseData): LoggedInUser => ({
   userId: user_id,
   email,
   avatarUrl,
@@ -24,7 +24,7 @@ const createUser = ({ user_id, email, avatarUrl, name, socialLogin, loginType, f
   favourites,
 });
 
-export const fetchLoggedInUser = async (): Promise<User | void> => {
+export const fetchLoggedInUser = async (): Promise<LoggedInUser | void> => {
   const path = `/rest/user/loggedin`;
   const token = await getValidToken();
   if (token) {

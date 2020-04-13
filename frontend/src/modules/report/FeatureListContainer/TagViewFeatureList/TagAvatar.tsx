@@ -2,7 +2,7 @@ import React, { FC, MouseEvent } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
 
-import { TagAssignee } from 'models/TagAssignee';
+import { User } from 'models/User';
 import UserAvatar from 'modules/userAvatar/UserAvatar';
 
 const useStyles = makeStyles(() =>
@@ -23,21 +23,19 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-  tagAssignee?: TagAssignee;
+  user?: User;
   isIgnored: boolean;
   onClick(event: MouseEvent): void;
 }
 
-const TagAvatar: FC<Props> = ({ tagAssignee, isIgnored, onClick }) => {
+const TagAvatar: FC<Props> = ({ user, isIgnored, onClick }) => {
   const classes = useStyles();
 
   if (isIgnored) {
     return <Block className={classes.blockAvatar} />;
   }
 
-  return (
-    <UserAvatar className={classes.userAvatar} userName={tagAssignee?.userName} avatarUrl={tagAssignee?.avatarUrl} onClick={onClick} />
-  );
+  return <UserAvatar className={classes.userAvatar} user={user || null} onClick={onClick} />;
 };
 
 export default TagAvatar;
