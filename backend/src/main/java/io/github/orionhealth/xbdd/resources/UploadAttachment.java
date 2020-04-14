@@ -96,7 +96,7 @@ public class UploadAttachment {
 				}
 			}
 			feature.put("elements", elements);
-			feature.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
+			feature.put("statusLastEditedBy", LoggedInUserUtil.getLoggedInUser().getDisplay());
 			feature.put("lastEditOn", new Date());
 
 			// add edit update

@@ -39,21 +39,13 @@ public class UsersDao {
 			return user;
 		}
 
-		if (shouldUpdateUser(savedUser, user)) {
-			savedUser.setAvatarUrl(user.getAvatarUrl());
-			savedUser.setEmail(user.getEmail());
-			savedUser.setName(user.getName());
+		if (!StringUtils.equals(savedUser.getDisplay(), user.getDisplay())) {
+			savedUser.setDisplay(user.getDisplay());
 			users.replaceOne(query, savedUser);
 		}
 
 		return savedUser;
 
-	}
-
-	private boolean shouldUpdateUser(final User savedUser, final User user) {
-		return StringUtils.equals(savedUser.getAvatarUrl(), user.getAvatarUrl()) &&
-				StringUtils.equals(savedUser.getEmail(), user.getEmail()) &&
-				StringUtils.equals(savedUser.getName(), user.getName());
 	}
 
 	public List<String> getUserFavourites(final String userId) {

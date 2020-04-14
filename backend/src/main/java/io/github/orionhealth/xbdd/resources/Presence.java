@@ -63,11 +63,11 @@ public class Presence {
 		final Date now = Calendar.getInstance().getTime();
 		collection.update(query,
 				new BasicDBObject("$set",
-						new BasicDBObject("users." + LoggedInUserUtil.getDisplayString(), now).append("lastUpdated", now)),
+						new BasicDBObject("users." + LoggedInUserUtil.getLoggedInUser().getDisplay(), now).append("lastUpdated", now)),
 				true,
 				false);
 		final DBObject newPresence = collection.findOne(query);
-		newPresence.put("currentUser", LoggedInUserUtil.getDisplayString());
+		newPresence.put("currentUser", LoggedInUserUtil.getLoggedInUser().getDisplay());
 		return Response.ok(SerializerUtil.serialise(newPresence)).build();
 	}
 
@@ -82,7 +82,7 @@ public class Presence {
 								.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
 										.getBuild() + "/" + featureId);
 		final DBObject newPresence = collection.findOne(query);
-		newPresence.put("currentUser", LoggedInUserUtil.getDisplayString());
+		newPresence.put("currentUser", LoggedInUserUtil.getLoggedInUser().getDisplay());
 		return Response.ok(SerializerUtil.serialise(newPresence)).build();
 
 	}
@@ -112,10 +112,11 @@ public class Presence {
 						"featureId", featureId))
 								.append("_id", coordinates.getProduct() + "/" + coordinates.getVersionString() + "/" + coordinates
 										.getBuild() + "/" + featureId);
-		collection.update(query, new BasicDBObject("$unset", new BasicDBObject("users." + LoggedInUserUtil.getDisplayString(), 1)),
+		collection.update(query,
+				new BasicDBObject("$unset", new BasicDBObject("users." + LoggedInUserUtil.getLoggedInUser().getDisplay(), 1)),
 				true, false);
 		final DBObject newPresence = collection.findOne(query);
-		newPresence.put("currentUser", LoggedInUserUtil.getDisplayString());
+		newPresence.put("currentUser", LoggedInUserUtil.getLoggedInUser().getDisplay());
 		return Response.ok(SerializerUtil.serialise(newPresence)).build();
 	}
 }

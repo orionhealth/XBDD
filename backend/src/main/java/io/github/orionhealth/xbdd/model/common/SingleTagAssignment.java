@@ -1,13 +1,18 @@
 package io.github.orionhealth.xbdd.model.common;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SingleTagAssignment {
 	private String tag;
 
 	private String userId;
 
-	private String userName;
+	private String socialLogin;
 
-	private String avatarUrl;
+	private LoginType loginType;
+
+	private String display;
 
 	public String getTag() {
 		return this.tag;
@@ -25,20 +30,28 @@ public class SingleTagAssignment {
 		this.userId = userId;
 	}
 
-	public String getUserName() {
-		return this.userName;
+	public String getSocialLogin() {
+		return this.socialLogin;
 	}
 
-	public void setUserName(final String userName) {
-		this.userName = userName;
+	public void setSocialLogin(final String socialLogin) {
+		this.socialLogin = socialLogin;
 	}
 
-	public String getAvatarUrl() {
-		return this.avatarUrl;
+	public LoginType getLoginType() {
+		return this.loginType;
 	}
 
-	public void setAvatarUrl(final String avatarUrl) {
-		this.avatarUrl = avatarUrl;
+	public void setLoginType(final LoginType loginType) {
+		this.loginType = loginType;
+	}
+
+	public String getDisplay() {
+		return this.display;
+	}
+
+	public void setDisplay(final String display) {
+		this.display = display;
 	}
 
 }

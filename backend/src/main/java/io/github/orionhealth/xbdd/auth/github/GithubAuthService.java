@@ -12,6 +12,7 @@ package io.github.orionhealth.xbdd.auth.github;
 
 import java.io.IOException;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,10 +43,9 @@ public class GithubAuthService {
 	private User mapGithubProfileToUser(final GithubProfile githubProfile) {
 		final User user = new User();
 
-		user.setAvatarUrl(githubProfile.getAvatarUrl());
-		user.setEmail(githubProfile.getEmail());
 		user.setLoginType(LoginType.GITHUB);
-		user.setName(githubProfile.getName());
+		user.setDisplay(StringUtils.defaultIfBlank(githubProfile.getName(), githubProfile.getLogin()));
+		user.setSocialId(githubProfile.getId());
 		user.setSocialLogin(githubProfile.getLogin());
 		user.setUserId(String.format("github-%s", githubProfile.getId()));
 

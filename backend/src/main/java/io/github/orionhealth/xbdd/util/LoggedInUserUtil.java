@@ -10,7 +10,6 @@
  */
 package io.github.orionhealth.xbdd.util;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,23 +28,5 @@ public class LoggedInUserUtil {
 
 		// This shouldn't ever happen unless it is called in an unauthenticated context.
 		throw new RuntimeException("Attempted to get logged in user but you must not be logged in.");
-	}
-
-	public static String getDisplayString() {
-		final User user = getLoggedInUser();
-
-		if (StringUtils.isNotBlank(user.getName())) {
-			return user.getName();
-		}
-
-		if (StringUtils.isNotBlank(user.getSocialLogin())) {
-			return user.getSocialLogin();
-		}
-
-		if (StringUtils.isNotBlank(user.getEmail())) {
-			return user.getEmail();
-		}
-
-		return user.getUserId();
 	}
 }

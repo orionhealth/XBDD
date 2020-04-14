@@ -6,8 +6,10 @@ import * as t from 'ts-interface-checker';
 
 export const ResponseDataElement = t.iface([], {
   tag: 'string',
-  userName: t.opt('string'),
-  avatarUrl: t.opt('string'),
+  userId: t.opt('string'),
+  socialLogin: t.opt('string'),
+  loginType: t.opt('string'),
+  display: t.opt('string'),
 });
 
 export const ResponseData = t.array('ResponseDataElement');

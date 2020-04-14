@@ -71,8 +71,9 @@ public class UserResource {
 		final User user = LoggedInUserUtil.getLoggedInUser();
 
 		singleTagAssignment.setUserId(user.getUserId());
-		singleTagAssignment.setAvatarUrl(user.getAvatarUrl());
-		singleTagAssignment.setUserName(user.getName());
+		singleTagAssignment.setSocialLogin(user.getSocialLogin());
+		singleTagAssignment.setLoginType(user.getLoginType());
+		singleTagAssignment.setDisplay(LoggedInUserUtil.getLoggedInUser().getDisplay());
 
 		this.tagAssignmentDao.saveTagAssignment(coordinates, singleTagAssignment);
 		return Response.ok().build();

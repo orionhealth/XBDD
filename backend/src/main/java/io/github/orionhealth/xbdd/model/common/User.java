@@ -11,11 +11,12 @@ public class User {
 	@JsonProperty("user_id")
 	private String userId;
 
-	private String email;
-	private String avatarUrl;
-	private String name;
+	private String socialId;
 	private String socialLogin;
 	private LoginType loginType;
+
+	// Text display for the user, ideally a name or handle
+	private String display;
 
 	private Map<String, Boolean> favourites;
 
@@ -27,28 +28,12 @@ public class User {
 		this.userId = userId;
 	}
 
-	public String getEmail() {
-		return this.email;
+	public String getSocialId() {
+		return this.socialId;
 	}
 
-	public void setEmail(final String email) {
-		this.email = email;
-	}
-
-	public String getAvatarUrl() {
-		return this.avatarUrl;
-	}
-
-	public void setAvatarUrl(final String avatarUrl) {
-		this.avatarUrl = avatarUrl;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
+	public void setSocialId(final String socialId) {
+		this.socialId = socialId;
 	}
 
 	public String getSocialLogin() {
@@ -65,6 +50,14 @@ public class User {
 
 	public void setLoginType(final LoginType loginType) {
 		this.loginType = loginType;
+	}
+
+	public String getDisplay() {
+		return this.display;
+	}
+
+	public void setDisplay(final String display) {
+		this.display = display;
 	}
 
 	public Map<String, Boolean> getFavourites() {

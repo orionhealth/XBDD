@@ -101,7 +101,7 @@ public class Report {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSummaryOfAllReports() {
 		// TODO this doesn't actually do anything atm as we dont have users but this is how you would use it
-		final List<String> favourites = this.usersDao.getUserFavourites(LoggedInUserUtil.getDisplayString());
+		final List<String> favourites = this.usersDao.getUserFavourites(LoggedInUserUtil.getLoggedInUser().getDisplay());
 		final List<Summary> summaries = this.summaryDao.getSummaries();
 
 		summaries.forEach(summary -> summary.setFavourite(favourites.contains(summary.getCoordinates().getProduct())));

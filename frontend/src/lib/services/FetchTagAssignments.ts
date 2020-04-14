@@ -1,19 +1,33 @@
+import { User } from 'models/User';
 import { getValidToken } from './TokenService';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import TagAssignments from 'models/TagAssignments';
 import FetchTagAssignmentsTypes from './generated/FetchTagAssignmentsTypes';
+import { getAvatarUrl } from './FetchLoggedInUser';
 
 interface ResponseDataElement {
   tag: string;
-  userId: string;
-  userName?: string;
-  avatarUrl?: string;
+  userId?: string;
+  socialLogin?: string;
+  loginType?: string;
+  display?: string;
 }
 type ResponseData = ResponseDataElement[];
 
+const mapUser = ({ userId, socialLogin, loginType, display }: ResponseDataElement): User | undefined => {
+  if (userId && socialLogin && loginType && display) {
+    return {
+      userId,
+      socialLogin,
+      display,
+      avatarUrl: getAvatarUrl(loginType, socialLogin),
+    };
+  }
+};
+
 const createTagAssignments = (responseData: ResponseData): TagAssignments => {
   const tagAssignments: TagAssignments = {};
-  responseData.forEach(item => (tagAssignments[item.tag] = { userId: item.userId, name: item.userName, avatarUrl: item.avatarUrl }));
+  responseData.forEach(item => (tagAssignments[item.tag] = mapUser(item)));
   return tagAssignments;
 };
 

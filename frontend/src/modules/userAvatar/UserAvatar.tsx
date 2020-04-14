@@ -3,9 +3,9 @@ import { Avatar } from '@material-ui/core';
 
 import { User } from 'models/User';
 
-const getInitials = (userName): string => {
+const getInitials = (userName: string): string => {
   let initials;
-  const nameParts = userName && userName?.split(' ');
+  const nameParts = userName?.split(' ');
 
   if (nameParts) {
     if (nameParts.length > 1) {
@@ -22,10 +22,10 @@ const getInitials = (userName): string => {
   return initials;
 };
 
-const getHSLFromString = (string: string): string => {
+const getHSLFromString = (display: string): string => {
   let val = 0;
-  for (let i = 0; i < string.length; i++) {
-    val += string.charCodeAt(i);
+  for (let i = 0; i < display.length; i++) {
+    val += display.charCodeAt(i);
   }
   return 'hsl(' + ((val * val) % 360) + ', 21%, 63%)';
 };
@@ -37,9 +37,13 @@ interface Props {
 }
 
 const UserAvatar: FC<Props> = ({ user, className, onClick }) => {
-  const initials = user?.name && getInitials(user.name);
+  let initials;
+  let color;
 
-  const color = user?.name && getHSLFromString(user.name);
+  if (user) {
+    initials = getInitials(user.display);
+    color = getHSLFromString(user.display);
+  }
 
   if (user?.avatarUrl) {
     return <Avatar className={className} src={user.avatarUrl} alt={initials} onClick={onClick} style={{ backgroundColor: color }} />;

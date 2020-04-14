@@ -6,12 +6,10 @@ import * as t from 'ts-interface-checker';
 
 export const ResponseData = t.iface([], {
   user_id: 'string',
-  email: 'string',
-  avatarUrl: 'string',
-  name: 'string',
+  display: 'string',
   socialLogin: 'string',
   loginType: 'string',
-  favourites: 'any',
+  favourites: t.opt('any'),
 });
 
 const exportedTypeSuite: t.ITypeSuite = {

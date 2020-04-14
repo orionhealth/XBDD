@@ -223,7 +223,7 @@ public class Feature {
 				final DBCollection tips = this.mongoLegacyDb.getCollection("testingTips");
 				updateTestingTipsForScenario(tips, scenarioToUpdate, coordinates, featureId);
 			}
-			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
+			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getLoggedInUser().getDisplay());
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
@@ -257,7 +257,7 @@ public class Feature {
 		// get the differences/new edits
 
 		// Detect if the edits caused a change
-		feature.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
+		feature.put("statusLastEditedBy", LoggedInUserUtil.getLoggedInUser().getDisplay());
 		feature.put("lastEditOn", new Date());
 		final BasicDBList edits = updateEdits(feature, report);
 		feature.put("edits", edits);
@@ -298,7 +298,7 @@ public class Feature {
 				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
 				updateSteps(stepsToUpdate, stepLine, status);
 			}
-			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
+			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getLoggedInUser().getDisplay());
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);
@@ -400,7 +400,7 @@ public class Feature {
 				final BasicDBList stepsToUpdate = (BasicDBList) (scenarioToUpdate.get("steps"));
 				updateAllSteps(stepsToUpdate, status);
 			}
-			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getDisplayString());
+			featureToUpdate.put("statusLastEditedBy", LoggedInUserUtil.getLoggedInUser().getDisplay());
 			featureToUpdate.put("lastEditOn", new Date());
 			featureToUpdate.put("calculatedStatus", calculateStatusForFeature(featureToUpdate));
 			collection.save(featureToUpdate);

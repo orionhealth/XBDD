@@ -5,22 +5,24 @@ import { LoggedInUser } from 'models/User';
 
 interface ResponseData {
   user_id: string;
-  email: string;
-  avatarUrl: string;
-  name: string;
+  display: string;
   socialLogin: string;
   loginType: string;
-  favourites: any;
+  favourites?: any;
 }
 
+export const getAvatarUrl = (loginType: string, socialLogin: string): string | undefined => {
+  if (loginType === 'GITHUB') {
+    return `https://github.com/${socialLogin}.png`;
+  }
+};
+
 /* eslint-disable @typescript-eslint/camelcase */
-const createUser = ({ user_id, email, avatarUrl, name, socialLogin, loginType, favourites }: ResponseData): LoggedInUser => ({
+const createUser = ({ user_id, display, socialLogin, loginType, favourites }: ResponseData): LoggedInUser => ({
   userId: user_id,
-  email,
-  avatarUrl,
-  name,
+  display,
   socialLogin,
-  loginType,
+  avatarUrl: getAvatarUrl(loginType, socialLogin),
   favourites,
 });
 
