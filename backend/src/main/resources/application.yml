@@ -17,9 +17,11 @@ security:
     client:
       client-id: xbdd
       client-secret: secret
+      accessTokenUri: http://localhost:8080/oauth/token
 
-server:
-  port: 8443
-  ssl:
-    key-store: classpath:certs/keystore.p12
-    key-store-password: password
+# Enable this if you want to run on https, note that the frontend .env files will need to be updated
+#server:
+#  port: 8443
+#  ssl:
+#    key-store: classpath:certs/keystore.p12
+#    key-store-password: password

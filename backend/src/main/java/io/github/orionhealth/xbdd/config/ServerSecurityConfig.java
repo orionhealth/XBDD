@@ -18,7 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 import io.github.orionhealth.xbdd.auth.github.GithubAuthenticationProvider;
-import io.github.orionhealth.xbdd.dev.SimpleCORSFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -27,9 +26,6 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	GithubAuthenticationProvider githubAuthenticationProvider;
-
-	@Autowired
-	SimpleCORSFilter simpleCorsFilters;
 
 	@Override
 	protected void configure(final AuthenticationManagerBuilder auth) {
