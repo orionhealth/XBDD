@@ -8,7 +8,7 @@ import { RootStore } from 'rootReducer';
 import { setUser } from '../../xbddReducer';
 import LoginDialog from './LoginDialog';
 import { useNavbarStyles } from './styles/NavbarStyles';
-import UserAvatar from './UserAvatar';
+import UserAvatar from '../userAvatar/UserAvatar';
 import { clearTokenFromLocalStorage } from 'lib/services/LocalStorageService';
 
 const Navbar: FC = () => {

@@ -28,6 +28,6 @@ export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/rest/feat
 export const updateComments = (featureId, patch) => doPutRequest(`/rest/feature/comments/${featureId}`, patch);
 
 // patch should be of type TagAssignment
-export const setTagAssignmentData = (restId, patch) => doPutRequest(`/rest/user/tagAssignment/${restId}`, patch);
+export const setTagAssignmentData = (restId, tag) => doPutRequest(`/rest/user/tagAssignment/${restId}`, { tag });
 
 export const setIgnoredTag = (product, patch) => doPutRequest(`/rest/user/ignoredTags/${product}`, patch);

@@ -166,6 +166,7 @@ class ReportContainer extends Component {
           <Grid container>
             <Grid item xs={4} lg={4}>
               <FeatureListContainer
+                user={user}
                 product={product}
                 version={version}
                 build={build}

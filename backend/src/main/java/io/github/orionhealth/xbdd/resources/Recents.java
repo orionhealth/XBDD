@@ -59,7 +59,7 @@ public class Recents {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", LoggedInUserUtil.getDisplayString());
+		user.put("user_id", LoggedInUserUtil.getLoggedInUser().getDisplay());
 
 		final DBObject blank = new BasicDBObject();
 		final DBObject doc = collection.findAndModify(user, blank, blank, false, new BasicDBObject("$set", user), true, true);
@@ -93,7 +93,7 @@ public class Recents {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", LoggedInUserUtil.getDisplayString());
+		user.put("user_id", LoggedInUserUtil.getLoggedInUser().getDisplay());
 
 		final DBObject blank = new BasicDBObject();
 		final DBObject doc = collection.findAndModify(user, blank, blank, false, new BasicDBObject("$set", user), true, true);
@@ -125,7 +125,7 @@ public class Recents {
 
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
-		final BasicDBObject user = new BasicDBObject("user_id", LoggedInUserUtil.getDisplayString());
+		final BasicDBObject user = new BasicDBObject("user_id", LoggedInUserUtil.getLoggedInUser().getDisplay());
 
 		final DBCursor cursor = collection.find(user);
 		DBObject doc;
@@ -148,7 +148,7 @@ public class Recents {
 
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
-		final BasicDBObject user = new BasicDBObject("user_id", LoggedInUserUtil.getDisplayString());
+		final BasicDBObject user = new BasicDBObject("user_id", LoggedInUserUtil.getLoggedInUser().getDisplay());
 
 		final DBCursor cursor = collection.find(user);
 		DBObject doc;

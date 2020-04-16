@@ -5,6 +5,7 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
+
 import { tagListItemStyles } from './styles/TagListStyles';
 import TagViewFeatureList from './TagViewFeatureList';
 import Tag from 'models/Tag';
@@ -12,10 +13,9 @@ import Status from 'models/Status';
 import TagAvatar from './TagAvatar';
 import TagAssignments from 'models/TagAssignments';
 import TagsIgnored from 'models/TagsIgnored';
-import { UserName } from 'models/User';
+import { User } from 'models/User';
 
 interface Props extends WithStyles {
-  loggedInUserName: UserName;
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tag: Tag;
@@ -25,12 +25,11 @@ interface Props extends WithStyles {
   selectedFeatureId: string;
   selectedStatus: Status;
   handleFeatureSelected(): void;
-  handleTagAssigned(restId: string, name: string, loggedInUserName: UserName, userName?: UserName): void;
+  handleTagAssigned(restId: string, name: string, currentlyAssignedUser?: User): void;
   handleTagIgnore(productId: string, name: string): void;
 }
 
 const TagListItem: FC<Props> = ({
-  loggedInUserName,
   isEditMode,
   isAssignedTagsView,
   tag,
@@ -47,7 +46,7 @@ const TagListItem: FC<Props> = ({
   const [expanded, setExpanded] = useState(false);
   const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
   const { name } = tag;
-  const userName = tagAssignments[name];
+  const user = tagAssignments[name];
   const isIgnored = tagsIgnored[name];
 
   if (isAssignedTagsView && isIgnored) {
@@ -61,7 +60,9 @@ const TagListItem: FC<Props> = ({
 
   const onAvatarClick = (event: MouseEvent): void => {
     event.stopPropagation();
-    handleTagAssigned(restId, name, loggedInUserName, userName);
+
+    // TODO there is a potential but here as an undefined username can happen in two cases. Fix this when converting FeatureListContainer to TS
+    handleTagAssigned(restId, name, user);
   };
 
   return (
@@ -71,7 +72,7 @@ const TagListItem: FC<Props> = ({
           <FontAwesomeIcon icon={isIgnored ? faMinusSquare : faSquare} className={classes.checkboxIcons} onClick={onTagIgnoreClick} />
         )}
         <ListItemText>{tag.name}</ListItemText>
-        <TagAvatar userName={userName} isIgnored={isIgnored} onClick={onAvatarClick} />
+        <TagAvatar user={user} isIgnored={isIgnored} onClick={onAvatarClick} />
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} timeout="auto" unmountOnExit>

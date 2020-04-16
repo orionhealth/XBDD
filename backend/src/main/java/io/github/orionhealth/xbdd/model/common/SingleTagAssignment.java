@@ -1,24 +1,26 @@
 package io.github.orionhealth.xbdd.model.common;
 
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class SingleTagAssignment {
+	private String tag;
 
-public class User {
-
-	@SerializedName("user_id")
-	@JsonProperty("user_id")
 	private String userId;
 
-	private String socialId;
 	private String socialLogin;
+
 	private LoginType loginType;
 
-	// Text display for the user, ideally a name or handle
 	private String display;
 
-	private Map<String, Boolean> favourites;
+	public String getTag() {
+		return this.tag;
+	}
+
+	public void setTag(final String tag) {
+		this.tag = tag;
+	}
 
 	public String getUserId() {
 		return this.userId;
@@ -26,14 +28,6 @@ public class User {
 
 	public void setUserId(final String userId) {
 		this.userId = userId;
-	}
-
-	public String getSocialId() {
-		return this.socialId;
-	}
-
-	public void setSocialId(final String socialId) {
-		this.socialId = socialId;
 	}
 
 	public String getSocialLogin() {
@@ -60,11 +54,4 @@ public class User {
 		this.display = display;
 	}
 
-	public Map<String, Boolean> getFavourites() {
-		return this.favourites;
-	}
-
-	public void setFavourites(final Map<String, Boolean> favourites) {
-		this.favourites = favourites;
-	}
 }

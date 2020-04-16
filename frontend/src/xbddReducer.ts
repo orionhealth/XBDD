@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
 
 import { getValidToken } from './lib/services/TokenService';
-import { User } from 'models/User';
+import { LoggedInUser } from 'models/User';
 import { putTokenInLocalStorage } from 'lib/services/LocalStorageService';
 import { authenticateWithGithubCode } from 'lib/services/FetchAuthToken';
 import { fetchLoggedInUser } from 'lib/services/FetchLoggedInUser';
 import { StoreDispatch } from 'rootReducer';
 
 interface UserState {
-  user: User | null;
+  user: LoggedInUser | null;
 }
 
-type UserAction = PayloadAction<User | null>;
+type UserAction = PayloadAction<LoggedInUser | null>;
 
 type XbddState = UserState;
 

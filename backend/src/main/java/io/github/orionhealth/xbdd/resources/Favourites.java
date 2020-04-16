@@ -50,7 +50,7 @@ public class Favourites {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", LoggedInUserUtil.getDisplayString());
+		user.put("user_id", LoggedInUserUtil.getLoggedInUser().getDisplay());
 
 		final DBObject blank = new BasicDBObject();
 		collection.findAndModify(user, blank, blank, false, new BasicDBObject("$set", user), true, true);
@@ -84,7 +84,7 @@ public class Favourites {
 	public Response getFavouriteStateOfProduct(@PathParam("product") final String product) {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("users");
 
-		final BasicDBObject query = new BasicDBObject("user_id", LoggedInUserUtil.getDisplayString());
+		final BasicDBObject query = new BasicDBObject("user_id", LoggedInUserUtil.getLoggedInUser().getDisplay());
 		query.put("favourites." + product, true);
 
 		final DBObject favState = collection.findOne(query);
@@ -100,7 +100,7 @@ public class Favourites {
 		final DBCollection usersCollection = this.mongoLegacyDb.getCollection("users");
 
 		final BasicDBObject user = new BasicDBObject();
-		user.put("user_id", LoggedInUserUtil.getDisplayString());
+		user.put("user_id", LoggedInUserUtil.getLoggedInUser().getDisplay());
 
 		final DBObject blank = new BasicDBObject();
 		final DBObject uDoc = usersCollection.findAndModify(user, blank, blank, false,

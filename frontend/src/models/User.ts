@@ -1,11 +1,10 @@
-export type UserName = string;
-
 export interface User {
   userId: string;
-  email?: string;
-  avatarUrl?: string;
-  name?: UserName;
   socialLogin: string;
-  loginType: string;
+  display: string;
+  avatarUrl?: string;
+}
+
+export interface LoggedInUser extends User {
   favourites?: Record<string, boolean>;
 }

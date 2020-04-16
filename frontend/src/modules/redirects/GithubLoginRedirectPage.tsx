@@ -15,7 +15,7 @@ const getCodeFromQueryParam = (): string | undefined => {
   return extractedCode || undefined;
 };
 
-const RedirectPage: FC = () => {
+const GithubLoginRedirectPage: FC = () => {
   const user = useSelector((store: RootStore) => store.app.user);
   const dispatch = useDispatch();
   const code = getCodeFromQueryParam();
@@ -31,4 +31,4 @@ const RedirectPage: FC = () => {
   return <Loading loading={true} />;
 };
 
-export default RedirectPage;
+export default GithubLoginRedirectPage;
