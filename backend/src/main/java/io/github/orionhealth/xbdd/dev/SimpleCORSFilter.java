@@ -1,13 +1,3 @@
-/*
- * Copyright (c) Orchestral Developments Ltd and the Orion Health group of companies (2001 - 2020).
- *
- * This document is copyright. Except for the purpose of fair reviewing, no part
- * of this publication may be reproduced or transmitted in any form or by any
- * means, electronic or mechanical, including photocopying, recording, or any
- * information storage and retrieval system, without permission in writing from
- * the publisher. Infringers of copyright render themselves liable for
- * prosecution.
- */
 package io.github.orionhealth.xbdd.dev;
 
 import java.io.IOException;
@@ -34,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleCORSFilter implements Filter {
-	
+
 	@Value("${security.oauth2.client.accessTokenUri}")
 	String accessTokenUri;
 
@@ -45,11 +35,11 @@ public class SimpleCORSFilter implements Filter {
 	@Override
 	public void doFilter(final ServletRequest req, final ServletResponse resp,
 			final FilterChain chain) throws IOException, ServletException {
-		
+
 		final HttpServletResponse response = (HttpServletResponse) resp;
 		final HttpServletRequest request = (HttpServletRequest) req;
-		
-		String scheme = accessTokenUri.startsWith("https") ? "https" : "http";
+
+		final String scheme = this.accessTokenUri.startsWith("https") ? "https" : "http";
 		response.setHeader("Access-Control-Allow-Origin", String.format("%s://localhost:3000", scheme));
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, PATCH");
 		response.setHeader("Access-Control-Max-Age", "3600");
