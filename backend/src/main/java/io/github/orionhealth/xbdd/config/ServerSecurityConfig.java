@@ -26,7 +26,10 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/rest/reports/**").permitAll()
 				.anyRequest().authenticated()
 			)
-			.csrf(c -> c.disable()) // TODO - we probably want CSRF on but it's failing PUT/POST atm for some reason.
+			.csrf(c -> c
+//				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//				.ignoringAntMatchers("/login", "/logout")
+				.disable()) // TODO - we probably want CSRF on, but it's failing PUT/POST requests atm for some reason.
 			.logout(l -> l
 				// No logout URL as the frontend provides the logout redirect.
 				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
