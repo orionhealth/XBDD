@@ -1,7 +1,6 @@
 import { createCheckers, ITypeSuite } from 'ts-interface-checker';
 
 import { showNotification } from 'modules/notifications/notifications';
-import OAuthToken from 'models/OAuthToken';
 
 const backendUrl = process.env.REACT_APP_BACKEND_HOST || '';
 const DEFAULT_TIMEOUT = 10000;
@@ -13,13 +12,8 @@ export enum Method {
   DELETE = 'DELETE',
 }
 
-const getHeaders = (token?: OAuthToken): Headers => {
-  if (!token) {
-    throw Error("Can't make authenticated call if not logged in");
-  }
-
+const getHeaders = (): Headers => {
   return new Headers({
-    Authorization: `${token.tokenType} ${token.accessToken}`,
     'Content-Type': 'application/json',
   });
 };
@@ -38,11 +32,12 @@ const validateResponseData = (responseData: unknown, type: ITypeSuite | ITypeSui
   createCheckers(...types).ResponseData.check(responseData);
 };
 
-const call = <T>(method: Method, path: string, data: unknown, token?: OAuthToken, options?: RequestInit): Promise<T | void> => {
+const call = <T>(method: Method, path: string, data: unknown, options?: RequestInit): Promise<T | void> => {
   const url = `${backendUrl}${path}`;
   const requestOptions = options || {
     method,
-    headers: getHeaders(token),
+    credentials: 'include', // TODO - this should be dev only
+    headers: getHeaders(),
     body: data ? JSON.stringify(data) : null,
   };
 
@@ -62,13 +57,12 @@ const handleError = (error: Error, path: string, message: string): void => {
   showNotification({ message, severity: 'error' });
 };
 
-export function doRequest<T>(method: Method, path: string, errorMessage: string, data: unknown, token: OAuthToken): Promise<T | void>;
+export function doRequest<T>(method: Method, path: string, errorMessage: string, data: unknown): Promise<T | void>;
 export function doRequest<T, R>(
   method: Method,
   path: string,
   errorMessage: string,
   data: unknown,
-  token: OAuthToken,
   type: ITypeSuite | ITypeSuite[],
   onSuccess: (responseData: T) => R
 ): Promise<R | void>;
@@ -77,7 +71,6 @@ export function doRequest<T, R>(
   path: string,
   errorMessage: string,
   data: unknown,
-  token: OAuthToken,
   type: ITypeSuite | ITypeSuite[],
   onSuccess: (responseData: T) => R
 ): Promise<R | void>;
@@ -87,39 +80,18 @@ export function doRequest<T, R>(
   path: string,
   errorMessage = `rest.error.${method.toLowerCase()}`,
   data: unknown,
-  token: OAuthToken,
   type?: ITypeSuite | ITypeSuite[],
   onSuccess?: (responseData: T) => R
 ): Promise<T | R | void> {
-  return call<T>(method, path, data, token)
+  return call<T>(method, path, data)
     .then((responseData: T | void) => {
-      if (type) {
+      if (type && responseData) {
         validateResponseData(responseData, type);
       }
       if (onSuccess && responseData) {
         return onSuccess(responseData);
       }
       return responseData;
-    })
-    .catch(error => handleError(error, path, errorMessage));
-}
-
-export function doTokenRequest<T, R>(
-  options: RequestInit,
-  errorMessage = `rest.error.token`,
-  type: ITypeSuite | ITypeSuite[],
-  onSuccess: (responseData: T) => R
-): Promise<R | void> {
-  const path = '/oauth/token';
-  return call<T>(Method.POST, path, undefined, undefined, options)
-    .then((responseData: T | void) => {
-      if (type) {
-        validateResponseData(responseData, type);
-      }
-      if (responseData) {
-        return onSuccess(responseData);
-      }
-      throw Error('Token response was undefined.');
     })
     .catch(error => handleError(error, path, errorMessage));
 }
