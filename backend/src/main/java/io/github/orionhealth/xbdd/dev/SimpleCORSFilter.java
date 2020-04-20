@@ -11,7 +11,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,9 +24,6 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleCORSFilter implements Filter {
 
-	@Value("${security.oauth2.client.accessTokenUri}")
-	String accessTokenUri;
-
 	@Override
 	public void init(final FilterConfig fc) throws ServletException {
 	}
@@ -39,12 +35,12 @@ public class SimpleCORSFilter implements Filter {
 		final HttpServletResponse response = (HttpServletResponse) resp;
 		final HttpServletRequest request = (HttpServletRequest) req;
 
-		final String scheme = this.accessTokenUri.startsWith("https") ? "https" : "http";
+		final String scheme = request.isSecure() ? "https" : "http";
 		response.setHeader("Access-Control-Allow-Origin", String.format("%s://localhost:3000", scheme));
+		response.setHeader("Access-Control-Allow-Credentials", "true");
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, PATCH");
 		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Access-Control-Allow-Headers",
-				"authorization, content-type");
+		response.setHeader("Access-Control-Allow-Headers", "authorization, content-type");
 
 		if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
 			response.setStatus(HttpServletResponse.SC_OK);

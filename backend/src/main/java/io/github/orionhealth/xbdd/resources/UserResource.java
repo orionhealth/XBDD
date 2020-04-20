@@ -39,7 +39,11 @@ public class UserResource {
 	@Path("/loggedin")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getLoggedInUser() {
-		return Response.ok(LoggedInUserUtil.getLoggedInUser()).build();
+		final User user = LoggedInUserUtil.getLoggedInUser();
+		if (user == null) {
+			return Response.noContent().build();
+		}
+		return Response.ok(user).build();
 	}
 
 	@GET
