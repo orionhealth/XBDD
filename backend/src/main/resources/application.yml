@@ -30,6 +30,9 @@ spring:
       ldif: classpath:test-server.ldif
       port: 8389
 
+logging:
+  file: xbdd.log
+
 # Enable this if you want to run on https, note that the frontend .env files will need to be updated
 #server:
 #  port: 8443
