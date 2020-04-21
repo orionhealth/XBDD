@@ -12,17 +12,17 @@ spring:
       client:
         registration:
           github:
-            client-id: your-app-client-id
-            client-secret: your-app-client-secret
+            client-id: your-github-app-client-id
+            client-secret: your-github-app-client-secret
           google:
-            client-id: your-app-client-id
-            client-secret: your-app-client-secret
+            client-id: your-google-app-client-id
+            client-secret: google-your-app-client-secret
           # facebook:
-          #   client-id: your-app-client-id
-          #   client-secret: your-app-client-secret
+          #   client-id: your-facebook-app-client-id
+          #   client-secret: your-facebook-app-client-secret
           # okta:
-          #   client-id: your-app-client-id
-          #   client-secret: your-app-client-secret
+          #   client-id: your-okta-app-client-id
+          #   client-secret: your-okta-app-client-secret
 
   ldap:
     embedded:

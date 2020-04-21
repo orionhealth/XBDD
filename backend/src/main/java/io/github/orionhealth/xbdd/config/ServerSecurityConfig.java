@@ -19,9 +19,21 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
+
+		final String[] allowedUrls = new String[] {
+				"/",
+				"/index.html",
+				"/static/**",
+				"/locales/**",
+				"/manifest.json",
+				"/login",
+				"/error",
+				"/rest/user/loggedin",
+				"/rest/attachment/**"
+		};
 		http
 			.authorizeRequests(a -> a
-				.antMatchers("/", "/login", "/error", "/rest/user/loggedin", "/rest/attachment/**").permitAll()
+				.antMatchers(allowedUrls).permitAll()
 				.antMatchers(HttpMethod.PUT, "/rest/reports/**").permitAll()
 				.antMatchers(HttpMethod.POST, "/rest/reports/**").permitAll()
 				.anyRequest().authenticated()
@@ -35,8 +47,8 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
 				.permitAll()
 			);
-		http.oauth2Login();
-		http.formLogin();
+		http.oauth2Login(a -> a.loginPage("/"));
+		http.formLogin(a -> a.loginPage("/").loginProcessingUrl("/login"));
 	}
 
 	@Override
