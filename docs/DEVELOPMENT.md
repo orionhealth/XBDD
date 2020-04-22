@@ -28,18 +28,14 @@ It is possible to run the dev environment using https. If you need to do so, in 
 
 ```
 HTTPS=true
-SSL_CRT_FILE=certs/xbdd-frontend-dev.crt
-SSL_KEY_FILE=certs/xbdd-frontend-dev.key
 ```
 
 Then you need to enable the backend server to run SSL, to do that
 
-1. Remove `security.oauth2.client.accessTokenUri: http://localhost:8080/oauth/token` from `backend/src/main/resources/application-dev.yml` (it runs SSL by default).
 1. Enable the block beginning with `server` in the `application-dev.yml`;
 
 Finally you need to set up certificates, to do so follow the instructions for both the frontend and backend below.
 
-1. Follow the instructions in [frontend/certs/README.md](../frontend/certs/README.md)
 1. Follow the instructions in [backend/src/main/resources/certs/README.md](../backend/src/main/resources/certs/README.md)
 
 ### Running XBDD
