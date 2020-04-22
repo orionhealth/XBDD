@@ -9,7 +9,6 @@ import { setUser } from '../../xbddReducer';
 import LoginDialog from './LoginDialog';
 import { useNavbarStyles } from './styles/NavbarStyles';
 import UserAvatar from '../userAvatar/UserAvatar';
-import { clearTokenFromLocalStorage } from 'lib/services/LocalStorageService';
 
 const Navbar: FC = () => {
   const { t } = useTranslation();
@@ -22,9 +21,13 @@ const Navbar: FC = () => {
   const history = useHistory();
 
   const onLogout = (): void => {
-    clearTokenFromLocalStorage();
-    dispatch(setUser(null));
-    history.push('/');
+    fetch(process.env.REACT_APP_BACKEND_HOST + '/logout', {
+      method: 'POST',
+      credentials: 'include', // TODO - this should be dev only
+    }).then(() => {
+      dispatch(setUser(null));
+      history.push('/');
+    });
   };
 
   return (

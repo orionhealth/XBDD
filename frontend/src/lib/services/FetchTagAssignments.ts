@@ -1,5 +1,4 @@
 import { User } from 'models/User';
-import { getValidToken } from './TokenService';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import TagAssignments from 'models/TagAssignments';
 import FetchTagAssignmentsTypes from './generated/FetchTagAssignmentsTypes';
@@ -15,7 +14,7 @@ interface ResponseDataElement {
 type ResponseData = ResponseDataElement[];
 
 const mapUser = ({ userId, socialLogin, loginType, display }: ResponseDataElement): User | undefined => {
-  if (userId && socialLogin && loginType && display) {
+  if (userId && loginType && display) {
     return {
       userId,
       socialLogin,
@@ -33,10 +32,7 @@ const createTagAssignments = (responseData: ResponseData): TagAssignments => {
 
 const fetchTagAssignments = async (product: string, version: string, build: string): Promise<TagAssignments | void> => {
   const url = `/rest/user/tagAssignment/${product}/${version}/${build}`;
-  const token = await getValidToken();
-  if (token) {
-    return doRequest(Method.GET, url, 'rest.error.get', null, token, FetchTagAssignmentsTypes, createTagAssignments);
-  }
+  return doRequest(Method.GET, url, 'rest.error.get', null, FetchTagAssignmentsTypes, createTagAssignments);
 };
 
 export default fetchTagAssignments;

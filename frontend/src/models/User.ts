@@ -1,6 +1,6 @@
 export interface User {
   userId: string;
-  socialLogin: string;
+  socialLogin?: string;
   display: string;
   avatarUrl?: string;
 }

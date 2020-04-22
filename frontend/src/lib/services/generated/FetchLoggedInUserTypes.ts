@@ -7,7 +7,7 @@ import * as t from 'ts-interface-checker';
 export const ResponseData = t.iface([], {
   user_id: 'string',
   display: 'string',
-  socialLogin: 'string',
+  socialLogin: t.opt('string'),
   loginType: 'string',
   favourites: t.opt('any'),
 });

@@ -5,8 +5,9 @@
   "navbar": {
     "cancel": "Cancel",
     "login": "Login",
-    "loginWithGithub": "Log in with Github",
-    "loginToXbdd": "Log in to Xbdd",
+    "loginWithGithub": "Login with Github",
+    "loginWithGoogle": "Login with Google",
+    "loginToXbdd": "Login to XBDD",
     "logout": "Logout"
   },
   "report": {

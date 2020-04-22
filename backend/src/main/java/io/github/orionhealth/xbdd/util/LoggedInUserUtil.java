@@ -1,22 +1,50 @@
 package io.github.orionhealth.xbdd.util;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import io.github.orionhealth.xbdd.model.common.LoginType;
 import io.github.orionhealth.xbdd.model.common.User;
 
 public class LoggedInUserUtil {
+
 	public static User getLoggedInUser() {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			if (authentication.getPrincipal() instanceof User) {
-				return (User) authentication.getPrincipal();
-			}
+		if (authentication instanceof OAuth2AuthenticationToken) {
+			final OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
+			final OAuth2User principal = token.getPrincipal();
+
+			final User user = new User();
+			user.setSocialId(principal.getName());
+			user.setLoginType(LoginType.valueOf(token.getAuthorizedClientRegistrationId().toUpperCase()));
+
+			// Github-specific attributes
+			user.setUserId(String.format("%s-%s", user.getLoginType(), principal.getName()));
+			user.setSocialLogin(principal.getAttribute("login"));
+			user.setDisplay(principal.getAttribute("name"));
+
+			return user;
 		}
 
-		// This shouldn't ever happen unless it is called in an unauthenticated context.
-		throw new RuntimeException("Attempted to get logged in user but you must not be logged in.");
+		if (authentication instanceof UsernamePasswordAuthenticationToken) {
+			final UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
+			final LdapUserDetails principal = (LdapUserDetails) token.getPrincipal();
+
+			final User user = new User();
+			user.setLoginType(LoginType.LDAP);
+			user.setUserId("ldap-" + principal.getUsername());
+			user.setSocialId(principal.getUsername());
+			user.setSocialLogin(principal.getUsername());
+			user.setDisplay(principal.getUsername());
+
+			return user;
+		}
+
+		return null;
 	}
 }

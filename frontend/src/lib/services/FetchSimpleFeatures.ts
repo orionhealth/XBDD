@@ -1,4 +1,3 @@
-import { getValidToken } from './TokenService';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import SimpleFeature from 'models/SimpleFeature';
 import { getStatusFromString } from 'models/Status';
@@ -27,10 +26,7 @@ export const createSimpleFeatures = (data: SimpleFeatureResponseData[]): SimpleF
 
 const fetchSimpleFeatures = async (product: string, version: string, build: string): Promise<SimpleFeature[] | void> => {
   const url = `/rest/reports/featureIndex/${product}/${version}/${build}`;
-  const token = await getValidToken();
-  if (token) {
-    return doRequest(Method.GET, url, 'rest.error.get', null, token, FetchSimpleFeaturesTypes, createSimpleFeatures);
-  }
+  return doRequest(Method.GET, url, 'rest.error.get', null, FetchSimpleFeaturesTypes, createSimpleFeatures);
 };
 
 export default fetchSimpleFeatures;

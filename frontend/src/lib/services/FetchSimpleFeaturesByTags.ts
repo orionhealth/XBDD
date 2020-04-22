@@ -1,4 +1,3 @@
-import { getValidToken } from './TokenService';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import FetchSimpleFeaturesByTagsTypes from './generated/FetchSimpleFeaturesByTagsTypes';
 import FetchSimpleFeaturesTypes from './generated/FetchSimpleFeaturesTypes';
@@ -24,18 +23,14 @@ const createTagViewData = (data: ResponseData): Tag[] => {
 
 const fetchSimpleFeaturesByTags = async (product: string, version: string, build: string): Promise<Tag[] | void> => {
   const url = `/rest/tagview/featureTagIndex/${product}/${version}/${build}`;
-  const token = await getValidToken();
-  if (token) {
-    return doRequest(
-      Method.GET,
-      url,
-      'rest.error.featuresByTag',
-      null,
-      token,
-      [FetchSimpleFeaturesTypes, FetchSimpleFeaturesByTagsTypes],
-      createTagViewData
-    );
-  }
+  return doRequest(
+    Method.GET,
+    url,
+    'rest.error.featuresByTag',
+    null,
+    [FetchSimpleFeaturesTypes, FetchSimpleFeaturesByTagsTypes],
+    createTagViewData
+  );
 };
 
 export default fetchSimpleFeaturesByTags;

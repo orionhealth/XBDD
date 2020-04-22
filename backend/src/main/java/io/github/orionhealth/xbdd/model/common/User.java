@@ -2,9 +2,11 @@ package io.github.orionhealth.xbdd.model.common;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
 	@SerializedName("user_id")

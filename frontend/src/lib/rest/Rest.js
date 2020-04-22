@@ -1,10 +1,9 @@
 import { doRequest, Method } from './RestRequests';
-import { getValidToken } from 'lib/services/TokenService';
 
 const { GET, PUT, DELETE } = Method;
-const doGetRequest = async (path, errorMessage) => doRequest(GET, path, errorMessage, null, await getValidToken());
-const doPutRequest = async (path, data, errorMessage) => doRequest(PUT, path, errorMessage, data, await getValidToken());
-const doDeleteRequest = async (path, errorMessage) => doRequest(DELETE, path, errorMessage, null, await getValidToken());
+const doGetRequest = async (path, errorMessage) => doRequest(GET, path, errorMessage, null);
+const doPutRequest = async (path, data, errorMessage) => doRequest(PUT, path, errorMessage, data);
+const doDeleteRequest = async (path, errorMessage) => doRequest(DELETE, path, errorMessage, null);
 
 export const setProductFavouriteOn = project => doPutRequest(`/rest/favourites/${project}/`, null, 'rest.error.favourite');
 

@@ -9,9 +9,8 @@ import ReportContainer from 'modules/report/ReportContainer';
 import ErrorBoundary from 'modules/errorBoundary/ErrorBoundary';
 import theme from 'AppTheme';
 import NotificationsView from 'modules/notifications/NotificationsView';
-import GithubLoginRedirectPage from 'modules/redirects/GithubLoginRedirectPage';
 import { RootStore } from 'rootReducer';
-import { getUserIfTokenIsValid } from 'xbddReducer';
+import { fetchUser } from 'xbddReducer';
 import { LoggedInUser } from 'models/User';
 
 import './Xbdd.css';
@@ -28,15 +27,10 @@ const ReportPage: FC<UserProps> = ({ user }) => {
 const PageContent: FC<UserProps> = ({ user }) => {
   return (
     <Switch>
-      <Route path="/redirect">
-        <GithubLoginRedirectPage />
-      </Route>
       <Route path="/reports/:product/:version/:build">
         <ReportPage user={user} />
       </Route>
-      <Route path="/">
-        <SummaryContainer user={user} />
-      </Route>
+      <Route path="/">{user && <SummaryContainer user={user} />}</Route>
     </Switch>
   );
 };
@@ -46,7 +40,7 @@ const Xbdd: FC = () => {
   const user = useSelector((store: RootStore) => store.app.user);
 
   if (!user) {
-    dispatch(getUserIfTokenIsValid());
+    dispatch(fetchUser());
   }
 
   return (

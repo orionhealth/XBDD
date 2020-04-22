@@ -1,4 +1,3 @@
-import { getValidToken } from './TokenService';
 import { Method, doRequest } from 'lib/rest/RestRequests';
 import FetchLoggedInUserTypes from './generated/FetchLoggedInUserTypes';
 import { LoggedInUser } from 'models/User';
@@ -6,13 +5,13 @@ import { LoggedInUser } from 'models/User';
 interface ResponseData {
   user_id: string;
   display: string;
-  socialLogin: string;
+  socialLogin?: string;
   loginType: string;
   favourites?: any;
 }
 
-export const getAvatarUrl = (loginType: string, socialLogin: string): string | undefined => {
-  if (loginType === 'GITHUB') {
+export const getAvatarUrl = (loginType: string, socialLogin?: string): string | undefined => {
+  if (socialLogin && loginType === 'GITHUB') {
     return `https://github.com/${socialLogin}.png`;
   }
 };
@@ -27,9 +26,6 @@ const createUser = ({ user_id, display, socialLogin, loginType, favourites }: Re
 });
 
 export const fetchLoggedInUser = async (): Promise<LoggedInUser | void> => {
-  const path = `/rest/user/loggedin`;
-  const token = await getValidToken();
-  if (token) {
-    return doRequest(Method.GET, path, 'rest.error.get', null, token, FetchLoggedInUserTypes, createUser);
-  }
+  const url = `/rest/user/loggedin`;
+  return doRequest(Method.GET, url, 'rest.error.get', null, FetchLoggedInUserTypes, createUser);
 };
