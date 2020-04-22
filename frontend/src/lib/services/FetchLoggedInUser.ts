@@ -5,13 +5,13 @@ import { LoggedInUser } from 'models/User';
 interface ResponseData {
   user_id: string;
   display: string;
-  socialLogin: string;
+  socialLogin?: string;
   loginType: string;
   favourites?: any;
 }
 
-export const getAvatarUrl = (loginType: string, socialLogin: string): string | undefined => {
-  if (loginType === 'GITHUB') {
+export const getAvatarUrl = (loginType: string, socialLogin?: string): string | undefined => {
+  if (socialLogin && loginType === 'GITHUB') {
     return `https://github.com/${socialLogin}.png`;
   }
 };

@@ -24,7 +24,7 @@ public class LoggedInUserUtil {
 			user.setLoginType(LoginType.valueOf(token.getAuthorizedClientRegistrationId().toUpperCase()));
 
 			// Github-specific attributes
-			user.setUserId("github-" + principal.getName());
+			user.setUserId(String.format("%s-%s", user.getLoginType(), principal.getName()));
 			user.setSocialLogin(principal.getAttribute("login"));
 			user.setDisplay(principal.getAttribute("name"));
 

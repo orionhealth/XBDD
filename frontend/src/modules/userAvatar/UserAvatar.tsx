@@ -9,7 +9,7 @@ const getInitials = (userName: string): string => {
 
   if (nameParts) {
     if (nameParts.length > 1) {
-      initials = `${nameParts[0].toUpperCase()}${nameParts[nameParts.length - 1].toUpperCase()}`;
+      initials = `${nameParts[0][0].toUpperCase()}${nameParts[nameParts.length - 1][0].toUpperCase()}`;
     } else if (nameParts.length === 1) {
       initials = nameParts[0].toUpperCase();
     }

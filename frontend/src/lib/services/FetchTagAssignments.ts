@@ -14,7 +14,7 @@ interface ResponseDataElement {
 type ResponseData = ResponseDataElement[];
 
 const mapUser = ({ userId, socialLogin, loginType, display }: ResponseDataElement): User | undefined => {
-  if (userId && socialLogin && loginType && display) {
+  if (userId && loginType && display) {
     return {
       userId,
       socialLogin,
