@@ -1,4 +1,4 @@
-package io.github.orionhealth.xbdd.resources;
+package io.github.orionhealth.xbdd.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -13,8 +13,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-
-import io.github.orionhealth.xbdd.util.Coordinates;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QueryBuilderTest {
@@ -45,7 +43,8 @@ public class QueryBuilderTest {
 
 		final BasicDBObject searchQuery = this.queryBuilder.getSearchQuery(searchKeys, this.coordinates, searchCategories);
 
-		@SuppressWarnings("unchecked") final List<DBObject> queryResults = (ArrayList<DBObject>) searchQuery.get("$or");
+		@SuppressWarnings("unchecked")
+		final List<DBObject> queryResults = (ArrayList<DBObject>) searchQuery.get("$or");
 
 		assertTrue(queryResults.isEmpty());
 	}
@@ -59,7 +58,8 @@ public class QueryBuilderTest {
 
 		final BasicDBObject searchQuery = this.queryBuilder.getSearchQuery(searchKeys, this.coordinates, searchCategories);
 
-		@SuppressWarnings("unchecked") final List<DBObject> queryResults = (ArrayList<DBObject>) searchQuery.get("$or");
+		@SuppressWarnings("unchecked")
+		final List<DBObject> queryResults = (ArrayList<DBObject>) searchQuery.get("$or");
 
 		assertEquals("{\"name\": {\"$regex\": \"hi\", \"$options\": \"i\"}}", queryResults.get(0).toString());
 		assertEquals("{\"age\": {\"$regex\": \"hi\", \"$options\": \"i\"}}", queryResults.get(1).toString());

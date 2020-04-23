@@ -1,4 +1,4 @@
-package io.github.orionhealth.xbdd.resources;
+package io.github.orionhealth.xbdd.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

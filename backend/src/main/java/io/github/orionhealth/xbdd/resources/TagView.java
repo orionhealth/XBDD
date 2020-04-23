@@ -24,6 +24,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import io.github.orionhealth.xbdd.util.Coordinates;
+import io.github.orionhealth.xbdd.util.QueryBuilder;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/tagview")

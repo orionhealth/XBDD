@@ -1,4 +1,4 @@
-package io.github.orionhealth.xbdd.resources;
+package io.github.orionhealth.xbdd.util;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-
-import io.github.orionhealth.xbdd.util.Coordinates;
 
 public class QueryBuilderFilterQueryTest {
 	@Test
