@@ -1,11 +1,8 @@
-package io.github.orionhealth.xbdd.resources;
+package io.github.orionhealth.xbdd.util;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-
-import io.github.orionhealth.xbdd.util.Coordinates;
-import io.github.orionhealth.xbdd.util.Statuses;
 
 import org.apache.commons.lang.StringUtils;
 

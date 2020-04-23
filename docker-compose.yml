@@ -2,14 +2,14 @@ version: '3'
 services:
   xbdd:
     container_name: xbdd
-    build: ./packager
+    build: ./backend
     ports:
-      - "8080:8080"
-      - "8443:8443"
+      - '8080:8080'
+      - '8443:8443'
   mongo:
     container_name: xbdd_mongo
     build: ./mongo
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
       - /opt/xbdd/volumes/mongodb:/data/db

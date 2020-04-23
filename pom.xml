@@ -9,6 +9,5 @@
   <modules>
     <module>frontend</module>
     <module>backend</module>
-    <module>packager</module>
   </modules>
 </project>

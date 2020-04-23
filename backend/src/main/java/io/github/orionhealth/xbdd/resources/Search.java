@@ -21,6 +21,8 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import io.github.orionhealth.xbdd.util.Coordinates;
+import io.github.orionhealth.xbdd.util.DBObjectComparator;
+import io.github.orionhealth.xbdd.util.QueryBuilder;
 import io.github.orionhealth.xbdd.util.SerializerUtil;
 
 @Path("/search")
@@ -41,7 +43,7 @@ public class Search {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("features");
 		final List<DBObject> searchResults = new ArrayList<>();
 
-		final io.github.orionhealth.xbdd.resources.QueryBuilder queryBuilder = QueryBuilder.getInstance();
+		final QueryBuilder queryBuilder = QueryBuilder.getInstance();
 		final DBCursor results = collection.find(queryBuilder.getSearchQuery(searchWords, coordinates, searchCategories));
 
 		while (results.hasNext()) {

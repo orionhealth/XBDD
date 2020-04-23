@@ -1,4 +1,4 @@
-package io.github.orionhealth.xbdd.resources;
+package io.github.orionhealth.xbdd.util;
 
 import com.mongodb.DBObject;
 import org.apache.commons.lang.StringUtils;
