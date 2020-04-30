@@ -7,7 +7,7 @@ public class StepMatch {
 	private String location;
 
 	public String getLocation() {
-		return location;
+		return this.location;
 	}
 
 	public void setLocation(final String location) {

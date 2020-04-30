@@ -1,13 +1,14 @@
 package io.github.orionhealth.xbdd.model.xbdd;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 import io.github.orionhealth.xbdd.model.common.Tag;
-
-import org.bson.codecs.pojo.annotations.BsonProperty;
-
-import java.util.List;
 
 public class XbddFeatureSummary {
 	// The id field is used in indexes in mongo and actually gets mapped to _id in the db.
@@ -28,7 +29,7 @@ public class XbddFeatureSummary {
 	private List<Tag> tags;
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(final String id) {
@@ -36,7 +37,7 @@ public class XbddFeatureSummary {
 	}
 
 	public String getOriginalId() {
-		return originalId;
+		return this.originalId;
 	}
 
 	public void setOriginalId(final String originalId) {
@@ -44,7 +45,7 @@ public class XbddFeatureSummary {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(final String name) {
@@ -52,7 +53,7 @@ public class XbddFeatureSummary {
 	}
 
 	public String getUri() {
-		return uri;
+		return this.uri;
 	}
 
 	public void setUri(final String uri) {
@@ -60,7 +61,7 @@ public class XbddFeatureSummary {
 	}
 
 	public String getCalculatedStatus() {
-		return calculatedStatus;
+		return this.calculatedStatus;
 	}
 
 	public void setCalculatedStatus(final String calculatedStatus) {
@@ -68,7 +69,7 @@ public class XbddFeatureSummary {
 	}
 
 	public String getOriginalAutomatedStatus() {
-		return originalAutomatedStatus;
+		return this.originalAutomatedStatus;
 	}
 
 	public void setOriginalAutomatedStatus(final String originalAutomatedStatus) {
@@ -76,7 +77,10 @@ public class XbddFeatureSummary {
 	}
 
 	public List<Tag> getTags() {
-		return tags;
+		if (this.tags == null) {
+			this.tags = new ArrayList<Tag>();
+		}
+		return this.tags;
 	}
 
 	public void setTags(final List<Tag> tags) {

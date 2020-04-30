@@ -8,7 +8,7 @@ public class JUnitEmbedding {
 	String mime_type;
 
 	public String getData() {
-		return data;
+		return this.data;
 	}
 
 	public void setData(final String data) {
@@ -16,7 +16,7 @@ public class JUnitEmbedding {
 	}
 
 	public String getMime_type() {
-		return mime_type;
+		return this.mime_type;
 	}
 
 	public void setMime_type(final String mime_type) {

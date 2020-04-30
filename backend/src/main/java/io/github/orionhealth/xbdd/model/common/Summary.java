@@ -1,10 +1,12 @@
 package io.github.orionhealth.xbdd.model.common;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class Summary {
 	@SerializedName("_id")
@@ -21,7 +23,7 @@ public class Summary {
 	private Boolean favourite;
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(final String id) {
@@ -29,7 +31,10 @@ public class Summary {
 	}
 
 	public List<String> getBuilds() {
-		return builds;
+		if (this.builds == null) {
+			this.builds = new ArrayList<String>();
+		}
+		return this.builds;
 	}
 
 	public void setBuilds(final List<String> builds) {
@@ -37,7 +42,7 @@ public class Summary {
 	}
 
 	public CoordinatesDto getCoordinates() {
-		return coordinates;
+		return this.coordinates;
 	}
 
 	public void setCoordinates(final CoordinatesDto coordinates) {
@@ -45,7 +50,7 @@ public class Summary {
 	}
 
 	public Boolean getFavourite() {
-		return favourite;
+		return this.favourite;
 	}
 
 	public void setFavourite(final Boolean favourite) {

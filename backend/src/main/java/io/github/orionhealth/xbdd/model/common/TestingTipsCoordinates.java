@@ -5,7 +5,7 @@ public class TestingTipsCoordinates extends CoordinatesDto {
 	private String scenarioId;
 
 	public String getFeatureId() {
-		return featureId;
+		return this.featureId;
 	}
 
 	public void setFeatureId(final String featureId) {
@@ -13,7 +13,7 @@ public class TestingTipsCoordinates extends CoordinatesDto {
 	}
 
 	public String getScenarioId() {
-		return scenarioId;
+		return this.scenarioId;
 	}
 
 	public void setScenarioId(final String scenarioId) {

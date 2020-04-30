@@ -9,7 +9,7 @@ public class JUnitStepResult {
 	private String status;
 
 	public Long getDuration() {
-		return duration;
+		return this.duration;
 	}
 
 	public void setDuration(final Long duration) {
@@ -17,7 +17,7 @@ public class JUnitStepResult {
 	}
 
 	public String getError_message() {
-		return error_message;
+		return this.error_message;
 	}
 
 	public void setError_message(final String error_message) {
@@ -25,7 +25,7 @@ public class JUnitStepResult {
 	}
 
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(final String status) {

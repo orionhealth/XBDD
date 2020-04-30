@@ -1,5 +1,6 @@
 package io.github.orionhealth.xbdd.model.xbdd;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.orionhealth.xbdd.model.common.StepMatch;
@@ -14,7 +15,7 @@ public class XbddStep {
 	private List<String> embeddings;
 
 	public Integer getLine() {
-		return line;
+		return this.line;
 	}
 
 	public void setLine(final Integer line) {
@@ -22,7 +23,7 @@ public class XbddStep {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(final String name) {
@@ -30,7 +31,7 @@ public class XbddStep {
 	}
 
 	public XbddStepResult getResult() {
-		return result;
+		return this.result;
 	}
 
 	public void setResult(final XbddStepResult result) {
@@ -38,7 +39,7 @@ public class XbddStep {
 	}
 
 	public StepMatch getMatch() {
-		return match;
+		return this.match;
 	}
 
 	public void setMatch(final StepMatch match) {
@@ -46,7 +47,10 @@ public class XbddStep {
 	}
 
 	public List<Integer> getMatchedColumns() {
-		return matchedColumns;
+		if (this.matchedColumns == null) {
+			this.matchedColumns = new ArrayList<Integer>();
+		}
+		return this.matchedColumns;
 	}
 
 	public void setMatchedColumns(final List<Integer> matchedColumns) {
@@ -54,7 +58,7 @@ public class XbddStep {
 	}
 
 	public String getKeyword() {
-		return keyword;
+		return this.keyword;
 	}
 
 	public void setKeyword(final String keyword) {
@@ -62,7 +66,10 @@ public class XbddStep {
 	}
 
 	public List<String> getEmbeddings() {
-		return embeddings;
+		if (this.embeddings == null) {
+			this.embeddings = new ArrayList<String>();
+		}
+		return this.embeddings;
 	}
 
 	public void setEmbeddings(final List<String> embeddings) {

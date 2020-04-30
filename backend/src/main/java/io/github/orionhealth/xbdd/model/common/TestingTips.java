@@ -1,8 +1,9 @@
 package io.github.orionhealth.xbdd.model.common;
 
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class TestingTips {
 	TestingTipsCoordinates coordinates;
@@ -13,7 +14,7 @@ public class TestingTips {
 	String testingTips;
 
 	public TestingTipsCoordinates getCoordinates() {
-		return coordinates;
+		return this.coordinates;
 	}
 
 	public void setCoordinates(final TestingTipsCoordinates coordinates) {
@@ -21,7 +22,7 @@ public class TestingTips {
 	}
 
 	public String getTestingTips() {
-		return testingTips;
+		return this.testingTips;
 	}
 
 	public void setTestingTips(final String testingTips) {
