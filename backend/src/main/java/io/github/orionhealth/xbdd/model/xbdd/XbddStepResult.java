@@ -7,7 +7,7 @@ public class XbddStepResult {
 	private String manualStatus;
 
 	public Long getDuration() {
-		return duration;
+		return this.duration;
 	}
 
 	public void setDuration(final Long duration) {
@@ -15,7 +15,7 @@ public class XbddStepResult {
 	}
 
 	public String getError_message() {
-		return error_message;
+		return this.error_message;
 	}
 
 	public void setError_message(final String error_message) {
@@ -23,7 +23,7 @@ public class XbddStepResult {
 	}
 
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(final String status) {
@@ -31,7 +31,7 @@ public class XbddStepResult {
 	}
 
 	public String getManualStatus() {
-		return manualStatus;
+		return this.manualStatus;
 	}
 
 	public void setManualStatus(final String manualStatus) {

@@ -1,10 +1,11 @@
 package io.github.orionhealth.xbdd.model.junit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.github.orionhealth.xbdd.model.common.StepMatch;
-
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JUnitStep {
@@ -17,7 +18,7 @@ public class JUnitStep {
 	private List<JUnitEmbedding> embeddings;
 
 	public Integer getLine() {
-		return line;
+		return this.line;
 	}
 
 	public void setLine(final Integer line) {
@@ -25,7 +26,7 @@ public class JUnitStep {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(final String name) {
@@ -33,7 +34,7 @@ public class JUnitStep {
 	}
 
 	public JUnitStepResult getResult() {
-		return result;
+		return this.result;
 	}
 
 	public void setResult(final JUnitStepResult result) {
@@ -41,7 +42,7 @@ public class JUnitStep {
 	}
 
 	public StepMatch getMatch() {
-		return match;
+		return this.match;
 	}
 
 	public void setMatch(final StepMatch match) {
@@ -49,7 +50,10 @@ public class JUnitStep {
 	}
 
 	public List<Integer> getMatchedColumns() {
-		return matchedColumns;
+		if (this.matchedColumns == null) {
+			this.matchedColumns = new ArrayList<Integer>();
+		}
+		return this.matchedColumns;
 	}
 
 	public void setMatchedColumns(final List<Integer> matchedColumns) {
@@ -57,7 +61,7 @@ public class JUnitStep {
 	}
 
 	public String getKeyword() {
-		return keyword;
+		return this.keyword;
 	}
 
 	public void setKeyword(final String keyword) {
@@ -65,7 +69,10 @@ public class JUnitStep {
 	}
 
 	public List<JUnitEmbedding> getEmbeddings() {
-		return embeddings;
+		if (this.embeddings == null) {
+			this.embeddings = new ArrayList<JUnitEmbedding>();
+		}
+		return this.embeddings;
 	}
 
 	public void setEmbeddings(final List<JUnitEmbedding> embeddings) {

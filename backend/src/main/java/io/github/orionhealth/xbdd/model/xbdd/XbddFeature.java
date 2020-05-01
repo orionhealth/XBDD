@@ -1,5 +1,6 @@
 package io.github.orionhealth.xbdd.model.xbdd;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.orionhealth.xbdd.model.common.CoordinatesDto;
@@ -15,7 +16,7 @@ public class XbddFeature extends XbddFeatureSummary {
 	private CoordinatesDto coordinates;
 
 	public Integer getLine() {
-		return line;
+		return this.line;
 	}
 
 	public void setLine(final Integer line) {
@@ -23,7 +24,7 @@ public class XbddFeature extends XbddFeatureSummary {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(final String description) {
@@ -31,7 +32,7 @@ public class XbddFeature extends XbddFeatureSummary {
 	}
 
 	public String getKeyword() {
-		return keyword;
+		return this.keyword;
 	}
 
 	public void setKeyword(final String keyword) {
@@ -39,7 +40,10 @@ public class XbddFeature extends XbddFeatureSummary {
 	}
 
 	public List<XbddScenario> getElements() {
-		return elements;
+		if (this.elements == null) {
+			this.elements = new ArrayList<XbddScenario>();
+		}
+		return this.elements;
 	}
 
 	public void setElements(final List<XbddScenario> elements) {
@@ -47,7 +51,7 @@ public class XbddFeature extends XbddFeatureSummary {
 	}
 
 	public CoordinatesDto getCoordinates() {
-		return coordinates;
+		return this.coordinates;
 	}
 
 	public void setCoordinates(final CoordinatesDto coordinates) {

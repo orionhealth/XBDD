@@ -1,10 +1,11 @@
 package io.github.orionhealth.xbdd.model.junit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.github.orionhealth.xbdd.model.common.Tag;
-
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JUnitFeature {
@@ -18,7 +19,7 @@ public class JUnitFeature {
 	private List<Tag> tags;
 
 	public Integer getLine() {
-		return line;
+		return this.line;
 	}
 
 	public void setLine(final Integer line) {
@@ -26,7 +27,7 @@ public class JUnitFeature {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(final String name) {
@@ -34,7 +35,7 @@ public class JUnitFeature {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(final String description) {
@@ -42,7 +43,7 @@ public class JUnitFeature {
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(final String id) {
@@ -50,7 +51,7 @@ public class JUnitFeature {
 	}
 
 	public String getKeyword() {
-		return keyword;
+		return this.keyword;
 	}
 
 	public void setKeyword(final String keyword) {
@@ -58,7 +59,7 @@ public class JUnitFeature {
 	}
 
 	public String getUri() {
-		return uri;
+		return this.uri;
 	}
 
 	public void setUri(final String uri) {
@@ -66,7 +67,10 @@ public class JUnitFeature {
 	}
 
 	public List<JUnitElement> getElements() {
-		return elements;
+		if (this.elements == null) {
+			this.elements = new ArrayList<JUnitElement>();
+		}
+		return this.elements;
 	}
 
 	public void setElements(final List<JUnitElement> elements) {
@@ -74,7 +78,10 @@ public class JUnitFeature {
 	}
 
 	public List<Tag> getTags() {
-		return tags;
+		if (this.tags == null) {
+			this.tags = new ArrayList<Tag>();
+		}
+		return this.tags;
 	}
 
 	public void setTags(final List<Tag> tags) {

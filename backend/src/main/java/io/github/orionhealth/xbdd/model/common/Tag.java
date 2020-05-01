@@ -8,7 +8,7 @@ public class Tag {
 	String name;
 
 	public Integer getLine() {
-		return line;
+		return this.line;
 	}
 
 	public void setLine(final Integer line) {
@@ -16,7 +16,7 @@ public class Tag {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(final String name) {

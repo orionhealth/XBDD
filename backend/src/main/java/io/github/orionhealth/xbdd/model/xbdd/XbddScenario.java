@@ -1,14 +1,15 @@
 package io.github.orionhealth.xbdd.model.xbdd;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
-
-import io.github.orionhealth.xbdd.model.common.Tag;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+
+import io.github.orionhealth.xbdd.model.common.Tag;
 
 public class XbddScenario {
 	// The id field gets mapped in _id in the mongo driver so we need to bypass that.
@@ -32,7 +33,7 @@ public class XbddScenario {
 	private String testingTips;
 
 	public Integer getLine() {
-		return line;
+		return this.line;
 	}
 
 	public void setLine(final Integer line) {
@@ -40,7 +41,7 @@ public class XbddScenario {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(final String name) {
@@ -48,7 +49,7 @@ public class XbddScenario {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(final String description) {
@@ -56,7 +57,7 @@ public class XbddScenario {
 	}
 
 	public String getOriginalId() {
-		return originalId;
+		return this.originalId;
 	}
 
 	public void setOriginalId(final String originalId) {
@@ -64,7 +65,7 @@ public class XbddScenario {
 	}
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(final String type) {
@@ -72,7 +73,7 @@ public class XbddScenario {
 	}
 
 	public String getKeyword() {
-		return keyword;
+		return this.keyword;
 	}
 
 	public void setKeyword(final String keyword) {
@@ -80,7 +81,7 @@ public class XbddScenario {
 	}
 
 	public XbddScenario getBackground() {
-		return background;
+		return this.background;
 	}
 
 	public void setBackground(final XbddScenario background) {
@@ -88,7 +89,10 @@ public class XbddScenario {
 	}
 
 	public List<XbddStep> getSteps() {
-		return steps;
+		if (this.steps == null) {
+			this.steps = new ArrayList<XbddStep>();
+		}
+		return this.steps;
 	}
 
 	public void setSteps(final List<XbddStep> steps) {
@@ -96,7 +100,10 @@ public class XbddScenario {
 	}
 
 	public List<Tag> getTags() {
-		return tags;
+		if (this.tags == null) {
+			this.tags = new ArrayList<Tag>();
+		}
+		return this.tags;
 	}
 
 	public void setTags(final List<Tag> tags) {
@@ -104,7 +111,7 @@ public class XbddScenario {
 	}
 
 	public String getTestingTips() {
-		return testingTips;
+		return this.testingTips;
 	}
 
 	public void setTestingTips(final String testingTips) {

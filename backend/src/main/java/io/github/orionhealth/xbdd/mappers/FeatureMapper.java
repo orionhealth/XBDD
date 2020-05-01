@@ -6,7 +6,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.github.orionhealth.xbdd.model.junit.*;
+import io.github.orionhealth.xbdd.model.junit.JUnitElement;
+import io.github.orionhealth.xbdd.model.junit.JUnitEmbedding;
+import io.github.orionhealth.xbdd.model.junit.JUnitFeature;
+import io.github.orionhealth.xbdd.model.junit.JUnitStep;
+import io.github.orionhealth.xbdd.model.junit.JUnitStepResult;
 import io.github.orionhealth.xbdd.model.xbdd.XbddFeature;
 import io.github.orionhealth.xbdd.model.xbdd.XbddScenario;
 import io.github.orionhealth.xbdd.model.xbdd.XbddStep;
@@ -30,9 +34,7 @@ public class FeatureMapper {
 			allSteps.addAll(element.getBackground().getSteps());
 		}
 
-		if (element.getSteps() != null) {
-			allSteps.addAll(element.getSteps());
-		}
+		allSteps.addAll(element.getSteps());
 
 		return allSteps.stream().map(step -> step.getResult().getStatus()).filter(Objects::nonNull);
 	}
@@ -47,11 +49,7 @@ public class FeatureMapper {
 		xbddFeature.setUri(jUnitFeature.getUri());
 		xbddFeature.setCoordinates(CoordinatesMapper.mapCoordinates(coordinates));
 
-		if (jUnitFeature.getTags() != null) {
-			xbddFeature.setTags(jUnitFeature.getTags());
-		} else {
-			xbddFeature.setTags(new ArrayList<>());
-		}
+		xbddFeature.setTags(jUnitFeature.getTags());
 
 		// take each feature and give it a unique id.
 		final String _id = coordinates.getFeature_Id(jUnitFeature.getId());
@@ -96,18 +94,12 @@ public class FeatureMapper {
 		xbddScenario.setName(jUnitElement.getName());
 		xbddScenario.setType(jUnitElement.getType());
 
-		if (jUnitElement.getTags() != null) {
-			xbddScenario.setTags(jUnitElement.getTags());
-		} else {
-			xbddScenario.setTags(new ArrayList<>());
-		}
+		xbddScenario.setTags(jUnitElement.getTags());
 
-		if (jUnitElement.getSteps() != null) {
-			xbddScenario.setSteps(
-					jUnitElement.getSteps().stream().map(step -> mapStep(step, coordinates, featureId, xbddScenario.getOriginalId()))
-							.collect(
-									Collectors.toList()));
-		}
+		xbddScenario.setSteps(
+				jUnitElement.getSteps().stream().map(step -> mapStep(step, coordinates, featureId, xbddScenario.getOriginalId()))
+						.collect(
+								Collectors.toList()));
 
 		return xbddScenario;
 	}
@@ -140,12 +132,10 @@ public class FeatureMapper {
 	private void mapEmbeddings(final JUnitStep junitStep, final XbddStep xbddStep, final Coordinates coordinates, final String featureId,
 			final String scenarioId) {
 		xbddStep.setEmbeddings(new ArrayList<>());
-		if (junitStep.getEmbeddings() != null) {
-			for (final JUnitEmbedding embedding : junitStep.getEmbeddings()) {
-				final String filename = this.imageDao.saveImageAndReturnFilename(embedding, coordinates, featureId, scenarioId);
-				if (filename != null) {
-					xbddStep.getEmbeddings().add(filename);
-				}
+		for (final JUnitEmbedding embedding : junitStep.getEmbeddings()) {
+			final String filename = this.imageDao.saveImageAndReturnFilename(embedding, coordinates, featureId, scenarioId);
+			if (filename != null) {
+				xbddStep.getEmbeddings().add(filename);
 			}
 		}
 	}

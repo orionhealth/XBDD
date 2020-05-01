@@ -1,5 +1,6 @@
 package io.github.orionhealth.xbdd.model.common;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -63,6 +64,9 @@ public class User {
 	}
 
 	public Map<String, Boolean> getFavourites() {
+		if (this.favourites == null) {
+			this.favourites = new HashMap<String, Boolean>();
+		}
 		return this.favourites;
 	}
 
