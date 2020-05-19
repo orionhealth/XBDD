@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "/",
   "devDependencies": {
-    "@types/jest": "^25.2.2",
+    "@types/jest": "^25.2.3",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.31.0",
     "babel-preset-env": "^1.7.0",
