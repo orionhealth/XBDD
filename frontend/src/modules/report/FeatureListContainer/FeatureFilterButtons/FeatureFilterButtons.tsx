@@ -32,7 +32,7 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-  selectedStatus: StatusMap<string>;
+  selectedStatus: StatusMap<boolean>;
   handleFilterButtonClick(status: Status): void;
 }
 

@@ -27,6 +27,9 @@ export const updateAllStepPatch = (featureId, patch) => doPutRequest(`/rest/feat
 export const updateComments = (featureId, patch) => doPutRequest(`/rest/feature/comments/${featureId}`, patch);
 
 // patch should be of type TagAssignment
-export const setTagAssignmentData = (restId, tag) => doPutRequest(`/rest/user/tagAssignment/${restId}`, { tag });
+export const assignTagToLoggedInUser = (restId, tag) => doPutRequest(`/rest/user/tagAssignment/${restId}`, { tag });
+
+// patch should be of type TagAssignment
+export const unAssignTag = (restId, tag) => doPutRequest(`/rest/user/tagAssignment/unAssign/${restId}`, { tag });
 
 export const setIgnoredTag = (product, patch) => doPutRequest(`/rest/user/ignoredTags/${product}`, patch);

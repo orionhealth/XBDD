@@ -58,5 +58,8 @@
     "showLess": "Show less",
     "showMore": "Show More",
     "versions": "Versions"
+  },
+  "featureList": {
+    "features": "Features"
   }
 }

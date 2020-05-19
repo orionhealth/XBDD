@@ -68,6 +68,20 @@ public class UserResource {
 		return Response.ok().build();
 	}
 
+	@PUT
+	@Path("/tagAssignment/unAssign/{product}/{major}.{minor}.{servicePack}/{build}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteTagsAssignment(@BeanParam final Coordinates coordinates, final SingleTagAssignment singleTagAssignment) {
+
+		singleTagAssignment.setUserId(null);
+		singleTagAssignment.setSocialLogin(null);
+		singleTagAssignment.setLoginType(null);
+		singleTagAssignment.setDisplay(null);
+
+		this.tagAssignmentDao.saveTagAssignment(coordinates, singleTagAssignment);
+		return Response.ok().build();
+	}
+
 	@GET
 	@Path("/ignoredTags/{product}")
 	@Produces(MediaType.APPLICATION_JSON)

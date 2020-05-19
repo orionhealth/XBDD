@@ -9,7 +9,7 @@ import { faSquare } from '@fortawesome/free-regular-svg-icons';
 import { tagListItemStyles } from './styles/TagListStyles';
 import TagViewFeatureList from './TagViewFeatureList';
 import Tag from 'models/Tag';
-import Status from 'models/Status';
+import { StatusMap } from 'models/Status';
 import TagAvatar from './TagAvatar';
 import TagAssignments from 'models/TagAssignments';
 import TagsIgnored from 'models/TagsIgnored';
@@ -23,7 +23,7 @@ interface Props extends WithStyles {
   tagsIgnored: TagsIgnored;
   restId: string;
   selectedFeatureId: string;
-  selectedStatus: Status;
+  selectedStatus: StatusMap<boolean>;
   handleFeatureSelected(): void;
   handleTagAssigned(restId: string, name: string, currentlyAssignedUser?: User): void;
   handleTagIgnore(productId: string, name: string): void;
