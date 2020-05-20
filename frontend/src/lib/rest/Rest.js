@@ -1,3 +1,5 @@
+/* Remove these comments after this has been converted to TS */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { doRequest, Method } from './RestRequests';
 
 const { GET, PUT, DELETE } = Method;
