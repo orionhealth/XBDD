@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
-import { Typography, Checkbox, Tooltip, Box } from '@material-ui/core';
+import React, { Component, ReactNode } from 'react';
+import { Typography, Checkbox, Tooltip, Box, WithStyles } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import produce from 'immer';
 import { bindActionCreators } from 'redux';
 
 import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
-import { setTagAssignmentData, setIgnoredTag } from 'lib/rest/Rest';
+import { assignTagToLoggedInUser, unAssignTag, setIgnoredTag } from 'lib/rest/Rest';
 import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
 import FeatureFilterButtons from './FeatureFilterButtons/FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
@@ -21,8 +20,43 @@ import fetchSimpleFeatures from 'lib/services/FetchSimpleFeatures';
 import fetchTagAssignments from 'lib/services/FetchTagAssignments';
 import fetchTagsIgnored from 'lib/services/FetchTagsIgnored';
 import { receivedTagsIgnored, tagIgnoreToggled } from 'redux/TagsIgnoredReducer';
+import { LoggedInUser, User } from 'models/User';
+import Status, { StatusMap } from 'models/Status';
+import Tag, { TagName } from 'models/Tag';
+import TagAssignments from 'models/TagAssignments';
+import SimpleFeature from 'models/SimpleFeature';
+import TagsIgnored from 'models/TagsIgnored';
+import { StoreDispatch } from 'rootReducer';
 
-class FeatureListContainer extends Component {
+interface ProvidedProps extends WithStyles, WithTranslation {
+  user: LoggedInUser;
+  product: string;
+  version: string;
+  build: string;
+  selectedFeatureId: string;
+  handleFeatureSelected(): void;
+}
+
+interface DispatchProps {
+  dispatchReceivedTagsIgnored(tagsIgnored: TagsIgnored): void;
+  dispatchTagIgnoreToggled(tagName: TagName): void;
+}
+
+type Props = ProvidedProps & DispatchProps;
+
+interface State {
+  warningArgs: { restId: string; tag: string; newUser: User; prevUser: User } | null;
+  isEditMode: boolean;
+  isAssignedTagsView: boolean;
+  isTagView: boolean;
+  tagList: Tag[];
+  simpleFeatureList: SimpleFeature[];
+  tagAssignments: TagAssignments;
+  selectedStatus: StatusMap<boolean>;
+  loading: boolean;
+}
+
+class FeatureListContainer extends Component<Props, State> {
   constructor(props) {
     super(props);
 
@@ -44,7 +78,7 @@ class FeatureListContainer extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { product, version, build, dispatchReceivedTagsIgnored } = this.props;
     this.setState({ loading: true });
     Promise.all([
@@ -66,40 +100,41 @@ class FeatureListContainer extends Component {
       .finally(() => this.setState({ loading: false }));
   }
 
-  handleViewSwitch = () => {
+  handleViewSwitch = (): void => {
     this.setState(prevState => ({ ...prevState, isTagView: !prevState.isTagView }));
   };
 
-  handleTagsSwitch = () => {
+  handleTagsSwitch = (): void => {
     this.setState(prevState => ({ ...prevState, isAssignedTagsView: !prevState.isAssignedTagsView }));
   };
 
-  handleEditModeSwitch = () => {
+  handleEditModeSwitch = (): void => {
     this.setState(prevState => ({ ...prevState, isEditMode: !prevState.isEditMode }));
   };
 
-  handleFilterButtonClick = status => {
+  handleFilterButtonClick = (status: Status): void => {
     this.setState(prevState => ({
       ...prevState,
       selectedStatus: { ...prevState.selectedStatus, [status]: !prevState.selectedStatus[status] },
     }));
   };
 
-  setStateForTagUser(tag, userName) {
+  setStateForTagUser(tag: string, user?: User): void {
     this.setState(
       produce(draft => {
-        draft.tagAssignments[tag] = userName;
+        draft.tagAssignments[tag] = user;
       })
     );
   }
 
-  handleTagAssigned = (restId, tag, currentlyAssignedUser) => {
+  handleTagAssigned = (restId: string, tag: string, currentlyAssignedUser: User): void => {
     const { user } = this.props;
-    if (currentlyAssignedUser?.userId && user.userId !== currentlyAssignedUser.userId) {
-      this.setState({ warningArgs: { restId, tag, newUserName: user.name, prevUserName: currentlyAssignedUser?.userName } });
+    if (currentlyAssignedUser?.userId && user.userId !== currentlyAssignedUser?.userId) {
+      this.setState({ warningArgs: { restId, tag, newUser: user, prevUser: currentlyAssignedUser } });
     } else {
       // While we are just setting the whole user as the new assignee only id, name and avatar will be saved.
-      const newAssignee = user.userId === currentlyAssignedUser?.userId ? null : user;
+      const newAssignee = user.userId === currentlyAssignedUser?.userId ? undefined : user;
+      const setTagAssignmentData = newAssignee ? assignTagToLoggedInUser : unAssignTag;
 
       setTagAssignmentData(restId, tag).then(response => {
         if (!response || !response.ok) {
@@ -110,7 +145,7 @@ class FeatureListContainer extends Component {
     }
   };
 
-  handleTagIgnore = (product, tagName) => {
+  handleTagIgnore = (product: string, tagName: string): void => {
     setIgnoredTag(product, { tagName: tagName }).then(response => {
       if (!response || !response.ok) {
         this.setIgnoreStateForTag(tagName);
@@ -119,29 +154,34 @@ class FeatureListContainer extends Component {
     this.setIgnoreStateForTag(tagName);
   };
 
-  setIgnoreStateForTag(tagName) {
+  setIgnoreStateForTag(tagName: string): void {
     const { dispatchTagIgnoreToggled } = this.props;
     dispatchTagIgnoreToggled(tagName);
   }
 
-  filterTags(userName) {
+  filterTags(): Tag[] {
+    const { user } = this.props;
     const { tagList, isAssignedTagsView, selectedStatus, tagAssignments } = this.state;
     let filteredTagList = tagList;
 
     if (isAssignedTagsView) {
-      filteredTagList = filteredTagList.filter(tag => tagAssignments[tag.name] === userName);
+      filteredTagList = filteredTagList.filter(tag => tagAssignments[tag.name]?.userId === user.userId);
     }
     filteredTagList = filteredTagList.filter(tag => tag.features.find(feature => selectedStatus[feature.calculatedStatus]));
 
     return filteredTagList;
   }
 
-  renderAssignedTagsSwitch() {
+  renderAssignedTagsSwitch(): ReactNode {
     const { classes, t } = this.props;
     const { isEditMode, isAssignedTagsView } = this.state;
+
+    const editModeTitle = isEditMode ? t('report.turnEditModeOff') : t('report.turnEditModeOn');
+    const assignedTagsTitle = isAssignedTagsView ? t('report.showAllTags') : t('report.showAssignedTags');
+
     return (
       <>
-        <Tooltip title={isEditMode ? t('report.turnEditModeOff') : t('report.turnEditModeOn')} placement="top">
+        <Tooltip title={editModeTitle} placement="top">
           <Checkbox
             onChange={this.handleEditModeSwitch}
             icon={<FontAwesomeIcon icon={faUserSlash} className={classes.unCheckedIcon} />}
@@ -149,7 +189,7 @@ class FeatureListContainer extends Component {
             checked={isEditMode}
           />
         </Tooltip>
-        <Tooltip title={isAssignedTagsView ? t('report.showAllTags') : t('report.showAssignedTags')} placement="top">
+        <Tooltip title={assignedTagsTitle} placement="top">
           <Checkbox
             onChange={this.handleTagsSwitch}
             icon={<FontAwesomeIcon icon={faUserTag} className={classes.unCheckedIcon} />}
@@ -161,11 +201,14 @@ class FeatureListContainer extends Component {
     );
   }
 
-  renderViewsSwitch() {
+  renderViewsSwitch(): ReactNode {
     const { classes, t } = this.props;
     const { isTagView } = this.state;
+
+    const title = isTagView ? t('report.switchToListView') : t('report.switchToTagView');
+
     return (
-      <Tooltip title={isTagView ? t('report.switchToListView') : t('report.switchToTagView')} placement="top">
+      <Tooltip title={title} placement="top">
         <Checkbox
           onChange={this.handleViewSwitch}
           icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
@@ -176,13 +219,14 @@ class FeatureListContainer extends Component {
     );
   }
 
-  renderFeatureListTitle() {
-    const { classes } = this.props;
+  renderFeatureListTitle(): ReactNode {
+    const { classes, t } = this.props;
     const { isTagView } = this.state;
+
     return (
       <Box className={classes.featureListTitle}>
-        <Box p={1} flexGrow={1} className={null}>
-          <Typography variant="h5">Features</Typography>
+        <Box p={1} flexGrow={1}>
+          <Typography variant="h5">{t('featureList.features')}</Typography>
         </Box>
         <Box>
           {isTagView ? this.renderAssignedTagsSwitch() : null}
@@ -192,7 +236,7 @@ class FeatureListContainer extends Component {
     );
   }
 
-  renderFeatureList(userName, restId, selectedFeatureId) {
+  renderFeatureList(restId: string, selectedFeatureId: string): ReactNode {
     const { handleFeatureSelected } = this.props;
     const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, simpleFeatureList, tagAssignments } = this.state;
     if (isTagView) {
@@ -200,7 +244,7 @@ class FeatureListContainer extends Component {
         <TagList
           isEditMode={isEditMode}
           isAssignedTagsView={isAssignedTagsView}
-          tagList={this.filterTags(userName)}
+          tagList={this.filterTags()}
           tagAssignments={tagAssignments}
           restId={restId}
           selectedFeatureId={selectedFeatureId}
@@ -222,8 +266,8 @@ class FeatureListContainer extends Component {
     }
   }
 
-  render() {
-    const { product, version, build, userName, selectedFeatureId, classes, t } = this.props;
+  render(): ReactNode {
+    const { product, version, build, selectedFeatureId, classes, t } = this.props;
     const { loading, warningArgs, selectedStatus } = this.state;
 
     const restId = `${product}/${version}/${build}`;
@@ -235,44 +279,28 @@ class FeatureListContainer extends Component {
           open={!!warningArgs}
           title={t('report.warning')}
           msg={t('report.pleaseReassignTheTag')}
-          handleConfirmed={() => warningArgs && this.handleTagAssigned(warningArgs.restId, warningArgs.tag, warningArgs.newUserName, null)}
-          handleClosed={() => {
+          handleConfirmed={(): void => {
+            if (warningArgs) {
+              this.handleTagAssigned(warningArgs.restId, warningArgs.tag, warningArgs.newUser);
+            }
+          }}
+          handleClosed={(): void => {
             this.setState({ warningArgs: null });
           }}
         />
         <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
         <div className={classes.xbddTagListContainer}>
           {this.renderFeatureListTitle()}
-          {this.renderFeatureList(userName, restId, selectedFeatureId)}
+          {this.renderFeatureList(restId, selectedFeatureId)}
         </div>
       </>
     );
   }
 }
 
-FeatureListContainer.propTypes = {
-  user: PropTypes.shape({}),
-  product: PropTypes.string,
-  version: PropTypes.string,
-  build: PropTypes.string,
-  userName: PropTypes.string,
-  selectedFeatureId: PropTypes.string,
-  handleFeatureSelected: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}),
-  dispatchReceivedTagsIgnored: PropTypes.func.isRequired,
-  dispatchTagIgnoreToggled: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = state => ({
-  userName: state.app.user?.name,
-});
-
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: StoreDispatch): DispatchProps => ({
   dispatchReceivedTagsIgnored: bindActionCreators(receivedTagsIgnored, dispatch),
   dispatchTagIgnoreToggled: bindActionCreators(tagIgnoreToggled, dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation()(withStyles(featureListContainerStyles)(FeatureListContainer)));
+export default connect(null, mapDispatchToProps)(withTranslation()(withStyles(featureListContainerStyles)(FeatureListContainer)));

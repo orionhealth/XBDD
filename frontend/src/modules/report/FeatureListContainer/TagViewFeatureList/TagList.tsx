@@ -6,9 +6,10 @@ import { useSelector } from 'react-redux';
 import { tagListStyles } from './styles/TagListStyles';
 import TagListItem from './TagListItem';
 import Tag from 'models/Tag';
-import Status from 'models/Status';
+import { StatusMap } from 'models/Status';
 import TagAssignments from 'models/TagAssignments';
 import { RootStore } from 'rootReducer';
+import { User } from 'models/User';
 
 interface Props extends WithStyles {
   isEditMode: boolean;
@@ -17,10 +18,10 @@ interface Props extends WithStyles {
   tagAssignments: TagAssignments;
   restId: string;
   selectedFeatureId: string;
-  selectedStatus: Status;
+  selectedStatus: StatusMap<boolean>;
   handleFeatureSelected(): void;
-  handleTagAssigned(): void;
-  handleTagIgnore(): void;
+  handleTagAssigned(restId: string, tag: string, currentlyAssignedUser: User): void;
+  handleTagIgnore(product: string, tagName: string): void;
 }
 
 const TagList: FC<Props> = ({

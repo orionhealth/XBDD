@@ -1,76 +1,90 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, ReactNode } from 'react';
 import { Grid, Card } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { withTranslation } from 'react-i18next';
+import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 import fetchProducts from 'lib/services/FetchProducts';
 import ProductListContainer from './productList/ProductListContainer';
 import SummaryStyles from './styles/SummaryStyles';
 import { setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
 import Loading from 'modules/loading/Loading';
-import { updateProductPinnedBuildList } from 'models/Product';
+import Product, { updateProductPinnedBuildList } from 'models/Product';
+import { LoggedInUser } from 'models/User';
+import Version from 'models/Version';
 
-class SummaryContainer extends Component {
+interface Props extends WithStyles, WithTranslation {
+  user: LoggedInUser;
+}
+
+interface State {
+  productList: Product[] | null;
+  loading: boolean;
+}
+
+class SummaryContainer extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = { productList: null, loading: false };
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.setState({ loading: true });
     fetchProducts().then(productList => {
       this.setState({
-        productList, // :Product[]
+        productList: productList || null,
         loading: false,
       });
     });
   }
 
-  changeFavouriteStatus(isFavourite, product) {
+  changeFavouriteStatus(isFavourite: boolean, product: Product): Promise<any> {
     if (isFavourite) {
       return setProductFavouriteOff(product.name);
     }
     return setProductFavouriteOn(product.name);
   }
 
-  handleFavouriteChange = product => {
+  handleFavouriteChange = (product: Product): void => {
     const isFavourite = product.favourite;
     const newProductList = this.state.productList;
 
     this.changeFavouriteStatus(isFavourite, product).then(response => {
       if (response && response.ok) {
-        const newProduct = newProductList.find(item => item.name === product.name);
-        newProduct.favourite = !isFavourite;
-        this.setState({
-          productList: newProductList,
-        });
+        const newProduct = newProductList?.find(item => item.name === product.name);
+        if (newProduct) {
+          newProduct.favourite = !isFavourite;
+          this.setState({
+            productList: newProductList,
+          });
+        }
       }
     });
   };
 
-  changePinStatus(product, version, build, isPinned) {
+  changePinStatus(product: Product, version: Version, build: string, isPinned: boolean): Promise<any> {
     if (isPinned) {
       return unPinABuild(product.name, version.major, version.minor, version.servicePack, build);
     }
     return pinABuild(product.name, version.major, version.minor, version.servicePack, build);
   }
 
-  handlePinChange = (product, version, build, isPinned) => {
+  handlePinChange = (product: Product, version: Version, build: string, isPinned: boolean): void => {
     const newProductList = this.state.productList;
 
     this.changePinStatus(product, version, build, isPinned).then(response => {
       if (response.status === 200) {
-        const newProduct = newProductList.find(item => item.name === product.name);
-        updateProductPinnedBuildList(newProduct, version, build, isPinned);
-        this.setState({
-          productList: newProductList,
-        });
+        const newProduct = newProductList?.find(item => item.name === product.name);
+        if (newProduct) {
+          updateProductPinnedBuildList(newProduct, version, build, isPinned);
+          this.setState({
+            productList: newProductList,
+          });
+        }
       }
     });
   };
 
-  render() {
+  render(): ReactNode {
     const { user, classes, t } = this.props;
     const { productList, loading } = this.state;
 
@@ -113,10 +127,5 @@ class SummaryContainer extends Component {
     );
   }
 }
-
-SummaryContainer.propTypes = {
-  user: PropTypes.shape({}),
-  classes: PropTypes.shape({}),
-};
 
 export default withTranslation()(withStyles(SummaryStyles)(SummaryContainer));

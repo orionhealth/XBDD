@@ -3,14 +3,14 @@ import { List, ListItem, Card, Chip, WithStyles } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
-import Feature from 'models/Feature';
 import { StatusMap, Passed, Skipped, Failed, Undefined } from 'models/Status';
+import SimpleFeature from 'models/SimpleFeature';
 
 interface Props extends WithStyles {
-  featureList: Feature[];
+  featureList: SimpleFeature[];
   selectedFeatureId: string;
   selectedStatus: StatusMap<boolean>;
-  handleFeatureSelected(feature: Feature): void;
+  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
 const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, selectedStatus, handleFeatureSelected, classes }) => {
@@ -23,7 +23,7 @@ const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, select
     [Skipped]: classes.itemSkipped,
   };
 
-  const getItemClasses = (feature: Feature, statusClass: string): string =>
+  const getItemClasses = (feature: SimpleFeature, statusClass: string): string =>
     feature._id === selectedFeatureId ? `${statusClass} ${classes.item} ${classes.itemSelected}` : `${statusClass} ${classes.item}`;
 
   return (
