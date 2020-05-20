@@ -30,11 +30,11 @@ import { StoreDispatch } from 'rootReducer';
 
 interface ProvidedProps extends WithStyles, WithTranslation {
   user: LoggedInUser;
-  product: string;
-  version: string;
+  productId: string;
+  versionString: string;
   build: string;
-  selectedFeatureId: string;
-  handleFeatureSelected(): void;
+  selectedFeatureId?: string;
+  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
 interface DispatchProps {
@@ -79,13 +79,13 @@ class FeatureListContainer extends Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { product, version, build, dispatchReceivedTagsIgnored } = this.props;
+    const { productId, versionString, build, dispatchReceivedTagsIgnored } = this.props;
     this.setState({ loading: true });
     Promise.all([
-      fetchSimpleFeaturesByTags(product, version, build),
-      fetchSimpleFeatures(product, version, build),
-      fetchTagAssignments(product, version, build),
-      fetchTagsIgnored(product),
+      fetchSimpleFeaturesByTags(productId, versionString, build),
+      fetchSimpleFeatures(productId, versionString, build),
+      fetchTagAssignments(productId, versionString, build),
+      fetchTagsIgnored(productId),
     ])
       .then(data => {
         this.setState(prevState => ({
@@ -236,7 +236,7 @@ class FeatureListContainer extends Component<Props, State> {
     );
   }
 
-  renderFeatureList(restId: string, selectedFeatureId: string): ReactNode {
+  renderFeatureList(restId: string, selectedFeatureId?: string): ReactNode {
     const { handleFeatureSelected } = this.props;
     const { isTagView, isEditMode, isAssignedTagsView, selectedStatus, simpleFeatureList, tagAssignments } = this.state;
     if (isTagView) {
@@ -267,10 +267,10 @@ class FeatureListContainer extends Component<Props, State> {
   }
 
   render(): ReactNode {
-    const { product, version, build, selectedFeatureId, classes, t } = this.props;
+    const { productId, versionString, build, selectedFeatureId, classes, t } = this.props;
     const { loading, warningArgs, selectedStatus } = this.state;
 
-    const restId = `${product}/${version}/${build}`;
+    const restId = `${productId}/${versionString}/${build}`;
 
     return (
       <>

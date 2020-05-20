@@ -14,6 +14,7 @@ import TagAvatar from './TagAvatar';
 import TagAssignments from 'models/TagAssignments';
 import TagsIgnored from 'models/TagsIgnored';
 import { User } from 'models/User';
+import SimpleFeature from 'models/SimpleFeature';
 
 interface Props extends WithStyles {
   isEditMode: boolean;
@@ -22,9 +23,9 @@ interface Props extends WithStyles {
   tagAssignments: TagAssignments;
   tagsIgnored: TagsIgnored;
   restId: string;
-  selectedFeatureId: string;
+  selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
-  handleFeatureSelected(): void;
+  handleFeatureSelected(feature: SimpleFeature): void;
   handleTagAssigned(restId: string, name: string, currentlyAssignedUser?: User): void;
   handleTagIgnore(productId: string, name: string): void;
 }

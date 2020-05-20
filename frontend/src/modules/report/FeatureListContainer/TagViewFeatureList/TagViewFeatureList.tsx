@@ -5,12 +5,11 @@ import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 import SimpleFeature from 'models/SimpleFeature';
-import Feature from 'models/Feature';
 
 interface Props extends WithStyles {
-  selectedFeatureId: string;
+  selectedFeatureId?: string;
   featureList: SimpleFeature[];
-  handleFeatureSelected(feature: Feature): void;
+  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
 const TagViewFeatureList: FC<Props> = ({ selectedFeatureId, featureList, handleFeatureSelected, classes }) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Enzyme, { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
@@ -11,7 +11,7 @@ import Xbdd from '../Xbdd';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const renderApp = () => {
+const renderApp = (): ReactNode => {
   const initialState = {
     app: {
       user: null,

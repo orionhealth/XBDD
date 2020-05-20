@@ -13,20 +13,4 @@ interface Scenario {
   calculatedStatus: Status;
 }
 
-// TODO - once we move the state to redux and use createSlice and immer, we won't need these clone methods as we can mutate state directly.
-const cloneScenario = (scenario: Scenario): Scenario => {
-  return {
-    id: scenario.id,
-    name: scenario.name,
-    backgroundSteps: scenario.backgroundSteps.map(step => ({ ...step })),
-    steps: scenario.steps.map(step => ({ ...step })),
-    environmentNotes: scenario.environmentNotes,
-    executionNotes: scenario.executionNotes,
-    testingTips: scenario.testingTips,
-    originalAutomatedStatus: scenario.originalAutomatedStatus,
-    calculatedStatus: scenario.calculatedStatus,
-  };
-};
-
-export { cloneScenario };
 export default Scenario;
