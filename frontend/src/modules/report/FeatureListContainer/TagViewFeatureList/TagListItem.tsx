@@ -24,7 +24,6 @@ interface Props extends WithStyles {
   isAssignedTagsView: boolean;
   tag: Tag;
   tagAssignments: TagAssignments;
-  isIgnored: boolean;
   restId: string;
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
@@ -36,7 +35,6 @@ const TagListItem: FC<Props> = ({
   isAssignedTagsView,
   tag,
   tagAssignments,
-  isIgnored,
   selectedFeatureId,
   restId,
   selectedStatus,
@@ -46,6 +44,7 @@ const TagListItem: FC<Props> = ({
   const [expanded, setExpanded] = useState(false);
   const [warningOpen, setWarningOpen] = useState(false);
   const user = useSelector((state: RootStore) => state.user);
+  const isIgnored = useSelector((state: RootStore) => Boolean(state.tags.ignored?.[tag.name]));
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
