@@ -14,7 +14,6 @@ import Tag from 'models/Tag';
 import { StatusMap } from 'models/Status';
 import TagAvatar from './TagAvatar';
 import TagAssignments from 'models/TagAssignments';
-import TagsIgnored from 'models/TagsIgnored';
 import SimpleFeature from 'models/SimpleFeature';
 import { ignoreTagWithRollback, assignUserToTagWithRollback } from 'redux/TagsMetadataReducer';
 import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog';
@@ -25,7 +24,7 @@ interface Props extends WithStyles {
   isAssignedTagsView: boolean;
   tag: Tag;
   tagAssignments: TagAssignments;
-  tagsIgnored: TagsIgnored;
+  isIgnored: boolean;
   restId: string;
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
@@ -37,7 +36,7 @@ const TagListItem: FC<Props> = ({
   isAssignedTagsView,
   tag,
   tagAssignments,
-  tagsIgnored,
+  isIgnored,
   selectedFeatureId,
   restId,
   selectedStatus,
@@ -58,7 +57,6 @@ const TagListItem: FC<Props> = ({
   const { name } = tag;
   const currentAssignee = tagAssignments[name];
   const newAssignee = user.userId !== currentAssignee?.userId ? user : undefined;
-  const isIgnored = tagsIgnored[name];
 
   if (isAssignedTagsView && isIgnored) {
     return null;
