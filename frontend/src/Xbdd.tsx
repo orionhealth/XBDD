@@ -16,12 +16,12 @@ import { LoggedInUser } from 'models/User';
 import './Xbdd.css';
 
 interface UserProps {
-  user: LoggedInUser | null;
+  user: LoggedInUser;
 }
 
 const ReportPage: FC<UserProps> = ({ user }) => {
   const { product, version, build } = useParams();
-  return <ReportContainer user={user} product={product} version={version} build={build} />;
+  return <ReportContainer user={user} productId={product} versionString={version} build={build} />;
 };
 
 const PageContent: FC<UserProps> = ({ user }) => {
@@ -50,7 +50,7 @@ const Xbdd: FC = () => {
           <ErrorBoundary>
             <Router>
               <Navbar />
-              <PageContent user={user} />
+              {user && <PageContent user={user} />}
               <NotificationsView />
             </Router>
           </ErrorBoundary>

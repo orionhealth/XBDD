@@ -8,7 +8,7 @@ import SimpleFeature from 'models/SimpleFeature';
 
 interface Props extends WithStyles {
   featureList: SimpleFeature[];
-  selectedFeatureId: string;
+  selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
   handleFeatureSelected(feature: SimpleFeature): void;
 }

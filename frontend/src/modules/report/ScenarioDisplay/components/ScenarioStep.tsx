@@ -11,16 +11,12 @@ import CucumberTable from './CucumberTable';
 import Step from 'models/Step';
 import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
 import StepScreenshot from './StepScreenshot';
-
-interface StepChange {
-  stepId: number;
-  status: Status;
-}
+import StepChange from 'models/StatusChange';
 
 interface Props extends WithStyles {
   title: string;
   steps: Step[];
-  handleStatusChange(oldStatusMap: StepChange[], newStatusMap: StepChange[]): void;
+  handleStatusChange(oldStatusChanges: StepChange[], newStatusChanges: StepChange[]): void;
 }
 
 const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) => {
@@ -46,10 +42,10 @@ const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) 
     };
 
     const status = newStatus ? newStatus : nextStatus[prevStatus];
-    const prevStatusMap = [{ stepId: stepId, status: prevStatus }];
-    const newStatusMap = [{ stepId: stepId, status: status }];
+    const prevStatusChanges = [{ stepId: stepId, status: prevStatus }];
+    const newStatusChanges = [{ stepId: stepId, status: status }];
 
-    handleStatusChange(prevStatusMap, newStatusMap);
+    handleStatusChange(prevStatusChanges, newStatusChanges);
   };
 
   return (

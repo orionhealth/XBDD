@@ -37,5 +37,8 @@ spring:
 #    key-store: classpath:certs/keystore.p12
 #    key-store-password: password
 
-logging.level:
-  org.springframework.security: DEBUG
+logging:
+  # Only log to console for dev
+  file:
+  level:
+    org.springframework.security: DEBUG

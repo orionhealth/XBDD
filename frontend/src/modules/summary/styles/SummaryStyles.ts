@@ -1,4 +1,6 @@
-const SummaryStyles = () => ({
+import { createStyles } from '@material-ui/core';
+
+const SummaryStyles = createStyles({
   summaryTitle: {
     color: 'inherit',
     paddingTop: '20px',
