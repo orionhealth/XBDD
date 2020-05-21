@@ -9,7 +9,6 @@ import Tag from 'models/Tag';
 import { StatusMap } from 'models/Status';
 import TagAssignments from 'models/TagAssignments';
 import { RootStore } from 'rootReducer';
-import { User } from 'models/User';
 import SimpleFeature from 'models/SimpleFeature';
 
 interface Props extends WithStyles {
@@ -21,8 +20,6 @@ interface Props extends WithStyles {
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
   handleFeatureSelected(feature: SimpleFeature): void;
-  handleTagAssigned(restId: string, tag: string, currentlyAssignedUser: User): void;
-  handleTagIgnore(product: string, tagName: string): void;
 }
 
 const TagList: FC<Props> = ({
@@ -34,11 +31,9 @@ const TagList: FC<Props> = ({
   selectedFeatureId,
   selectedStatus,
   handleFeatureSelected,
-  handleTagAssigned,
-  handleTagIgnore,
   classes,
 }) => {
-  const tagsIgnored = useSelector((state: RootStore) => state.tagsIgnored);
+  const tagsIgnored = useSelector((state: RootStore) => state.tags.ignored);
   return (
     <Card raised className={classes.tagList}>
       <List component="ul">
@@ -54,8 +49,6 @@ const TagList: FC<Props> = ({
             selectedFeatureId={selectedFeatureId}
             selectedStatus={selectedStatus}
             handleFeatureSelected={handleFeatureSelected}
-            handleTagAssigned={handleTagAssigned}
-            handleTagIgnore={handleTagIgnore}
           />
         ))}
       </List>

@@ -4,25 +4,17 @@ import { LoggedInUser } from 'models/User';
 import { fetchLoggedInUser } from 'lib/services/FetchLoggedInUser';
 import { StoreDispatch } from 'rootReducer';
 
-interface UserState {
-  user: LoggedInUser | null;
-}
+type UserState = LoggedInUser | null;
 
-type UserAction = PayloadAction<LoggedInUser | null>;
+type UserAction = PayloadAction<UserState>;
 
-type XbddState = UserState;
-
-const initialState: XbddState = {
-  user: null,
-};
-
-const userReducer: CaseReducer<XbddState, UserAction> = (state, action) => {
-  state.user = action.payload;
+const userReducer: CaseReducer<UserState, UserAction> = (state, action) => {
+  return action.payload;
 };
 
 const { actions, reducer } = createSlice({
-  name: 'xbdd',
-  initialState,
+  name: 'user',
+  initialState: null as UserState,
   reducers: {
     setUser: userReducer,
   },

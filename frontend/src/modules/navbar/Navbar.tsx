@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
 import { RootStore } from 'rootReducer';
-import { setUser } from '../../xbddReducer';
+import { setUser } from '../../redux/UserReducer';
 import LoginDialog from './LoginDialog';
 import { useNavbarStyles } from './styles/NavbarStyles';
 import UserAvatar from '../userAvatar/UserAvatar';
@@ -15,7 +15,7 @@ const Navbar: FC = () => {
   const classes = useNavbarStyles();
 
   const [openDialog, setOpenDialog] = useState(false);
-  const loggedInUser = useSelector((state: RootStore) => state.app.user);
+  const loggedInUser = useSelector((state: RootStore) => state.user);
 
   const dispatch = useDispatch();
   const history = useHistory();

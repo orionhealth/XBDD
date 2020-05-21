@@ -10,7 +10,7 @@ import ErrorBoundary from 'modules/errorBoundary/ErrorBoundary';
 import theme from 'AppTheme';
 import NotificationsView from 'modules/notifications/NotificationsView';
 import { RootStore } from 'rootReducer';
-import { fetchUser } from 'xbddReducer';
+import { fetchUser } from 'redux/UserReducer';
 import { LoggedInUser } from 'models/User';
 
 import './Xbdd.css';
@@ -37,7 +37,7 @@ const PageContent: FC<UserProps> = ({ user }) => {
 
 const Xbdd: FC = () => {
   const dispatch = useDispatch();
-  const user = useSelector((store: RootStore) => store.app.user);
+  const user = useSelector((store: RootStore) => store.user);
 
   if (!user) {
     dispatch(fetchUser());
