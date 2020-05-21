@@ -9,9 +9,12 @@ import fetchTagsIgnored from 'lib/services/FetchTagsIgnored';
 import { StoreDispatch } from 'rootReducer';
 import { User } from 'models/User';
 
+type IgnoredState = TagsIgnored | null;
+type AssignmentsState = TagAssignments | null;
+
 type TagsMetadataState = {
-  ignored: TagsIgnored;
-  assignments: TagAssignments;
+  ignored: IgnoredState;
+  assignments: AssignmentsState;
 };
 
 type ReceivedTagsMetadataAction = PayloadAction<TagsMetadataState>;
@@ -23,17 +26,23 @@ const setTagsMetadataReducer: CaseReducer<TagsMetadataState, ReceivedTagsMetadat
 };
 
 const assignUserToTagReducer: CaseReducer<TagsMetadataState, AssignUserToTagAction> = (state, action) => {
+  if (!state.assignments) {
+    state.assignments = {};
+  }
   state.assignments[action.payload.tagName] = action.payload.user;
 };
 
 const toggleTagIgnoreReducer: CaseReducer<TagsMetadataState, TagIgnoreToggledAction> = (state, action) => {
   const tagName = action.payload;
+  if (!state.ignored) {
+    state.ignored = {};
+  }
   state.ignored[tagName] = !state.ignored[tagName];
 };
 
 const { actions, reducer } = createSlice({
   name: 'tagsIgnored',
-  initialState: { ignored: {}, assignments: {} },
+  initialState: { ignored: null as IgnoredState, assignments: null as AssignmentsState },
   reducers: {
     setTagsMetadata: setTagsMetadataReducer,
     tagIgnoreToggled: toggleTagIgnoreReducer,
@@ -65,7 +74,7 @@ export const assignUserToTagWithRollback = (restId: string, tag: string, current
   dispatch(assignUserToTag({ tagName: tag, user: newUser }));
 };
 
-export const ignoreTagWithRollback = (product: string, tagName: string) => (dispatch: StoreDispatch) => {
+export const ignoreTagWithRollback = (product: string, tagName: string) => (dispatch: StoreDispatch): void => {
   setIgnoredTag(product, { tagName: tagName }).then(response => {
     if (!response || !response.ok) {
       dispatch(tagIgnoreToggled(tagName));
