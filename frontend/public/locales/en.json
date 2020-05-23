@@ -61,5 +61,9 @@
   },
   "featureList": {
     "features": "Features"
+  },
+  "tags": {
+    "blocked": "This tag cannot be assigned",
+    "unassigned": "Unassigned"
   }
 }
