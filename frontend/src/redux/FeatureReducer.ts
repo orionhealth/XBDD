@@ -7,12 +7,27 @@ import SimpleFeature from 'models/SimpleFeature';
 import Feature from 'models/Feature';
 import fetchFeature from 'lib/services/FetchFeature';
 import { User } from 'models/User';
-import { calculateManualStatus } from 'lib/StatusCalculator';
+import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 import Status from 'models/Status';
+import Tag from 'models/Tag';
+import fetchSimpleFeaturesByTags from 'lib/services/FetchSimpleFeaturesByTags';
+import fetchSimpleFeatures from 'lib/services/FetchSimpleFeatures';
 
-interface FeatureState {
+interface SelectedFeature {
   selected: Feature | null;
   executionHistory: Execution[] | null;
+}
+
+interface FeatureIndexes {
+  byTag: Tag[] | null;
+  byId: SimpleFeature[] | null;
+}
+
+type FeatureState = FeatureIndexes & SelectedFeature;
+
+interface IndexStatusUpdate {
+  feature: Feature;
+  status: Status;
 }
 
 interface CommentUpdateDetails {
@@ -37,14 +52,19 @@ interface ScenarioStatusChange {
   user: User;
 }
 
-type SaveFeatureAndHistoryAction = PayloadAction<FeatureState>;
+type SaveIndexesAction = PayloadAction<FeatureIndexes>;
+type SaveFeatureAndHistoryAction = PayloadAction<SelectedFeature>;
 type CommentUpdateAction = PayloadAction<CommentUpdateDetails>;
 type LastUpdatedUpdateAction = PayloadAction<User>;
 type StepStatusChangeAction = PayloadAction<StepStatusChange>;
 type ScenarioStatusChangeAction = PayloadAction<ScenarioStatusChange>;
 
+const featureIndexReducer: CaseReducer<FeatureState, SaveIndexesAction> = (state, action) => {
+  return { ...state, ...action.payload };
+};
+
 const saveFeatureAndHistoryReducer: CaseReducer<FeatureState, SaveFeatureAndHistoryAction> = (state, action) => {
-  return action.payload;
+  return { ...state, ...action.payload };
 };
 
 const updateMetadata = (featureState: FeatureState, user: User, build?: string): void => {
@@ -56,6 +76,28 @@ const updateMetadata = (featureState: FeatureState, user: User, build?: string):
     if (history) {
       history.calculatedStatus = selected.calculatedStatus;
       history.statusLastEditedBy = selected.lastEditedBy;
+    }
+  }
+};
+
+const updateFeatureStatus = (state: FeatureState, feature: Feature): void => {
+  const { byId, byTag } = state;
+
+  feature.calculatedStatus = calculateFeatureStatus(feature);
+
+  if (byId) {
+    for (const simpleFeature of byId) {
+      if (simpleFeature._id === feature._id) {
+        simpleFeature.calculatedStatus = feature.calculatedStatus;
+      }
+    }
+  }
+
+  if (byTag) {
+    for (const simpleFeature of byTag.flatMap(tag => tag.features)) {
+      if (simpleFeature._id === feature._id) {
+        simpleFeature.calculatedStatus = feature.calculatedStatus;
+      }
     }
   }
 };
@@ -72,15 +114,17 @@ const updateScenarioCommentReducer: CaseReducer<FeatureState, CommentUpdateActio
 
 const stepStatusChangeReducer: CaseReducer<FeatureState, StepStatusChangeAction> = (state, action) => {
   const { scenarioId, stepId, status, build } = action.payload;
-  const scenario = state.selected?.scenarios.find(scenario => scenario.id === scenarioId);
+  const feature = state.selected;
+  const scenario = feature?.scenarios.find(scenario => scenario.id === scenarioId);
 
-  if (scenario) {
+  if (feature && scenario) {
     const step = [...scenario.backgroundSteps, ...scenario.steps].find(step => step.id === stepId);
 
     if (step) {
       step.manualStatus = status;
       scenario.calculatedStatus = calculateManualStatus(scenario);
       updateMetadata(state, action.payload.user, build);
+      updateFeatureStatus(state, feature);
       return state;
     }
   }
@@ -88,21 +132,24 @@ const stepStatusChangeReducer: CaseReducer<FeatureState, StepStatusChangeAction>
 
 const scenarioStatusChangeReducer: CaseReducer<FeatureState, ScenarioStatusChangeAction> = (state, action) => {
   const { scenarioId, status, build, user } = action.payload;
+  const feature = state.selected;
+  const scenario = feature?.scenarios.find(scenario => scenario.id === scenarioId);
 
-  const scenario = state.selected?.scenarios.find(scenario => scenario.id === scenarioId);
-
-  if (scenario) {
+  if (feature && scenario) {
     [...scenario.backgroundSteps, ...scenario.steps].forEach(step => {
       step.manualStatus = status;
     });
 
     scenario.calculatedStatus = status;
     updateMetadata(state, user, build);
+    updateFeatureStatus(state, feature);
     return state;
   }
 };
 
 const initialState: FeatureState = {
+  byId: null,
+  byTag: null,
   selected: null,
   executionHistory: null,
 };
@@ -111,6 +158,7 @@ const { actions, reducer } = createSlice({
   name: 'feature',
   initialState,
   reducers: {
+    saveIndexes: featureIndexReducer,
     saveFeatureAndHistory: saveFeatureAndHistoryReducer,
     updateScenarioComment: updateScenarioCommentReducer,
     stepStatusChange: stepStatusChangeReducer,
@@ -118,7 +166,16 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const { saveFeatureAndHistory, updateScenarioComment, stepStatusChange, scenarioStatusChange } = actions;
+export const { saveIndexes, saveFeatureAndHistory, updateScenarioComment, stepStatusChange, scenarioStatusChange } = actions;
+
+export const fetchIndexes = (productId: string, versionString: string, build: string) => async (dispatch: StoreDispatch): Promise<void> => {
+  const [byTag, byId] = await Promise.all([
+    fetchSimpleFeaturesByTags(productId, versionString, build),
+    fetchSimpleFeatures(productId, versionString, build),
+  ]);
+
+  dispatch(saveIndexes({ byId: byId || null, byTag: byTag || null }));
+};
 
 export const selectFeature = (productId: string, versionString: string, feature: SimpleFeature) => async (
   dispatch: StoreDispatch

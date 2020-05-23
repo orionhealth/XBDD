@@ -1,14 +1,12 @@
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
 
-import featureIndexReducer from 'redux/FeatureIndexReducer';
 import featureReducer from 'redux/FeatureReducer';
 import tagsMetadataReducer from 'redux/TagsMetadataReducer';
 import userReducer from './redux/UserReducer';
 
 const rootReducer = combineReducers({
   feature: featureReducer,
-  featureIndex: featureIndexReducer,
   tags: tagsMetadataReducer,
   user: userReducer,
 });
