@@ -1,6 +1,7 @@
 import React, { FC, MouseEvent } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core';
 import { Block } from '@material-ui/icons';
+import { useTranslation } from 'react-i18next';
 
 import { User } from 'models/User';
 import UserAvatar from 'modules/userAvatar/UserAvatar';
@@ -30,9 +31,14 @@ interface Props {
 
 const TagAvatar: FC<Props> = ({ user, isIgnored, onClick }) => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   if (isIgnored) {
-    return <Block className={classes.blockAvatar} />;
+    return (
+      <span title={t('tags.blocked')}>
+        <Block className={classes.blockAvatar} />
+      </span>
+    );
   }
 
   return <UserAvatar className={classes.userAvatar} user={user || null} onClick={onClick} />;
