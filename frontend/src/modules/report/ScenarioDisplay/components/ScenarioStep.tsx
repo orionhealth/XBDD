@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
 
 import { stepStyles } from './styles/ScenarioStepStyles';
 import PopperMenu from './PopperMenu';
@@ -11,21 +12,24 @@ import CucumberTable from './CucumberTable';
 import Step from 'models/Step';
 import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
 import StepScreenshot from './StepScreenshot';
-import StepChange from 'models/StatusChange';
+import { updateStepStatusWithRollback } from 'redux/FeatureReducer';
 
 interface Props extends WithStyles {
   title: string;
   steps: Step[];
-  handleStatusChange(oldStatusChanges: StepChange[], newStatusChanges: StepChange[]): void;
+  scenarioId: string;
+  build: string;
 }
 
-const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) => {
+const ScenarioStep: FC<Props> = ({ scenarioId, build, title, steps, classes }) => {
   const iconMap: StatusMap<ReactNode> = {
     [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
     [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
     [Undefined]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
     [Skipped]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
   };
+
+  const dispatch = useDispatch();
 
   const getFailedClasses = (status: Status): string => {
     return status === Status.Failed ? `${classes.stepIconBox} ${classes.stepIconFailed}` : classes.stepIconBox;
@@ -42,10 +46,8 @@ const ScenarioStep: FC<Props> = ({ title, steps, handleStatusChange, classes }) 
     };
 
     const status = newStatus ? newStatus : nextStatus[prevStatus];
-    const prevStatusChanges = [{ stepId: stepId, status: prevStatus }];
-    const newStatusChanges = [{ stepId: stepId, status: status }];
 
-    handleStatusChange(prevStatusChanges, newStatusChanges);
+    dispatch(updateStepStatusWithRollback(scenarioId, stepId, status, build));
   };
 
   return (

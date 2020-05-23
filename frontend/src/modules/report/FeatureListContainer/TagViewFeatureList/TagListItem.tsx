@@ -14,12 +14,13 @@ import Tag from 'models/Tag';
 import { StatusMap } from 'models/Status';
 import TagAvatar from './TagAvatar';
 import TagAssignments from 'models/TagAssignments';
-import SimpleFeature from 'models/SimpleFeature';
 import { ignoreTagWithRollback, assignUserToTagWithRollback } from 'redux/TagsMetadataReducer';
 import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog';
 import { RootStore } from 'rootReducer';
 
 interface Props extends WithStyles {
+  productId: string;
+  versionString: string;
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tag: Tag;
@@ -27,10 +28,11 @@ interface Props extends WithStyles {
   restId: string;
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
-  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
 const TagListItem: FC<Props> = ({
+  productId,
+  versionString,
   isEditMode,
   isAssignedTagsView,
   tag,
@@ -38,7 +40,6 @@ const TagListItem: FC<Props> = ({
   selectedFeatureId,
   restId,
   selectedStatus,
-  handleFeatureSelected,
   classes,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -86,7 +87,12 @@ const TagListItem: FC<Props> = ({
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <TagViewFeatureList selectedFeatureId={selectedFeatureId} featureList={featureList} handleFeatureSelected={handleFeatureSelected} />
+        <TagViewFeatureList
+          productId={productId}
+          versionString={versionString}
+          selectedFeatureId={selectedFeatureId}
+          featureList={featureList}
+        />
       </Collapse>
       <ConfirmationDialog
         open={warningOpen}

@@ -27,7 +27,6 @@ interface ProvidedProps extends WithStyles, WithTranslation {
   versionString: string;
   build: string;
   selectedFeatureId?: string;
-  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
 interface StateProps {
@@ -171,11 +170,13 @@ class FeatureListContainer extends Component<Props, State> {
   }
 
   renderFeatureList(restId: string, selectedFeatureId?: string): ReactNode {
-    const { handleFeatureSelected, idIndex, tagAssignments } = this.props;
+    const { idIndex, tagAssignments, productId, versionString } = this.props;
     const { isTagView, isEditMode, isAssignedTagsView, selectedStatus } = this.state;
     if (isTagView && tagAssignments) {
       return (
         <TagList
+          productId={productId}
+          versionString={versionString}
           isEditMode={isEditMode}
           isAssignedTagsView={isAssignedTagsView}
           tagList={this.filterTags()}
@@ -183,16 +184,16 @@ class FeatureListContainer extends Component<Props, State> {
           restId={restId}
           selectedFeatureId={selectedFeatureId}
           selectedStatus={selectedStatus}
-          handleFeatureSelected={handleFeatureSelected}
         />
       );
     } else if (idIndex) {
       return (
         <ListViewFeatureList
+          productId={productId}
+          versionString={versionString}
           selectedFeatureId={selectedFeatureId}
           featureList={idIndex}
           selectedStatus={selectedStatus}
-          handleFeatureSelected={handleFeatureSelected}
         />
       );
     }

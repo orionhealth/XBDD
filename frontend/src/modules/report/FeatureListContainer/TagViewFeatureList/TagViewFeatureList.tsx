@@ -1,24 +1,29 @@
 import React, { FC, ReactNode } from 'react';
 import { List, ListItem } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
 
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 import SimpleFeature from 'models/SimpleFeature';
+import { selectFeature } from 'redux/FeatureReducer';
 
 interface Props extends WithStyles {
+  productId: string;
+  versionString: string;
   selectedFeatureId?: string;
   featureList: SimpleFeature[];
-  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
-const TagViewFeatureList: FC<Props> = ({ selectedFeatureId, featureList, handleFeatureSelected, classes }) => {
+const TagViewFeatureList: FC<Props> = ({ productId, versionString, selectedFeatureId, featureList, classes }) => {
   const classesMap: StatusMap<string> = {
     [Passed]: classes.itemPassed,
     [Failed]: classes.itemFailed,
     [Undefined]: classes.itemUndefined,
     [Skipped]: classes.itemSkipped,
   };
+
+  const dispatch = useDispatch();
 
   const renderFeatureListItem = (feature, statusClasses): ReactNode => {
     let className = `${classes.listItem} ${statusClasses} ${classes.item}`;
@@ -27,7 +32,14 @@ const TagViewFeatureList: FC<Props> = ({ selectedFeatureId, featureList, handleF
     }
 
     return (
-      <ListItem button key={feature._id} className={className} onClick={(): void => handleFeatureSelected(feature)}>
+      <ListItem
+        button
+        key={feature._id}
+        className={className}
+        onClick={(): void => {
+          dispatch(selectFeature(productId, versionString, feature));
+        }}
+      >
         {feature.name}
       </ListItem>
     );

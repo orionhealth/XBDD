@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import { ExpansionPanel, ExpansionPanelSummary, Box, Typography, ExpansionPanelDetails, Grid, Button } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
 import Scenario from 'models/Scenario';
 import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
@@ -9,6 +10,7 @@ import useScenarioDisplayStyles from './styles/ScenarioDisplayStyles';
 import StatusIcons from '../FeatureSummary/StatusIcons';
 import ScenarioStep from './components/ScenarioStep';
 import ScenarioInputField from './components/ScenarioInputField';
+import { updateScenarioStatusWithRollback } from 'redux/FeatureReducer';
 
 interface StepChange {
   stepId: number;
@@ -17,12 +19,12 @@ interface StepChange {
 
 interface Props {
   scenario: Scenario;
-  handleCommentUpdate(scenarioId: string, label: string, requestLabel: string, prevContent: string, content: string): void;
-  handleStatusChange(scenarioId: string, oldStatusMap: StepChange[], newStatusMap: StepChange[]): void;
+  build: string;
 }
 
-const ScenarioDisplay: FC<Props> = ({ scenario, handleCommentUpdate, handleStatusChange }) => {
+const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
   const [expanded, setExpanded] = useState(false);
+  const dispatch = useDispatch();
   const classes = useScenarioDisplayStyles();
   const { t } = useTranslation();
 
@@ -42,19 +44,6 @@ const ScenarioDisplay: FC<Props> = ({ scenario, handleCommentUpdate, handleStatu
   } else {
     className += ` ${classesMap[originalAutomatedStatus]}`;
   }
-
-  const getChangeAllSteps = (newStatus: Status) => (): void =>
-    handleStatusChange(
-      id,
-      [...backgroundSteps, ...steps].map(step => ({ stepId: step.id, status: step.manualStatus || step.status })),
-      [...backgroundSteps, ...steps].map(step => ({ stepId: step.id, status: newStatus }))
-    );
-
-  const boundStatusChange = (oldStatusMap: StepChange[], newStatusMap: StepChange[]): void =>
-    handleStatusChange(id, oldStatusMap, newStatusMap);
-
-  const boundCommentUpdate = (label: string, requestLabel: string, prevContent: string, content: string): void =>
-    handleCommentUpdate(id, label, requestLabel, prevContent, content);
 
   return (
     <ExpansionPanel key={id} expanded={expanded} className={classes.scenarioListItem} TransitionProps={{ unmountOnExit: true }}>
@@ -76,28 +65,42 @@ const ScenarioDisplay: FC<Props> = ({ scenario, handleCommentUpdate, handleStatu
         <Grid container>
           <Grid item xs={11}>
             {backgroundSteps && (
-              <ScenarioStep title={t('report.backgroundSteps')} steps={backgroundSteps} handleStatusChange={boundStatusChange} />
+              <ScenarioStep title={t('report.backgroundSteps')} steps={backgroundSteps} scenarioId={scenario.id} build={build} />
             )}
           </Grid>
           <Grid item xs={11}>
-            {steps && <ScenarioStep title={t('report.steps')} steps={steps} handleStatusChange={boundStatusChange} />}
+            {steps && <ScenarioStep title={t('report.steps')} steps={steps} scenarioId={scenario.id} build={build} />}
           </Grid>
           <Grid item xs={5}>
-            <ScenarioInputField label={t('report.environment')} value={environmentNotes} handleCommentUpdate={boundCommentUpdate} />
+            <ScenarioInputField scenarioId={scenario.id} label={t('report.environment')} content={environmentNotes} />
           </Grid>
           <Grid item xs={1} />
           <Grid item xs={5}>
-            <ScenarioInputField label={t('report.executionNotes')} value={executionNotes} handleCommentUpdate={boundCommentUpdate} />
+            <ScenarioInputField scenarioId={scenario.id} label={t('report.executionNotes')} content={executionNotes} />
           </Grid>
           <Grid item xs={11}>
-            <ScenarioInputField label={t('report.testingTips')} value={testingTips} handleCommentUpdate={boundCommentUpdate} />
+            <ScenarioInputField scenarioId={scenario.id} label={t('report.testingTips')} content={testingTips} />
           </Grid>
           <Grid item xs={11}>
             <div className={classes.buttons}>
-              <Button variant="contained" size="small" onClick={getChangeAllSteps(Skipped)} className={classes.skipAllSteps}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={(): void => {
+                  dispatch(updateScenarioStatusWithRollback(scenario.id, Failed, build));
+                }}
+                className={classes.skipAllSteps}
+              >
                 {t('report.skipAllSteps')}
               </Button>
-              <Button variant="contained" size="small" onClick={getChangeAllSteps(Passed)} className={classes.skipAllSteps}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={(): void => {
+                  dispatch(updateScenarioStatusWithRollback(scenario.id, Passed, build));
+                }}
+                className={classes.skipAllSteps}
+              >
                 {t('report.passAllSteps')}
               </Button>
             </div>
