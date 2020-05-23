@@ -1,5 +1,6 @@
 import React, { FC, MouseEvent } from 'react';
 import { Avatar } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 
 import { User } from 'models/User';
 
@@ -37,6 +38,7 @@ interface Props {
 }
 
 const UserAvatar: FC<Props> = ({ user, className, onClick }) => {
+  const { t } = useTranslation();
   let initials;
   let color;
 
@@ -46,16 +48,16 @@ const UserAvatar: FC<Props> = ({ user, className, onClick }) => {
   }
 
   if (user?.avatarUrl) {
-    return <Avatar className={className} src={user.avatarUrl} alt={initials} onClick={onClick} style={{ backgroundColor: color }} />;
+    return <Avatar className={className} src={user.avatarUrl} alt={initials} title={user?.display} onClick={onClick} />;
   } else if (initials) {
     return (
-      <Avatar className={className} onClick={onClick} style={{ backgroundColor: color }}>
+      <Avatar className={className} onClick={onClick} alt={initials} title={user?.display} style={{ backgroundColor: color }}>
         {initials}
       </Avatar>
     );
   }
 
-  return <Avatar className={className} onClick={onClick} />;
+  return <Avatar className={className} onClick={onClick} title={t('tags.unassigned')} />;
 };
 
 export default UserAvatar;
