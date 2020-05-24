@@ -7,9 +7,10 @@ import TagListItem from './TagListItem';
 import Tag from 'models/Tag';
 import { StatusMap } from 'models/Status';
 import TagAssignments from 'models/TagAssignments';
-import SimpleFeature from 'models/SimpleFeature';
 
 interface Props extends WithStyles {
+  productId: string;
+  versionString: string;
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tagList: Tag[];
@@ -17,10 +18,11 @@ interface Props extends WithStyles {
   restId: string;
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
-  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
 const TagList: FC<Props> = ({
+  productId,
+  versionString,
   isEditMode,
   isAssignedTagsView,
   tagList,
@@ -28,7 +30,6 @@ const TagList: FC<Props> = ({
   restId,
   selectedFeatureId,
   selectedStatus,
-  handleFeatureSelected,
   classes,
 }) => {
   return (
@@ -36,6 +37,8 @@ const TagList: FC<Props> = ({
       <List component="ul">
         {tagList.map(tag => (
           <TagListItem
+            productId={productId}
+            versionString={versionString}
             isEditMode={isEditMode}
             isAssignedTagsView={isAssignedTagsView}
             tag={tag}
@@ -44,7 +47,6 @@ const TagList: FC<Props> = ({
             restId={restId}
             selectedFeatureId={selectedFeatureId}
             selectedStatus={selectedStatus}
-            handleFeatureSelected={handleFeatureSelected}
           />
         ))}
       </List>

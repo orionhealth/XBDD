@@ -19,7 +19,7 @@ import Tag from 'models/Tag';
 import TagAssignments from 'models/TagAssignments';
 import SimpleFeature from 'models/SimpleFeature';
 import { StoreDispatch, RootStore } from 'rootReducer';
-import { fetchIndexes } from 'redux/FeatureIndexReducer';
+import { fetchIndexes } from 'redux/FeatureReducer';
 
 interface ProvidedProps extends WithStyles, WithTranslation {
   user: LoggedInUser;
@@ -27,7 +27,6 @@ interface ProvidedProps extends WithStyles, WithTranslation {
   versionString: string;
   build: string;
   selectedFeatureId?: string;
-  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
 interface StateProps {
@@ -171,11 +170,13 @@ class FeatureListContainer extends Component<Props, State> {
   }
 
   renderFeatureList(restId: string, selectedFeatureId?: string): ReactNode {
-    const { handleFeatureSelected, idIndex, tagAssignments } = this.props;
+    const { idIndex, tagAssignments, productId, versionString } = this.props;
     const { isTagView, isEditMode, isAssignedTagsView, selectedStatus } = this.state;
     if (isTagView && tagAssignments) {
       return (
         <TagList
+          productId={productId}
+          versionString={versionString}
           isEditMode={isEditMode}
           isAssignedTagsView={isAssignedTagsView}
           tagList={this.filterTags()}
@@ -183,16 +184,16 @@ class FeatureListContainer extends Component<Props, State> {
           restId={restId}
           selectedFeatureId={selectedFeatureId}
           selectedStatus={selectedStatus}
-          handleFeatureSelected={handleFeatureSelected}
         />
       );
     } else if (idIndex) {
       return (
         <ListViewFeatureList
+          productId={productId}
+          versionString={versionString}
           selectedFeatureId={selectedFeatureId}
           featureList={idIndex}
           selectedStatus={selectedStatus}
-          handleFeatureSelected={handleFeatureSelected}
         />
       );
     }
@@ -218,10 +219,10 @@ class FeatureListContainer extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootStore): StateProps => ({
-  idIndex: state.featureIndex.byId || undefined,
-  tagIndex: state.featureIndex.byTag || undefined,
+  idIndex: state.feature.byId || undefined,
+  tagIndex: state.feature.byTag || undefined,
   tagAssignments: state.tags.assignments || undefined,
-  loading: !(state.featureIndex.byId && state.featureIndex.byTag && state.tags.assignments && state.tags.ignored),
+  loading: !(state.feature.byId && state.feature.byTag && state.tags.assignments && state.tags.ignored),
 });
 
 const mapDispatchToProps = (dispatch: StoreDispatch): DispatchProps => ({

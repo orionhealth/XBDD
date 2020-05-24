@@ -8,6 +8,7 @@ type ScenarioDetails = {
 };
 
 const STATUS_PRIORITY_ORDER = [Status.Failed, Status.Undefined, Status.Skipped, Status.Passed];
+
 export const calculateFeatureStatus = (feature: Feature): Status => {
   const scenarioStatuses = feature.scenarios.map(scenario => scenario.calculatedStatus || scenario.originalAutomatedStatus);
   const featureStatus = STATUS_PRIORITY_ORDER.find(status => scenarioStatuses.includes(status));
@@ -32,4 +33,5 @@ const calculateStatus = (scenario: ScenarioDetails, getStepStatus: (step: Step) 
 
 export const calculateManualStatus = (scenario: ScenarioDetails): Status =>
   calculateStatus(scenario, step => step.manualStatus || step.status);
+
 export const calculateAutoStatus = (scenario: ScenarioDetails): Status => calculateStatus(scenario, step => step.status);

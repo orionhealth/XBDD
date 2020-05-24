@@ -1,19 +1,23 @@
 import React, { FC } from 'react';
 import { List, ListItem, Card, Chip, WithStyles } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
+import { useDispatch } from 'react-redux';
 
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 import { StatusMap, Passed, Skipped, Failed, Undefined } from 'models/Status';
 import SimpleFeature from 'models/SimpleFeature';
+import { selectFeature } from 'redux/FeatureReducer';
 
 interface Props extends WithStyles {
+  productId: string;
+  versionString: string;
   featureList: SimpleFeature[];
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
-  handleFeatureSelected(feature: SimpleFeature): void;
 }
 
-const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, selectedStatus, handleFeatureSelected, classes }) => {
+const ListViewFeatureList: FC<Props> = ({ productId, versionString, featureList, selectedFeatureId, selectedStatus, classes }) => {
+  const dispatch = useDispatch();
   const filterFeatureList = featureList.filter(feature => selectedStatus[feature.calculatedStatus]);
 
   const classesMap: StatusMap<string> = {
@@ -34,7 +38,9 @@ const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, select
             button
             key={feature._id}
             className={getItemClasses(feature, classesMap[feature.calculatedStatus])}
-            onClick={(): void => handleFeatureSelected(feature)}
+            onClick={(): void => {
+              dispatch(selectFeature(productId, versionString, feature));
+            }}
           >
             <span className={classesMap[feature.calculatedStatus]}>{feature.name + ' '}</span>
             {feature.tags?.map(tag => (
