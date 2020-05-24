@@ -39,6 +39,16 @@ public class FeatureMapper {
 		return allSteps.stream().map(step -> step.getResult().getStatus()).filter(Objects::nonNull);
 	}
 
+	public static void setFeatureStatus(final XbddFeature xbddFeature) {
+		final List<String> allStatuses = xbddFeature.getElements().stream()
+				.flatMap(FeatureMapper::getStepStatusStream)
+				.collect(Collectors.toList());
+
+		final String status = StatusHelper.reduceStatuses(allStatuses).getTextName();
+		xbddFeature.setOriginalAutomatedStatus(status);
+		xbddFeature.setCalculatedStatus(status);
+	}
+
 	public XbddFeature map(final JUnitFeature jUnitFeature, final Coordinates coordinates) {
 		final XbddFeature xbddFeature = new XbddFeature();
 		xbddFeature.setOriginalId(jUnitFeature.getId());
@@ -73,13 +83,7 @@ public class FeatureMapper {
 
 		}
 
-		final List<String> allStatuses = xbddFeature.getElements().stream()
-				.flatMap(FeatureMapper::getStepStatusStream)
-				.collect(Collectors.toList());
-
-		final String status = StatusHelper.reduceStatuses(allStatuses).getTextName();
-		xbddFeature.setOriginalAutomatedStatus(status);
-		xbddFeature.setCalculatedStatus(status);
+		FeatureMapper.setFeatureStatus(xbddFeature);
 
 		return xbddFeature;
 	}

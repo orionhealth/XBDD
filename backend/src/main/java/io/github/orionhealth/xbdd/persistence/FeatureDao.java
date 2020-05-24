@@ -15,6 +15,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
 import io.github.orionhealth.xbdd.mappers.CoordinatesMapper;
+import io.github.orionhealth.xbdd.mappers.FeatureMapper;
 import io.github.orionhealth.xbdd.model.xbdd.XbddFeature;
 import io.github.orionhealth.xbdd.model.xbdd.XbddFeatureSummary;
 import io.github.orionhealth.xbdd.model.xbdd.XbddScenario;
@@ -61,8 +62,9 @@ public class FeatureDao {
 			final XbddFeature existing = existingFeatures.find(featureQuery).first();
 
 			if (existing != null) {
-				updateExistingScenarios(existing, feature);
-				existingFeatures.replaceOne(featureQuery, existing);
+				addExistingFeatures(existing, feature);
+				FeatureMapper.setFeatureStatus(existing);
+				existingFeatures.replaceOne(featureQuery, feature);
 			} else {
 				existingFeatures.insertOne(feature);
 			}
@@ -73,10 +75,11 @@ public class FeatureDao {
 		return this.mongoBddDatabase.getCollection("features", XbddFeature.class);
 	}
 
-	private void updateExistingScenarios(final XbddFeature existing, final XbddFeature newFeature) {
-		for (final XbddScenario scenario : newFeature.getElements()) {
-			if (existing.getElements().stream().noneMatch(old -> StringUtils.equals(old.getOriginalId(), scenario.getOriginalId()))) {
-				existing.getElements().add(scenario);
+	private void addExistingFeatures(final XbddFeature existing, final XbddFeature newFeature) {
+		for (final XbddScenario oldScenario : existing.getElements()) {
+			if (newFeature.getElements().stream()
+					.noneMatch(scenario -> StringUtils.equals(scenario.getOriginalId(), oldScenario.getOriginalId()))) {
+				newFeature.getElements().add(oldScenario);
 			}
 		}
 	}
