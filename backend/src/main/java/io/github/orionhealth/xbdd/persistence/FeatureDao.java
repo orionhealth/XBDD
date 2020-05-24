@@ -63,7 +63,7 @@ public class FeatureDao {
 
 			if (existing != null) {
 				addExistingFeatures(existing, feature);
-				FeatureMapper.setFeatureStatus(existing);
+				FeatureMapper.setFeatureStatus(feature);
 				existingFeatures.replaceOne(featureQuery, feature);
 			} else {
 				existingFeatures.insertOne(feature);
