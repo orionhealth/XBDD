@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.github.orionhealth.xbdd.model.common.StepMatch;
+import io.github.orionhealth.xbdd.model.common.StepRow;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JUnitStep {
@@ -16,6 +17,7 @@ public class JUnitStep {
 	private List<Integer> matchedColumns;
 	private String keyword;
 	private List<JUnitEmbedding> embeddings;
+	private List<StepRow> rows;
 
 	public Integer getLine() {
 		return this.line;
@@ -78,4 +80,13 @@ public class JUnitStep {
 	public void setEmbeddings(final List<JUnitEmbedding> embeddings) {
 		this.embeddings = embeddings;
 	}
+
+	public List<StepRow> getRows() {
+		return this.rows;
+	}
+
+	public void setRows(final List<StepRow> rows) {
+		this.rows = rows;
+	}
+
 }

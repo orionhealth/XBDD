@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.orionhealth.xbdd.model.common.StepMatch;
+import io.github.orionhealth.xbdd.model.common.StepRow;
 
 public class XbddStep {
 	private Integer line;
@@ -13,6 +14,7 @@ public class XbddStep {
 	private List<Integer> matchedColumns;
 	private String keyword;
 	private List<String> embeddings;
+	private List<StepRow> rows;
 
 	public Integer getLine() {
 		return this.line;
@@ -75,4 +77,13 @@ public class XbddStep {
 	public void setEmbeddings(final List<String> embeddings) {
 		this.embeddings = embeddings;
 	}
+
+	public List<StepRow> getRows() {
+		return this.rows;
+	}
+
+	public void setRows(final List<StepRow> rows) {
+		this.rows = rows;
+	}
+
 }

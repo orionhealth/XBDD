@@ -117,6 +117,7 @@ public class FeatureMapper {
 		xbddStep.setMatchedColumns(jUnitStep.getMatchedColumns());
 		xbddStep.setMatch(jUnitStep.getMatch());
 		xbddStep.setResult(mapResult(jUnitStep.getResult()));
+		xbddStep.setRows(jUnitStep.getRows());
 
 		mapEmbeddings(jUnitStep, xbddStep, coordinates, featureId, scenarioId);
 
