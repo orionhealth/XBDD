@@ -154,6 +154,10 @@ const initialState: FeatureState = {
   executionHistory: null,
 };
 
+const resetFeatureStateReducer: CaseReducer = () => {
+  return initialState;
+};
+
 const { actions, reducer } = createSlice({
   name: 'feature',
   initialState,
@@ -163,10 +167,18 @@ const { actions, reducer } = createSlice({
     updateScenarioComment: updateScenarioCommentReducer,
     stepStatusChange: stepStatusChangeReducer,
     scenarioStatusChange: scenarioStatusChangeReducer,
+    resetFeatureState: resetFeatureStateReducer,
   },
 });
 
-export const { saveIndexes, saveFeatureAndHistory, updateScenarioComment, stepStatusChange, scenarioStatusChange } = actions;
+export const {
+  saveIndexes,
+  saveFeatureAndHistory,
+  updateScenarioComment,
+  stepStatusChange,
+  scenarioStatusChange,
+  resetFeatureState,
+} = actions;
 
 export const fetchIndexes = (productId: string, versionString: string, build: string) => async (dispatch: StoreDispatch): Promise<void> => {
   const [byTag, byId] = await Promise.all([

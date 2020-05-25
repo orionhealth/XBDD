@@ -9,6 +9,7 @@ import { setUser } from '../../redux/UserReducer';
 import LoginDialog from './LoginDialog';
 import { useNavbarStyles } from './styles/NavbarStyles';
 import UserAvatar from '../userAvatar/UserAvatar';
+import { resetFeatureState } from 'redux/FeatureReducer';
 
 const Navbar: FC = () => {
   const { t } = useTranslation();
@@ -38,6 +39,7 @@ const Navbar: FC = () => {
             className={classes.logo}
             onClick={(): void => {
               history.push('/');
+              dispatch(resetFeatureState());
             }}
           >
             {'XBDD'}
