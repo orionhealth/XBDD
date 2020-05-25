@@ -123,8 +123,8 @@ const stepStatusChangeReducer: CaseReducer<FeatureState, StepStatusChangeAction>
     if (step) {
       step.manualStatus = status;
       scenario.calculatedStatus = calculateManualStatus(scenario);
-      updateMetadata(state, action.payload.user, build);
       updateFeatureStatus(state, feature);
+      updateMetadata(state, action.payload.user, build);
       return state;
     }
   }
@@ -141,8 +141,8 @@ const scenarioStatusChangeReducer: CaseReducer<FeatureState, ScenarioStatusChang
     });
 
     scenario.calculatedStatus = status;
-    updateMetadata(state, user, build);
     updateFeatureStatus(state, feature);
+    updateMetadata(state, user, build);
     return state;
   }
 };
