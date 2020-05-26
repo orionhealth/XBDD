@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Summary {
 	@SerializedName("_id")
 	@JsonProperty("_id")
@@ -15,6 +17,7 @@ public class Summary {
 
 	List<String> builds;
 	CoordinatesDto coordinates;
+	private List<String> pinned;
 
 	/**
 	 * This is only used on the way out and is hydrated from the users collection. It's never saved here.
@@ -56,4 +59,13 @@ public class Summary {
 	public void setFavourite(final Boolean favourite) {
 		this.favourite = favourite;
 	}
+
+	public List<String> getPinned() {
+		return this.pinned;
+	}
+
+	public void setPinned(final List<String> pinned) {
+		this.pinned = pinned;
+	}
+
 }
