@@ -10,27 +10,9 @@
 In the instructions that follow, `$CATALINE_BASE` refers to the Tomcat installation directory and is available as a ENV variable in the Dockerfile.
 As this solution is built using docker, the Dockerfile in the `package` directory will need to be modified for any of the following cusomisations.
 
-### HTTPS
-
 ### User Authentication
 
-#### Local Authentication
-
-#### LDAP
-
-If you want to use LDAP, configure the realm in `$CATALINA_BASE/conf/server.xml` or `$CATALINA_BASE/conf/context.xml` with the JNDIRealm. See the [documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/realm.html#JNDI_Directory_Realm_-_org.apache.catalina.realm.JNDIRealm) for details on the required fields.
-
-For example:
-
-```xml
-<Realm className="org.apache.catalina.realm.LockOutRealm">
-    <Realm allRolesMode="authOnly" className="org.apache.catalina.realm.JNDIRealm"
-    connectionName="USERNAME" connectionPassword="PASSWORD" connectionURL="ldap://LDAP_HOST:389"
-    referrals="follow" roleBase="ou=Groups,ou=Employees,dc=Example,dc=Internal" roleName="cn"
-    roleSearch="(member={0})" roleSubtree="true" userBase="ou=Employees,dc=Example,dc=Internal"
-    userRoleName="memberOf" userSearch="(sAMAccountName={0})" userSubtree="true"/>
-</Realm>
-```
+Currently LDAP, Github and Google authenticate is available through spring secutirty.
 
 ### Configure Mongo Server Connection
 
