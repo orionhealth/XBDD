@@ -46,7 +46,7 @@
     "@types/uuid": "^8.0.0",
     "i18next": "^19.4.5",
     "i18next-browser-languagedetector": "^4.2.0",
-    "i18next-http-backend": "^1.0.12",
+    "i18next-http-backend": "^1.0.15",
     "immer": "^6.0.9",
     "prop-types": "^15.6.1",
     "query-string": "^6.12.1",
