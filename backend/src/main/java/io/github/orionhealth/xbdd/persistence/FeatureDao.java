@@ -48,7 +48,11 @@ public class FeatureDao {
 		final Bson query = Filters.eq("coordinates", CoordinatesMapper.mapCoordinates(coordinates));
 		final FindIterable<XbddFeature> savedFeatures = features.find(query, XbddFeature.class);
 
-		final Consumer<XbddFeature> addToExtractedFeatures = feature -> extractedFeatures.add(feature);
+		final Consumer<XbddFeature> addToExtractedFeatures = feature -> {
+			if (StringUtils.isNotBlank(feature.getId()) && StringUtils.isNotBlank(feature.getOriginalId())) {
+				extractedFeatures.add(feature);
+			}
+		};
 		savedFeatures.forEach(addToExtractedFeatures);
 
 		return extractedFeatures;
@@ -58,15 +62,18 @@ public class FeatureDao {
 		final MongoCollection<XbddFeature> existingFeatures = getFeatureCollection();
 
 		for (final XbddFeature feature : xbddFeatures) {
-			final Bson featureQuery = Filters.eq(feature.getId());
-			final XbddFeature existing = existingFeatures.find(featureQuery).first();
+			if (StringUtils.isNotBlank(feature.getId()) && StringUtils.isNotBlank(feature.getOriginalId())) {
 
-			if (existing != null) {
-				addExistingFeatures(existing, feature);
-				FeatureMapper.setFeatureStatus(feature);
-				existingFeatures.replaceOne(featureQuery, feature);
-			} else {
-				existingFeatures.insertOne(feature);
+				final Bson featureQuery = Filters.eq(feature.getId());
+				final XbddFeature existing = existingFeatures.find(featureQuery).first();
+
+				if (existing != null) {
+					addExistingFeatures(existing, feature);
+					FeatureMapper.setFeatureStatus(feature);
+					existingFeatures.replaceOne(featureQuery, feature);
+				} else {
+					existingFeatures.insertOne(feature);
+				}
 			}
 		}
 	}
