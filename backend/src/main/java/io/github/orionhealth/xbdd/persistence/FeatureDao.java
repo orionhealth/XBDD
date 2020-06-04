@@ -34,7 +34,12 @@ public class FeatureDao {
 		final Bson query = Filters.eq("coordinates", CoordinatesMapper.mapCoordinates(coordinates));
 		final FindIterable<XbddFeatureSummary> savedFeatures = features.find(query, XbddFeatureSummary.class);
 
-		final Consumer<XbddFeatureSummary> addToSummaries = summaries::add;
+		final Consumer<XbddFeatureSummary> addToSummaries = feature -> {
+			if (featureIsValid(feature)) {
+				summaries.add(feature);
+			}
+		};
+
 		savedFeatures.forEach(addToSummaries);
 
 		return summaries;
@@ -49,7 +54,7 @@ public class FeatureDao {
 		final FindIterable<XbddFeature> savedFeatures = features.find(query, XbddFeature.class);
 
 		final Consumer<XbddFeature> addToExtractedFeatures = feature -> {
-			if (StringUtils.isNotBlank(feature.getId()) && StringUtils.isNotBlank(feature.getOriginalId())) {
+			if (featureIsValid(feature)) {
 				extractedFeatures.add(feature);
 			}
 		};
@@ -62,7 +67,7 @@ public class FeatureDao {
 		final MongoCollection<XbddFeature> existingFeatures = getFeatureCollection();
 
 		for (final XbddFeature feature : xbddFeatures) {
-			if (StringUtils.isNotBlank(feature.getId()) && StringUtils.isNotBlank(feature.getOriginalId())) {
+			if (featureIsValid(feature)) {
 
 				final Bson featureQuery = Filters.eq(feature.getId());
 				final XbddFeature existing = existingFeatures.find(featureQuery).first();
@@ -89,5 +94,9 @@ public class FeatureDao {
 				newFeature.getElements().add(oldScenario);
 			}
 		}
+	}
+
+	private boolean featureIsValid(final XbddFeatureSummary feature) {
+		return StringUtils.isNotBlank(feature.getId()) && StringUtils.isNotBlank(feature.getOriginalId());
 	}
 }
