@@ -26,20 +26,15 @@ const useScenarioDisplayStyles = makeStyles(() =>
       textAlign: 'right',
       marginTop: '12px',
     },
-    skipAllSteps: {
+    buttonForAllSteps: {
       margin: '4px',
       color: 'white',
+    },
+    skipAllSteps: {
       backgroundColor: '#457B9D',
     },
     passAllSteps: {
-      margin: '4px',
-      color: 'white',
       backgroundColor: '#576E5D',
-    },
-    submitButton: {
-      margin: '4px',
-      color: 'white',
-      backgroundColor: '#dc004e',
     },
     statusIconsBox: {
       padding: '0px 8px 0px 0px',
