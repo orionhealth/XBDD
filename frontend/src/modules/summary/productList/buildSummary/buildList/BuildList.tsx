@@ -1,4 +1,5 @@
 import React, { FC, useState, ReactNode } from 'react';
+import { useDispatch } from 'react-redux';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +10,7 @@ import Version, { getString, getUnpinnedBuildList } from 'models/Version';
 import { useBuildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
 import Product from 'models/Product';
+import { resetFeatureState } from 'redux/FeatureReducer';
 
 interface Props {
   product: Product;
@@ -19,6 +21,7 @@ interface Props {
 const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
   const { t } = useTranslation();
   const classes = useBuildListStyles();
+  const dispatch = useDispatch();
   const history = useHistory();
   const [expanded, setExpanded] = useState(false);
 
@@ -42,6 +45,7 @@ const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
     const productParam = encodeURIComponent(product.name);
     const versionParam = encodeURIComponent(getString(version));
     const buildParam = encodeURIComponent(build);
+    dispatch(resetFeatureState());
     history.push(encodeURI(`/reports/${productParam}/${versionParam}/${buildParam}`));
   };
 
