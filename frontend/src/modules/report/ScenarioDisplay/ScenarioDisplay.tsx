@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import { ExpansionPanel, ExpansionPanelSummary, Box, Typography, ExpansionPanelDetails, Grid, Button } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
@@ -21,21 +21,6 @@ interface Props {
   scenario: Scenario;
   build: string;
 }
-
-const renderButton = (dispatch, scenarioId, build, status, classes, text) => {
-  return (
-    <Button
-      variant="contained"
-      size="small"
-      onClick={(): void => {
-        dispatch(updateScenarioStatusWithRollback(scenarioId, status, build));
-      }}
-      className={classes}
-    >
-      {text}
-    </Button>
-  );
-};
 
 const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
   const [expanded, setExpanded] = useState(false);
@@ -61,6 +46,19 @@ const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
   }
 
   const buttonClasses = statusClass => `${classes.buttonForAllSteps} ${statusClass}`;
+
+  const renderButton = (status: Status, classes: string, text: String): ReactNode => (
+    <Button
+      variant="contained"
+      size="small"
+      onClick={(): void => {
+        dispatch(updateScenarioStatusWithRollback(scenario.id, status, build));
+      }}
+      className={classes}
+    >
+      {text}
+    </Button>
+  );
 
   return (
     <ExpansionPanel key={id} expanded={expanded} className={classes.scenarioListItem} TransitionProps={{ unmountOnExit: true }}>
@@ -100,8 +98,8 @@ const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
           </Grid>
           <Grid item xs={11}>
             <div className={classes.buttons}>
-              {renderButton(dispatch, scenario.id, build, Skipped, buttonClasses(classes.skipAllSteps), t('report.skipAllSteps'))}
-              {renderButton(dispatch, scenario.id, build, Passed, buttonClasses(classes.passAllSteps), t('report.passAllSteps'))}
+              {renderButton(Skipped, buttonClasses(classes.skipAllSteps), t('report.skipAllSteps'))}
+              {renderButton(Passed, buttonClasses(classes.passAllSteps), t('report.passAllSteps'))}
             </div>
           </Grid>
         </Grid>
