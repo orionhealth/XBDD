@@ -72,7 +72,7 @@ const ScenarioStep: FC<Props> = ({ scenarioId, build, title, steps, classes }) =
                       <div>
                         <span className={classes.stepKeyword}>{step.keyword}</span>
                         <span>{`${step.name} `}</span>
-                        <PopperMenu stepId={step.id} status={status} onStepStatusChange={onStepStatusChange} />
+                        <PopperMenu stepId={step.id} stepName={step.name} status={status} onStepStatusChange={onStepStatusChange} />
                       </div>
                       {step.rows ? <CucumberTable rows={step.rows} /> : null}
                     </Box>
