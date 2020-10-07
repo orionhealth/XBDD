@@ -53,7 +53,7 @@ const ScenarioStep: FC<Props> = ({ scenarioId, build, title, steps, classes }) =
         {steps.map(
           (step: Step): ReactNode => {
             const status = step.manualStatus ? step.manualStatus : step.status;
-            const stepTextClasses = status == Skipped ? classes.skippedStepText : undefined;
+            const stepTextClasses = status === Skipped ? classes.skippedStepText : undefined;
             return (
               <div key={step.id}>
                 <ListItem
