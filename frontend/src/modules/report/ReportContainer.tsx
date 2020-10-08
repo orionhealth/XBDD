@@ -42,9 +42,11 @@ const ReportContainer: FC<Props> = ({ user, productId, versionString, build, cla
             {selectedFeature && executionHistory && (
               <div className={classes.scenarioList}>
                 <FeatureSummary feature={selectedFeature} executionHistory={executionHistory} />
-                {selectedFeature.scenarios.map(scenario => (
-                  <ScenarioDisplay key={scenario.id} scenario={scenario} build={build} />
-                ))}
+                <Card className={classes.scenarioBody}>
+                  {selectedFeature.scenarios.map(scenario => (
+                    <ScenarioDisplay key={scenario.id} scenario={scenario} build={build} />
+                  ))}
+                </Card>
               </div>
             )}
           </Grid>

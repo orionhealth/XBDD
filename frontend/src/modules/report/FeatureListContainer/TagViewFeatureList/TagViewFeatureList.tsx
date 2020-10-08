@@ -36,11 +36,22 @@ const TagViewFeatureList: FC<Props> = ({ productId, versionString, selectedFeatu
         button
         key={feature._id}
         className={className}
+        style={{ display: 'flex' }}
         onClick={(): void => {
           dispatch(selectFeature(productId, versionString, feature));
         }}
       >
-        {feature.name}
+        <div style={{ flexBasis: '94%' }}>
+          {feature.name}
+        </div>
+        &nbsp;
+        {
+          feature.elements ? ( 
+          <label className={classes.scenarioCountLabel} title={`${feature.elements.length} ${' feature'}${feature.elements.length > 1 ? 's' : ''} ${'present'}`}>
+            { feature.elements.length}
+          </label>
+          ) : null
+        }
       </ListItem>
     );
   };

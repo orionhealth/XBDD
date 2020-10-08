@@ -52,6 +52,16 @@ const featureListItemStyles = createStyles({
   listItem: {
     paddingLeft: '40px',
   },
+  scenarioCountLabel: {
+    borderRadius: '50%', 
+    backgroundColor: '#457B9D', 
+    color: 'white', 
+    textAlign: 'center', 
+    border: 'none',
+    width: '20px', 
+    height: '20px', 
+    fontSize: '12px',
+  }
 });
 
 export { featureListContainerStyles, featureListItemStyles };
