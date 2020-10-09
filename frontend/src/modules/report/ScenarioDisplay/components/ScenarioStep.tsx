@@ -25,15 +25,11 @@ const ScenarioStep: FC<Props> = ({ scenarioId, build, title, steps, classes }) =
   const iconMap: StatusMap<ReactNode> = {
     [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
     [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
+    [Skipped]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusSkipped} ${classes.scenarioStepIcon}`} />,
     [Undefined]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
-    [Skipped]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
   };
 
   const dispatch = useDispatch();
-
-  const getFailedClasses = (status: Status): string => {
-    return status === Status.Failed ? `${classes.stepIconBox} ${classes.stepIconFailed}` : classes.stepIconBox;
-  };
 
   const onStepStatusChange = (event: MouseEvent<HTMLElement>, stepId: number, prevStatus: Status, newStatus: Status | null): void => {
     event.stopPropagation();
@@ -57,6 +53,7 @@ const ScenarioStep: FC<Props> = ({ scenarioId, build, title, steps, classes }) =
         {steps.map(
           (step: Step): ReactNode => {
             const status = step.manualStatus ? step.manualStatus : step.status;
+            const stepTextClasses = status === Skipped ? classes.skippedStepText : undefined;
             return (
               <div key={step.id}>
                 <ListItem
@@ -65,11 +62,11 @@ const ScenarioStep: FC<Props> = ({ scenarioId, build, title, steps, classes }) =
                   onClick={(e: MouseEvent<HTMLElement>): void => onStepStatusChange(e, step.id, status, null)}
                 >
                   <Box display="flex" flexDirection="row">
-                    <Box p={1} className={getFailedClasses(status)}>
+                    <Box p={1} className={classes.stepIconBox}>
                       {iconMap[status]}
                     </Box>
                     <Box p={1} className={classes.stepContentBox}>
-                      <div>
+                      <div className={stepTextClasses}>
                         <span className={classes.stepKeyword}>{step.keyword}</span>
                         <span>{`${step.name} `}</span>
                         <PopperMenu stepId={step.id} status={status} onStepStatusChange={onStepStatusChange} />
