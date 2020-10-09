@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import { ExpansionPanel, ExpansionPanelSummary, Box, Typography, ExpansionPanelDetails, Grid, Button } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
@@ -45,6 +45,21 @@ const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
     className += ` ${classesMap[originalAutomatedStatus]}`;
   }
 
+  const buttonClasses = statusClass => `${classes.buttonForAllSteps} ${statusClass}`;
+
+  const renderButton = (status: Status, classes: string, text: String): ReactNode => (
+    <Button
+      variant="contained"
+      size="small"
+      onClick={(): void => {
+        dispatch(updateScenarioStatusWithRollback(scenario.id, status, build));
+      }}
+      className={classes}
+    >
+      {text}
+    </Button>
+  );
+
   return (
     <ExpansionPanel key={id} expanded={expanded} className={classes.scenarioListItem} TransitionProps={{ unmountOnExit: true }}>
       <ExpansionPanelSummary expandIcon={<ExpandMore />} onClick={(): void => setExpanded(!expanded)}>
@@ -83,26 +98,8 @@ const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
           </Grid>
           <Grid item xs={11}>
             <div className={classes.buttons}>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={(): void => {
-                  dispatch(updateScenarioStatusWithRollback(scenario.id, Failed, build));
-                }}
-                className={classes.skipAllSteps}
-              >
-                {t('report.skipAllSteps')}
-              </Button>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={(): void => {
-                  dispatch(updateScenarioStatusWithRollback(scenario.id, Passed, build));
-                }}
-                className={classes.skipAllSteps}
-              >
-                {t('report.passAllSteps')}
-              </Button>
+              {renderButton(Skipped, buttonClasses(classes.skipAllSteps), t('report.skipAllSteps'))}
+              {renderButton(Passed, buttonClasses(classes.passAllSteps), t('report.passAllSteps'))}
             </div>
           </Grid>
         </Grid>
