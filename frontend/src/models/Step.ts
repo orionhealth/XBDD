@@ -1,9 +1,5 @@
 import Status from './Status';
-
-export interface StepRow {
-  cells: string[];
-  line: number;
-}
+import StepRow from './StepRow';
 
 interface Step {
   id: number;
