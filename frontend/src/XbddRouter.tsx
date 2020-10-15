@@ -13,8 +13,6 @@ import { updateReportIdentifier } from 'redux/ReportReducer';
 import { fetchIndexes } from 'redux/FeatureReducer';
 import { fetchTagsMetadata } from 'redux/TagsMetadataReducer';
 
-import './Xbdd.css';
-
 interface UserProps {
   user: LoggedInUser;
 }

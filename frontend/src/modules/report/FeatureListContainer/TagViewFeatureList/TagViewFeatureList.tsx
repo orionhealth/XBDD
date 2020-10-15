@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
-import SimpleFeature from 'models/SimpleFeature';
+import { SimpleFeature } from 'models/Feature';
 import { selectFeature } from 'redux/FeatureReducer';
 
 interface Props extends WithStyles {

@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { reportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
@@ -12,14 +12,16 @@ import { RootStore } from 'rootReducer';
 
 interface Props extends WithStyles {
   user: LoggedInUser;
-  productId: string;
-  versionString: string;
-  build: string;
 }
 
-const ReportContainer: FC<Props> = ({ user, productId, versionString, build, classes }) => {
+const ReportContainer: FC<Props> = ({ user, classes }) => {
   const selectedFeature = useSelector((state: RootStore) => state.feature.selected);
   const executionHistory = useSelector((state: RootStore) => state.feature.executionHistory);
+
+  // === will remove this after the refactor is done ===
+  const report = useSelector((state: RootStore) => state.report);
+  const { product, version, build } = report;
+  // ===================================================
 
   if (!user) {
     return null;
@@ -32,8 +34,8 @@ const ReportContainer: FC<Props> = ({ user, productId, versionString, build, cla
           <Grid item xs={4} lg={4}>
             <FeatureListContainer
               user={user}
-              productId={productId}
-              versionString={versionString}
+              productId={product}
+              versionString={version}
               build={build}
               selectedFeatureId={selectedFeature?._id}
             />

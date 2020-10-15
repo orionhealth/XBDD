@@ -17,7 +17,7 @@ import { LoggedInUser } from 'models/User';
 import Status, { StatusMap } from 'models/Status';
 import Tag from 'models/Tag';
 import TagAssignments from 'models/TagAssignments';
-import SimpleFeature from 'models/SimpleFeature';
+import { SimpleFeature } from 'models/Feature';
 import { StoreDispatch, RootStore } from 'rootReducer';
 import { fetchIndexes } from 'redux/FeatureReducer';
 

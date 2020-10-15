@@ -1,5 +1,6 @@
 import { doRequest, Method } from 'lib/rest/RestRequests';
-import SimpleFeature from 'models/SimpleFeature';
+import { SimpleFeature } from 'models/Feature';
+import { SimpleTag } from 'models/Tag';
 import { getStatusFromString } from 'models/Status';
 import FetchSimpleFeaturesTypes from './generated/FetchSimpleFeaturesTypes';
 
@@ -7,9 +8,7 @@ export interface SimpleFeatureResponseData {
   id: string;
   _id: string;
   name: string;
-  tags: {
-    name: string;
-  }[];
+  tags: SimpleTag[];
   calculatedStatus: string;
 }
 type ResponseData = SimpleFeatureResponseData[];
