@@ -8,6 +8,9 @@ const stepStyles = createStyles({
     padding: '3px',
     overflowX: 'scroll',
   },
+  skippedStepText: {
+    textDecoration: 'line-through',
+  },
   steps: {
     paddingBottom: '12px',
   },
@@ -28,10 +31,10 @@ const stepStyles = createStyles({
     color: '#576E5D',
   },
   scenarioStepStatusFailed: {
-    color: 'white',
+    color: '#AC534F',
   },
-  stepIconFailed: {
-    backgroundColor: '#AC534F',
+  scenarioStepStatusSkipped: {
+    color: '#457B9D',
   },
 });
 
