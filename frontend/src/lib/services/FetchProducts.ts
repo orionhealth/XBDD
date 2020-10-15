@@ -1,5 +1,5 @@
-import Product from 'models/Product';
-import Version from 'models/Version';
+import Product, { productComparator } from 'models/Product';
+import Version, { versionComparator } from 'models/Version';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import FetchProductsTypes from './generated/FetchProductsTypes';
 
@@ -16,16 +16,6 @@ interface ResponseDataElement {
   };
 }
 type ResponseData = ResponseDataElement[];
-
-const versionComparator = (a: Version, b: Version): number => {
-  if (a.major !== b.major) {
-    return Number(b.major) - Number(a.major);
-  } else if (a.minor !== b.minor) {
-    return Number(b.minor) - Number(a.minor);
-  } else {
-    return Number(b.servicePack) - Number(a.servicePack);
-  }
-};
 
 const createVersion = (data: ResponseDataElement): Version => {
   const buildList = data.builds.slice().reverse();
@@ -58,7 +48,7 @@ const createProducts = (responseData: ResponseData): Product[] => {
     products[productName].versionList.sort(versionComparator);
   });
   const productList = Object.values(products);
-  productList.sort((a: Product, b: Product): number => a.name.localeCompare(b.name));
+  productList.sort(productComparator);
   return productList;
 };
 

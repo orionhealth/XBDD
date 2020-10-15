@@ -17,7 +17,7 @@ const createTag = (data: ResponseDataElement): Tag => {
   };
 };
 
-const createTagViewData = (data: ResponseData): Tag[] => {
+const createTags = (data: ResponseData): Tag[] => {
   return data.map(item => createTag(item));
 };
 
@@ -29,7 +29,7 @@ const fetchSimpleFeaturesByTags = async (product: string, version: string, build
     'rest.error.featuresByTag',
     null,
     [FetchSimpleFeaturesTypes, FetchSimpleFeaturesByTagsTypes],
-    createTagViewData
+    createTags
   );
 };
 

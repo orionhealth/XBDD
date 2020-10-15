@@ -13,7 +13,7 @@ export interface SimpleFeatureResponseData {
 }
 type ResponseData = SimpleFeatureResponseData[];
 
-export const createSimpleFeatures = (data: SimpleFeatureResponseData[]): SimpleFeature[] => {
+export const createSimpleFeatures = (data: ResponseData): SimpleFeature[] => {
   return data.map(item => ({
     ...item,
     tags: item.tags.map(tag => ({

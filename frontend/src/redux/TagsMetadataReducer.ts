@@ -6,7 +6,7 @@ import TagsIgnored from 'models/TagsIgnored';
 import TagAssignments from 'models/TagAssignments';
 import fetchTagAssignments from 'lib/services/FetchTagAssignments';
 import fetchTagsIgnored from 'lib/services/FetchTagsIgnored';
-import { StoreDispatch } from 'rootReducer';
+import { StoreDispatch, RootStore } from 'rootReducer';
 import { User } from 'models/User';
 
 type IgnoredState = TagsIgnored | null;
@@ -52,10 +52,10 @@ const { actions, reducer } = createSlice({
 
 export const { setTagsMetadata, tagIgnoreToggled, assignUserToTag } = actions;
 
-export const fetchTagsMetadata = (productId: string, versionString: string, build: string) => async (
-  dispatch: StoreDispatch
-): Promise<void> => {
-  const [assignments, ignored] = await Promise.all([fetchTagAssignments(productId, versionString, build), fetchTagsIgnored(productId)]);
+export const fetchTagsMetadata = () => async (dispatch: StoreDispatch, getState: () => RootStore): Promise<void> => {
+  const state = getState();
+  const { product, version, build } = state.report;
+  const [assignments, ignored] = await Promise.all([fetchTagAssignments(product, version, build), fetchTagsIgnored(product)]);
 
   dispatch(setTagsMetadata({ assignments: assignments || {}, ignored: ignored || {} }));
 };

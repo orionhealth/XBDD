@@ -47,7 +47,7 @@ class ProductListContainer extends Component<Props, State> {
   };
 
   render(): ReactNode {
-    const { list } = this.props;
+    const { list, title, handleFavouriteChange, handlePinChange } = this.props;
     const { searchContent } = this.state;
 
     const filteredList = searchContent ? list.filter(product => product.name.toLowerCase().includes(searchContent.toLowerCase())) : list;
@@ -57,9 +57,9 @@ class ProductListContainer extends Component<Props, State> {
         <ProductList
           list={filteredList}
           selectedVersionMap={this.state.selectedVersionMap}
-          title={this.props.title}
-          handleFavouriteChange={this.props.handleFavouriteChange}
-          handlePinChange={this.props.handlePinChange}
+          title={title}
+          handleFavouriteChange={handleFavouriteChange}
+          handlePinChange={handlePinChange}
           handleSearchProduct={this.handleSearchProduct}
           handleVersionSelected={this.handleVersionSelected}
         />

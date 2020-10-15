@@ -84,9 +84,25 @@ class SummaryContainer extends Component<Props, State> {
     });
   };
 
+  renderList = (productList, title) => {
+    return (
+      productList && (
+        <Card raised>
+          <ProductListContainer
+            list={productList}
+            title={title}
+            handleFavouriteChange={this.handleFavouriteChange}
+            handlePinChange={this.handlePinChange}
+          />
+        </Card>
+      )
+    );
+  };
+
   render(): ReactNode {
     const { user, classes, t } = this.props;
     const { productList, loading } = this.state;
+    const favouriteList = productList?.filter(product => product.favourite);
 
     if (!user) {
       return null;
@@ -98,28 +114,10 @@ class SummaryContainer extends Component<Props, State> {
         <Card elevation={0}>
           <Grid container>
             <Grid item xs={6} className={classes.productListContainer}>
-              {productList && (
-                <Card raised>
-                  <ProductListContainer
-                    list={productList}
-                    title={t('summary.productList')}
-                    handleFavouriteChange={this.handleFavouriteChange}
-                    handlePinChange={this.handlePinChange}
-                  />
-                </Card>
-              )}
+              {this.renderList(productList, t('summary.productList'))}
             </Grid>
             <Grid item xs={6} className={classes.productListContainer}>
-              {productList && (
-                <Card raised>
-                  <ProductListContainer
-                    list={productList.filter(product => product.favourite)}
-                    title={t('summary.favourites')}
-                    handleFavouriteChange={this.handleFavouriteChange}
-                    handlePinChange={this.handlePinChange}
-                  />
-                </Card>
-              )}
+              {this.renderList(favouriteList, t('summary.favourites'))}
             </Grid>
           </Grid>
         </Card>

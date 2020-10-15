@@ -37,8 +37,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  dispatchFetchIndexes(productId: string, versionString: string, build: string): void;
-  dispatchFetchTagsMetadata(productId: string, versionString: string, build: string): void;
+  dispatchFetchIndexes(): void;
+  dispatchFetchTagsMetadata(): void;
 }
 
 type Props = ProvidedProps & StateProps & DispatchProps;
@@ -69,8 +69,8 @@ class FeatureListContainer extends Component<Props, State> {
 
   componentDidMount(): void {
     const { productId, versionString, build, dispatchFetchIndexes, dispatchFetchTagsMetadata } = this.props;
-    dispatchFetchIndexes(productId, versionString, build);
-    dispatchFetchTagsMetadata(productId, versionString, build);
+    dispatchFetchIndexes();
+    dispatchFetchTagsMetadata();
   }
 
   handleViewSwitch = (): void => {

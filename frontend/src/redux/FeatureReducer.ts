@@ -179,10 +179,12 @@ export const {
   resetFeatureState,
 } = actions;
 
-export const fetchIndexes = (productId: string, versionString: string, build: string) => async (dispatch: StoreDispatch): Promise<void> => {
+export const fetchIndexes = () => async (dispatch: StoreDispatch, getState: () => RootStore): Promise<void> => {
+  const state = getState();
+  const { product, version, build } = state.report;
   const [byTag, byId] = await Promise.all([
-    fetchSimpleFeaturesByTags(productId, versionString, build),
-    fetchSimpleFeatures(productId, versionString, build),
+    fetchSimpleFeaturesByTags(product, version, build),
+    fetchSimpleFeatures(product, version, build),
   ]);
 
   dispatch(saveIndexes({ byId: byId || null, byTag: byTag || null }));
