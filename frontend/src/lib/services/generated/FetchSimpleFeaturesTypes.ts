@@ -8,18 +8,19 @@ export const SimpleFeatureResponseData = t.iface([], {
   id: 'string',
   _id: 'string',
   name: 'string',
-  tags: t.array(
-    t.iface([], {
-      name: 'string',
-    })
-  ),
+  tags: t.array('SimpleTagResponseData'),
   calculatedStatus: 'string',
+});
+
+export const SimpleTagResponseData = t.iface([], {
+  name: 'string',
 });
 
 export const ResponseData = t.array('SimpleFeatureResponseData');
 
 const exportedTypeSuite: t.ITypeSuite = {
   SimpleFeatureResponseData,
+  SimpleTagResponseData,
   ResponseData,
 };
 export default exportedTypeSuite;

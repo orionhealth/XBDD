@@ -4,29 +4,19 @@ import Search from '@material-ui/icons/Search';
 
 import { useProductListStyles } from './styles/ProductListStyles';
 import ProductListItem from './ProductListItem';
-import Product from 'models/Product';
-import Version from 'models/Version';
+import Product, { getVersionFromString } from 'models/Product';
+import { useSelector } from 'react-redux';
+import { RootStore } from 'rootReducer';
 
 interface Props {
   list: Product[];
-  selectedVersionMap: Record<string, Version | undefined>;
   title: string;
-  handleFavouriteChange(product: Product): void;
-  handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
   handleSearchProduct(event: ChangeEvent<HTMLInputElement>): void;
-  handleVersionSelected(event: ChangeEvent<{ value: string }>, product: Product): void;
 }
 
-const ProductList: FC<Props> = ({
-  list,
-  title,
-  selectedVersionMap,
-  handleSearchProduct,
-  handleFavouriteChange,
-  handleVersionSelected,
-  handlePinChange,
-}) => {
+const ProductList: FC<Props> = ({ list, title, handleSearchProduct }) => {
   const classes = useProductListStyles();
+  const selectedVersionMap = useSelector((state: RootStore) => state.report.selectedVersion);
 
   if (!list) {
     return null;
@@ -49,16 +39,12 @@ const ProductList: FC<Props> = ({
 
       <List>
         {list.map(product => {
-          return (
-            <ProductListItem
-              key={product.name}
-              product={product}
-              version={selectedVersionMap[product.name] || product.versionList[0]}
-              handleFavouriteChange={handleFavouriteChange}
-              handlePinChange={handlePinChange}
-              handleVersionSelected={handleVersionSelected}
-            />
-          );
+          const selectedVersion: string = selectedVersionMap[product.name];
+          const version = selectedVersion ? getVersionFromString(product, selectedVersion) : product.versionList[0];
+          if (!version) {
+            return null;
+          }
+          return <ProductListItem key={product.name} product={product} version={version} />;
         })}
       </List>
     </>

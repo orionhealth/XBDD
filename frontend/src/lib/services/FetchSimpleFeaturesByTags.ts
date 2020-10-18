@@ -3,6 +3,7 @@ import FetchSimpleFeaturesByTagsTypes from './generated/FetchSimpleFeaturesByTag
 import FetchSimpleFeaturesTypes from './generated/FetchSimpleFeaturesTypes';
 import Tag from 'models/Tag';
 import { createSimpleFeatures, SimpleFeatureResponseData } from './FetchSimpleFeatures';
+import { getEncodedURI } from 'lib/rest/URIHelper';
 
 interface ResponseDataElement {
   tag: string;
@@ -22,7 +23,7 @@ const createTags = (data: ResponseData): Tag[] => {
 };
 
 const fetchSimpleFeaturesByTags = async (product: string, version: string, build: string): Promise<Tag[] | void> => {
-  const url = `/rest/tagview/featureTagIndex/${product}/${version}/${build}`;
+  const url = `/rest/tagview/featureTagIndex/${getEncodedURI(product, version, build)}`;
   return doRequest(
     Method.GET,
     url,

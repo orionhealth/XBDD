@@ -54,33 +54,47 @@ export const { setTagsMetadata, tagIgnoreToggled, assignUserToTag } = actions;
 
 export const fetchTagsMetadata = () => async (dispatch: StoreDispatch, getState: () => RootStore): Promise<void> => {
   const state = getState();
-  const { product, version, build } = state.report;
-  const [assignments, ignored] = await Promise.all([fetchTagAssignments(product, version, build), fetchTagsIgnored(product)]);
+  const reportIdentifier = state.report.currentReportId;
+  if (reportIdentifier) {
+    const { product, version, build } = reportIdentifier;
+    const [assignments, ignored] = await Promise.all([fetchTagAssignments(product, version, build), fetchTagsIgnored(product)]);
 
-  dispatch(setTagsMetadata({ assignments: assignments || {}, ignored: ignored || {} }));
+    dispatch(setTagsMetadata({ assignments: assignments || {}, ignored: ignored || {} }));
+  }
 };
 
-export const assignUserToTagWithRollback = (restId: string, tag: string, currentlyAssignedUser?: User, newUser?: User) => (
-  dispatch: StoreDispatch
+export const assignUserToTagWithRollback = (tag: string, currentlyAssignedUser?: User, newUser?: User) => (
+  dispatch: StoreDispatch,
+  getState: () => RootStore
 ): void => {
-  const setTagAssignmentData = newUser ? assignTagToLoggedInUser : unAssignTag;
+  const state = getState();
+  const reportIdentifier = state.report.currentReportId;
+  if (reportIdentifier) {
+    const { product, version, build } = reportIdentifier;
+    const setTagAssignmentData = newUser ? assignTagToLoggedInUser : unAssignTag;
 
-  setTagAssignmentData(restId, tag).then(response => {
-    if (!response || !response.ok) {
-      dispatch(assignUserToTag({ tagName: tag, user: currentlyAssignedUser }));
-    }
-  });
+    setTagAssignmentData(product, version, build, tag).then(response => {
+      if (!response || !response.ok) {
+        dispatch(assignUserToTag({ tagName: tag, user: currentlyAssignedUser }));
+      }
+    });
 
-  dispatch(assignUserToTag({ tagName: tag, user: newUser }));
+    dispatch(assignUserToTag({ tagName: tag, user: newUser }));
+  }
 };
 
-export const ignoreTagWithRollback = (product: string, tagName: string) => (dispatch: StoreDispatch): void => {
-  setIgnoredTag(product, { tagName: tagName }).then(response => {
-    if (!response || !response.ok) {
-      dispatch(tagIgnoreToggled(tagName));
-    }
-  });
-  dispatch(tagIgnoreToggled(tagName));
+export const ignoreTagWithRollback = (tagName: string) => (dispatch: StoreDispatch, getState: () => RootStore): void => {
+  const state = getState();
+  const reportIdentifier = state.report.currentReportId;
+  if (reportIdentifier) {
+    const { product } = reportIdentifier;
+    setIgnoredTag(product, { tagName: tagName }).then(response => {
+      if (!response || !response.ok) {
+        dispatch(tagIgnoreToggled(tagName));
+      }
+    });
+    dispatch(tagIgnoreToggled(tagName));
+  }
 };
 
 export default reducer;

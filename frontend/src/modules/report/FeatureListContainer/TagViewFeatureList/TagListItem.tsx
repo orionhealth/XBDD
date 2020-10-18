@@ -19,29 +19,15 @@ import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog';
 import { RootStore } from 'rootReducer';
 
 interface Props extends WithStyles {
-  productId: string;
-  versionString: string;
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tag: Tag;
   tagAssignments: TagAssignments;
-  restId: string;
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
 }
 
-const TagListItem: FC<Props> = ({
-  productId,
-  versionString,
-  isEditMode,
-  isAssignedTagsView,
-  tag,
-  tagAssignments,
-  selectedFeatureId,
-  restId,
-  selectedStatus,
-  classes,
-}) => {
+const TagListItem: FC<Props> = ({ isEditMode, isAssignedTagsView, tag, tagAssignments, selectedFeatureId, selectedStatus, classes }) => {
   const [expanded, setExpanded] = useState(false);
   const [warningOpen, setWarningOpen] = useState(false);
   const user = useSelector((state: RootStore) => state.user);
@@ -64,7 +50,7 @@ const TagListItem: FC<Props> = ({
 
   const onTagIgnoreClick = (event: MouseEvent): void => {
     event.stopPropagation();
-    dispatch(ignoreTagWithRollback(restId.split('/')[0], name));
+    dispatch(ignoreTagWithRollback(name));
   };
 
   const onAvatarClick = (event: MouseEvent): void => {
@@ -72,7 +58,7 @@ const TagListItem: FC<Props> = ({
     if (currentAssignee?.userId && user.userId !== currentAssignee?.userId) {
       setWarningOpen(true);
     } else {
-      dispatch(assignUserToTagWithRollback(restId, tag.name, currentAssignee, newAssignee));
+      dispatch(assignUserToTagWithRollback(tag.name, currentAssignee, newAssignee));
     }
   };
 
@@ -87,19 +73,14 @@ const TagListItem: FC<Props> = ({
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <TagViewFeatureList
-          productId={productId}
-          versionString={versionString}
-          selectedFeatureId={selectedFeatureId}
-          featureList={featureList}
-        />
+        <TagViewFeatureList selectedFeatureId={selectedFeatureId} featureList={featureList} />
       </Collapse>
       <ConfirmationDialog
         open={warningOpen}
         title={t('report.warning')}
         msg={t('report.pleaseReassignTheTag')}
         handleConfirmed={(): void => {
-          dispatch(assignUserToTagWithRollback(restId, tag.name, currentAssignee, newAssignee));
+          dispatch(assignUserToTagWithRollback(tag.name, currentAssignee, newAssignee));
           setWarningOpen(false);
         }}
         handleClosed={(): void => setWarningOpen(false)}

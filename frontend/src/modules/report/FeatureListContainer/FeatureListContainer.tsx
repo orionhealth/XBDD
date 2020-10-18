@@ -5,27 +5,21 @@ import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icon
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { bindActionCreators } from 'redux';
 
 import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
 import FeatureFilterButtons from './FeatureFilterButtons/FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
 import TagList from './TagViewFeatureList/TagList';
 import Loading from 'modules/loading/Loading';
-import { fetchTagsMetadata } from 'redux/TagsMetadataReducer';
 import { LoggedInUser } from 'models/User';
 import Status, { StatusMap } from 'models/Status';
 import Tag from 'models/Tag';
 import TagAssignments from 'models/TagAssignments';
 import { SimpleFeature } from 'models/Feature';
-import { StoreDispatch, RootStore } from 'rootReducer';
-import { fetchIndexes } from 'redux/FeatureReducer';
+import { RootStore } from 'rootReducer';
 
 interface ProvidedProps extends WithStyles, WithTranslation {
   user: LoggedInUser;
-  productId: string;
-  versionString: string;
-  build: string;
   selectedFeatureId?: string;
 }
 
@@ -36,12 +30,7 @@ interface StateProps {
   loading: boolean;
 }
 
-interface DispatchProps {
-  dispatchFetchIndexes(): void;
-  dispatchFetchTagsMetadata(): void;
-}
-
-type Props = ProvidedProps & StateProps & DispatchProps;
+type Props = ProvidedProps & StateProps;
 
 interface State {
   isEditMode: boolean;
@@ -163,41 +152,28 @@ class FeatureListContainer extends Component<Props, State> {
     );
   }
 
-  renderFeatureList(restId: string, selectedFeatureId?: string): ReactNode {
-    const { idIndex, tagAssignments, productId, versionString } = this.props;
+  renderFeatureList(selectedFeatureId?: string): ReactNode {
+    const { idIndex, tagAssignments } = this.props;
     const { isTagView, isEditMode, isAssignedTagsView, selectedStatus } = this.state;
     if (isTagView && tagAssignments) {
       return (
         <TagList
-          productId={productId}
-          versionString={versionString}
           isEditMode={isEditMode}
           isAssignedTagsView={isAssignedTagsView}
           tagList={this.filterTags()}
           tagAssignments={tagAssignments}
-          restId={restId}
           selectedFeatureId={selectedFeatureId}
           selectedStatus={selectedStatus}
         />
       );
     } else if (idIndex) {
-      return (
-        <ListViewFeatureList
-          productId={productId}
-          versionString={versionString}
-          selectedFeatureId={selectedFeatureId}
-          featureList={idIndex}
-          selectedStatus={selectedStatus}
-        />
-      );
+      return <ListViewFeatureList selectedFeatureId={selectedFeatureId} featureList={idIndex} selectedStatus={selectedStatus} />;
     }
   }
 
   render(): ReactNode {
-    const { productId, versionString, build, selectedFeatureId, loading, classes } = this.props;
+    const { selectedFeatureId, loading, classes } = this.props;
     const { selectedStatus } = this.state;
-
-    const restId = `${productId}/${versionString}/${build}`;
 
     return (
       <>
@@ -205,7 +181,7 @@ class FeatureListContainer extends Component<Props, State> {
         <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
         <div className={classes.xbddTagListContainer}>
           {this.renderFeatureListTitle()}
-          {this.renderFeatureList(restId, selectedFeatureId)}
+          {this.renderFeatureList(selectedFeatureId)}
         </div>
       </>
     );
@@ -219,12 +195,4 @@ const mapStateToProps = (state: RootStore): StateProps => ({
   loading: !(state.feature.byId && state.feature.byTag && state.tags.assignments && state.tags.ignored),
 });
 
-const mapDispatchToProps = (dispatch: StoreDispatch): DispatchProps => ({
-  dispatchFetchIndexes: bindActionCreators(fetchIndexes, dispatch),
-  dispatchFetchTagsMetadata: bindActionCreators(fetchTagsMetadata, dispatch),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation()(withStyles(featureListContainerStyles)(FeatureListContainer)));
+export default connect(mapStateToProps)(withTranslation()(withStyles(featureListContainerStyles)(FeatureListContainer)));

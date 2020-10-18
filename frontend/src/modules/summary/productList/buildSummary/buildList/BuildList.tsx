@@ -1,59 +1,37 @@
 import React, { FC, useState, ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
-
-import Version, { getString, getUnpinnedBuildList } from 'models/Version';
 import { useBuildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
-import Product from 'models/Product';
-import { resetFeatureState } from 'redux/FeatureReducer';
 
 interface Props {
-  product: Product;
-  version: Version;
-  handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
+  product: string;
+  version: string;
+  pinnedBuildList: string[];
+  unpinnedBuildList: string[];
 }
 
-const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
+const BuildList: FC<Props> = ({ product, version, pinnedBuildList, unpinnedBuildList }) => {
   const { t } = useTranslation();
   const classes = useBuildListStyles();
-  const dispatch = useDispatch();
-  const history = useHistory();
   const [expanded, setExpanded] = useState(false);
 
-  const pinnedBuildList = version.pinnedBuildList;
-  let unpinnedBuildList = getUnpinnedBuildList(version);
-  const isExpandable = unpinnedBuildList.length > 5;
-
-  if (isExpandable && !expanded) {
-    unpinnedBuildList = unpinnedBuildList.slice(0, 5);
-  }
-
-  const onItemClick = (event, build: string, isPinned: boolean): void => {
-    let node = event.target;
-    while (node) {
-      if (node.className === 'MuiIconButton-label') {
-        handlePinChange(product, version, build, isPinned);
-        return;
-      }
-      node = node.parentNode;
-    }
-    const productParam = encodeURIComponent(product.name);
-    const versionParam = encodeURIComponent(getString(version));
-    const buildParam = encodeURIComponent(build);
-    dispatch(resetFeatureState());
-    history.push(encodeURI(`/reports/${productParam}/${versionParam}/${buildParam}`));
-  };
-
-  const renderBuildListByPin = (buildList: string[], isPinned: boolean): ReactNode => (
+  const renderPinnedBuildList = (): ReactNode => (
     <List>
+      <BuildListItem product={product} version={version} isPinned={true} buildList={pinnedBuildList} />
+    </List>
+  );
+
+  const renderUnpinnedBuildList = (): ReactNode => {
+    const isExpandable = unpinnedBuildList.length > 5;
+    const buildList = isExpandable && !expanded ? unpinnedBuildList.slice(0, 5) : unpinnedBuildList;
+
+    return (
       <List>
-        <BuildListItem isPinned={isPinned} buildList={buildList} onClick={onItemClick} />
-        {isPinned || !isExpandable ? null : (
+        <BuildListItem product={product} version={version} isPinned={false} buildList={buildList} />
+        {isExpandable && (
           <ListItem button divider className={classes.buildListItem} onClick={(): void => setExpanded(!expanded)}>
             <ListItemIcon className={classes.arrowIcon}>
               <FontAwesomeIcon icon={expanded ? faAngleDoubleUp : faAngleDoubleDown} />
@@ -62,13 +40,13 @@ const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
           </ListItem>
         )}
       </List>
-    </List>
-  );
+    );
+  };
 
   return (
     <div className={classes.buildListContainer}>
-      {pinnedBuildList.length !== 0 ? renderBuildListByPin(pinnedBuildList, true) : null}
-      {unpinnedBuildList.length !== 0 ? renderBuildListByPin(unpinnedBuildList, false) : null}
+      {pinnedBuildList.length !== 0 && renderPinnedBuildList()}
+      {unpinnedBuildList.length !== 0 && renderUnpinnedBuildList()}
     </div>
   );
 };

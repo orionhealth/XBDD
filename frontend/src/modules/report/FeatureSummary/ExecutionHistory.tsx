@@ -11,16 +11,19 @@ import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 import { useHistory } from 'react-router-dom';
 import { resetFeatureState } from 'redux/FeatureReducer';
 import { RootStore } from 'rootReducer';
+import { getEncodedURI } from 'lib/rest/URIHelper';
+import { useTranslation } from 'react-i18next';
 
 interface Props extends WithStyles {
   executionHistory: Execution[];
 }
 
 const ExecutionHistory: FC<Props> = ({ executionHistory, classes }) => {
+  const { t } = useTranslation();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const report = useSelector((state: RootStore) => state.report);
+  const report = useSelector((state: RootStore) => state.report.currentReportId);
 
   const iconMap: StatusMap<ReactNode> = {
     [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={classes.featurePassed} />,
@@ -30,16 +33,16 @@ const ExecutionHistory: FC<Props> = ({ executionHistory, classes }) => {
   };
 
   const navigateToBuild = (build: string) => {
-    if (report.build === build) {
+    if (!report || report.build === build) {
       return;
     }
     dispatch(resetFeatureState());
-    history.push(encodeURI(`/reports/${report.product}/${report.version}/${build}`));
+    history.push(`/reports/${getEncodedURI(report.product, report.version, build)}`);
   };
 
   return (
     <div className={classes.executionHistory}>
-      <Typography variant="body2">Execution History</Typography>
+      <Typography variant="body2">{t(`report.executionHistory`)}</Typography>
       {executionHistory.map(build => (
         <span key={build.build}>
           <Tooltip title={build.build} placement="top">

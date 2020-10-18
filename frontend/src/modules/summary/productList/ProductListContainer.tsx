@@ -1,71 +1,28 @@
-import React, { Component, ChangeEvent, ReactNode } from 'react';
+import React, { ChangeEvent, FC, useState } from 'react';
 import { Card } from '@material-ui/core';
-import produce from 'immer';
 
 import ProductList from './ProductList';
-import Product, { getVersionFromString } from 'models/Product';
-import Version from 'models/Version';
+import Product from 'models/Product';
 
 interface Props {
   list: Product[];
   title: string;
-  handleFavouriteChange(product: Product): void;
-  handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
 }
 
-interface State {
-  searchContent: string;
-  selectedVersionMap: Record<string, Version | undefined>;
-}
+const ProductListContainer: FC<Props> = ({ list, title }) => {
+  const [searchContent, setSearchContent] = useState('');
 
-class ProductListContainer extends Component<Props, State> {
-  constructor(props) {
-    super(props);
-
-    const { list } = this.props;
-    const selectedVersionMap: Record<string, Version> = {};
-    for (const { name, versionList } of list) {
-      selectedVersionMap[name] = versionList[0];
-    }
-
-    this.state = {
-      searchContent: '',
-      selectedVersionMap,
-    };
-  }
-
-  handleSearchProduct = (event: ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ searchContent: event.target.value });
+  const handleSearchProduct = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSearchContent(event.target.value);
   };
 
-  handleVersionSelected = (event: ChangeEvent<{ value: string }>, product: Product): void => {
-    this.setState(
-      produce((draft: State) => {
-        draft.selectedVersionMap[product.name] = getVersionFromString(product, event.target.value);
-      })
-    );
-  };
+  const filteredList = searchContent ? list.filter(product => product.name.toLowerCase().includes(searchContent.toLowerCase())) : list;
 
-  render(): ReactNode {
-    const { list, title, handleFavouriteChange, handlePinChange } = this.props;
-    const { searchContent } = this.state;
-
-    const filteredList = searchContent ? list.filter(product => product.name.toLowerCase().includes(searchContent.toLowerCase())) : list;
-
-    return (
-      <Card raised>
-        <ProductList
-          list={filteredList}
-          selectedVersionMap={this.state.selectedVersionMap}
-          title={title}
-          handleFavouriteChange={handleFavouriteChange}
-          handlePinChange={handlePinChange}
-          handleSearchProduct={this.handleSearchProduct}
-          handleVersionSelected={this.handleVersionSelected}
-        />
-      </Card>
-    );
-  }
-}
+  return (
+    <Card raised>
+      <ProductList list={filteredList} title={title} handleSearchProduct={handleSearchProduct} />
+    </Card>
+  );
+};
 
 export default ProductListContainer;

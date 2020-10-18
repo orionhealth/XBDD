@@ -11,6 +11,7 @@
     "logout": "Logout"
   },
   "report": {
+    "executionHistory": "Execution History",
     "fullSizedScreenshot": "Full Size Screenshot",
     "pleaseReassignTheTag": "Please reassign the tag.",
     "showAllTags": "Show All Tags",
@@ -48,7 +49,13 @@
       "post": "Data save failed",
       "summaryOfReports": "Failed to get summary of reports.",
       "unfavourite": "Failed to unfavourite the product.",
-      "unpin": "Failed to unpin the build."
+      "unpin": "Failed to unpin the build.",
+      "updateStep": "Failed to update the step status.",
+      "updateAllSteps": "Failed to update statuses for all the step.",
+      "updateComment": "Failed to update comment.",
+      "assignTag": "Failed to assign tag.",
+      "unassignTag": "Failed to unassign the Tag.",
+      "setIgnoredTag": "Failed to set the ignored tag."
     }
   },
   "summary": {

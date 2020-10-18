@@ -1,129 +1,54 @@
-import React, { Component, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { Grid, Card } from '@material-ui/core';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { withTranslation, WithTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-import fetchProducts from 'lib/services/FetchProducts';
 import ProductListContainer from './productList/ProductListContainer';
-import SummaryStyles from './styles/SummaryStyles';
-import { setProductFavouriteOn, setProductFavouriteOff, pinABuild, unPinABuild } from 'lib/rest/Rest';
+import { useSummaryStyles } from './styles/SummaryStyles';
 import Loading from 'modules/loading/Loading';
-import Product, { updateProductPinnedBuildList } from 'models/Product';
 import { LoggedInUser } from 'models/User';
-import Version from 'models/Version';
+import { useSelector } from 'react-redux';
+import { RootStore } from 'rootReducer';
+import Product from 'models/Product';
 
-interface Props extends WithStyles, WithTranslation {
+interface Props {
   user: LoggedInUser;
 }
 
-interface State {
-  productList: Product[] | null;
-  loading: boolean;
-}
+const renderList = (productList: Product[], title: string) => {
+  return (
+    productList && (
+      <Card raised>
+        <ProductListContainer list={productList} title={title} />
+      </Card>
+    )
+  );
+};
 
-class SummaryContainer extends Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = { productList: null, loading: false };
+const SummaryContainer: FC<Props> = ({ user }) => {
+  const { t } = useTranslation();
+  const classes = useSummaryStyles();
+  const productList = useSelector((state: RootStore) => state.report.productList);
+  const favouriteList = productList?.filter(product => product.favourite);
+
+  if (!user) {
+    return null;
   }
 
-  componentDidMount(): void {
-    this.setState({ loading: true });
-    fetchProducts().then(productList => {
-      this.setState({
-        productList: productList || null,
-        loading: false,
-      });
-    });
-  }
-
-  changeFavouriteStatus(isFavourite: boolean, product: Product): Promise<any> {
-    if (isFavourite) {
-      return setProductFavouriteOff(product.name);
-    }
-    return setProductFavouriteOn(product.name);
-  }
-
-  handleFavouriteChange = (product: Product): void => {
-    const isFavourite = product.favourite;
-    const newProductList = this.state.productList;
-
-    this.changeFavouriteStatus(isFavourite, product).then(response => {
-      if (response && response.ok) {
-        const newProduct = newProductList?.find(item => item.name === product.name);
-        if (newProduct) {
-          newProduct.favourite = !isFavourite;
-          this.setState({
-            productList: newProductList,
-          });
-        }
-      }
-    });
-  };
-
-  changePinStatus(product: Product, version: Version, build: string, isPinned: boolean): Promise<any> {
-    if (isPinned) {
-      return unPinABuild(product.name, version.major, version.minor, version.servicePack, build);
-    }
-    return pinABuild(product.name, version.major, version.minor, version.servicePack, build);
-  }
-
-  handlePinChange = (product: Product, version: Version, build: string, isPinned: boolean): void => {
-    const newProductList = this.state.productList;
-
-    this.changePinStatus(product, version, build, isPinned).then(response => {
-      if (response.status === 200) {
-        const newProduct = newProductList?.find(item => item.name === product.name);
-        if (newProduct) {
-          updateProductPinnedBuildList(newProduct, version, build, isPinned);
-          this.setState({
-            productList: newProductList,
-          });
-        }
-      }
-    });
-  };
-
-  renderList = (productList, title) => {
-    return (
-      productList && (
-        <Card raised>
-          <ProductListContainer
-            list={productList}
-            title={title}
-            handleFavouriteChange={this.handleFavouriteChange}
-            handlePinChange={this.handlePinChange}
-          />
-        </Card>
-      )
-    );
-  };
-
-  render(): ReactNode {
-    const { user, classes, t } = this.props;
-    const { productList, loading } = this.state;
-    const favouriteList = productList?.filter(product => product.favourite);
-
-    if (!user) {
-      return null;
-    }
-
-    return (
-      <>
-        <Loading loading={loading} />
-        <Card elevation={0}>
-          <Grid container>
-            <Grid item xs={6} className={classes.productListContainer}>
-              {this.renderList(productList, t('summary.productList'))}
-            </Grid>
-            <Grid item xs={6} className={classes.productListContainer}>
-              {this.renderList(favouriteList, t('summary.favourites'))}
-            </Grid>
+  return (
+    <>
+      <Loading loading={!productList} />
+      <Card elevation={0}>
+        <Grid container>
+          <Grid item xs={6} className={classes.productListContainer}>
+            {productList && renderList(productList, t('summary.productList'))}
           </Grid>
-        </Card>
-      </>
-    );
-  }
-}
+          <Grid item xs={6} className={classes.productListContainer}>
+            {favouriteList && renderList(favouriteList, t('summary.favourites'))}
+          </Grid>
+        </Grid>
+      </Card>
+    </>
+  );
+};
 
-export default withTranslation()(withStyles(SummaryStyles)(SummaryContainer));
+export default SummaryContainer;

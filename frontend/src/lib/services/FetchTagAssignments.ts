@@ -3,6 +3,7 @@ import { doRequest, Method } from 'lib/rest/RestRequests';
 import TagAssignments from 'models/TagAssignments';
 import FetchTagAssignmentsTypes from './generated/FetchTagAssignmentsTypes';
 import { getAvatarUrl } from './FetchLoggedInUser';
+import { getEncodedURI } from 'lib/rest/URIHelper';
 
 interface ResponseDataElement {
   tag: string;
@@ -31,7 +32,7 @@ const createTagAssignments = (responseData: ResponseData): TagAssignments => {
 };
 
 const fetchTagAssignments = async (product: string, version: string, build: string): Promise<TagAssignments | void> => {
-  const url = `/rest/user/tagAssignment/${product}/${version}/${build}`;
+  const url = `/rest/user/tagAssignment/${getEncodedURI(product, version, build)}`;
   return doRequest(Method.GET, url, 'rest.error.get', null, FetchTagAssignmentsTypes, createTagAssignments);
 };
 
