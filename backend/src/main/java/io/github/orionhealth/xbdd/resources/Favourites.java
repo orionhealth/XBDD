@@ -1,5 +1,8 @@
 package io.github.orionhealth.xbdd.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,6 +22,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.client.model.DBCollectionUpdateOptions;
 
 import io.github.orionhealth.xbdd.util.Coordinates;
 import io.github.orionhealth.xbdd.util.LoggedInUserUtil;
@@ -127,23 +131,20 @@ public class Favourites {
 		final DBCollection collection = this.mongoLegacyDb.getCollection("summary");
 
 		final BasicDBObject query = new BasicDBObject("_id", product + "/" + version);
-		final BasicDBObject toBePinned = new BasicDBObject("pinned", build);
-		final String method;
-
-		if (state) {
-			method = "$addToSet";
-		} else {
-			method = "$pull";
-		}
-
-		collection.update(query, new BasicDBObject(method, toBePinned));
+		final BasicDBObject value = new BasicDBObject("builds.$[build].isPinned", state);
+		final BasicDBObject set = new BasicDBObject("$set", value);
+		final BasicDBObject condition = new BasicDBObject("build.name", build);
+		final List<DBObject> filters = new ArrayList<>();
+		filters.add(condition);
+		final DBCollectionUpdateOptions options = new DBCollectionUpdateOptions();
+		options.arrayFilters(filters);
+		collection.update(query, set, options);
 	}
 
 	@PUT
 	@Path("/pin/{product}/{major}.{minor}.{servicePack}/{build}/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response pinABuild(@BeanParam final Coordinates coordinates) {
-
 		setPinStateOfBuild(coordinates.getProduct(), coordinates.getVersionString(), coordinates.getBuild(), true);
 		return Response.ok().build();
 	}
@@ -152,7 +153,6 @@ public class Favourites {
 	@Path("/pin/{product}/{major}.{minor}.{servicePack}/{build}/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response unPinABuild(@BeanParam final Coordinates coordinates) {
-
 		setPinStateOfBuild(coordinates.getProduct(), coordinates.getVersionString(), coordinates.getBuild(), false);
 		return Response.ok().build();
 	}

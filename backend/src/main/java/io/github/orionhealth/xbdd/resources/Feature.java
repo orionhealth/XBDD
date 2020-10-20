@@ -99,12 +99,12 @@ public class Feature {
 						.append("version", coordinates.getVersionString()));
 
 		final DBObject buildOrder = summary.findOne(coordinates.getQueryObject());
-		final List<String> buildArray = (List<String>) buildOrder.get("builds");
+		final List<DBObject> buildList = (List<DBObject>) buildOrder.get("builds");
 		final List<BasicDBObject> orderedFeatures = new ArrayList<>();
 
-		for (final String build : buildArray) {
+		for (final DBObject build : buildList) {
 			for (final BasicDBObject feature : features) {
-				if (feature.get("build").equals(build)) {
+				if (feature.get("build").equals(((BasicDBObject) build).get("name"))) {
 					orderedFeatures.add(feature);
 					break;
 				}

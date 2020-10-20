@@ -9,15 +9,15 @@ import { updatePinStatusWithRollback } from 'redux/ReportReducer';
 import { getEncodedURI } from 'lib/rest/URIHelper';
 import { resetFeatureState } from 'redux/FeatureReducer';
 import { useHistory } from 'react-router-dom';
+import Build from 'models/Build';
 
 interface Props {
   product: string;
   version: string;
-  isPinned: boolean;
-  buildList: string[];
+  build: Build;
 }
 
-const BuildListItem: FC<Props> = ({ product, version, isPinned, buildList }) => {
+const BuildListItem: FC<Props> = ({ product, version, build }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -36,20 +36,16 @@ const BuildListItem: FC<Props> = ({ product, version, isPinned, buildList }) => 
   };
 
   return (
-    <>
-      {buildList.map(build => (
-        <ListItem button key={build} onClick={(event: MouseEvent): void => onItemClick(event, build, isPinned)}>
-          <ListItemText>{t('summary.buildDisplay', { build })}</ListItemText>
-          <ListItemIcon>
-            <Checkbox
-              icon={<FontAwesomeIcon icon={faThumbtack} style={{ color: grey[300] }} />}
-              checkedIcon={<FontAwesomeIcon icon={faThumbtack} style={{ color: grey[700] }} />}
-              checked={isPinned}
-            />
-          </ListItemIcon>
-        </ListItem>
-      ))}
-    </>
+    <ListItem button onClick={(event: MouseEvent): void => onItemClick(event, build.name, build.isPinned)}>
+      <ListItemText>{t('summary.buildDisplay', { name: build.name, publishDate: new Date(build.publishDate) })}</ListItemText>
+      <ListItemIcon>
+        <Checkbox
+          icon={<FontAwesomeIcon icon={faThumbtack} style={{ color: grey[300] }} />}
+          checkedIcon={<FontAwesomeIcon icon={faThumbtack} style={{ color: grey[700] }} />}
+          checked={build.isPinned}
+        />
+      </ListItemIcon>
+    </ListItem>
   );
 };
 

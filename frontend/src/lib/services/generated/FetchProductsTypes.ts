@@ -7,7 +7,7 @@ import * as t from 'ts-interface-checker';
 export const ResponseDataElement = t.iface([], {
   _id: 'string',
   favourite: 'boolean',
-  builds: t.array('string'),
+  builds: t.array('BuildResponseData'),
   pinned: t.opt(t.array('string')),
   coordinates: t.iface([], {
     product: 'string',
@@ -17,10 +17,17 @@ export const ResponseDataElement = t.iface([], {
   }),
 });
 
+export const BuildResponseData = t.iface([], {
+  name: 'string',
+  publishDate: 'string',
+  isPinned: 'boolean',
+});
+
 export const ResponseData = t.array('ResponseDataElement');
 
 const exportedTypeSuite: t.ITypeSuite = {
   ResponseDataElement,
+  BuildResponseData,
   ResponseData,
 };
 export default exportedTypeSuite;

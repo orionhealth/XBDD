@@ -1,36 +1,37 @@
-import React, { FC, useState, ReactNode } from 'react';
+import React, { FC, useState } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import { useBuildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
+import Build from 'models/Build';
 
 interface Props {
   product: string;
   version: string;
-  pinnedBuildList: string[];
-  unpinnedBuildList: string[];
+  buildList: Build[];
 }
 
-const BuildList: FC<Props> = ({ product, version, pinnedBuildList, unpinnedBuildList }) => {
+const BuildList: FC<Props> = ({ product, version, buildList }) => {
   const { t } = useTranslation();
   const classes = useBuildListStyles();
   const [expanded, setExpanded] = useState(false);
+  const pinnedBuildList = buildList.filter(build => build.isPinned);
+  let unpinnedBuildList = buildList.filter(build => !build.isPinned);
 
-  const renderPinnedBuildList = (): ReactNode => (
-    <List>
-      <BuildListItem product={product} version={version} isPinned={true} buildList={pinnedBuildList} />
-    </List>
-  );
+  const isExpandable = unpinnedBuildList.length > 5;
+  unpinnedBuildList = isExpandable && !expanded ? unpinnedBuildList.slice(0, 5) : unpinnedBuildList;
 
-  const renderUnpinnedBuildList = (): ReactNode => {
-    const isExpandable = unpinnedBuildList.length > 5;
-    const buildList = isExpandable && !expanded ? unpinnedBuildList.slice(0, 5) : unpinnedBuildList;
+  const renderList = (buildList: Build[]) => {
+    return buildList.map(build => <BuildListItem key={build.name} product={product} version={version} build={build} />);
+  };
 
-    return (
+  return (
+    <div className={classes.buildListContainer}>
+      <List>{renderList(pinnedBuildList)}</List>
       <List>
-        <BuildListItem product={product} version={version} isPinned={false} buildList={buildList} />
+        {renderList(unpinnedBuildList)}
         {isExpandable && (
           <ListItem button divider className={classes.buildListItem} onClick={(): void => setExpanded(!expanded)}>
             <ListItemIcon className={classes.arrowIcon}>
@@ -40,13 +41,6 @@ const BuildList: FC<Props> = ({ product, version, pinnedBuildList, unpinnedBuild
           </ListItem>
         )}
       </List>
-    );
-  };
-
-  return (
-    <div className={classes.buildListContainer}>
-      {pinnedBuildList.length !== 0 && renderPinnedBuildList()}
-      {unpinnedBuildList.length !== 0 && renderUnpinnedBuildList()}
     </div>
   );
 };

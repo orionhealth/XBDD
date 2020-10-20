@@ -3,6 +3,8 @@ import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
+const locale = 'en-AU';
+
 i18n
   .use(Backend)
   .use(LanguageDetector)
@@ -16,7 +18,7 @@ i18n
     debug: process.env.REACT_APP_DEBUG === 'ON',
     interpolation: {
       escapeValue: false,
-      format: (value: any, format?: string, lng?: string): string => {
+      format: (value: any): string => {
         if (value instanceof Date) {
           const options: Intl.DateTimeFormatOptions = {
             year: 'numeric',
@@ -24,9 +26,10 @@ i18n
             day: 'numeric',
             hour: 'numeric',
             minute: 'numeric',
-            hour12: true,
+            second: 'numeric',
+            hour12: false,
           };
-          return new Intl.DateTimeFormat(lng, options).format(value);
+          return new Intl.DateTimeFormat(locale, options).format(value);
         }
 
         return value;

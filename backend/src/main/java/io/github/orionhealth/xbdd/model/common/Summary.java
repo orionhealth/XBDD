@@ -15,9 +15,8 @@ public class Summary {
 	@JsonProperty("_id")
 	String id;
 
-	List<String> builds;
+	List<Build> builds;
 	CoordinatesDto coordinates;
-	private List<String> pinned;
 
 	/**
 	 * This is only used on the way out and is hydrated from the users collection. It's never saved here.
@@ -33,14 +32,14 @@ public class Summary {
 		this.id = id;
 	}
 
-	public List<String> getBuilds() {
+	public List<Build> getBuilds() {
 		if (this.builds == null) {
-			this.builds = new ArrayList<String>();
+			this.builds = new ArrayList<Build>();
 		}
 		return this.builds;
 	}
 
-	public void setBuilds(final List<String> builds) {
+	public void setBuilds(final List<Build> builds) {
 		this.builds = builds;
 	}
 
@@ -58,14 +57,6 @@ public class Summary {
 
 	public void setFavourite(final Boolean favourite) {
 		this.favourite = favourite;
-	}
-
-	public List<String> getPinned() {
-		return this.pinned;
-	}
-
-	public void setPinned(final List<String> pinned) {
-		this.pinned = pinned;
 	}
 
 }

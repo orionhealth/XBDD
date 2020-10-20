@@ -30,7 +30,7 @@ const FeatureSummary: FC<Props> = ({ feature, executionHistory, classes }) => {
         <Grid item xs={3}>
           <StatusIcons firstStatus={feature.originalAutomatedStatus} secondStatus={feature.calculatedStatus} />
           <div className={classes.featureEditInfo}>
-            {feature.lastEditedBy && <div>{t('report.lastEditedByOn', { name: feature.lastEditedBy, date: feature.lastEditedOn })}</div>}
+            {feature.lastEditedBy && <div>{t('report.lastEditedBy', { name: feature.lastEditedBy })}</div>}
             {feature.lastEditedOn && <div>{t('report.lastEditedOn', { date: feature.lastEditedOn })}</div>}
           </div>
           {feature.tags ? (
