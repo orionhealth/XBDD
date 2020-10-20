@@ -14,7 +14,7 @@ interface Feature extends SimpleFeature{
   keyword: string;
   originalAutomatedStatus: Status;
   scenarios: Scenario[];
-  lastEditedOn?: Date;
+  lastEditedOn?: number;
   lastEditedBy?: string;
 }
 

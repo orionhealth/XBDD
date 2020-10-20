@@ -31,7 +31,7 @@ const FeatureSummary: FC<Props> = ({ feature, executionHistory, classes }) => {
           <StatusIcons firstStatus={feature.originalAutomatedStatus} secondStatus={feature.calculatedStatus} />
           <div className={classes.featureEditInfo}>
             {feature.lastEditedBy && <div>{t('report.lastEditedBy', { name: feature.lastEditedBy })}</div>}
-            {feature.lastEditedOn && <div>{t('report.lastEditedOn', { date: feature.lastEditedOn })}</div>}
+            {feature.lastEditedOn && <div>{t('report.lastEditedOn', { date: new Date(feature.lastEditedOn) })}</div>}
           </div>
           {feature.tags ? (
             <div className={classes.featureTags}>

@@ -69,7 +69,7 @@ const saveFeatureAndHistoryReducer: CaseReducer<FeatureState, SaveFeatureAndHist
 const updateMetadata = (featureState: FeatureState, user: User, build?: string): void => {
   const { selected, executionHistory } = featureState;
   if (selected && executionHistory) {
-    selected.lastEditedOn = new Date();
+    selected.lastEditedOn = new Date().getTime();
     selected.lastEditedBy = user.display;
     const history = build && executionHistory.find(ex => ex.build === build);
     if (history) {

@@ -86,13 +86,13 @@ const createScenario = (data: ScenarioResponseData): Scenario => {
 };
 
 // TODO We shouldn't need this but it seems we have some varying date representations coming out of the backed.
-const parseLastEditOn = (date?: { $date: string } | string): Date | undefined => {
+const parseLastEditOn = (date?: { $date: string } | string): number | undefined => {
   if (typeof date === 'string') {
-    return new Date(Date.parse(date));
+    return new Date(Date.parse(date)).getTime();
   }
 
   if (typeof date?.$date === 'string') {
-    return new Date(Date.parse(date.$date));
+    return new Date(Date.parse(date.$date)).getTime();
   }
 
   return undefined;
