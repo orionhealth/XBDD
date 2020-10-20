@@ -29,18 +29,18 @@ const BuildList: FC<Props> = ({ product, version, buildList }) => {
 
   return (
     <div className={classes.buildListContainer}>
-      <List>{renderList(pinnedBuildList)}</List>
-      <List>
+      {pinnedBuildList.length !== 0 && <List>{renderList(pinnedBuildList)}</List>}
+      {unpinnedBuildList.length !== 0 && <List>
         {renderList(unpinnedBuildList)}
         {isExpandable && (
-          <ListItem button divider className={classes.buildListItem} onClick={(): void => setExpanded(!expanded)}>
+          <ListItem button divider onClick={(): void => setExpanded(!expanded)}>
             <ListItemIcon className={classes.arrowIcon}>
               <FontAwesomeIcon icon={expanded ? faAngleDoubleUp : faAngleDoubleDown} />
             </ListItemIcon>
             <ListItemText>{expanded ? t('summary.showLess') : t('summary.showMore')}</ListItemText>
           </ListItem>
         )}
-      </List>
+      </List>}
     </div>
   );
 };
