@@ -19,7 +19,7 @@ XBDD is laid out via three docker images:
 - Frontend
 - Mongo
 
-Each of these is their own top level directory and can be customised, rebuilt and re-deployed.
+Each of these is their own top level directory and can be customised, rebuilt and re-deployed independently.
 
 ## Customising /backend
 
@@ -37,6 +37,8 @@ The following login options are available:
 
 ### LDAP authentication
 TODO
+
+Default user is test/test
 
 ### Github authentication
 TODO
