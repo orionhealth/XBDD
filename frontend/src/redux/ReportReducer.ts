@@ -135,11 +135,11 @@ export const updateFavouriteStatusWithRollback = (product: string, isFavourite: 
   const user = state.user;
 
   if (user) {
-    isFavourite
-      ? setProductFavouriteOff(product)
-      : setProductFavouriteOn(product).then(response => {
-          rollbackOnFail(response, dispatch, state.report);
-        });
+    const setProductFavourite = isFavourite ? setProductFavouriteOff : setProductFavouriteOn;
+
+    setProductFavourite(product).then(response => {
+      rollbackOnFail(response, dispatch, state.report);
+    });
 
     dispatch(updateFavouriteStatus({ product, isFavourite }));
   }
@@ -153,11 +153,11 @@ export const updatePinStatusWithRollback = (product: string, version: string, bu
   const user = state.user;
 
   if (user) {
-    isPinned
-      ? unPinABuild(product, version, build)
-      : pinABuild(product, version, build).then(response => {
-          rollbackOnFail(response, dispatch, state.report);
-        });
+    const setBuildPinStatus = isPinned ? unPinABuild : pinABuild;
+
+    setBuildPinStatus(product, version, build).then(response => {
+      rollbackOnFail(response, dispatch, state.report);
+    });
 
     dispatch(updatePinStatus({ product, version, build, isPinned }));
   }
