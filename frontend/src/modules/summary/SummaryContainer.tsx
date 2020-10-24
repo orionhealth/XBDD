@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { Grid, Card } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
-import ProductListContainer from './productList/ProductListContainer';
+import ProductList from './productList/ProductList';
 import { useSummaryStyles } from './styles/SummaryStyles';
 import Loading from 'modules/loading/Loading';
 import { LoggedInUser } from 'models/User';
@@ -15,13 +15,7 @@ interface Props {
 }
 
 const renderList = (productList: Product[], title: string) => {
-  return (
-    productList && (
-      <Card raised>
-        <ProductListContainer list={productList} title={title} />
-      </Card>
-    )
-  );
+  return productList && <ProductList list={productList} title={title} />;
 };
 
 const SummaryContainer: FC<Props> = ({ user }) => {
@@ -37,16 +31,14 @@ const SummaryContainer: FC<Props> = ({ user }) => {
   return (
     <>
       <Loading loading={!productList} />
-      <Card elevation={0}>
-        <Grid container>
-          <Grid item xs={6} className={classes.productListContainer}>
-            {productList && renderList(productList, t('summary.productList'))}
-          </Grid>
-          <Grid item xs={6} className={classes.productListContainer}>
-            {favouriteList && renderList(favouriteList, t('summary.favourites'))}
-          </Grid>
+      <Grid container>
+        <Grid item xs={6} className={classes.productListContainer}>
+          {productList && renderList(productList, t('summary.productList'))}
         </Grid>
-      </Card>
+        <Grid item xs={6} className={classes.productListContainer}>
+          {favouriteList && renderList(favouriteList, t('summary.favourites'))}
+        </Grid>
+      </Grid>
     </>
   );
 };
