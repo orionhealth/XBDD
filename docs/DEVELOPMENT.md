@@ -16,11 +16,11 @@ http://localhost:27017
 ### Registering a Github OAuth App
 
 1. Go to https://github.com/settings/developers and register a new OAuth application
-1. Call the application xbdd-{your-github-user-id}
-1. For the homepage url use http://localhost:3000
-1. For the redirect url use http://localhost:3000/redirect
-1. In frontend/.env.development paste in your app's client id into REACT_APP_GITHUB_CLIENT_ID.
-1. In backend/src/main/resources/application-dev.yml paste in your app's client id and secret into github.client.id and github.client.secret respectively.
+1. Call the `application xbdd-{your-github-user-id}`
+1. For the homepage url, use `http://localhost:3000`
+1. For the redirect url, use `http://localhost:3000/redirect`
+1. In `frontend/.env.development`, add `REACT_APP_GITHUB_CLIENT_ID={your-app-client-id}`.
+1. In `backend/src/main/resources/application-dev.yml` paste in your app's client id and secret into `github.client-id` and `github.client-secret` respectively.
 
 ### OPTIONAL - Setup SSL Certificates
 
@@ -30,7 +30,7 @@ It is possible to run the dev environment using https. If you need to do so, in 
 HTTPS=true
 ```
 
-Then you need to enable the backend server to run SSL, to do that
+Then you need to enable the backend server to run SSL. To do that:
 
 1. Enable the block beginning with `server` in the `application-dev.yml`;
 
