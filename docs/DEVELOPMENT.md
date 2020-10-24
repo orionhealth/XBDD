@@ -7,7 +7,7 @@
 
 ### Setup MongoDB for a dev environment
 
-1. Build the docker mongo image with `docker build -t xbdd_mongo_dev mongo`
+1. From the base directory, build the Mongo docker image via `docker build -t xbdd_mongo_dev mongo`
 1. Start the docker container with `docker run -p=27017:27017 --name xbdd_mongo_dev -d xbdd_mongo_dev`
 
 This will give you a docker container named xbdd_mongo_dev which is accessible at
