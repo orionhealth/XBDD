@@ -1,47 +1,24 @@
 import React, { FC, ReactNode } from 'react';
-import { Dialog, DialogTitle, DialogContent, Button, DialogActions, makeStyles } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Button, DialogActions, TextField } from '@material-ui/core';
 import { GitHub, Android } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
+import { useLoginDialogStyles } from './styles/LoginDialogStyles';
 
 interface Props {
   open: boolean;
   onClose(): void;
 }
 
-const useStyles = makeStyles({
-  loginButtons: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-
-  loginButton: {
-    marginBottom: '20px',
-  },
-
-  usernamePasswordLabel: {
-    width: '100px',
-    display: 'inline-block',
-  },
-});
-
 const UsernamePasswordForm: FC = () => {
-  const styles = useStyles();
+  const classes = useLoginDialogStyles();
+  const { t } = useTranslation();
+
   return (
-    <form className="form-signin" method="post" action={`${process.env.REACT_APP_BACKEND_HOST}/login`}>
-      <p>
-        <label htmlFor="username" className={styles.usernamePasswordLabel}>
-          Username
-        </label>
-        <input type="text" id="username" name="username" className="form-control" placeholder="Username" required />
-      </p>
-      <p>
-        <label htmlFor="password" className={styles.usernamePasswordLabel}>
-          Password
-        </label>
-        <input type="password" id="password" name="password" className="form-control" placeholder="Password" required />
-      </p>
-      <Button className={styles.loginButton} variant="contained" type="submit">
-        Sign in
+    <form className={classes.columnDisplay} method="post" action={`${process.env.REACT_APP_BACKEND_HOST}/login`}>
+      <TextField label="Username" name="username" variant="outlined" required className={classes.textField} />
+      <TextField label="Password" name="password" variant="outlined" type="password" required className={classes.textField} />
+      <Button className={classes.loginButton} variant="contained" type="submit">
+        {t('navbar.signin')}
       </Button>
     </form>
   );
@@ -54,12 +31,12 @@ interface OAuthButtonProps {
 }
 
 const OAuthButton: FC<OAuthButtonProps> = ({ provider, icon, label }) => {
-  const styles = useStyles();
+  const classes = useLoginDialogStyles();
   return (
     <Button
       href={`${process.env.REACT_APP_BACKEND_HOST}/oauth2/authorization/${provider}`}
       variant="contained"
-      className={styles.loginButton}
+      className={classes.loginButton}
       startIcon={icon}
     >
       {label}
@@ -68,14 +45,14 @@ const OAuthButton: FC<OAuthButtonProps> = ({ provider, icon, label }) => {
 };
 
 const LoginDialog: FC<Props> = ({ open, onClose }) => {
-  const styles = useStyles();
+  const classes = useLoginDialogStyles();
   const { t } = useTranslation();
 
   // TODO - add more buttons below and/or make dynamic based on registered providers.
   return (
     <Dialog open={open} onEscapeKeyDown={onClose} onBackdropClick={onClose}>
       <DialogTitle>{t('navbar.loginToXbdd')}</DialogTitle>
-      <DialogContent className={styles.loginButtons}>
+      <DialogContent className={classes.columnDisplay}>
         <UsernamePasswordForm />
         <OAuthButton provider="github" icon={<GitHub />} label={t('navbar.loginWithGithub')} />
         <OAuthButton provider="google" icon={<Android />} label={t('navbar.loginWithGoogle')} />
