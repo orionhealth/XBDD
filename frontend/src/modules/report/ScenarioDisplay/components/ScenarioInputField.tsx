@@ -1,4 +1,4 @@
-import React, { FC, ChangeEvent, useState } from 'react';
+import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
@@ -15,6 +15,8 @@ interface Props extends WithStyles {
 const ScenarioInputField: FC<Props> = ({ scenarioId, label, content, classes }) => {
   const [text, setText] = useState(content);
   const dispatch = useDispatch();
+
+  useEffect(() => setText(content), [content]);
 
   const labelMap = {
     Environment: 'environmentNotes',
