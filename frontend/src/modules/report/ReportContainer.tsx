@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { Grid, Card } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { reportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
@@ -9,7 +9,6 @@ import ScenarioDisplay from './ScenarioDisplay/ScenarioDisplay';
 import FeatureSummary from './FeatureSummary/FeatureSummary';
 import { LoggedInUser } from 'models/User';
 import { RootStore } from 'rootReducer';
-import { updateReportIdentifier } from 'redux/ReportReducer';
 
 interface Props extends WithStyles {
   user: LoggedInUser;
@@ -21,11 +20,6 @@ interface Props extends WithStyles {
 const ReportContainer: FC<Props> = ({ user, productId, versionString, build, classes }) => {
   const selectedFeature = useSelector((state: RootStore) => state.feature.selected);
   const executionHistory = useSelector((state: RootStore) => state.feature.executionHistory);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(updateReportIdentifier(productId, versionString, build));
-  });
 
   if (!user) {
     return null;

@@ -73,14 +73,6 @@ class FeatureListContainer extends Component<Props, State> {
     dispatchFetchTagsMetadata(productId, versionString, build);
   }
 
-  componentDidUpdate(prevProps: Props): void {
-    const { productId, versionString, build, dispatchFetchIndexes, dispatchFetchTagsMetadata } = this.props;
-    if (prevProps.productId !== productId || prevProps.versionString !== versionString || prevProps.build !== build) {
-      dispatchFetchIndexes(productId, versionString, build);
-      dispatchFetchTagsMetadata(productId, versionString, build);
-    }
-  }
-
   handleViewSwitch = (): void => {
     this.setState(prevState => ({ ...prevState, isTagView: !prevState.isTagView }));
   };
