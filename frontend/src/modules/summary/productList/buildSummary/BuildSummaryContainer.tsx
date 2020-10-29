@@ -1,13 +1,13 @@
 import React, { FC, ReactNode } from 'react';
 import { FormControl, InputLabel, Select, MenuItem, OutlinedInput, Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
 import Version, { getString } from 'models/Version';
 import { useBuildListStyles } from './styles/BuildSummaryStyles';
 import BuildList from './buildList/BuildList';
 import Product from 'models/Product';
 import { selectVersion } from 'redux/ReportReducer';
-import { useDispatch } from 'react-redux';
 
 const buildVersionList = (version: Version): ReactNode => {
   const versionString = getString(version);

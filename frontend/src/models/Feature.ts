@@ -9,7 +9,7 @@ export interface SimpleFeature {
   tags: SimpleTag[];
   calculatedStatus: Status;
 }
-interface Feature extends SimpleFeature{
+interface Feature extends SimpleFeature {
   description: string;
   keyword: string;
   originalAutomatedStatus: Status;

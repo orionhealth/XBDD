@@ -1,5 +1,4 @@
 import React, { FC, MouseEvent, useState } from 'react';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { ListItem, ListItemText, Collapse } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,7 +7,7 @@ import { faSquare } from '@fortawesome/free-regular-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { tagListItemStyles } from './styles/TagListStyles';
+import { useTagListItemStyles } from './styles/TagListStyles';
 import TagViewFeatureList from './TagViewFeatureList';
 import Tag from 'models/Tag';
 import { StatusMap } from 'models/Status';
@@ -18,7 +17,7 @@ import { ignoreTagWithRollback, assignUserToTagWithRollback } from 'redux/TagsMe
 import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog';
 import { RootStore } from 'rootReducer';
 
-interface Props extends WithStyles {
+interface Props {
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tag: Tag;
@@ -27,13 +26,14 @@ interface Props extends WithStyles {
   selectedStatus: StatusMap<boolean>;
 }
 
-const TagListItem: FC<Props> = ({ isEditMode, isAssignedTagsView, tag, tagAssignments, selectedFeatureId, selectedStatus, classes }) => {
+const TagListItem: FC<Props> = ({ isEditMode, isAssignedTagsView, tag, tagAssignments, selectedFeatureId, selectedStatus }) => {
   const [expanded, setExpanded] = useState(false);
   const [warningOpen, setWarningOpen] = useState(false);
   const user = useSelector((state: RootStore) => state.user);
   const isIgnored = useSelector((state: RootStore) => Boolean(state.tags.ignored?.[tag.name]));
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const classes = useTagListItemStyles();
 
   if (!user) {
     return null;
@@ -89,4 +89,4 @@ const TagListItem: FC<Props> = ({ isEditMode, isAssignedTagsView, tag, tagAssign
   );
 };
 
-export default withStyles(tagListItemStyles)(TagListItem);
+export default TagListItem;

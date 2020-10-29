@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 import ProductList from './productList/ProductList';
 import { useSummaryStyles } from './styles/SummaryStyles';
 import Loading from 'modules/loading/Loading';
 import { LoggedInUser } from 'models/User';
-import { useSelector } from 'react-redux';
 import { RootStore } from 'rootReducer';
 import Product from 'models/Product';
 
@@ -14,7 +14,7 @@ interface Props {
   user: LoggedInUser;
 }
 
-const renderList = (productList: Product[], title: string) => {
+const renderList = (productList: Product[], title: string): ReactNode => {
   return productList && <ProductList list={productList} title={title} />;
 };
 

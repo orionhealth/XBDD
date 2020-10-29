@@ -8,7 +8,7 @@ interface ResponseData {
   display: string;
   socialLogin?: string;
   loginType: string;
-  favourites?: any;
+  favourites?: Record<string, boolean>;
 }
 
 export const getAvatarUrl = (loginType: string, socialLogin?: string): string | undefined => {
@@ -18,12 +18,12 @@ export const getAvatarUrl = (loginType: string, socialLogin?: string): string | 
 };
 
 /* eslint-disable @typescript-eslint/camelcase */
-const createUser = ({ user_id, display, socialLogin, loginType, favourites }: ResponseData): LoggedInUser => ({
-  userId: user_id,
-  display,
-  socialLogin,
-  avatarUrl: getAvatarUrl(loginType, socialLogin),
-  favourites,
+const createUser = (responseData: ResponseData): LoggedInUser => ({
+  userId: responseData.user_id,
+  display: responseData.display,
+  socialLogin: responseData.socialLogin,
+  avatarUrl: getAvatarUrl(responseData.loginType, responseData.socialLogin),
+  favourites: responseData.favourites,
 });
 
 export const fetchLoggedInUser = async (): Promise<LoggedInUser | void> => {

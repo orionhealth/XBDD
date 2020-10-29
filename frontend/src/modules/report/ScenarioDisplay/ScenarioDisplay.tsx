@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 
 import Scenario from 'models/Scenario';
 import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
-import useScenarioDisplayStyles from './styles/ScenarioDisplayStyles';
+import { useScenarioDisplayStyles } from './styles/ScenarioDisplayStyles';
 import StatusIcons from '../FeatureSummary/StatusIcons';
 import ScenarioStep from './components/ScenarioStep';
 import ScenarioInputField from './components/ScenarioInputField';
@@ -44,9 +44,9 @@ const ScenarioDisplay: FC<Props> = ({ scenario }) => {
     className += ` ${classesMap[originalAutomatedStatus]}`;
   }
 
-  const buttonClasses = statusClass => `${classes.buttonForAllSteps} ${statusClass}`;
+  const buttonClasses = (statusClass: string): string => `${classes.buttonForAllSteps} ${statusClass}`;
 
-  const renderButton = (status: Status, classes: string, text: String): ReactNode => (
+  const renderButton = (status: Status, classes: string, text: string): ReactNode => (
     <Button
       variant="contained"
       size="small"

@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from '@material-ui/core';
 
-const useScenarioDisplayStyles = makeStyles(() =>
+export const useScenarioDisplayStyles = makeStyles(() =>
   createStyles({
     scenarioListItem: {
       textAlign: 'left',
@@ -44,5 +44,3 @@ const useScenarioDisplayStyles = makeStyles(() =>
     },
   })
 );
-
-export default useScenarioDisplayStyles;

@@ -205,7 +205,7 @@ export const selectFeature = (featureId: string) => async (dispatch: StoreDispat
   }
 };
 
-const rollbackOnFail = (response: any, dispatch: StoreDispatch, featureState: FeatureState): void => {
+const rollbackOnFail = (response: Response | void, dispatch: StoreDispatch, featureState: FeatureState): void => {
   if (!response || !response.ok) {
     dispatch(saveFeatureAndHistory(featureState));
   }

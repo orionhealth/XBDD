@@ -2,18 +2,18 @@ import React, { FC } from 'react';
 import { Forward } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 
-import { statusIconStyles } from './styles/FeatureSummaryStyles';
+import { useStatusIconStyles } from './styles/FeatureSummaryStyles';
 
-interface Props extends WithStyles<typeof statusIconStyles> {
+interface Props {
   firstStatus: string;
   secondStatus: string;
   size?: string;
 }
 
 const StatusIcons: FC<Props> = props => {
-  const { firstStatus, secondStatus, size, classes } = props;
+  const classes = useStatusIconStyles();
+  const { firstStatus, secondStatus, size } = props;
   let sizeClasses = classes.bigIcons;
   if (size === 'small') {
     sizeClasses = classes.smallIcons;
@@ -35,4 +35,4 @@ const StatusIcons: FC<Props> = props => {
   );
 };
 
-export default withStyles(statusIconStyles)(StatusIcons);
+export default StatusIcons;

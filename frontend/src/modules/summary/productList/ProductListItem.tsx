@@ -4,12 +4,12 @@ import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import { useDispatch } from 'react-redux';
 
 import { useProductListStyles } from './styles/ProductListStyles';
 import BuildSummaryContainer from './buildSummary/BuildSummaryContainer';
 import Product from 'models/Product';
 import Version from 'models/Version';
-import { useDispatch } from 'react-redux';
 import { updateFavouriteStatusWithRollback } from 'redux/ReportReducer';
 
 interface Props {
