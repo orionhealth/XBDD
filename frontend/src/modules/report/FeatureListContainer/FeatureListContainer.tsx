@@ -179,7 +179,7 @@ class FeatureListContainer extends Component<Props, State> {
       <>
         <Loading loading={loading} />
         <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
-        <div className={classes.xbddTagListContainer}>
+        <div className={classes.tagListContainer}>
           {this.renderFeatureListTitle()}
           {this.renderFeatureList(selectedFeatureId)}
         </div>

@@ -73,7 +73,7 @@ export const assignUserToTagWithRollback = (tag: string, currentlyAssignedUser?:
     const { product, version, build } = reportIdentifier;
     const setTagAssignmentData = newUser ? assignTagToLoggedInUser : unAssignTag;
 
-    setTagAssignmentData(product, version, build, tag).then(response => {
+    setTagAssignmentData(product, version, build, tag).then((response: any) => {
       if (!response || !response.ok) {
         dispatch(assignUserToTag({ tagName: tag, user: currentlyAssignedUser }));
       }
@@ -88,7 +88,7 @@ export const ignoreTagWithRollback = (tagName: string) => (dispatch: StoreDispat
   const reportIdentifier = state.report.currentReportId;
   if (reportIdentifier) {
     const { product } = reportIdentifier;
-    setIgnoredTag(product, { tagName: tagName }).then(response => {
+    setIgnoredTag(product, { tagName: tagName }).then((response: any) => {
       if (!response || !response.ok) {
         dispatch(tagIgnoreToggled(tagName));
       }
