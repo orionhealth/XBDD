@@ -3,6 +3,7 @@ import FetchSimpleFeaturesByTagsTypes from './generated/FetchSimpleFeaturesByTag
 import FetchSimpleFeaturesTypes from './generated/FetchSimpleFeaturesTypes';
 import Tag from 'models/Tag';
 import { createSimpleFeatures, SimpleFeatureResponseData } from './FetchSimpleFeatures';
+import { getEncodedURI } from 'lib/rest/URIHelper';
 
 interface ResponseDataElement {
   tag: string;
@@ -17,19 +18,19 @@ const createTag = (data: ResponseDataElement): Tag => {
   };
 };
 
-const createTagViewData = (data: ResponseData): Tag[] => {
+const createTags = (data: ResponseData): Tag[] => {
   return data.map(item => createTag(item));
 };
 
 const fetchSimpleFeaturesByTags = async (product: string, version: string, build: string): Promise<Tag[] | void> => {
-  const url = `/rest/tagview/featureTagIndex/${product}/${version}/${build}`;
+  const url = `/rest/tagview/featureTagIndex/${getEncodedURI(product, version, build)}`;
   return doRequest(
     Method.GET,
     url,
     'rest.error.featuresByTag',
     null,
     [FetchSimpleFeaturesTypes, FetchSimpleFeaturesByTagsTypes],
-    createTagViewData
+    createTags
   );
 };
 

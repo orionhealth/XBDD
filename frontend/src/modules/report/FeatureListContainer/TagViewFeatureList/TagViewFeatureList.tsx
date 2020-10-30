@@ -5,17 +5,15 @@ import { useDispatch } from 'react-redux';
 
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
-import SimpleFeature from 'models/SimpleFeature';
+import { SimpleFeature } from 'models/Feature';
 import { selectFeature } from 'redux/FeatureReducer';
 
 interface Props extends WithStyles {
-  productId: string;
-  versionString: string;
   selectedFeatureId?: string;
   featureList: SimpleFeature[];
 }
 
-const TagViewFeatureList: FC<Props> = ({ productId, versionString, selectedFeatureId, featureList, classes }) => {
+const TagViewFeatureList: FC<Props> = ({ selectedFeatureId, featureList, classes }) => {
   const classesMap: StatusMap<string> = {
     [Passed]: classes.itemPassed,
     [Failed]: classes.itemFailed,
@@ -37,7 +35,7 @@ const TagViewFeatureList: FC<Props> = ({ productId, versionString, selectedFeatu
         key={feature._id}
         className={className}
         onClick={(): void => {
-          dispatch(selectFeature(productId, versionString, feature));
+          dispatch(selectFeature(feature.id));
         }}
       >
         {feature.name}

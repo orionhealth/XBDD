@@ -23,6 +23,10 @@ export const StepResponseData = t.iface([], {
   embeddings: t.opt(t.array('string')),
 });
 
+export const SimpleTagResponseData = t.iface([], {
+  name: 'string',
+});
+
 export const ScenarioResponseData = t.iface([], {
   id: 'string',
   name: 'string',
@@ -51,16 +55,13 @@ export const ResponseData = t.iface([], {
       'string'
     )
   ),
-  tags: t.array(
-    t.iface([], {
-      name: 'string',
-    })
-  ),
+  tags: t.array('SimpleTagResponseData'),
   elements: t.array('ScenarioResponseData'),
 });
 
 const exportedTypeSuite: t.ITypeSuite = {
   StepResponseData,
+  SimpleTagResponseData,
   ScenarioResponseData,
   ResponseData,
 };

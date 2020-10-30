@@ -2,15 +2,17 @@ import Scenario from './Scenario';
 import Status from './Status';
 import { SimpleTag } from './Tag';
 
-interface Feature {
+export interface SimpleFeature {
   id: string;
   _id: string;
   name: string;
+  tags: SimpleTag[];
+  calculatedStatus: Status;
+}
+interface Feature extends SimpleFeature{
   description: string;
   keyword: string;
-  calculatedStatus: Status;
   originalAutomatedStatus: Status;
-  tags: SimpleTag[];
   scenarios: Scenario[];
   lastEditedOn?: Date;
   lastEditedBy?: string;

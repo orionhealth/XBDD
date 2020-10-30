@@ -5,18 +5,16 @@ import { useDispatch } from 'react-redux';
 
 import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
 import { StatusMap, Passed, Skipped, Failed, Undefined } from 'models/Status';
-import SimpleFeature from 'models/SimpleFeature';
+import { SimpleFeature } from 'models/Feature';
 import { selectFeature } from 'redux/FeatureReducer';
 
 interface Props extends WithStyles {
-  productId: string;
-  versionString: string;
   featureList: SimpleFeature[];
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
 }
 
-const ListViewFeatureList: FC<Props> = ({ productId, versionString, featureList, selectedFeatureId, selectedStatus, classes }) => {
+const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, selectedStatus, classes }) => {
   const dispatch = useDispatch();
   const filterFeatureList = featureList.filter(feature => selectedStatus[feature.calculatedStatus]);
 
@@ -39,7 +37,7 @@ const ListViewFeatureList: FC<Props> = ({ productId, versionString, featureList,
             key={feature._id}
             className={getItemClasses(feature, classesMap[feature.calculatedStatus])}
             onClick={(): void => {
-              dispatch(selectFeature(productId, versionString, feature));
+              dispatch(selectFeature(feature.id));
             }}
           >
             <span className={classesMap[feature.calculatedStatus]}>{feature.name + ' '}</span>

@@ -19,10 +19,9 @@ interface StepChange {
 
 interface Props {
   scenario: Scenario;
-  build: string;
 }
 
-const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
+const ScenarioDisplay: FC<Props> = ({ scenario }) => {
   const [expanded, setExpanded] = useState(false);
   const dispatch = useDispatch();
   const classes = useScenarioDisplayStyles();
@@ -52,7 +51,7 @@ const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
       variant="contained"
       size="small"
       onClick={(): void => {
-        dispatch(updateScenarioStatusWithRollback(scenario.id, status, build));
+        dispatch(updateScenarioStatusWithRollback(scenario.id, status));
       }}
       className={classes}
     >
@@ -79,12 +78,10 @@ const ScenarioDisplay: FC<Props> = ({ scenario, build }) => {
       <ExpansionPanelDetails>
         <Grid container>
           <Grid item xs={11}>
-            {backgroundSteps && (
-              <ScenarioStep title={t('report.backgroundSteps')} steps={backgroundSteps} scenarioId={scenario.id} build={build} />
-            )}
+            {backgroundSteps && <ScenarioStep title={t('report.backgroundSteps')} steps={backgroundSteps} scenarioId={scenario.id} />}
           </Grid>
           <Grid item xs={11}>
-            {steps && <ScenarioStep title={t('report.steps')} steps={steps} scenarioId={scenario.id} build={build} />}
+            {steps && <ScenarioStep title={t('report.steps')} steps={steps} scenarioId={scenario.id} />}
           </Grid>
           <Grid item xs={5}>
             <ScenarioInputField scenarioId={scenario.id} label={t('report.environment')} content={environmentNotes} />

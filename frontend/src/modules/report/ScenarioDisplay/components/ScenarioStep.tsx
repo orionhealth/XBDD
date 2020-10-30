@@ -18,10 +18,9 @@ interface Props extends WithStyles {
   title: string;
   steps: Step[];
   scenarioId: string;
-  build: string;
 }
 
-const ScenarioStep: FC<Props> = ({ scenarioId, build, title, steps, classes }) => {
+const ScenarioStep: FC<Props> = ({ scenarioId, title, steps, classes }) => {
   const iconMap: StatusMap<ReactNode> = {
     [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
     [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
@@ -43,7 +42,7 @@ const ScenarioStep: FC<Props> = ({ scenarioId, build, title, steps, classes }) =
 
     const status = newStatus ? newStatus : nextStatus[prevStatus];
 
-    dispatch(updateStepStatusWithRollback(scenarioId, stepId, status, build));
+    dispatch(updateStepStatusWithRollback(scenarioId, stepId, status));
   };
 
   return (

@@ -1,6 +1,7 @@
 import { Method, doRequest } from 'lib/rest/RestRequests';
 import FetchLoggedInUserTypes from './generated/FetchLoggedInUserTypes';
 import { LoggedInUser } from 'models/User';
+import { getEncodedURI } from 'lib/rest/URIHelper';
 
 interface ResponseData {
   user_id: string;
@@ -12,7 +13,7 @@ interface ResponseData {
 
 export const getAvatarUrl = (loginType: string, socialLogin?: string): string | undefined => {
   if (socialLogin && loginType === 'GITHUB') {
-    return `https://github.com/${socialLogin}.png`;
+    return `https://github.com/${getEncodedURI(socialLogin)}.png`;
   }
 };
 

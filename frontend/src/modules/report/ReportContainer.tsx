@@ -12,12 +12,9 @@ import { RootStore } from 'rootReducer';
 
 interface Props extends WithStyles {
   user: LoggedInUser;
-  productId: string;
-  versionString: string;
-  build: string;
 }
 
-const ReportContainer: FC<Props> = ({ user, productId, versionString, build, classes }) => {
+const ReportContainer: FC<Props> = ({ user, classes }) => {
   const selectedFeature = useSelector((state: RootStore) => state.feature.selected);
   const executionHistory = useSelector((state: RootStore) => state.feature.executionHistory);
 
@@ -30,20 +27,14 @@ const ReportContainer: FC<Props> = ({ user, productId, versionString, build, cla
       <Card elevation={0}>
         <Grid container>
           <Grid item xs={4} lg={4}>
-            <FeatureListContainer
-              user={user}
-              productId={productId}
-              versionString={versionString}
-              build={build}
-              selectedFeatureId={selectedFeature?._id}
-            />
+            <FeatureListContainer user={user} selectedFeatureId={selectedFeature?._id} />
           </Grid>
           <Grid item xs={8} lg={8}>
             {selectedFeature && executionHistory && (
               <div className={classes.scenarioList}>
                 <FeatureSummary feature={selectedFeature} executionHistory={executionHistory} />
                 {selectedFeature.scenarios.map(scenario => (
-                  <ScenarioDisplay key={scenario.id} scenario={scenario} build={build} />
+                  <ScenarioDisplay key={scenario.id} scenario={scenario} />
                 ))}
               </div>
             )}

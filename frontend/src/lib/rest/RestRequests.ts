@@ -58,14 +58,7 @@ const handleError = (error: Error, path: string, message: string): void => {
 };
 
 export function doRequest<T>(method: Method, path: string, errorMessage: string, data: unknown): Promise<T | void>;
-export function doRequest<T, R>(
-  method: Method,
-  path: string,
-  errorMessage: string,
-  data: unknown,
-  type: ITypeSuite | ITypeSuite[],
-  onSuccess: (responseData: T) => R
-): Promise<R | void>;
+
 export function doRequest<T, R>(
   method: Method,
   path: string,

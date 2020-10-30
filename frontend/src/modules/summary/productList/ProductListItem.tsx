@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, ChangeEvent, useState } from 'react';
+import React, { FC, MouseEvent, useState } from 'react';
 import { Checkbox, ListItem, ListItemText, ListItemIcon, Collapse } from '@material-ui/core';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
@@ -10,16 +10,16 @@ import { useProductListStyles } from './styles/ProductListStyles';
 import BuildSummaryContainer from './buildSummary/BuildSummaryContainer';
 import Product from 'models/Product';
 import Version from 'models/Version';
+import { useDispatch } from 'react-redux';
+import { updateFavouriteStatusWithRollback } from 'redux/ReportReducer';
 
 interface Props {
   product: Product;
   version: Version;
-  handleFavouriteChange(product: Product): void;
-  handleVersionSelected(event: ChangeEvent<unknown>, product: Product): void;
-  handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
 }
 
-const ProductListItem: FC<Props> = ({ product, version, handleFavouriteChange, handleVersionSelected, handlePinChange }) => {
+const ProductListItem: FC<Props> = ({ product, version }) => {
+  const dispatch = useDispatch();
   const classes = useProductListStyles();
   const [expanded, setExpanded] = useState(false);
 
@@ -28,7 +28,7 @@ const ProductListItem: FC<Props> = ({ product, version, handleFavouriteChange, h
 
     while (node && node instanceof Element) {
       if (node.className === 'MuiIconButton-label') {
-        handleFavouriteChange(product);
+        dispatch(updateFavouriteStatusWithRollback(product.name, product.favourite));
         return;
       }
       if (node.parentNode instanceof Element) {
@@ -50,12 +50,7 @@ const ProductListItem: FC<Props> = ({ product, version, handleFavouriteChange, h
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <BuildSummaryContainer
-          product={product}
-          version={version}
-          handleVersionSelected={handleVersionSelected}
-          handlePinChange={handlePinChange}
-        />
+        <BuildSummaryContainer product={product} version={version} />
       </Collapse>
     </>
   );
