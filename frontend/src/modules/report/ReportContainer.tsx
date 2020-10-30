@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Grid, Card } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 
@@ -23,25 +23,21 @@ const ReportContainer: FC<Props> = ({ user, classes }) => {
   }
 
   return (
-    <>
-      <Card elevation={0}>
-        <Grid container>
-          <Grid item xs={4} lg={4}>
-            <FeatureListContainer user={user} selectedFeatureId={selectedFeature?._id} />
-          </Grid>
-          <Grid item xs={8} lg={8}>
-            {selectedFeature && executionHistory && (
-              <div className={classes.scenarioList}>
-                <FeatureSummary feature={selectedFeature} executionHistory={executionHistory} />
-                {selectedFeature.scenarios.map(scenario => (
-                  <ScenarioDisplay key={scenario.id} scenario={scenario} />
-                ))}
-              </div>
-            )}
-          </Grid>
-        </Grid>
-      </Card>
-    </>
+    <Grid container>
+      <Grid item xs={4} lg={4}>
+        <FeatureListContainer user={user} selectedFeatureId={selectedFeature?._id} />
+      </Grid>
+      <Grid item xs={8} lg={8}>
+        {selectedFeature && executionHistory && (
+          <div className={classes.scenarioList}>
+            <FeatureSummary feature={selectedFeature} executionHistory={executionHistory} />
+            {selectedFeature.scenarios.map(scenario => (
+              <ScenarioDisplay key={scenario.id} scenario={scenario} />
+            ))}
+          </div>
+        )}
+      </Grid>
+    </Grid>
   );
 };
 

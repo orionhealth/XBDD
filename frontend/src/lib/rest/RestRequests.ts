@@ -32,7 +32,7 @@ const validateResponseData = (responseData: unknown, type: ITypeSuite | ITypeSui
   createCheckers(...types).ResponseData.check(responseData);
 };
 
-const call = <T>(method: Method, path: string, data: unknown, options?: RequestInit): Promise<T | void> => {
+const call = async <T>(method: Method, path: string, data: unknown, options?: RequestInit): Promise<T | void> => {
   const url = `${backendUrl}${path}`;
   const requestOptions = options || {
     method,
@@ -41,15 +41,15 @@ const call = <T>(method: Method, path: string, data: unknown, options?: RequestI
     body: data ? JSON.stringify(data) : null,
   };
 
-  return timeout(fetch(url, requestOptions)).then(response => {
-    if (!response.ok) {
-      throw new Error(`${response.status} ${response.body}`);
-    }
-    if (response.status === 204) {
-      return null;
-    }
-    return response.text().then(text => (text ? JSON.parse(text) : response));
-  });
+  const response = await timeout(fetch(url, requestOptions));
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.body}`);
+  }
+  if (response.status === 204) {
+    return;
+  }
+  const text = await response.text();
+  return text ? JSON.parse(text) : response;
 };
 
 const handleError = (error: Error, path: string, message: string): void => {
@@ -68,7 +68,7 @@ export function doRequest<T, R>(
   onSuccess: (responseData: T) => R
 ): Promise<R | void>;
 
-export function doRequest<T, R>(
+export async function doRequest<T, R>(
   method: Method,
   path: string,
   errorMessage = `rest.error.${method.toLowerCase()}`,
@@ -76,15 +76,16 @@ export function doRequest<T, R>(
   type?: ITypeSuite | ITypeSuite[],
   onSuccess?: (responseData: T) => R
 ): Promise<T | R | void> {
-  return call<T>(method, path, data)
-    .then((responseData: T | void) => {
-      if (type && responseData) {
-        validateResponseData(responseData, type);
-      }
-      if (onSuccess && responseData) {
-        return onSuccess(responseData);
-      }
-      return responseData;
-    })
-    .catch(error => handleError(error, path, errorMessage));
+  try {
+    const response = await call<T>(method, path, data);
+    if (type && response) {
+      validateResponseData(response, type);
+    }
+    if (onSuccess && response) {
+      return onSuccess(response);
+    }
+    return response;
+  } catch (error) {
+    return handleError(error, path, errorMessage);
+  }
 }
