@@ -8,7 +8,7 @@ interface ResponseData {
   display: string;
   socialLogin?: string;
   loginType: string;
-  favourites?: Record<string, boolean>;
+  favourites?: any;
 }
 
 export const getAvatarUrl = (loginType: string, socialLogin?: string): string | undefined => {
