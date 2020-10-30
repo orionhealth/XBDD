@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from 'react';
 import { FormControl, InputLabel, Select, MenuItem, OutlinedInput, Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
-import Version, { getString, getUnpinnedBuildList } from 'models/Version';
+import Version, { getString } from 'models/Version';
 import { useBuildListStyles } from './styles/BuildSummaryStyles';
 import BuildList from './buildList/BuildList';
 import Product from 'models/Product';
@@ -43,12 +43,7 @@ const BuildSummaryContainer: FC<Props> = ({ product, version }) => {
         </FormControl>
       </Grid>
       <Grid item xs={9}>
-        <BuildList
-          product={product.name}
-          version={getString(version)}
-          pinnedBuildList={version.pinnedBuildList}
-          unpinnedBuildList={getUnpinnedBuildList(version)}
-        />
+        <BuildList product={product.name} version={getString(version)} buildList={version.buildList} />
       </Grid>
     </Grid>
   );

@@ -35,8 +35,8 @@
     "environment": "Environment",
     "executionNotes": "Execution Notes",
     "testingTips": "Testing Tips",
-    "lastEditedOn": "Last edited on {{date, DD/MM/YYYY}}",
-    "lastEditedByOn": "Last edited by {{name}}, {{date, DD/MM/YYYY}}"
+    "lastEditedBy": "Last edited by {{name}}",
+    "lastEditedOn": "Last edited on {{date, DD/MM/YYYY}}"
   },
   "rest": {
     "error": {
@@ -59,7 +59,7 @@
     }
   },
   "summary": {
-    "buildDisplay": "Build {{build}}",
+    "buildDisplay": "Build {{ name }} - {{publishDate, DD/MM/YYYY}}",
     "favourites": "Favourites",
     "productList": "Product List",
     "showLess": "Show less",

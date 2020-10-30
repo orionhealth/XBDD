@@ -81,12 +81,9 @@ const updatePinStatusReducer: CaseReducer<ReportState, UpdatePinStatusAction> = 
   const productList = state.productList;
   const productToUpdate = productList?.find(item => item.name === product);
   const versionToUpdate = productToUpdate?.versionList.find(item => getString(item) === version);
-  if (versionToUpdate) {
-    if (isPinned) {
-      versionToUpdate.pinnedBuildList = versionToUpdate.pinnedBuildList.filter(item => item !== build);
-    } else {
-      versionToUpdate.pinnedBuildList.push(build);
-    }
+  const buildToUpdate = versionToUpdate?.buildList.find(item => item.name === build);
+  if (buildToUpdate) {
+    buildToUpdate.isPinned = !isPinned;
   }
   return state;
 };

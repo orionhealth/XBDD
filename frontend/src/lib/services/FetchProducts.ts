@@ -2,11 +2,12 @@ import Product, { productComparator } from 'models/Product';
 import Version, { versionComparator } from 'models/Version';
 import { doRequest, Method } from 'lib/rest/RestRequests';
 import FetchProductsTypes from './generated/FetchProductsTypes';
+import Build from 'models/Build';
 
 interface ResponseDataElement {
   _id: string;
   favourite: boolean;
-  builds: string[];
+  builds: BuildResponseData[];
   pinned?: string[];
   coordinates: {
     product: string;
@@ -15,17 +16,30 @@ interface ResponseDataElement {
     servicePack: number;
   };
 }
+
+interface BuildResponseData {
+  name: string;
+  publishDate: string;
+  isPinned: boolean;
+}
+
 type ResponseData = ResponseDataElement[];
 
+const createBuild = (data: BuildResponseData): Build => {
+  return {
+    name: data.name,
+    publishDate: new Date(data.publishDate).getTime(),
+    isPinned: data.isPinned,
+  };
+};
+
 const createVersion = (data: ResponseDataElement): Version => {
-  const buildList = data.builds.slice().reverse();
   return {
     id: data._id,
     major: data.coordinates.major,
     minor: data.coordinates.minor,
     servicePack: data.coordinates.servicePack,
-    buildList,
-    pinnedBuildList: buildList.filter(build => data.pinned && data.pinned.includes(build)),
+    buildList: data.builds.map(build => createBuild(build)),
   };
 };
 
