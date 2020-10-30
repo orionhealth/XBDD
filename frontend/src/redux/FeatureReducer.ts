@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
 
-import Execution, { createExecutionFromFetchedData } from './../models/Execution';
-import { getRollUpData, updateComment, updateStepPatch, updateAllStepPatch } from 'lib/rest/Rest';
+import Execution from './../models/Execution';
+import { updateComment, updateStepPatch, updateAllStepPatch } from 'lib/rest/Rest';
 import { StoreDispatch, RootStore } from 'rootReducer';
 import Feature, { SimpleFeature } from 'models/Feature';
 import fetchFeature from 'lib/services/FetchFeature';
+import fetchExecutionHistory from 'lib/services/FetchExecutionHistory';
 import { User } from 'models/User';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 import Status from 'models/Status';
@@ -74,7 +75,6 @@ const updateMetadata = (featureState: FeatureState, user: User, build?: string):
     const history = build && executionHistory.find(ex => ex.build === build);
     if (history) {
       history.calculatedStatus = selected.calculatedStatus;
-      history.statusLastEditedBy = selected.lastEditedBy;
     }
   }
 };
@@ -197,15 +197,11 @@ export const selectFeature = (featureId: string) => async (dispatch: StoreDispat
   const reportIdentifier = state.report.currentReportId;
   if (reportIdentifier) {
     const { product, version, build } = reportIdentifier;
-    const selected = await fetchFeature(product, version, build, featureId);
-
-    if (selected) {
-      const rollUp = await getRollUpData(product, version, featureId);
-      if (rollUp) {
-        const executionHistory = rollUp.rollup.map(build => build && createExecutionFromFetchedData(build)).filter(Boolean);
-        dispatch(saveFeatureAndHistory({ selected, executionHistory }));
-      }
-    }
+    const [selected, executionHistory] = await Promise.all([
+      fetchFeature(product, version, build, featureId),
+      fetchExecutionHistory(product, version, featureId),
+    ]);
+    dispatch(saveFeatureAndHistory({ selected: selected || null, executionHistory: executionHistory || null }));
   }
 };
 

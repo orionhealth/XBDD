@@ -10,7 +10,7 @@ const featureListContainerStyles = createStyles({
     color: 'white',
     textAlign: 'left',
   },
-  xbddTagListContainer: {
+  tagListContainer: {
     padding: '12px 24px 24px 24px',
   },
   checkedIcon: {
