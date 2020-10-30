@@ -1,21 +1,22 @@
 import React, { FC } from 'react';
-import { List, ListItem, Card, Chip, WithStyles } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { List, ListItem, Card, Chip } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 
-import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
+import { useFeatureListItemStyles } from '../styles/FeatureListContainerStyles';
 import { StatusMap, Passed, Skipped, Failed, Undefined } from 'models/Status';
 import { SimpleFeature } from 'models/Feature';
 import { selectFeature } from 'redux/FeatureReducer';
 
-interface Props extends WithStyles {
+interface Props {
   featureList: SimpleFeature[];
   selectedFeatureId?: string;
   selectedStatus: StatusMap<boolean>;
 }
 
-const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, selectedStatus, classes }) => {
+const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, selectedStatus }) => {
   const dispatch = useDispatch();
+  const classes = useFeatureListItemStyles();
+
   const filterFeatureList = featureList.filter(feature => selectedStatus[feature.calculatedStatus]);
 
   const classesMap: StatusMap<string> = {
@@ -51,4 +52,4 @@ const ListViewFeatureList: FC<Props> = ({ featureList, selectedFeatureId, select
   );
 };
 
-export default withStyles(featureListItemStyles)(ListViewFeatureList);
+export default ListViewFeatureList;

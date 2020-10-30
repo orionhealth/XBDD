@@ -1,22 +1,23 @@
 import React, { FC } from 'react';
 import { Card, Grid, Typography, Chip } from '@material-ui/core';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 
-import { featureSummaryStyles } from './styles/FeatureSummaryStyles';
+import { useFeatureSummaryStyles } from './styles/FeatureSummaryStyles';
 import ExecutionHistory from './ExecutionHistory';
 import StatusIcons from './StatusIcons';
 import Execution from 'models/Execution';
 import Feature from 'models/Feature';
 import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 
-interface Props extends WithStyles {
+interface Props {
   feature: Feature;
   executionHistory: Execution[];
 }
 
-const FeatureSummary: FC<Props> = ({ feature, executionHistory, classes }) => {
+const FeatureSummary: FC<Props> = ({ feature, executionHistory }) => {
   const { t } = useTranslation();
+  const classes = useFeatureSummaryStyles();
+
   const classesMap: StatusMap<string> = {
     [Passed]: classes.featurePassed,
     [Failed]: classes.featureFailed,
@@ -61,4 +62,4 @@ const FeatureSummary: FC<Props> = ({ feature, executionHistory, classes }) => {
   );
 };
 
-export default withStyles(featureSummaryStyles)(FeatureSummary);
+export default FeatureSummary;

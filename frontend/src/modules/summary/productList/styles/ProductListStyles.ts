@@ -23,6 +23,6 @@ export const useProductListStyles = makeStyles(theme =>
     },
     checkedFavourite: {
       color: red[300],
-    }
+    },
   })
 );

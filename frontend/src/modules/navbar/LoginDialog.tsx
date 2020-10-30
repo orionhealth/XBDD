@@ -2,6 +2,7 @@ import React, { FC, ReactNode } from 'react';
 import { Dialog, DialogTitle, DialogContent, Button, DialogActions, TextField } from '@material-ui/core';
 import { GitHub, Android } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
+
 import { useLoginDialogStyles } from './styles/LoginDialogStyles';
 
 interface Props {

@@ -1,11 +1,11 @@
-import React, { FC, ChangeEvent, useState } from 'react';
+import React, { FC, ChangeEvent, useState, ReactNode } from 'react';
 import { List, Typography, TextField, Grid, Box, Card } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
+import { useSelector } from 'react-redux';
 
 import { useProductListStyles } from './styles/ProductListStyles';
 import ProductListItem from './ProductListItem';
 import Product, { getVersionFromString } from 'models/Product';
-import { useSelector } from 'react-redux';
 import { RootStore } from 'rootReducer';
 
 interface Props {
@@ -24,7 +24,7 @@ const ProductList: FC<Props> = ({ list, title }) => {
 
   const filteredList = searchContent ? list.filter(product => product.name.toLowerCase().includes(searchContent.toLowerCase())) : list;
 
-  const renderTitle = () => (
+  const renderTitle = (): ReactNode => (
     <Box color="primary">
       <Typography variant="h5" className={classes.productListTitle}>
         {title}
@@ -32,7 +32,7 @@ const ProductList: FC<Props> = ({ list, title }) => {
     </Box>
   );
 
-  const renderSearchBar = () => (
+  const renderSearchBar = (): ReactNode => (
     <Grid container spacing={1} className={classes.searchBar}>
       <Grid item>
         <Search />
@@ -43,7 +43,7 @@ const ProductList: FC<Props> = ({ list, title }) => {
     </Grid>
   );
 
-  const renderList = () => (
+  const renderList = (): ReactNode => (
     <List>
       {filteredList.map(product => {
         const selectedVersion: string = selectedVersionMap[product.name];

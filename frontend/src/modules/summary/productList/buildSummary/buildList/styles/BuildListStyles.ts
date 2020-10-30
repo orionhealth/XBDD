@@ -11,10 +11,10 @@ export const useBuildListStyles = makeStyles(() =>
       minWidth: '24px',
     },
     unpinnedBuild: {
-      color: grey[300]
+      color: grey[300],
     },
     pinnedBuild: {
-      color: grey[700]
-    }
+      color: grey[700],
+    },
   })
 );

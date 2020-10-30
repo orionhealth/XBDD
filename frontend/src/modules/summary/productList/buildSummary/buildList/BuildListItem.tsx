@@ -4,10 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
 import { updatePinStatusWithRollback } from 'redux/ReportReducer';
 import { getEncodedURI } from 'lib/rest/URIHelper';
 import { resetFeatureState } from 'redux/FeatureReducer';
-import { useHistory } from 'react-router-dom';
 import Build from 'models/Build';
 import { useBuildListStyles } from './styles/BuildListStyles';
 

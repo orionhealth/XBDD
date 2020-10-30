@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
+
 import { pinABuild, setProductFavouriteOff, setProductFavouriteOn, unPinABuild } from 'lib/rest/Rest';
 import Product from 'models/Product';
 import { RootStore, StoreDispatch } from 'rootReducer';
@@ -118,7 +119,7 @@ export const selectVersion = (product: string, version: string) => (dispatch: St
   dispatch(updateSelectedVersion({ product, version } || []));
 };
 
-const rollbackOnFail = (response: any, dispatch: StoreDispatch, report: ReportState): void => {
+const rollbackOnFail = (response: Response | void, dispatch: StoreDispatch, report: ReportState): void => {
   if (!response || !response.ok) {
     dispatch(updateReport(report));
   }

@@ -39,7 +39,7 @@ const createVersion = (data: ResponseDataElement): Version => {
     major: data.coordinates.major,
     minor: data.coordinates.minor,
     servicePack: data.coordinates.servicePack,
-    buildList: data.builds.map(build => createBuild(build)),
+    buildList: data.builds.map(build => createBuild(build)).reverse(),
   };
 };
 

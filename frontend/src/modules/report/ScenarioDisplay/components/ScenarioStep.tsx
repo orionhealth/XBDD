@@ -3,10 +3,9 @@ import { List, ListItem, Box } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 
-import { stepStyles } from './styles/ScenarioStepStyles';
+import { useStepStyles } from './styles/ScenarioStepStyles';
 import PopperMenu from './PopperMenu';
 import CucumberTable from './CucumberTable';
 import Step from 'models/Step';
@@ -14,21 +13,22 @@ import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/St
 import StepScreenshot from './StepScreenshot';
 import { updateStepStatusWithRollback } from 'redux/FeatureReducer';
 
-interface Props extends WithStyles {
+interface Props {
   title: string;
   steps: Step[];
   scenarioId: string;
 }
 
-const ScenarioStep: FC<Props> = ({ scenarioId, title, steps, classes }) => {
+const ScenarioStep: FC<Props> = ({ scenarioId, title, steps }) => {
+  const classes = useStepStyles();
+  const dispatch = useDispatch();
+
   const iconMap: StatusMap<ReactNode> = {
     [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
     [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
     [Skipped]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusSkipped} ${classes.scenarioStepIcon}`} />,
     [Undefined]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
   };
-
-  const dispatch = useDispatch();
 
   const onStepStatusChange = (event: MouseEvent<HTMLElement>, stepId: number, prevStatus: Status, newStatus: Status | null): void => {
     event.stopPropagation();
@@ -84,4 +84,4 @@ const ScenarioStep: FC<Props> = ({ scenarioId, title, steps, classes }) => {
   );
 };
 
-export default withStyles(stepStyles)(ScenarioStep);
+export default ScenarioStep;

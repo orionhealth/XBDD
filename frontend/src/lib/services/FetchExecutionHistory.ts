@@ -22,7 +22,7 @@ const createExecution = (data: ExecutionResponseData): Execution => {
   };
 };
 
-const createExecutionHistory = (data: ResponseData) => {
+const createExecutionHistory = (data: ResponseData): Execution[] => {
   return data.rollup.map(execution => execution && createExecution(execution)).filter(Boolean);
 };
 

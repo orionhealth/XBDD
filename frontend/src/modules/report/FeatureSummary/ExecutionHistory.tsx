@@ -3,23 +3,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip, Typography, IconButton } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-import { executionHistoryStyles } from './styles/FeatureSummaryStyles';
+import { useExecutionHistoryStyles } from './styles/FeatureSummaryStyles';
 import Execution from 'models/Execution';
 import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
-import { useHistory } from 'react-router-dom';
 import { resetFeatureState } from 'redux/FeatureReducer';
 import { RootStore } from 'rootReducer';
 import { getEncodedURI } from 'lib/rest/URIHelper';
-import { useTranslation } from 'react-i18next';
 
-interface Props extends WithStyles {
+interface Props {
   executionHistory: Execution[];
 }
 
-const ExecutionHistory: FC<Props> = ({ executionHistory, classes }) => {
+const ExecutionHistory: FC<Props> = ({ executionHistory }) => {
   const { t } = useTranslation();
+  const classes = useExecutionHistoryStyles();
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -32,7 +32,7 @@ const ExecutionHistory: FC<Props> = ({ executionHistory, classes }) => {
     [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={classes.featureSkipped} />,
   };
 
-  const navigateToBuild = (build: string) => {
+  const navigateToBuild = (build: string): void => {
     if (!report || report.build === build) {
       return;
     }
@@ -46,7 +46,7 @@ const ExecutionHistory: FC<Props> = ({ executionHistory, classes }) => {
       {executionHistory.map(build => (
         <span key={build.build}>
           <Tooltip title={build.build} placement="top">
-            <IconButton className={classes.executionHistoryIcon} onClick={() => navigateToBuild(build.build)}>
+            <IconButton className={classes.executionHistoryIcon} onClick={(): void => navigateToBuild(build.build)}>
               {iconMap[build.calculatedStatus]}
             </IconButton>
           </Tooltip>
@@ -56,4 +56,4 @@ const ExecutionHistory: FC<Props> = ({ executionHistory, classes }) => {
   );
 };
 
-export default withStyles(executionHistoryStyles)(ExecutionHistory);
+export default ExecutionHistory;

@@ -18,7 +18,7 @@ interface Props {
   user: LoggedInUser;
 }
 
-interface reportIdentifier {
+interface ReportIdentifier {
   productParam: string;
   versionParam: string;
   buildParam: string;
@@ -26,7 +26,7 @@ interface reportIdentifier {
 
 const ReportPage: FC<Props> = ({ user }) => {
   const dispatch = useDispatch();
-  const { productParam, versionParam, buildParam } = useParams<reportIdentifier>();
+  const { productParam, versionParam, buildParam } = useParams<ReportIdentifier>();
   const { product, version, build } = getDecodedIdentifier(productParam, versionParam, buildParam);
   dispatch(updateReportIdentifier(product, version, build));
   dispatch(fetchIndexes());

@@ -1,20 +1,20 @@
 import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 
-import { inputFieldStyles } from './styles/ScenarioStepStyles';
+import { useInputFieldStyles } from './styles/ScenarioStepStyles';
 import { updateCommentWithRollback } from 'redux/FeatureReducer';
 
-interface Props extends WithStyles {
+interface Props {
   scenarioId: string;
   label: string;
   content: string;
 }
 
-const ScenarioInputField: FC<Props> = ({ scenarioId, label, content, classes }) => {
-  const [text, setText] = useState(content);
+const ScenarioInputField: FC<Props> = ({ scenarioId, label, content }) => {
   const dispatch = useDispatch();
+  const classes = useInputFieldStyles();
+  const [text, setText] = useState(content);
 
   useEffect(() => setText(content), [content]);
 
@@ -42,7 +42,6 @@ const ScenarioInputField: FC<Props> = ({ scenarioId, label, content, classes }) 
         onBlur={(): void => {
           dispatch(updateCommentWithRollback(scenarioId, labelMap[label], requestLabelMap[label], text));
         }}
-        className={classes.textField}
         margin="normal"
         variant="outlined"
       />
@@ -50,4 +49,4 @@ const ScenarioInputField: FC<Props> = ({ scenarioId, label, content, classes }) 
   );
 };
 
-export default withStyles(inputFieldStyles)(ScenarioInputField);
+export default ScenarioInputField;
