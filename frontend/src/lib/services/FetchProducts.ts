@@ -4,6 +4,12 @@ import { doRequest, Method } from 'lib/rest/RestRequests';
 import FetchProductsTypes from './generated/FetchProductsTypes';
 import Build from 'models/Build';
 
+interface BuildResponseData {
+  name: string;
+  publishDate: string | null;
+  isPinned: boolean;
+}
+
 interface ResponseDataElement {
   _id: string;
   favourite: boolean;
@@ -17,18 +23,12 @@ interface ResponseDataElement {
   };
 }
 
-interface BuildResponseData {
-  name: string;
-  publishDate: string;
-  isPinned: boolean;
-}
-
 type ResponseData = ResponseDataElement[];
 
 const createBuild = (data: BuildResponseData): Build => {
   return {
     name: data.name,
-    publishDate: new Date(data.publishDate).getTime(),
+    publishDate: data.publishDate ? new Date(data.publishDate).getTime() : null,
     isPinned: data.isPinned,
   };
 };

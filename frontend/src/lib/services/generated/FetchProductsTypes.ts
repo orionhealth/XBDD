@@ -4,6 +4,12 @@
 import * as t from 'ts-interface-checker';
 // tslint:disable:object-literal-key-quotes
 
+export const BuildResponseData = t.iface([], {
+  name: 'string',
+  publishDate: t.union('string', 'null'),
+  isPinned: 'boolean',
+});
+
 export const ResponseDataElement = t.iface([], {
   _id: 'string',
   favourite: 'boolean',
@@ -17,17 +23,11 @@ export const ResponseDataElement = t.iface([], {
   }),
 });
 
-export const BuildResponseData = t.iface([], {
-  name: 'string',
-  publishDate: 'string',
-  isPinned: 'boolean',
-});
-
 export const ResponseData = t.array('ResponseDataElement');
 
 const exportedTypeSuite: t.ITypeSuite = {
-  ResponseDataElement,
   BuildResponseData,
+  ResponseDataElement,
   ResponseData,
 };
 export default exportedTypeSuite;

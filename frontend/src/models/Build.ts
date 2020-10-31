@@ -1,6 +1,6 @@
 interface Build {
   name: string;
-  publishDate: number;
+  publishDate: number | null;
   isPinned: boolean;
 }
 
