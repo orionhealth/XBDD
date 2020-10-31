@@ -1,21 +1,21 @@
 import React, { FC, ReactNode } from 'react';
 import { List, ListItem } from '@material-ui/core';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 
-import { featureListItemStyles } from '../styles/FeatureListContainerStyles';
+import { useFeatureListItemStyles } from '../styles/FeatureListContainerStyles';
 import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
-import SimpleFeature from 'models/SimpleFeature';
+import { SimpleFeature } from 'models/Feature';
 import { selectFeature } from 'redux/FeatureReducer';
 
-interface Props extends WithStyles {
-  productId: string;
-  versionString: string;
+interface Props {
   selectedFeatureId?: string;
   featureList: SimpleFeature[];
 }
 
-const TagViewFeatureList: FC<Props> = ({ productId, versionString, selectedFeatureId, featureList, classes }) => {
+const TagViewFeatureList: FC<Props> = ({ selectedFeatureId, featureList }) => {
+  const dispatch = useDispatch();
+  const classes = useFeatureListItemStyles();
+
   const classesMap: StatusMap<string> = {
     [Passed]: classes.itemPassed,
     [Failed]: classes.itemFailed,
@@ -23,9 +23,7 @@ const TagViewFeatureList: FC<Props> = ({ productId, versionString, selectedFeatu
     [Skipped]: classes.itemSkipped,
   };
 
-  const dispatch = useDispatch();
-
-  const renderFeatureListItem = (feature, statusClasses): ReactNode => {
+  const renderFeatureListItem = (feature: SimpleFeature, statusClasses: string): ReactNode => {
     let className = `${classes.listItem} ${statusClasses} ${classes.item}`;
     if (feature._id === selectedFeatureId) {
       className += ` ${classes.itemSelected}`;
@@ -37,7 +35,7 @@ const TagViewFeatureList: FC<Props> = ({ productId, versionString, selectedFeatu
         key={feature._id}
         className={className}
         onClick={(): void => {
-          dispatch(selectFeature(productId, versionString, feature));
+          dispatch(selectFeature(feature.id));
         }}
       >
         {feature.name}
@@ -48,4 +46,4 @@ const TagViewFeatureList: FC<Props> = ({ productId, versionString, selectedFeatu
   return <List>{featureList.map(feature => renderFeatureListItem(feature, classesMap[feature.calculatedStatus]))}</List>;
 };
 
-export default withStyles(featureListItemStyles)(TagViewFeatureList);
+export default TagViewFeatureList;

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Table, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-import { StepRow } from 'models/Step';
+import StepRow from 'models/StepRow';
 
 const useStyles = makeStyles(() =>
   createStyles({

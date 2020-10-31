@@ -1,4 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
 
 export const useProductListStyles = makeStyles(theme =>
   createStyles({
@@ -19,6 +20,9 @@ export const useProductListStyles = makeStyles(theme =>
     productListItem: {
       paddingTop: '2px',
       paddingBottom: '2px',
+    },
+    checkedFavourite: {
+      color: red[300],
     },
   })
 );

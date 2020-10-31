@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
 
-import Execution, { createExecutionFromFetchedData } from './../models/Execution';
-import { getRollUpData, updateComments, updateStepPatch, updateAllStepPatch } from 'lib/rest/Rest';
+import Execution from './../models/Execution';
+import { updateComment, updateStepPatch, updateAllStepPatch } from 'lib/rest/Rest';
 import { StoreDispatch, RootStore } from 'rootReducer';
-import SimpleFeature from 'models/SimpleFeature';
-import Feature from 'models/Feature';
+import Feature, { SimpleFeature } from 'models/Feature';
 import fetchFeature from 'lib/services/FetchFeature';
+import fetchExecutionHistory from 'lib/services/FetchExecutionHistory';
 import { User } from 'models/User';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 import Status from 'models/Status';
@@ -70,12 +70,11 @@ const saveFeatureAndHistoryReducer: CaseReducer<FeatureState, SaveFeatureAndHist
 const updateMetadata = (featureState: FeatureState, user: User, build?: string): void => {
   const { selected, executionHistory } = featureState;
   if (selected && executionHistory) {
-    selected.lastEditedOn = new Date();
+    selected.lastEditedOn = new Date().getTime();
     selected.lastEditedBy = user.display;
     const history = build && executionHistory.find(ex => ex.build === build);
     if (history) {
       history.calculatedStatus = selected.calculatedStatus;
-      history.statusLastEditedBy = selected.lastEditedBy;
     }
   }
 };
@@ -180,30 +179,33 @@ export const {
   resetFeatureState,
 } = actions;
 
-export const fetchIndexes = (productId: string, versionString: string, build: string) => async (dispatch: StoreDispatch): Promise<void> => {
-  const [byTag, byId] = await Promise.all([
-    fetchSimpleFeaturesByTags(productId, versionString, build),
-    fetchSimpleFeatures(productId, versionString, build),
-  ]);
-
-  dispatch(saveIndexes({ byId: byId || null, byTag: byTag || null }));
-};
-
-export const selectFeature = (productId: string, versionString: string, feature: SimpleFeature) => async (
-  dispatch: StoreDispatch
-): Promise<void> => {
-  const selected = await fetchFeature(feature._id);
-
-  if (selected) {
-    const rollUp = await getRollUpData(productId, versionString, feature.id);
-    if (rollUp) {
-      const executionHistory = rollUp.rollup.map(build => build && createExecutionFromFetchedData(build)).filter(Boolean);
-      dispatch(saveFeatureAndHistory({ selected, executionHistory }));
-    }
+export const fetchIndexes = () => async (dispatch: StoreDispatch, getState: () => RootStore): Promise<void> => {
+  const state = getState();
+  const reportIdentifier = state.report.currentReportId;
+  if (reportIdentifier) {
+    const { product, version, build } = reportIdentifier;
+    const [byTag, byId] = await Promise.all([
+      fetchSimpleFeaturesByTags(product, version, build),
+      fetchSimpleFeatures(product, version, build),
+    ]);
+    dispatch(saveIndexes({ byId: byId || null, byTag: byTag || null }));
   }
 };
 
-const rollbackOnFail = (response: any, dispatch: StoreDispatch, featureState: FeatureState): void => {
+export const selectFeature = (featureId: string) => async (dispatch: StoreDispatch, getState: () => RootStore): Promise<void> => {
+  const state = getState();
+  const reportIdentifier = state.report.currentReportId;
+  if (reportIdentifier) {
+    const { product, version, build } = reportIdentifier;
+    const [selected, executionHistory] = await Promise.all([
+      fetchFeature(product, version, build, featureId),
+      fetchExecutionHistory(product, version, featureId),
+    ]);
+    dispatch(saveFeatureAndHistory({ selected: selected || null, executionHistory: executionHistory || null }));
+  }
+};
+
+const rollbackOnFail = (response: Response | void, dispatch: StoreDispatch, featureState: FeatureState): void => {
   if (!response || !response.ok) {
     dispatch(saveFeatureAndHistory(featureState));
   }
@@ -216,9 +218,11 @@ export const updateCommentWithRollback = (scenarioId: string, label: string, req
   const state = getState();
   const selectedFeature = state.feature.selected;
   const user = state.user;
+  const reportIdentifier = state.report.currentReportId;
 
-  if (selectedFeature && user) {
-    updateComments(selectedFeature._id, { scenarioId, label: requestLabel, content }).then(response => {
+  if (reportIdentifier && selectedFeature && user) {
+    const { product, version, build } = reportIdentifier;
+    updateComment(product, version, build, selectedFeature.id, { scenarioId, label: requestLabel, content }).then(response => {
       rollbackOnFail(response, dispatch, state.feature);
     });
 
@@ -226,16 +230,18 @@ export const updateCommentWithRollback = (scenarioId: string, label: string, req
   }
 };
 
-export const updateStepStatusWithRollback = (scenarioId: string, stepId: number, status: Status, build: string) => (
+export const updateStepStatusWithRollback = (scenarioId: string, stepId: number, status: Status) => (
   dispatch: StoreDispatch,
   getState: () => RootStore
 ): void => {
   const state = getState();
   const selectedFeature = state.feature.selected;
   const user = state.user;
+  const reportIdentifier = state.report.currentReportId;
 
-  if (selectedFeature && user) {
-    updateStepPatch(selectedFeature._id, { scenarioId, line: stepId, status: status }).then(response => {
+  if (selectedFeature && reportIdentifier && user) {
+    const { product, version, build } = reportIdentifier;
+    updateStepPatch(product, version, build, selectedFeature.id, { scenarioId, line: stepId, status: status }).then(response => {
       rollbackOnFail(response, dispatch, state.feature);
     });
 
@@ -243,16 +249,18 @@ export const updateStepStatusWithRollback = (scenarioId: string, stepId: number,
   }
 };
 
-export const updateScenarioStatusWithRollback = (scenarioId: string, status: Status, build: string) => (
+export const updateScenarioStatusWithRollback = (scenarioId: string, status: Status) => (
   dispatch: StoreDispatch,
   getState: () => RootStore
 ): void => {
   const state = getState();
   const selectedFeature = state.feature.selected;
   const user = state.user;
+  const reportIdentifier = state.report.currentReportId;
 
-  if (selectedFeature && user) {
-    updateAllStepPatch(selectedFeature._id, { scenarioId, status }).then(response => {
+  if (selectedFeature && reportIdentifier && user) {
+    const { product, version, build } = reportIdentifier;
+    updateAllStepPatch(product, version, build, selectedFeature.id, { scenarioId, status }).then(response => {
       rollbackOnFail(response, dispatch, state.feature);
     });
 

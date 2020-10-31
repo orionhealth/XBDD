@@ -1,74 +1,49 @@
-import React, { FC, useState, ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { FC, ReactNode, useState } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 
-import Version, { getString, getUnpinnedBuildList } from 'models/Version';
 import { useBuildListStyles } from './styles/BuildListStyles';
 import BuildListItem from './BuildListItem';
-import Product from 'models/Product';
-import { resetFeatureState } from 'redux/FeatureReducer';
+import Build from 'models/Build';
 
 interface Props {
-  product: Product;
-  version: Version;
-  handlePinChange(product: Product, version: Version, build: string, isPinned: boolean): void;
+  product: string;
+  version: string;
+  buildList: Build[];
 }
 
-const BuildList: FC<Props> = ({ product, version, handlePinChange }) => {
+const BuildList: FC<Props> = ({ product, version, buildList }) => {
   const { t } = useTranslation();
   const classes = useBuildListStyles();
-  const dispatch = useDispatch();
-  const history = useHistory();
   const [expanded, setExpanded] = useState(false);
+  const pinnedBuildList = buildList.filter(build => build.isPinned);
+  let unpinnedBuildList = buildList.filter(build => !build.isPinned);
 
-  const pinnedBuildList = version.pinnedBuildList;
-  let unpinnedBuildList = getUnpinnedBuildList(version);
   const isExpandable = unpinnedBuildList.length > 5;
+  unpinnedBuildList = isExpandable && !expanded ? unpinnedBuildList.slice(0, 5) : unpinnedBuildList;
 
-  if (isExpandable && !expanded) {
-    unpinnedBuildList = unpinnedBuildList.slice(0, 5);
-  }
-
-  const onItemClick = (event, build: string, isPinned: boolean): void => {
-    let node = event.target;
-    while (node) {
-      if (node.className === 'MuiIconButton-label') {
-        handlePinChange(product, version, build, isPinned);
-        return;
-      }
-      node = node.parentNode;
-    }
-    const productParam = encodeURIComponent(product.name);
-    const versionParam = encodeURIComponent(getString(version));
-    const buildParam = encodeURIComponent(build);
-    dispatch(resetFeatureState());
-    history.push(encodeURI(`/reports/${productParam}/${versionParam}/${buildParam}`));
+  const renderList = (buildList: Build[]): ReactNode => {
+    return buildList.map(build => <BuildListItem key={build.name} product={product} version={version} build={build} />);
   };
-
-  const renderBuildListByPin = (buildList: string[], isPinned: boolean): ReactNode => (
-    <List>
-      <List>
-        <BuildListItem isPinned={isPinned} buildList={buildList} onClick={onItemClick} />
-        {isPinned || !isExpandable ? null : (
-          <ListItem button divider className={classes.buildListItem} onClick={(): void => setExpanded(!expanded)}>
-            <ListItemIcon className={classes.arrowIcon}>
-              <FontAwesomeIcon icon={expanded ? faAngleDoubleUp : faAngleDoubleDown} />
-            </ListItemIcon>
-            <ListItemText>{expanded ? t('summary.showLess') : t('summary.showMore')}</ListItemText>
-          </ListItem>
-        )}
-      </List>
-    </List>
-  );
 
   return (
     <div className={classes.buildListContainer}>
-      {pinnedBuildList.length !== 0 ? renderBuildListByPin(pinnedBuildList, true) : null}
-      {unpinnedBuildList.length !== 0 ? renderBuildListByPin(unpinnedBuildList, false) : null}
+      {pinnedBuildList.length !== 0 && <List>{renderList(pinnedBuildList)}</List>}
+      {unpinnedBuildList.length !== 0 && (
+        <List>
+          {renderList(unpinnedBuildList)}
+          {isExpandable && (
+            <ListItem button divider onClick={(): void => setExpanded(!expanded)}>
+              <ListItemIcon className={classes.arrowIcon}>
+                <FontAwesomeIcon icon={expanded ? faAngleDoubleUp : faAngleDoubleDown} />
+              </ListItemIcon>
+              <ListItemText>{expanded ? t('summary.showLess') : t('summary.showMore')}</ListItemText>
+            </ListItem>
+          )}
+        </List>
+      )}
     </div>
   );
 };

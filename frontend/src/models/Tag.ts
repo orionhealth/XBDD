@@ -1,4 +1,4 @@
-import SimpleFeature from './SimpleFeature';
+import { SimpleFeature } from './Feature';
 
 export type TagName = string;
 

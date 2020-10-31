@@ -1,4 +1,5 @@
 import { doRequest, Method } from 'lib/rest/RestRequests';
+import { getEncodedURI } from 'lib/rest/URIHelper';
 import TagsIgnored from 'models/TagsIgnored';
 import FetchTagsIgnoredTypes from './generated/FetchTagsIgnoredTypes';
 
@@ -11,7 +12,7 @@ const createIgnoredTags = (responseData: ResponseData): TagsIgnored => {
 };
 
 const fetchTagsIgnored = async (product: string): Promise<TagsIgnored | void> => {
-  const url = `/rest/user/ignoredTags/${product}`;
+  const url = `/rest/user/ignoredTags/${getEncodedURI(product)}`;
   return doRequest(Method.GET, url, 'rest.error.get', null, FetchTagsIgnoredTypes, createIgnoredTags);
 };
 

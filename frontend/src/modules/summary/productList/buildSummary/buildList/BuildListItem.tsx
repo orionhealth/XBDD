@@ -2,33 +2,52 @@ import React, { FC, MouseEvent } from 'react';
 import { ListItem, ListItemIcon, ListItemText, Checkbox } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbtack } from '@fortawesome/free-solid-svg-icons';
-import { grey } from '@material-ui/core/colors';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
+import { updatePinStatusWithRollback } from 'redux/ReportReducer';
+import { getEncodedURI } from 'lib/rest/URIHelper';
+import { resetFeatureState } from 'redux/FeatureReducer';
+import Build from 'models/Build';
+import { useBuildListStyles } from './styles/BuildListStyles';
 
 interface Props {
-  isPinned: boolean;
-  buildList: string[];
-  onClick(event: MouseEvent, build: string, isPinned: boolean): void;
+  product: string;
+  version: string;
+  build: Build;
 }
 
-const BuildListItem: FC<Props> = ({ isPinned, buildList, onClick }) => {
+const BuildListItem: FC<Props> = ({ product, version, build }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const classes = useBuildListStyles();
+  const history = useHistory();
+
+  const onItemClick = (event, build: string, isPinned: boolean): void => {
+    let node = event.target;
+    while (node) {
+      if (node.className === 'MuiIconButton-label') {
+        dispatch(updatePinStatusWithRollback(product, version, build, isPinned));
+        return;
+      }
+      node = node.parentNode;
+    }
+    dispatch(resetFeatureState());
+    history.push(`/reports/${getEncodedURI(product, version, build)}`);
+  };
 
   return (
-    <>
-      {buildList.map(build => (
-        <ListItem button key={build} onClick={(event: MouseEvent): void => onClick(event, build, isPinned)}>
-          <ListItemText>{t('summary.buildDisplay', { build })}</ListItemText>
-          <ListItemIcon>
-            <Checkbox
-              icon={<FontAwesomeIcon icon={faThumbtack} style={{ color: grey[300] }} />}
-              checkedIcon={<FontAwesomeIcon icon={faThumbtack} style={{ color: grey[700] }} />}
-              checked={isPinned}
-            />
-          </ListItemIcon>
-        </ListItem>
-      ))}
-    </>
+    <ListItem button onClick={(event: MouseEvent): void => onItemClick(event, build.name, build.isPinned)}>
+      <ListItemText>{t('summary.buildDisplay', { name: build.name, publishDate: new Date(build.publishDate) })}</ListItemText>
+      <ListItemIcon>
+        <Checkbox
+          icon={<FontAwesomeIcon icon={faThumbtack} className={classes.unpinnedBuild} />}
+          checkedIcon={<FontAwesomeIcon icon={faThumbtack} className={classes.pinnedBuild} />}
+          checked={build.isPinned}
+        />
+      </ListItemIcon>
+    </ListItem>
   );
 };
 

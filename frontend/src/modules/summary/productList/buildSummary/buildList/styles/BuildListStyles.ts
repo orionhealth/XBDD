@@ -1,4 +1,5 @@
 import { makeStyles, createStyles } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
 
 export const useBuildListStyles = makeStyles(() =>
   createStyles({
@@ -6,12 +7,14 @@ export const useBuildListStyles = makeStyles(() =>
       height: '100%',
       width: '100%',
     },
-    buildListItem: {
-      padding: '0 6px',
-      height: '42px',
-    },
     arrowIcon: {
       minWidth: '24px',
+    },
+    unpinnedBuild: {
+      color: grey[300],
+    },
+    pinnedBuild: {
+      color: grey[700],
     },
   })
 );

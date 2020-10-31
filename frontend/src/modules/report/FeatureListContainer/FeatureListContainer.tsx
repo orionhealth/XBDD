@@ -1,47 +1,24 @@
-import React, { Component, ReactNode } from 'react';
-import { Typography, Checkbox, Tooltip, Box, WithStyles } from '@material-ui/core';
+import React, { FC, ReactNode, useState } from 'react';
+import { Typography, Checkbox, Tooltip, Box } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icons';
-import { withStyles } from '@material-ui/styles';
-import { connect } from 'react-redux';
-import { withTranslation, WithTranslation } from 'react-i18next';
-import { bindActionCreators } from 'redux';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
-import { featureListContainerStyles } from './styles/FeatureListContainerStyles';
+import { useFeatureListContainerStyles } from './styles/FeatureListContainerStyles';
 import FeatureFilterButtons from './FeatureFilterButtons/FeatureFilterButtons';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
 import TagList from './TagViewFeatureList/TagList';
 import Loading from 'modules/loading/Loading';
-import { fetchTagsMetadata } from 'redux/TagsMetadataReducer';
 import { LoggedInUser } from 'models/User';
-import Status, { StatusMap } from 'models/Status';
 import Tag from 'models/Tag';
-import TagAssignments from 'models/TagAssignments';
-import SimpleFeature from 'models/SimpleFeature';
-import { StoreDispatch, RootStore } from 'rootReducer';
-import { fetchIndexes } from 'redux/FeatureReducer';
+import { RootStore } from 'rootReducer';
+import Status, { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 
-interface ProvidedProps extends WithStyles, WithTranslation {
+interface Props {
   user: LoggedInUser;
-  productId: string;
-  versionString: string;
-  build: string;
   selectedFeatureId?: string;
 }
-
-interface StateProps {
-  idIndex?: SimpleFeature[];
-  tagIndex?: Tag[];
-  tagAssignments?: TagAssignments;
-  loading: boolean;
-}
-
-interface DispatchProps {
-  dispatchFetchIndexes(productId: string, versionString: string, build: string): void;
-  dispatchFetchTagsMetadata(productId: string, versionString: string, build: string): void;
-}
-
-type Props = ProvidedProps & StateProps & DispatchProps;
 
 interface State {
   isEditMode: boolean;
@@ -50,51 +27,45 @@ interface State {
   selectedStatus: StatusMap<boolean>;
 }
 
-class FeatureListContainer extends Component<Props, State> {
-  constructor(props) {
-    super(props);
+const FeatureListContainer: FC<Props> = props => {
+  const classes = useFeatureListContainerStyles();
+  const { t } = useTranslation();
 
-    this.state = {
-      isEditMode: false,
-      isAssignedTagsView: false,
-      isTagView: true,
-      selectedStatus: {
-        passed: true,
-        failed: true,
-        undefined: true,
-        skipped: true,
-      },
-    };
-  }
+  const idIndex = useSelector((state: RootStore) => state.feature.byId);
+  const tagIndex = useSelector((state: RootStore) => state.feature.byTag);
+  const tagAssignments = useSelector((state: RootStore) => state.tags.assignments);
+  const ignoredTag = useSelector((state: RootStore) => state.tags.ignored);
+  const loading = !(idIndex && tagIndex && tagAssignments && ignoredTag);
 
-  componentDidMount(): void {
-    const { productId, versionString, build, dispatchFetchIndexes, dispatchFetchTagsMetadata } = this.props;
-    dispatchFetchIndexes(productId, versionString, build);
-    dispatchFetchTagsMetadata(productId, versionString, build);
-  }
+  const [isEditMode, setEditMode] = useState(false);
+  const [isAssignedTagsView, setAssignedTagsView] = useState(false);
+  const [isTagView, setTagView] = useState(true);
+  const [isPassSelected, setPassSelected] = useState(true);
+  const [isFailedSelected, setFailedSelected] = useState(true);
+  const [isUndefinedSelected, setUndefinedSelected] = useState(true);
+  const [isSkippedSelected, setSkippedSelected] = useState(true);
 
-  handleViewSwitch = (): void => {
-    this.setState(prevState => ({ ...prevState, isTagView: !prevState.isTagView }));
+  const selectedStatus = {
+    [Passed]: isPassSelected,
+    [Failed]: isFailedSelected,
+    [Undefined]: isUndefinedSelected,
+    [Skipped]: isSkippedSelected,
   };
 
-  handleTagsSwitch = (): void => {
-    this.setState(prevState => ({ ...prevState, isAssignedTagsView: !prevState.isAssignedTagsView }));
+  const handlerMap = {
+    [Passed]: setPassSelected,
+    [Failed]: setFailedSelected,
+    [Undefined]: setUndefinedSelected,
+    [Skipped]: setSkippedSelected,
   };
 
-  handleEditModeSwitch = (): void => {
-    this.setState(prevState => ({ ...prevState, isEditMode: !prevState.isEditMode }));
+  const handleFilterButtonClick = (filterSelected: Status): void => {
+    handlerMap[filterSelected](!selectedStatus[filterSelected]);
   };
 
-  handleFilterButtonClick = (status: Status): void => {
-    this.setState(prevState => ({
-      ...prevState,
-      selectedStatus: { ...prevState.selectedStatus, [status]: !prevState.selectedStatus[status] },
-    }));
-  };
+  const { user, selectedFeatureId } = props;
 
-  filterTags(): Tag[] {
-    const { user, tagAssignments, tagIndex } = this.props;
-    const { isAssignedTagsView, selectedStatus } = this.state;
+  const filterTags = (): Tag[] => {
     let filteredTagList = tagIndex || [];
 
     if (tagAssignments && isAssignedTagsView) {
@@ -103,12 +74,9 @@ class FeatureListContainer extends Component<Props, State> {
     filteredTagList = filteredTagList.filter(tag => tag.features.find(feature => selectedStatus[feature.calculatedStatus]));
 
     return filteredTagList;
-  }
+  };
 
-  renderAssignedTagsSwitch(): ReactNode {
-    const { classes, t } = this.props;
-    const { isEditMode, isAssignedTagsView } = this.state;
-
+  const renderAssignedTagsSwitch = (): ReactNode => {
     const editModeTitle = isEditMode ? t('report.turnEditModeOff') : t('report.turnEditModeOn');
     const assignedTagsTitle = isAssignedTagsView ? t('report.showAllTags') : t('report.showAssignedTags');
 
@@ -116,7 +84,7 @@ class FeatureListContainer extends Component<Props, State> {
       <>
         <Tooltip title={editModeTitle} placement="top">
           <Checkbox
-            onChange={this.handleEditModeSwitch}
+            onChange={(): void => setEditMode(!isEditMode)}
             icon={<FontAwesomeIcon icon={faUserSlash} className={classes.unCheckedIcon} />}
             checkedIcon={<FontAwesomeIcon icon={faUserSlash} className={classes.checkedIcon} />}
             checked={isEditMode}
@@ -124,7 +92,7 @@ class FeatureListContainer extends Component<Props, State> {
         </Tooltip>
         <Tooltip title={assignedTagsTitle} placement="top">
           <Checkbox
-            onChange={this.handleTagsSwitch}
+            onChange={(): void => setAssignedTagsView(!isAssignedTagsView)}
             icon={<FontAwesomeIcon icon={faUserTag} className={classes.unCheckedIcon} />}
             checkedIcon={<FontAwesomeIcon icon={faUserTag} className={classes.checkedIcon} />}
             checked={isAssignedTagsView}
@@ -132,105 +100,64 @@ class FeatureListContainer extends Component<Props, State> {
         </Tooltip>
       </>
     );
-  }
+  };
 
-  renderViewsSwitch(): ReactNode {
-    const { classes, t } = this.props;
-    const { isTagView } = this.state;
-
+  const renderViewsSwitch = (): ReactNode => {
     const title = isTagView ? t('report.switchToListView') : t('report.switchToTagView');
 
     return (
       <Tooltip title={title} placement="top">
         <Checkbox
-          onChange={this.handleViewSwitch}
+          onChange={(): void => setTagView(!isTagView)}
           icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
           checkedIcon={<FontAwesomeIcon icon={faTags} className={classes.checkedIcon} />}
           checked={isTagView}
         />
       </Tooltip>
     );
-  }
+  };
 
-  renderFeatureListTitle(): ReactNode {
-    const { classes, t } = this.props;
-    const { isTagView } = this.state;
-
+  const renderFeatureListTitle = (): ReactNode => {
     return (
       <Box className={classes.featureListTitle}>
         <Box p={1} flexGrow={1}>
           <Typography variant="h5">{t('featureList.features')}</Typography>
         </Box>
         <Box>
-          {isTagView ? this.renderAssignedTagsSwitch() : null}
-          {this.renderViewsSwitch()}
+          {isTagView ? renderAssignedTagsSwitch() : null}
+          {renderViewsSwitch()}
         </Box>
       </Box>
     );
-  }
+  };
 
-  renderFeatureList(restId: string, selectedFeatureId?: string): ReactNode {
-    const { idIndex, tagAssignments, productId, versionString } = this.props;
-    const { isTagView, isEditMode, isAssignedTagsView, selectedStatus } = this.state;
+  const renderFeatureList = (selectedFeatureId?: string): ReactNode => {
     if (isTagView && tagAssignments) {
       return (
         <TagList
-          productId={productId}
-          versionString={versionString}
           isEditMode={isEditMode}
           isAssignedTagsView={isAssignedTagsView}
-          tagList={this.filterTags()}
+          tagList={filterTags()}
           tagAssignments={tagAssignments}
-          restId={restId}
           selectedFeatureId={selectedFeatureId}
           selectedStatus={selectedStatus}
         />
       );
     } else if (idIndex) {
-      return (
-        <ListViewFeatureList
-          productId={productId}
-          versionString={versionString}
-          selectedFeatureId={selectedFeatureId}
-          featureList={idIndex}
-          selectedStatus={selectedStatus}
-        />
-      );
+      return <ListViewFeatureList selectedFeatureId={selectedFeatureId} featureList={idIndex} selectedStatus={selectedStatus} />;
     }
-  }
+  };
 
-  render(): ReactNode {
-    const { productId, versionString, build, selectedFeatureId, loading, classes } = this.props;
-    const { selectedStatus } = this.state;
+  return (
+    <>
+      <Loading loading={loading} />
+      <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={handleFilterButtonClick} />
+      <div className={classes.tagListContainer}>
+        {renderFeatureListTitle()}
+        {renderFeatureList(selectedFeatureId)}
+      </div>
+    </>
+  );
+};
 
-    const restId = `${productId}/${versionString}/${build}`;
-
-    return (
-      <>
-        <Loading loading={loading} />
-        <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={this.handleFilterButtonClick} />
-        <div className={classes.xbddTagListContainer}>
-          {this.renderFeatureListTitle()}
-          {this.renderFeatureList(restId, selectedFeatureId)}
-        </div>
-      </>
-    );
-  }
-}
-
-const mapStateToProps = (state: RootStore): StateProps => ({
-  idIndex: state.feature.byId || undefined,
-  tagIndex: state.feature.byTag || undefined,
-  tagAssignments: state.tags.assignments || undefined,
-  loading: !(state.feature.byId && state.feature.byTag && state.tags.assignments && state.tags.ignored),
-});
-
-const mapDispatchToProps = (dispatch: StoreDispatch): DispatchProps => ({
-  dispatchFetchIndexes: bindActionCreators(fetchIndexes, dispatch),
-  dispatchFetchTagsMetadata: bindActionCreators(fetchTagsMetadata, dispatch),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withTranslation()(withStyles(featureListContainerStyles)(FeatureListContainer)));
+export default FeatureListContainer;

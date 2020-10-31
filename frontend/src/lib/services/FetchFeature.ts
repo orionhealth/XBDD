@@ -5,6 +5,8 @@ import Feature from 'models/Feature';
 import Step from 'models/Step';
 import FetchFeatureTypes from './generated/FetchFeatureTypes';
 import { getStatusFromString } from 'models/Status';
+import { SimpleTag } from 'models/Tag';
+import { getEncodedURI } from 'lib/rest/URIHelper';
 
 interface StepResponseData {
   line: number;
@@ -19,6 +21,10 @@ interface StepResponseData {
     line: number;
   }[];
   embeddings?: string[];
+}
+
+interface SimpleTagResponseData {
+  name: string;
 }
 
 interface ScenarioResponseData {
@@ -40,9 +46,7 @@ interface ResponseData {
   originalAutomatedStatus: string;
   statusLastEditedBy?: string | null;
   lastEditOn?: { $date: string } | string;
-  tags: {
-    name: string;
-  }[];
+  tags: SimpleTagResponseData[];
   elements: ScenarioResponseData[];
 }
 
@@ -55,6 +59,12 @@ const createStep = (data: StepResponseData): Step => {
     manualStatus: data.result.manualStatus ? getStatusFromString(data.result.manualStatus) : undefined,
     rows: data.rows,
     embeddings: data.embeddings,
+  };
+};
+
+const createSimpleTag = (data: SimpleTagResponseData): SimpleTag => {
+  return {
+    name: data.name,
   };
 };
 
@@ -76,13 +86,13 @@ const createScenario = (data: ScenarioResponseData): Scenario => {
 };
 
 // TODO We shouldn't need this but it seems we have some varying date representations coming out of the backed.
-const parseLastEditOn = (date?: { $date: string } | string): Date | undefined => {
+const parseLastEditOn = (date?: { $date: string } | string): number | undefined => {
   if (typeof date === 'string') {
-    return new Date(Date.parse(date));
+    return new Date(Date.parse(date)).getTime();
   }
 
   if (typeof date?.$date === 'string') {
-    return new Date(Date.parse(date.$date));
+    return new Date(Date.parse(date.$date)).getTime();
   }
 
   return undefined;
@@ -97,17 +107,15 @@ const createFeature = (data: ResponseData): Feature => {
     keyword: data.keyword,
     calculatedStatus: getStatusFromString(data.calculatedStatus),
     originalAutomatedStatus: getStatusFromString(data.originalAutomatedStatus),
-    tags: data.tags.map(tag => ({
-      name: tag.name,
-    })),
+    tags: data.tags.map(tag => createSimpleTag(tag)),
     scenarios: data.elements.map(element => createScenario(element)),
     lastEditedBy: data.statusLastEditedBy || undefined,
     lastEditedOn: parseLastEditOn(data.lastEditOn),
   };
 };
 
-const fetchFeature = async (featureId: string): Promise<Feature | void> => {
-  const url = `/rest/feature/${featureId}`;
+const fetchFeature = async (product: string, version: string, build: string, featureId: string): Promise<Feature | void> => {
+  const url = `/rest/feature/${getEncodedURI(product, version, build, featureId)}`;
   return doRequest(Method.GET, url, 'rest.error.get', null, FetchFeatureTypes, createFeature);
 };
 

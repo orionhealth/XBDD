@@ -1,6 +1,7 @@
 import { Method, doRequest } from 'lib/rest/RestRequests';
 import FetchLoggedInUserTypes from './generated/FetchLoggedInUserTypes';
 import { LoggedInUser } from 'models/User';
+import { getEncodedURI } from 'lib/rest/URIHelper';
 
 interface ResponseData {
   user_id: string;
@@ -12,17 +13,17 @@ interface ResponseData {
 
 export const getAvatarUrl = (loginType: string, socialLogin?: string): string | undefined => {
   if (socialLogin && loginType === 'GITHUB') {
-    return `https://github.com/${socialLogin}.png`;
+    return `https://github.com/${getEncodedURI(socialLogin)}.png`;
   }
 };
 
 /* eslint-disable @typescript-eslint/camelcase */
-const createUser = ({ user_id, display, socialLogin, loginType, favourites }: ResponseData): LoggedInUser => ({
-  userId: user_id,
-  display,
-  socialLogin,
-  avatarUrl: getAvatarUrl(loginType, socialLogin),
-  favourites,
+const createUser = (responseData: ResponseData): LoggedInUser => ({
+  userId: responseData.user_id,
+  display: responseData.display,
+  socialLogin: responseData.socialLogin,
+  avatarUrl: getAvatarUrl(responseData.loginType, responseData.socialLogin),
+  favourites: responseData.favourites,
 });
 
 export const fetchLoggedInUser = async (): Promise<LoggedInUser | void> => {

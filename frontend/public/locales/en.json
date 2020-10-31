@@ -3,6 +3,7 @@
     "unexpected": "An unexpected error has occurred, please reload.\nIf the problem persists please create an issue with any errors logged in your console to https://github.com/orionhealth/XBDD/issues."
   },
   "navbar": {
+    "signin": "Sign in",
     "cancel": "Cancel",
     "login": "Login",
     "loginWithGithub": "Login with Github",
@@ -11,6 +12,7 @@
     "logout": "Logout"
   },
   "report": {
+    "executionHistory": "Execution History",
     "fullSizedScreenshot": "Full Size Screenshot",
     "pleaseReassignTheTag": "Please reassign the tag.",
     "showAllTags": "Show All Tags",
@@ -34,8 +36,8 @@
     "environment": "Environment",
     "executionNotes": "Execution Notes",
     "testingTips": "Testing Tips",
-    "lastEditedOn": "Last edited on {{date, DD/MM/YYYY}}",
-    "lastEditedByOn": "Last edited by {{name}}, {{date, DD/MM/YYYY}}"
+    "lastEditedBy": "Last edited by {{name}}",
+    "lastEditedOn": "Last edited on {{date, DD/MM/YYYY}}"
   },
   "rest": {
     "error": {
@@ -48,11 +50,17 @@
       "post": "Data save failed",
       "summaryOfReports": "Failed to get summary of reports.",
       "unfavourite": "Failed to unfavourite the product.",
-      "unpin": "Failed to unpin the build."
+      "unpin": "Failed to unpin the build.",
+      "updateStep": "Failed to update the step status.",
+      "updateAllSteps": "Failed to update statuses for all the step.",
+      "updateComment": "Failed to update comment.",
+      "assignTag": "Failed to assign tag.",
+      "unassignTag": "Failed to unassign the Tag.",
+      "setIgnoredTag": "Failed to set the ignored tag."
     }
   },
   "summary": {
-    "buildDisplay": "Build {{build}}",
+    "buildDisplay": "Build {{ name }} - {{publishDate, DD/MM/YYYY}}",
     "favourites": "Favourites",
     "productList": "Product List",
     "showLess": "Show less",
