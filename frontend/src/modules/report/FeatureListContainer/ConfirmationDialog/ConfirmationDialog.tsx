@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   open: boolean;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const ConfirmationDialog: FC<Props> = props => {
+  const { t } = useTranslation();
   const { open, title, msg, handleConfirmed, handleClosed } = props;
 
   return (
@@ -20,10 +22,10 @@ const ConfirmationDialog: FC<Props> = props => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClosed} variant="contained">
-          Cancel
+          {t(`dialog.cancel`)}
         </Button>
         <Button onClick={handleConfirmed} variant="contained" color="primary">
-          Hell Yeah
+          {t(`dialog.yes`)}
         </Button>
       </DialogActions>
     </Dialog>

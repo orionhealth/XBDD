@@ -5,12 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import Scenario from 'models/Scenario';
-import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
+import Status, { Passed, Skipped } from 'models/Status';
 import { useScenarioDisplayStyles } from './styles/ScenarioDisplayStyles';
 import StatusIcons from '../FeatureSummary/StatusIcons';
 import ScenarioStep from './components/ScenarioStep';
 import ScenarioInputField from './components/ScenarioInputField';
 import { updateScenarioStatusWithRollback } from 'redux/FeatureReducer';
+import { useStatusColorStyles } from 'modules/styles/globalStyles';
 
 interface StepChange {
   stepId: number;
@@ -27,21 +28,14 @@ const ScenarioDisplay: FC<Props> = ({ scenario }) => {
   const classes = useScenarioDisplayStyles();
   const { t } = useTranslation();
 
-  const classesMap: StatusMap<string> = {
-    [Passed]: classes.xbddScenarioPassed,
-    [Failed]: classes.xbddScenarioFailed,
-    [Undefined]: classes.xbddScenarioUndefined,
-    [Skipped]: classes.xbddScenarioSkipped,
-  };
+  const classesMap = useStatusColorStyles();
 
   const { id, calculatedStatus, originalAutomatedStatus, steps, backgroundSteps, environmentNotes, testingTips, executionNotes } = scenario;
 
-  let className = expanded ? classes.expandedScenarioTitle : '';
+  let className = calculatedStatus ? classesMap[calculatedStatus] : classesMap[originalAutomatedStatus];
 
-  if (calculatedStatus) {
-    className += ` ${classesMap[calculatedStatus]}`;
-  } else {
-    className += ` ${classesMap[originalAutomatedStatus]}`;
+  if (expanded) {
+    className += ` ${classes.expandedScenarioTitle}`;
   }
 
   const buttonClasses = (statusClass: string): string => `${classes.buttonForAllSteps} ${statusClass}`;

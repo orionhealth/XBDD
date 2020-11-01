@@ -1,35 +1,11 @@
-import React, { FC } from 'react';
-import { Card } from '@material-ui/core';
+import React, { FC, ReactNode } from 'react';
+import { Card, IconButton, Tooltip } from '@material-ui/core';
 import { CheckCircleOutline, ErrorOutline, RemoveCircleOutline, HelpOutline } from '@material-ui/icons';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 
 import Status, { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
-import FilterButton from './FilterButton';
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    buttons: {
-      padding: '24px 24px 12px 24px',
-    },
-    buttonPassed: {
-      color: '#576E5D',
-    },
-    buttonFailed: {
-      color: '#AC534F',
-    },
-    buttonUndefined: {
-      color: '#C39575',
-    },
-    buttonSkipped: {
-      color: '#457B9D',
-      borderRight: 'hidden',
-    },
-    buttonUnselected: {
-      color: '#E0E0E0',
-    },
-  })
-);
+import { useFeatureFilterButtonStyles } from '../styles/FeatureListContainerStyles';
+import { useStatusColorStyles } from 'modules/styles/globalStyles';
 
 interface Props {
   selectedStatus: StatusMap<boolean>;
@@ -38,39 +14,44 @@ interface Props {
 
 const FeatureFilterButtons: FC<Props> = ({ selectedStatus, handleFilterButtonClick }) => {
   const { t } = useTranslation();
-  const classes = useStyles();
+  const classes = useFeatureFilterButtonStyles();
+
+  const classesMap = useStatusColorStyles();
+
+  const tooltipsMap: StatusMap<string> = {
+    [Passed]: t('report.passed'),
+    [Failed]: t('report.failed'),
+    [Undefined]: t('report.undefined'),
+    [Skipped]: t('report.skipped'),
+  };
+
+  const iconMap: StatusMap<ReactNode> = {
+    [Passed]: <CheckCircleOutline />,
+    [Failed]: <ErrorOutline />,
+    [Undefined]: <HelpOutline />,
+    [Skipped]: <RemoveCircleOutline />,
+  };
+
+  const renderFilterButton = (status: Status): ReactNode => {
+    const iconColorClasses = selectedStatus[status] ? classesMap[status] : classes.buttonUnselected;
+    const iconClasses = `${classes.button} ${iconColorClasses}`;
+
+    return (
+      <Tooltip title={tooltipsMap[status]} placement="top">
+        <IconButton className={iconClasses} onClick={(): void => handleFilterButtonClick(status)}>
+          {iconMap[status]}
+        </IconButton>
+      </Tooltip>
+    );
+  };
 
   return (
     <div className={classes.buttons}>
       <Card raised>
-        <FilterButton
-          tooltip={t('report.passed')}
-          colorClass={selectedStatus.passed ? classes.buttonPassed : classes.buttonUnselected}
-          onClick={(): void => handleFilterButtonClick(Passed)}
-        >
-          <CheckCircleOutline />
-        </FilterButton>
-        <FilterButton
-          tooltip={t('report.failed')}
-          colorClass={selectedStatus.failed ? classes.buttonFailed : classes.buttonUnselected}
-          onClick={(): void => handleFilterButtonClick(Failed)}
-        >
-          <ErrorOutline />
-        </FilterButton>
-        <FilterButton
-          tooltip={t('report.undefined')}
-          colorClass={selectedStatus.undefined ? classes.buttonUndefined : classes.buttonUnselected}
-          onClick={(): void => handleFilterButtonClick(Undefined)}
-        >
-          <HelpOutline />
-        </FilterButton>
-        <FilterButton
-          tooltip={t('report.skipped')}
-          colorClass={selectedStatus.skipped ? classes.buttonSkipped : classes.buttonUnselected}
-          onClick={(): void => handleFilterButtonClick(Skipped)}
-        >
-          <RemoveCircleOutline />
-        </FilterButton>
+        {renderFilterButton(Passed)}
+        {renderFilterButton(Failed)}
+        {renderFilterButton(Undefined)}
+        {renderFilterButton(Skipped)}
       </Card>
     </div>
   );

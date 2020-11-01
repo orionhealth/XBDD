@@ -27,18 +27,6 @@ export const useFeatureSummaryStyles = makeStyles(() =>
       textAlign: 'left',
       padding: '12px 0 12px 12px',
     },
-    featurePassed: {
-      color: '#576E5D',
-    },
-    featureFailed: {
-      color: '#AC534F',
-    },
-    featureUndefined: {
-      color: '#C39575',
-    },
-    featureSkipped: {
-      color: '#457B9D',
-    },
   })
 );
 
@@ -49,18 +37,6 @@ export const useExecutionHistoryStyles = makeStyles(() =>
     },
     executionHistoryIcon: {
       padding: '4px',
-    },
-    featurePassed: {
-      color: '#576E5D',
-    },
-    featureFailed: {
-      color: '#AC534F',
-    },
-    featureUndefined: {
-      color: '#C39575',
-    },
-    featureSkipped: {
-      color: '#457B9D',
     },
     featureStatusArrow: {
       fontSize: '24px',
@@ -79,18 +55,6 @@ export const useStatusIconStyles = makeStyles(() =>
     },
     smallIcons: {
       fontSize: '17px',
-    },
-    featurePassed: {
-      color: '#576E5D',
-    },
-    featureFailed: {
-      color: '#AC534F',
-    },
-    featureUndefined: {
-      color: '#C39575',
-    },
-    featureSkipped: {
-      color: '#457B9D',
     },
     featureStatusArrow: {
       color: '#999',

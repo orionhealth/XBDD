@@ -12,18 +12,6 @@ export const useFeatureListItemStyles = makeStyles(() =>
       lineHeight: '22px',
       display: 'inline-block',
     },
-    itemPassed: {
-      color: '#576E5D',
-    },
-    itemFailed: {
-      color: '#AC534F',
-    },
-    itemUndefined: {
-      color: '#C39575',
-    },
-    itemSkipped: {
-      color: '#457B9D',
-    },
     itemSelected: {
       fontWeight: 'bold',
       backgroundColor: '#E0E0E0',
@@ -54,6 +42,25 @@ export const useFeatureListContainerStyles = makeStyles(() =>
     },
     unCheckedIcon: {
       fontSize: '20px',
+    },
+  })
+);
+
+export const useFeatureFilterButtonStyles = makeStyles(() =>
+  createStyles({
+    button: {
+      height: 'calc(100% - 4px)',
+      marginTop: '2px',
+      marginBottom: '2px',
+      borderRadius: 0,
+      width: '25%',
+      borderRight: '1px solid rgba(0, 0, 0, 0.23)',
+    },
+    buttons: {
+      padding: '24px 24px 12px 24px',
+    },
+    buttonUnselected: {
+      color: '#E0E0E0',
     },
   })
 );

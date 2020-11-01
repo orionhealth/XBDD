@@ -10,18 +10,6 @@ export const useScenarioDisplayStyles = makeStyles(() =>
       fontWeight: 'bold',
       fontSize: '18px',
     },
-    xbddScenarioPassed: {
-      color: '#576E5D',
-    },
-    xbddScenarioFailed: {
-      color: '#AC534F',
-    },
-    xbddScenarioUndefined: {
-      color: '#C39575',
-    },
-    xbddScenarioSkipped: {
-      color: '#457B9D',
-    },
     buttons: {
       textAlign: 'right',
       marginTop: '12px',

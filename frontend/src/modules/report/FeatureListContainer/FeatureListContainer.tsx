@@ -20,13 +20,6 @@ interface Props {
   selectedFeatureId?: string;
 }
 
-interface State {
-  isEditMode: boolean;
-  isAssignedTagsView: boolean;
-  isTagView: boolean;
-  selectedStatus: StatusMap<boolean>;
-}
-
 const FeatureListContainer: FC<Props> = props => {
   const classes = useFeatureListContainerStyles();
   const { t } = useTranslation();
@@ -45,14 +38,14 @@ const FeatureListContainer: FC<Props> = props => {
   const [isUndefinedSelected, setUndefinedSelected] = useState(true);
   const [isSkippedSelected, setSkippedSelected] = useState(true);
 
-  const selectedStatus = {
+  const selectedStatus: StatusMap<boolean> = {
     [Passed]: isPassSelected,
     [Failed]: isFailedSelected,
     [Undefined]: isUndefinedSelected,
     [Skipped]: isSkippedSelected,
   };
 
-  const handlerMap = {
+  const handlerMap: StatusMap<(isSelected: boolean) => void> = {
     [Passed]: setPassSelected,
     [Failed]: setFailedSelected,
     [Undefined]: setUndefinedSelected,

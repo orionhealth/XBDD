@@ -1,21 +1,14 @@
 import React, { FC } from 'react';
-import { makeStyles, Theme, Backdrop, CircularProgress, createStyles } from '@material-ui/core';
+import { Backdrop, CircularProgress } from '@material-ui/core';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: theme.palette.primary.main,
-    },
-  })
-);
+import { useLoadingStyles } from './styles/LoadingStyles';
 
 interface Props {
   loading: boolean;
 }
 
 const Loading: FC<Props> = ({ loading }) => {
-  const classes = useStyles();
+  const classes = useLoadingStyles();
   return (
     <Backdrop className={classes.backdrop} open={loading}>
       <CircularProgress color="inherit" />

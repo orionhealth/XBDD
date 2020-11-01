@@ -28,15 +28,6 @@ export const useStepStyles = makeStyles(() =>
     scenarioStepIcon: {
       fontSize: '16px',
     },
-    scenarioStepStatusPassed: {
-      color: '#576E5D',
-    },
-    scenarioStepStatusFailed: {
-      color: '#AC534F',
-    },
-    scenarioStepStatusSkipped: {
-      color: '#457B9D',
-    },
   })
 );
 
@@ -44,6 +35,43 @@ export const useInputFieldStyles = makeStyles(() =>
   createStyles({
     inputField: {
       margin: '0',
+    },
+  })
+);
+
+export const useCucumberTableStyles = makeStyles(() =>
+  createStyles({
+    scrollableTable: {
+      overflowX: 'scroll',
+    },
+    stepTable: {
+      width: 'auto',
+      margin: '4px 0 12px 0',
+    },
+  })
+);
+
+export const usePopperMenuStyles = makeStyles(() =>
+  createStyles({
+    scenarioStepIcon: {
+      fontSize: '16px',
+    },
+    moreButton: {
+      padding: '0px',
+    },
+    popperMenu: {
+      zIndex: 999,
+    },
+  })
+);
+
+export const useSceenshotStyles = makeStyles(() =>
+  createStyles({
+    screenshot: {
+      margin: '20px 0 0 24px',
+      border: '1px solid rgba(0, 0, 0, 0.23)',
+      height: '50%',
+      width: '50%',
     },
   })
 );

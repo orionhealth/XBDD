@@ -12,6 +12,7 @@ import Step from 'models/Step';
 import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
 import StepScreenshot from './StepScreenshot';
 import { updateStepStatusWithRollback } from 'redux/FeatureReducer';
+import { useStatusColorStyles } from 'modules/styles/globalStyles';
 
 interface Props {
   title: string;
@@ -23,10 +24,12 @@ const ScenarioStep: FC<Props> = ({ scenarioId, title, steps }) => {
   const classes = useStepStyles();
   const dispatch = useDispatch();
 
+  const classesMap = useStatusColorStyles();
+
   const iconMap: StatusMap<ReactNode> = {
-    [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classes.scenarioStepStatusPassed} ${classes.scenarioStepIcon}`} />,
-    [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusFailed} ${classes.scenarioStepIcon}`} />,
-    [Skipped]: <FontAwesomeIcon icon={faMinusSquare} className={`${classes.scenarioStepStatusSkipped} ${classes.scenarioStepIcon}`} />,
+    [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={`${classesMap.passed} ${classes.scenarioStepIcon}`} />,
+    [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={`${classesMap.failed} ${classes.scenarioStepIcon}`} />,
+    [Skipped]: <FontAwesomeIcon icon={faMinusSquare} className={`${classesMap.skipped} ${classes.scenarioStepIcon}`} />,
     [Undefined]: <FontAwesomeIcon icon={faSquare} className={classes.scenarioStepIcon} />,
   };
 

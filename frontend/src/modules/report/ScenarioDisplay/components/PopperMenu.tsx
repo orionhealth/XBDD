@@ -1,24 +1,10 @@
 import React, { FC, MouseEvent, ReactNode, useState, useRef } from 'react';
 import { IconButton, Popper, Fade, Card, List, ListItem } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 
 import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    scenarioStepIcon: {
-      fontSize: '16px',
-    },
-    moreButton: {
-      padding: '0px',
-    },
-    popperMenu: {
-      zIndex: 999,
-    },
-  })
-);
+import { usePopperMenuStyles } from './styles/ScenarioStepStyles';
 
 interface Props {
   stepId: number;
@@ -27,7 +13,7 @@ interface Props {
 }
 
 const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
-  const classes = useStyles();
+  const classes = usePopperMenuStyles();
   const { t } = useTranslation();
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
