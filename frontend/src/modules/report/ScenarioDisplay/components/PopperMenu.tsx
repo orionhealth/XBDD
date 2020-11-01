@@ -4,7 +4,7 @@ import { MoreHoriz } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
 
 import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
-import { usePopperMenuStyles } from './styles/ScenarioStepStyles';
+import { usePopperMenuStyles } from './styles/ScenarioComponentsStyles';
 
 interface Props {
   stepId: number;

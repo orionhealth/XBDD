@@ -2,7 +2,7 @@ import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 
-import { useInputFieldStyles } from './styles/ScenarioStepStyles';
+import { useInputFieldStyles } from './styles/ScenarioComponentsStyles';
 import { updateCommentWithRollback } from 'redux/FeatureReducer';
 
 interface Props {

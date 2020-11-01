@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Table, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';
 
 import StepRow from 'models/StepRow';
-import { useCucumberTableStyles } from './styles/ScenarioStepStyles';
+import { useCucumberTableStyles } from './styles/ScenarioComponentsStyles';
 
 interface Props {
   rows: StepRow[];

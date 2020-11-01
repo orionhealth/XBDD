@@ -1,6 +1,6 @@
 import { makeStyles, createStyles } from '@material-ui/core';
 
-export const useStepStyles = makeStyles(() =>
+export const useStepsStyles = makeStyles(() =>
   createStyles({
     stepIconBox: {
       padding: '3px',

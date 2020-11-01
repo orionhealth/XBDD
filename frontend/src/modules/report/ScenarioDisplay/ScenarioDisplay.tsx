@@ -8,7 +8,7 @@ import Scenario from 'models/Scenario';
 import Status, { Passed, Skipped } from 'models/Status';
 import { useScenarioDisplayStyles } from './styles/ScenarioDisplayStyles';
 import StatusIcons from '../FeatureSummary/StatusIcons';
-import ScenarioStep from './components/ScenarioStep';
+import ScenarioSteps from './components/ScenarioSteps';
 import ScenarioInputField from './components/ScenarioInputField';
 import { updateScenarioStatusWithRollback } from 'redux/FeatureReducer';
 import { useStatusColorStyles } from 'modules/styles/globalStyles';
@@ -72,10 +72,10 @@ const ScenarioDisplay: FC<Props> = ({ scenario }) => {
       <ExpansionPanelDetails>
         <Grid container>
           <Grid item xs={11}>
-            {backgroundSteps && <ScenarioStep title={t('report.backgroundSteps')} steps={backgroundSteps} scenarioId={scenario.id} />}
+            {backgroundSteps && <ScenarioSteps title={t('report.backgroundSteps')} steps={backgroundSteps} scenarioId={scenario.id} />}
           </Grid>
           <Grid item xs={11}>
-            {steps && <ScenarioStep title={t('report.steps')} steps={steps} scenarioId={scenario.id} />}
+            {steps && <ScenarioSteps title={t('report.steps')} steps={steps} scenarioId={scenario.id} />}
           </Grid>
           <Grid item xs={5}>
             <ScenarioInputField scenarioId={scenario.id} label={t('report.environment')} content={environmentNotes} />

@@ -5,7 +5,7 @@ import { faMinusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 import { faSquare } from '@fortawesome/free-regular-svg-icons';
 import { useDispatch } from 'react-redux';
 
-import { useStepStyles } from './styles/ScenarioStepStyles';
+import { useStepsStyles } from './styles/ScenarioComponentsStyles';
 import PopperMenu from './PopperMenu';
 import CucumberTable from './CucumberTable';
 import Step from 'models/Step';
@@ -20,8 +20,8 @@ interface Props {
   scenarioId: string;
 }
 
-const ScenarioStep: FC<Props> = ({ scenarioId, title, steps }) => {
-  const classes = useStepStyles();
+const ScenarioSteps: FC<Props> = ({ scenarioId, title, steps }) => {
+  const classes = useStepsStyles();
   const dispatch = useDispatch();
 
   const classesMap = useStatusColorStyles();
@@ -42,7 +42,6 @@ const ScenarioStep: FC<Props> = ({ scenarioId, title, steps }) => {
       [Undefined]: Passed,
       [Skipped]: Passed,
     };
-
     const status = newStatus ? newStatus : nextStatus[prevStatus];
 
     dispatch(updateStepStatusWithRollback(scenarioId, stepId, status));
@@ -87,4 +86,4 @@ const ScenarioStep: FC<Props> = ({ scenarioId, title, steps }) => {
   );
 };
 
-export default ScenarioStep;
+export default ScenarioSteps;

@@ -1,7 +1,7 @@
 import React, { FC, useState, KeyboardEvent } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
 
-import { useSceenshotStyles } from './styles/ScenarioStepStyles';
+import { useSceenshotStyles } from './styles/ScenarioComponentsStyles';
 
 interface Props {
   screenshotPath: string;
