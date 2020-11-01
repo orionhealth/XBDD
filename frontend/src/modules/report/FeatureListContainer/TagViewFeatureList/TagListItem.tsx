@@ -14,7 +14,7 @@ import { StatusMap } from 'models/Status';
 import TagAvatar from './TagAvatar';
 import TagAssignments from 'models/TagAssignments';
 import { ignoreTagWithRollback, assignUserToTagWithRollback } from 'redux/TagsMetadataReducer';
-import ConfirmationDialog from '../ConfirmationDialog/ConfirmationDialog';
+import ConfirmationDialog from '../../../confirmationDialog/ConfirmationDialog';
 import { RootStore } from 'rootReducer';
 
 interface Props {
