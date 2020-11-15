@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { ExpansionPanel, ExpansionPanelSummary, Box, Typography, ExpansionPanelDetails, Grid, Button } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +22,35 @@ interface Props {
   scenario: Scenario;
 }
 
+interface ActionButtonProps {
+  scenarioId: string;
+  status: Status;
+  statusClass: string;
+  text: string;
+}
+
+const ActionButton: FC<ActionButtonProps> = ({ scenarioId, status, statusClass, text }) => {
+  const dispatch = useDispatch();
+  const classes = useScenarioDisplayStyles();
+
+  const buttonClasses = `${classes.buttonForAllSteps} ${statusClass}`;
+
+  return (
+    <Button
+      variant="contained"
+      size="small"
+      onClick={(): void => {
+        dispatch(updateScenarioStatusWithRollback(scenarioId, status));
+      }}
+      className={buttonClasses}
+    >
+      {text}
+    </Button>
+  );
+};
+
 const ScenarioDisplay: FC<Props> = ({ scenario }) => {
   const [expanded, setExpanded] = useState(false);
-  const dispatch = useDispatch();
   const classes = useScenarioDisplayStyles();
   const { t } = useTranslation();
 
@@ -37,21 +63,6 @@ const ScenarioDisplay: FC<Props> = ({ scenario }) => {
   if (expanded) {
     className += ` ${classes.expandedScenarioTitle}`;
   }
-
-  const buttonClasses = (statusClass: string): string => `${classes.buttonForAllSteps} ${statusClass}`;
-
-  const renderButton = (status: Status, classes: string, text: string): ReactNode => (
-    <Button
-      variant="contained"
-      size="small"
-      onClick={(): void => {
-        dispatch(updateScenarioStatusWithRollback(scenario.id, status));
-      }}
-      className={classes}
-    >
-      {text}
-    </Button>
-  );
 
   return (
     <ExpansionPanel key={id} expanded={expanded} className={classes.scenarioListItem} TransitionProps={{ unmountOnExit: true }}>
@@ -72,10 +83,10 @@ const ScenarioDisplay: FC<Props> = ({ scenario }) => {
       <ExpansionPanelDetails>
         <Grid container>
           <Grid item xs={11}>
-            {backgroundSteps && <ScenarioSteps title={t('report.backgroundSteps')} steps={backgroundSteps} scenarioId={scenario.id} />}
+            {backgroundSteps && <ScenarioSteps scenarioId={scenario.id} title={t('report.backgroundSteps')} steps={backgroundSteps} />}
           </Grid>
           <Grid item xs={11}>
-            {steps && <ScenarioSteps title={t('report.steps')} steps={steps} scenarioId={scenario.id} />}
+            {steps && <ScenarioSteps scenarioId={scenario.id} title={t('report.steps')} steps={steps} />}
           </Grid>
           <Grid item xs={5}>
             <ScenarioInputField scenarioId={scenario.id} label={t('report.environment')} content={environmentNotes} />
@@ -89,8 +100,8 @@ const ScenarioDisplay: FC<Props> = ({ scenario }) => {
           </Grid>
           <Grid item xs={11}>
             <div className={classes.buttons}>
-              {renderButton(Skipped, buttonClasses(classes.skipAllSteps), t('report.skipAllSteps'))}
-              {renderButton(Passed, buttonClasses(classes.passAllSteps), t('report.passAllSteps'))}
+              <ActionButton scenarioId={scenario.id} status={Skipped} statusClass={classes.skipAllSteps} text={t('report.skipAllSteps')} />
+              <ActionButton scenarioId={scenario.id} status={Passed} statusClass={classes.passAllSteps} text={t('report.passAllSteps')} />
             </div>
           </Grid>
         </Grid>

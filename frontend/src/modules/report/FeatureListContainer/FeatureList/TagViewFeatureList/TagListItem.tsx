@@ -10,36 +10,32 @@ import { useTranslation } from 'react-i18next';
 import { useTagListItemStyles } from './styles/TagListStyles';
 import TagViewFeatureList from './TagViewFeatureList';
 import Tag from 'models/Tag';
-import { StatusMap } from 'models/Status';
 import TagAvatar from './TagAvatar';
-import TagAssignments from 'models/TagAssignments';
 import { ignoreTagWithRollback, assignUserToTagWithRollback } from 'redux/TagsMetadataReducer';
-import ConfirmationDialog from '../../../confirmationDialog/ConfirmationDialog';
+import ConfirmationDialog from '../../../../confirmationDialog/ConfirmationDialog';
 import { RootStore } from 'rootReducer';
 
 interface Props {
   isEditMode: boolean;
   isAssignedTagsView: boolean;
   tag: Tag;
-  tagAssignments: TagAssignments;
   selectedFeatureId?: string;
-  selectedStatus: StatusMap<boolean>;
 }
 
-const TagListItem: FC<Props> = ({ isEditMode, isAssignedTagsView, tag, tagAssignments, selectedFeatureId, selectedStatus }) => {
+const TagListItem: FC<Props> = ({ isEditMode, isAssignedTagsView, tag, selectedFeatureId }) => {
   const [expanded, setExpanded] = useState(false);
   const [warningOpen, setWarningOpen] = useState(false);
   const user = useSelector((state: RootStore) => state.user);
+  const tagAssignments = useSelector((state: RootStore) => state.tags.assignments);
   const isIgnored = useSelector((state: RootStore) => Boolean(state.tags.ignored?.[tag.name]));
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const classes = useTagListItemStyles();
 
-  if (!user) {
+  if (!(user && tagAssignments)) {
     return null;
   }
 
-  const featureList = tag.features.filter(feature => selectedStatus[feature.calculatedStatus]);
   const { name } = tag;
   const currentAssignee = tagAssignments[name];
   const newAssignee = user.userId !== currentAssignee?.userId ? user : undefined;
@@ -48,17 +44,17 @@ const TagListItem: FC<Props> = ({ isEditMode, isAssignedTagsView, tag, tagAssign
     return null;
   }
 
-  const onTagIgnoreClick = (event: MouseEvent): void => {
-    event.stopPropagation();
+  const onTagIgnoreClick = (e: MouseEvent): void => {
+    e.stopPropagation();
     dispatch(ignoreTagWithRollback(name));
   };
 
-  const onAvatarClick = (event: MouseEvent): void => {
-    event.stopPropagation();
-    if (currentAssignee?.userId && user.userId !== currentAssignee?.userId) {
+  const onAvatarClick = (e: MouseEvent): void => {
+    e.stopPropagation();
+    if (currentAssignee && user.userId !== currentAssignee?.userId) {
       setWarningOpen(true);
     } else {
-      dispatch(assignUserToTagWithRollback(tag.name, currentAssignee, newAssignee));
+      dispatch(assignUserToTagWithRollback(name, currentAssignee, newAssignee));
     }
   };
 
@@ -68,19 +64,19 @@ const TagListItem: FC<Props> = ({ isEditMode, isAssignedTagsView, tag, tagAssign
         {isEditMode && (
           <FontAwesomeIcon icon={isIgnored ? faMinusSquare : faSquare} className={classes.checkboxIcons} onClick={onTagIgnoreClick} />
         )}
-        <ListItemText>{tag.name}</ListItemText>
+        <ListItemText>{name}</ListItemText>
         <TagAvatar user={currentAssignee} isIgnored={isIgnored} onClick={onAvatarClick} />
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <TagViewFeatureList selectedFeatureId={selectedFeatureId} featureList={featureList} />
+        <TagViewFeatureList featureList={tag.features} selectedFeatureId={selectedFeatureId} />
       </Collapse>
       <ConfirmationDialog
         open={warningOpen}
         title={t('report.warning')}
         msg={t('report.pleaseReassignTheTag')}
         handleConfirmed={(): void => {
-          dispatch(assignUserToTagWithRollback(tag.name, currentAssignee, newAssignee));
+          dispatch(assignUserToTagWithRollback(name, currentAssignee, newAssignee));
           setWarningOpen(false);
         }}
         handleClosed={(): void => setWarningOpen(false)}

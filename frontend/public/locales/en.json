@@ -7,7 +7,7 @@
     "cancel": "Cancel"
   },
   "navbar": {
-    "signin": "Sign in",
+    "signIn": "Sign in",
     "cancel": "Cancel",
     "login": "Login",
     "loginWithGithub": "Login with Github",

@@ -1,17 +1,5 @@
 import { makeStyles, createStyles } from '@material-ui/core';
 
-export const useTagListStyles = makeStyles(() =>
-  createStyles({
-    tagList: {
-      borderRadius: '0 0 4px 4px',
-      height: '100%',
-      overflow: 'scroll',
-      position: 'relative',
-      width: '100%',
-    },
-  })
-);
-
 export const useTagListItemStyles = makeStyles(() =>
   createStyles({
     listItemIcon: {

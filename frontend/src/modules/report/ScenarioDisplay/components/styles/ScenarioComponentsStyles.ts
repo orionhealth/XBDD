@@ -2,6 +2,17 @@ import { makeStyles, createStyles } from '@material-ui/core';
 
 export const useStepsStyles = makeStyles(() =>
   createStyles({
+    steps: {
+      paddingBottom: '12px',
+    },
+    stepsTitle: {
+      fontWeight: 'bold',
+    },
+  })
+);
+
+export const useStepStyles = makeStyles(() =>
+  createStyles({
     stepIconBox: {
       padding: '3px',
     },
@@ -12,21 +23,11 @@ export const useStepsStyles = makeStyles(() =>
     skippedStepText: {
       textDecoration: 'line-through',
     },
-    steps: {
-      paddingBottom: '12px',
-    },
     step: {
-      display: 'block',
       padding: '0',
-    },
-    stepTitle: {
-      fontWeight: 'bold',
     },
     stepKeyword: {
       color: '#07584F',
-    },
-    scenarioStepIcon: {
-      fontSize: '16px',
     },
   })
 );
@@ -65,7 +66,7 @@ export const usePopperMenuStyles = makeStyles(() =>
   })
 );
 
-export const useSceenshotStyles = makeStyles(() =>
+export const useScreenshotStyles = makeStyles(() =>
   createStyles({
     screenshot: {
       margin: '20px 0 0 24px',

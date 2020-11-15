@@ -7,7 +7,7 @@ import XbddRouter from 'XbddRouter';
 
 import './Xbdd.css';
 
-const Xbdd: FC<void> = () => {
+const Xbdd: FC = () => {
   return (
     <div className="xbdd-app">
       <Suspense fallback={<div />}>

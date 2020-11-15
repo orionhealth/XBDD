@@ -2,34 +2,45 @@ import React, { FC, MouseEvent, ReactNode, useState, useRef } from 'react';
 import { IconButton, Popper, Fade, Card, List, ListItem } from '@material-ui/core';
 import { MoreHoriz } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
-import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
+import Status, { Statuses } from 'models/Status';
 import { usePopperMenuStyles } from './styles/ScenarioComponentsStyles';
+import { updateStepStatusWithRollback } from 'redux/FeatureReducer';
 
 interface Props {
+  scenarioId: string;
   stepId: number;
-  status: Status;
-  onStepStatusChange(e: MouseEvent<HTMLElement>, stepId: number, status: Status, newStatus: Status): void;
 }
 
-const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
-  const classes = usePopperMenuStyles();
+interface MenuListItemProps {
+  scenarioId: string;
+  stepId: number;
+  status: Status;
+}
+
+const MenuListItem: FC<MenuListItemProps> = ({ scenarioId, stepId, status }) => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const onStepStatusChange = (e: MouseEvent<HTMLElement>): void => {
+    e.stopPropagation();
+    dispatch(updateStepStatusWithRollback(scenarioId, stepId, status));
+  };
+
+  return (
+    <ListItem button onClick={onStepStatusChange}>
+      {t(`report.${status}`)}
+    </ListItem>
+  );
+};
+
+const PopperMenu: FC<Props> = ({ scenarioId, stepId }) => {
+  const classes = usePopperMenuStyles();
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
 
-  const labelMap: StatusMap<string> = {
-    [Passed]: t('report.pass'),
-    [Failed]: t('report.fail'),
-    [Skipped]: t('report.skip'),
-    [Undefined]: t('report.undefined'),
-  };
-
-  const renderListItem = (newStatus: Status): ReactNode => (
-    <ListItem button onClick={(e: MouseEvent<HTMLElement>): void => onStepStatusChange(e, stepId, status, newStatus)}>
-      {labelMap[newStatus]}
-    </ListItem>
-  );
+  const statuses = Statuses;
 
   return (
     <span ref={ref} onMouseEnter={(): void => setOpen(true)} onMouseLeave={(): void => setOpen(false)}>
@@ -41,10 +52,9 @@ const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
           <Fade {...TransitionProps} timeout={350}>
             <Card>
               <List>
-                {renderListItem(Passed)}
-                {renderListItem(Failed)}
-                {renderListItem(Skipped)}
-                {renderListItem(Undefined)}
+                {statuses.map(status => (
+                  <MenuListItem key={status} scenarioId={scenarioId} stepId={stepId} status={status} />
+                ))}
               </List>
             </Card>
           </Fade>

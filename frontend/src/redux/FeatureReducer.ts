@@ -6,7 +6,7 @@ import { StoreDispatch, RootStore } from 'rootReducer';
 import Feature, { SimpleFeature } from 'models/Feature';
 import fetchFeature from 'lib/services/FetchFeature';
 import fetchExecutionHistory from 'lib/services/FetchExecutionHistory';
-import { User } from 'models/User';
+import { LoggedInUser, User } from 'models/User';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 import Status from 'models/Status';
 import Tag from 'models/Tag';
@@ -34,7 +34,7 @@ interface CommentUpdateDetails {
   scenarioId: string;
   label: string;
   content: string;
-  user: User;
+  user: LoggedInUser;
 }
 
 interface StepStatusChange {
@@ -42,14 +42,14 @@ interface StepStatusChange {
   status: Status;
   scenarioId: string;
   build: string;
-  user: User;
+  user: LoggedInUser;
 }
 
 interface ScenarioStatusChange {
   status: Status;
   scenarioId: string;
   build: string;
-  user: User;
+  user: LoggedInUser;
 }
 
 type SaveIndexesAction = PayloadAction<FeatureIndexes>;
@@ -67,7 +67,7 @@ const saveFeatureAndHistoryReducer: CaseReducer<FeatureState, SaveFeatureAndHist
   return { ...state, ...action.payload };
 };
 
-const updateMetadata = (featureState: FeatureState, user: User, build?: string): void => {
+const updateMetadata = (featureState: FeatureState, user: LoggedInUser, build?: string): void => {
   const { selected, executionHistory } = featureState;
   if (selected && executionHistory) {
     selected.lastEditedOn = new Date().getTime();

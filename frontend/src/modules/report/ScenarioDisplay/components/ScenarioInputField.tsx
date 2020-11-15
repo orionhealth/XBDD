@@ -38,7 +38,7 @@ const ScenarioInputField: FC<Props> = ({ scenarioId, label, content }) => {
         rows="2"
         fullWidth={true}
         value={text}
-        onChange={(event: ChangeEvent<HTMLInputElement>): void => setText(event.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>): void => setText(e.target.value)}
         onBlur={(): void => {
           dispatch(updateCommentWithRollback(scenarioId, labelMap[label], requestLabelMap[label], text));
         }}

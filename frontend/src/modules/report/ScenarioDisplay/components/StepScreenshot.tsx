@@ -1,7 +1,7 @@
 import React, { FC, useState, KeyboardEvent } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
 
-import { useSceenshotStyles } from './styles/ScenarioComponentsStyles';
+import { useScreenshotStyles } from './styles/ScenarioComponentsStyles';
 
 interface Props {
   screenshotPath: string;
@@ -9,7 +9,7 @@ interface Props {
 
 const StepScreenshot: FC<Props> = ({ screenshotPath }) => {
   const [enhanceScreenShot, setEnhanceScreenshot] = useState(false);
-  const classes = useSceenshotStyles();
+  const classes = useScreenshotStyles();
 
   const url = `${process.env.REACT_APP_BACKEND_HOST}/rest/attachment/${screenshotPath}`;
 

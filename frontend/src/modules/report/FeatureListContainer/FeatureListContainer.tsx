@@ -1,19 +1,14 @@
-import React, { FC, ReactNode, useState } from 'react';
-import { Typography, Checkbox, Tooltip, Box } from '@material-ui/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTags, faUserTag, faUserSlash } from '@fortawesome/free-solid-svg-icons';
+import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 
 import { useFeatureListContainerStyles } from './styles/FeatureListContainerStyles';
-import FeatureFilterButtons from './FeatureFilterButtons/FeatureFilterButtons';
-import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
-import TagList from './TagViewFeatureList/TagList';
+import FeatureFilterButtons from './FeatureFilterButtons';
 import Loading from 'modules/loading/Loading';
 import { LoggedInUser } from 'models/User';
-import Tag from 'models/Tag';
 import { RootStore } from 'rootReducer';
 import Status, { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
+import FeatureListTitle from './FeatureListTitle/FeatureListTitle';
+import FeatureList from './FeatureList/FeatureList';
 
 interface Props {
   user: LoggedInUser;
@@ -22,7 +17,6 @@ interface Props {
 
 const FeatureListContainer: FC<Props> = props => {
   const classes = useFeatureListContainerStyles();
-  const { t } = useTranslation();
 
   const idIndex = useSelector((state: RootStore) => state.feature.byId);
   const tagIndex = useSelector((state: RootStore) => state.feature.byTag);
@@ -33,6 +27,7 @@ const FeatureListContainer: FC<Props> = props => {
   const [isEditMode, setEditMode] = useState(false);
   const [isAssignedTagsView, setAssignedTagsView] = useState(false);
   const [isTagView, setTagView] = useState(true);
+
   const [isPassSelected, setPassSelected] = useState(true);
   const [isFailedSelected, setFailedSelected] = useState(true);
   const [isUndefinedSelected, setUndefinedSelected] = useState(true);
@@ -58,96 +53,27 @@ const FeatureListContainer: FC<Props> = props => {
 
   const { user, selectedFeatureId } = props;
 
-  const filterTags = (): Tag[] => {
-    let filteredTagList = tagIndex || [];
-
-    if (tagAssignments && isAssignedTagsView) {
-      filteredTagList = filteredTagList.filter(tag => tagAssignments[tag.name]?.userId === user.userId);
-    }
-    filteredTagList = filteredTagList.filter(tag => tag.features.find(feature => selectedStatus[feature.calculatedStatus]));
-
-    return filteredTagList;
-  };
-
-  const renderAssignedTagsSwitch = (): ReactNode => {
-    const editModeTitle = isEditMode ? t('report.turnEditModeOff') : t('report.turnEditModeOn');
-    const assignedTagsTitle = isAssignedTagsView ? t('report.showAllTags') : t('report.showAssignedTags');
-
-    return (
-      <>
-        <Tooltip title={editModeTitle} placement="top">
-          <Checkbox
-            onChange={(): void => setEditMode(!isEditMode)}
-            icon={<FontAwesomeIcon icon={faUserSlash} className={classes.unCheckedIcon} />}
-            checkedIcon={<FontAwesomeIcon icon={faUserSlash} className={classes.checkedIcon} />}
-            checked={isEditMode}
-          />
-        </Tooltip>
-        <Tooltip title={assignedTagsTitle} placement="top">
-          <Checkbox
-            onChange={(): void => setAssignedTagsView(!isAssignedTagsView)}
-            icon={<FontAwesomeIcon icon={faUserTag} className={classes.unCheckedIcon} />}
-            checkedIcon={<FontAwesomeIcon icon={faUserTag} className={classes.checkedIcon} />}
-            checked={isAssignedTagsView}
-          />
-        </Tooltip>
-      </>
-    );
-  };
-
-  const renderViewsSwitch = (): ReactNode => {
-    const title = isTagView ? t('report.switchToListView') : t('report.switchToTagView');
-
-    return (
-      <Tooltip title={title} placement="top">
-        <Checkbox
-          onChange={(): void => setTagView(!isTagView)}
-          icon={<FontAwesomeIcon icon={faTags} className={classes.unCheckedIcon} />}
-          checkedIcon={<FontAwesomeIcon icon={faTags} className={classes.checkedIcon} />}
-          checked={isTagView}
-        />
-      </Tooltip>
-    );
-  };
-
-  const renderFeatureListTitle = (): ReactNode => {
-    return (
-      <Box className={classes.featureListTitle}>
-        <Box p={1} flexGrow={1}>
-          <Typography variant="h5">{t('featureList.features')}</Typography>
-        </Box>
-        <Box>
-          {isTagView ? renderAssignedTagsSwitch() : null}
-          {renderViewsSwitch()}
-        </Box>
-      </Box>
-    );
-  };
-
-  const renderFeatureList = (selectedFeatureId?: string): ReactNode => {
-    if (isTagView && tagAssignments) {
-      return (
-        <TagList
-          isEditMode={isEditMode}
-          isAssignedTagsView={isAssignedTagsView}
-          tagList={filterTags()}
-          tagAssignments={tagAssignments}
-          selectedFeatureId={selectedFeatureId}
-          selectedStatus={selectedStatus}
-        />
-      );
-    } else if (idIndex) {
-      return <ListViewFeatureList selectedFeatureId={selectedFeatureId} featureList={idIndex} selectedStatus={selectedStatus} />;
-    }
-  };
-
   return (
     <>
       <Loading loading={loading} />
       <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={handleFilterButtonClick} />
       <div className={classes.tagListContainer}>
-        {renderFeatureListTitle()}
-        {renderFeatureList(selectedFeatureId)}
+        <FeatureListTitle
+          isEditMode={isEditMode}
+          isTagView={isTagView}
+          isAssignedTagsView={isAssignedTagsView}
+          setTagView={setTagView}
+          setEditMode={setEditMode}
+          setAssignedTagsView={setAssignedTagsView}
+        />
+        <FeatureList
+          isEditMode={isEditMode}
+          isTagView={isTagView}
+          isAssignedTagsView={isAssignedTagsView}
+          user={user}
+          selectedFeatureId={selectedFeatureId}
+          selectedStatus={selectedStatus}
+        />
       </div>
     </>
   );

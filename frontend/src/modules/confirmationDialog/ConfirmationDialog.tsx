@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
@@ -6,8 +6,8 @@ interface Props {
   open: boolean;
   title: string;
   msg: string;
-  handleConfirmed: (event: React.MouseEvent) => void;
-  handleClosed: (event: React.MouseEvent) => void;
+  handleConfirmed: (e: MouseEvent) => void;
+  handleClosed: (e: MouseEvent) => void;
 }
 
 const ConfirmationDialog: FC<Props> = props => {

@@ -2,7 +2,7 @@ import React, { FC, MouseEvent } from 'react';
 import { Avatar } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
-import { User } from 'models/User';
+import { LoggedInUser } from 'models/User';
 
 const getInitials = (userName: string): string => {
   let initials;
@@ -32,9 +32,9 @@ const getHSLFromString = (display: string): string => {
 };
 
 interface Props {
-  user: User | null;
+  user: LoggedInUser | null;
   className?: string;
-  onClick?(event: MouseEvent): void;
+  onClick?(e: MouseEvent): void;
 }
 
 const UserAvatar: FC<Props> = ({ user, className, onClick }) => {
