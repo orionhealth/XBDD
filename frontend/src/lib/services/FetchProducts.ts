@@ -28,7 +28,7 @@ type ResponseData = ResponseDataElement[];
 const createBuild = (data: BuildResponseData): Build => {
   return {
     name: data.name,
-    publishDate: data.publishDate ? new Date(data.publishDate).getTime() : null,
+    publishDate: data.publishDate ? Date.parse(data.publishDate) : null,
     isPinned: data.isPinned,
   };
 };
