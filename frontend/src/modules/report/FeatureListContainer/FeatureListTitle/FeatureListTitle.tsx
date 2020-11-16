@@ -39,7 +39,7 @@ const FeatureListTitle: FC<Props> = props => {
             flag={isAssignedTagsView}
             flagSetter={setAssignedTagsView}
             titleOn={t('report.showAllTags')}
-            titleOff={t('report.turnEditModeOn')}
+            titleOff={t('report.showAssignedTags')}
             iconName={faUserTag}
           />
         </>
