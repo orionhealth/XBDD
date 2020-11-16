@@ -6,7 +6,7 @@ import { StoreDispatch, RootStore } from 'rootReducer';
 import Feature, { SimpleFeature } from 'models/Feature';
 import fetchFeature from 'lib/services/FetchFeature';
 import fetchExecutionHistory from 'lib/services/FetchExecutionHistory';
-import { LoggedInUser, User } from 'models/User';
+import { LoggedInUser } from 'models/User';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
 import Status from 'models/Status';
 import Tag from 'models/Tag';
