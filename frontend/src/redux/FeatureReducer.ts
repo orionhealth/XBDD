@@ -50,7 +50,6 @@ interface ScenarioStatusChange {
 type SaveIndexesAction = PayloadAction<FeatureIndexes>;
 type SaveFeatureAndHistoryAction = PayloadAction<SelectedFeature>;
 type CommentUpdateAction = PayloadAction<CommentUpdateDetails>;
-type LastUpdatedUpdateAction = PayloadAction<User>;
 type StepStatusChangeAction = PayloadAction<StepStatusChange>;
 type ScenarioStatusChangeAction = PayloadAction<ScenarioStatusChange>;
 
