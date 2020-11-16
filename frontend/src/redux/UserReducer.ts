@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction, CaseReducer } from '@reduxjs/toolkit';
 
-import { LoggedInUser } from 'models/User';
+import { User } from 'models/User';
 import { fetchLoggedInUser } from 'lib/services/FetchLoggedInUser';
 import { StoreDispatch } from 'rootReducer';
 
-type UserState = LoggedInUser | null;
+type UserState = User | null;
 
 type UserAction = PayloadAction<UserState>;
 

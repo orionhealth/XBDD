@@ -2,13 +2,13 @@ import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import { StatusMap } from 'models/Status';
-import { LoggedInUser } from 'models/User';
+import { User } from 'models/User';
 import { RootStore } from 'rootReducer';
 import ListViewFeatureList from './ListViewFeatureList/ListViewFeatureList';
 import TagList from './TagViewFeatureList/TagList';
 
 interface Props {
-  user: LoggedInUser;
+  user: User;
   isEditMode: boolean;
   isTagView: boolean;
   isAssignedTagsView: boolean;

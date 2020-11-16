@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 import ProductListContainer from './productList/ProductListContainer';
 import { useSummaryStyles } from './styles/SummaryStyles';
 import Loading from 'modules/loading/Loading';
-import { LoggedInUser } from 'models/User';
+import { User } from 'models/User';
 import { RootStore } from 'rootReducer';
 
 interface Props {
-  user: LoggedInUser;
+  user: User;
 }
 
 const SummaryContainer: FC<Props> = ({ user }) => {

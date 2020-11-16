@@ -1,6 +1,6 @@
 import { Method, doRequest } from 'lib/rest/RestRequests';
 import FetchLoggedInUserTypes from './generated/FetchLoggedInUserTypes';
-import { LoggedInUser } from 'models/User';
+import { User } from 'models/User';
 import { getEncodedURI } from 'lib/rest/URIHelper';
 
 interface ResponseData {
@@ -18,7 +18,7 @@ export const getAvatarUrl = (loginType: string, socialLogin?: string): string | 
 };
 
 /* eslint-disable @typescript-eslint/camelcase */
-const createUser = (responseData: ResponseData): LoggedInUser => ({
+const createUser = (responseData: ResponseData): User => ({
   userId: responseData.user_id,
   display: responseData.display,
   socialLogin: responseData.socialLogin,
@@ -26,7 +26,7 @@ const createUser = (responseData: ResponseData): LoggedInUser => ({
   favourites: responseData.favourites,
 });
 
-export const fetchLoggedInUser = async (): Promise<LoggedInUser | void> => {
+export const fetchLoggedInUser = async (): Promise<User | void> => {
   const url = `/rest/user/loggedin`;
   return doRequest(Method.GET, url, 'rest.error.get', null, FetchLoggedInUserTypes, createUser);
 };

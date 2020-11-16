@@ -6,11 +6,11 @@ import { useReportContainerStyles } from './styles/ReportContainerStyles';
 import FeatureListContainer from './FeatureListContainer/FeatureListContainer';
 import ScenarioDisplay from './ScenarioDisplay/ScenarioDisplay';
 import FeatureSummary from './FeatureSummary/FeatureSummary';
-import { LoggedInUser } from 'models/User';
+import { User } from 'models/User';
 import { RootStore } from 'rootReducer';
 
 interface Props {
-  user: LoggedInUser;
+  user: User;
 }
 
 const ReportContainer: FC<Props> = ({ user }) => {

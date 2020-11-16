@@ -4,14 +4,14 @@ import { useSelector } from 'react-redux';
 import { useFeatureListContainerStyles } from './styles/FeatureListContainerStyles';
 import FeatureFilterButtons from './FeatureFilterButtons';
 import Loading from 'modules/loading/Loading';
-import { LoggedInUser } from 'models/User';
+import { User } from 'models/User';
 import { RootStore } from 'rootReducer';
 import Status, { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 import FeatureListTitle from './FeatureListTitle/FeatureListTitle';
 import FeatureList from './FeatureList/FeatureList';
 
 interface Props {
-  user: LoggedInUser;
+  user: User;
   selectedFeatureId?: string;
 }
 
