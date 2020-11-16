@@ -25,11 +25,6 @@ interface FeatureIndexes {
 
 type FeatureState = FeatureIndexes & SelectedFeature;
 
-interface IndexStatusUpdate {
-  feature: Feature;
-  status: Status;
-}
-
 interface CommentUpdateDetails {
   scenarioId: string;
   label: string;
