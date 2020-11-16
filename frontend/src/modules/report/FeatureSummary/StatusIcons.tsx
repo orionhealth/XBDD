@@ -26,8 +26,8 @@ const StatusIcons: FC<Props> = props => {
   const iconMap = {
     [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={`${classesMap[Passed]} ${sizeClasses}`} />,
     [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={`${classesMap[Failed]} ${sizeClasses}`} />,
-    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={`${classesMap[Undefined]} ${sizeClasses}`} />,
     [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={`${classesMap[Skipped]} ${sizeClasses}`} />,
+    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={`${classesMap[Undefined]} ${sizeClasses}`} />,
   };
 
   return (

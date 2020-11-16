@@ -26,15 +26,15 @@ const FilterButton: FC<FilterButtonProps> = ({ status, selectedStatus, handleFil
   const tooltipsMap: StatusMap<string> = {
     [Passed]: t('report.passed'),
     [Failed]: t('report.failed'),
-    [Undefined]: t('report.undefined'),
     [Skipped]: t('report.skipped'),
+    [Undefined]: t('report.undefined'),
   };
 
   const iconMap: StatusMap<ReactNode> = {
     [Passed]: <CheckCircleOutline />,
     [Failed]: <ErrorOutline />,
-    [Undefined]: <HelpOutline />,
     [Skipped]: <RemoveCircleOutline />,
+    [Undefined]: <HelpOutline />,
   };
 
   const iconColorClasses = selectedStatus[status] ? classesMap[status] : classes.buttonUnselected;

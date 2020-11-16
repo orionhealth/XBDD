@@ -36,15 +36,15 @@ const FeatureListContainer: FC<Props> = props => {
   const selectedStatus: StatusMap<boolean> = {
     [Passed]: isPassSelected,
     [Failed]: isFailedSelected,
-    [Undefined]: isUndefinedSelected,
     [Skipped]: isSkippedSelected,
+    [Undefined]: isUndefinedSelected,
   };
 
   const handlerMap: StatusMap<(isSelected: boolean) => void> = {
     [Passed]: setPassSelected,
     [Failed]: setFailedSelected,
-    [Undefined]: setUndefinedSelected,
     [Skipped]: setSkippedSelected,
+    [Undefined]: setUndefinedSelected,
   };
 
   const handleFilterButtonClick = (filterSelected: Status): void => {

@@ -29,10 +29,10 @@ const ExecutionHistory: FC<Props> = ({ executionHistory }) => {
   const classesMap = useStatusColorStyles();
 
   const iconMap: StatusMap<ReactNode> = {
-    [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={classesMap.passed} />,
-    [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={classesMap.failed} />,
-    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={classesMap.undefined} />,
-    [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={classesMap.skipped} />,
+    [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={classesMap[Passed]} />,
+    [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={classesMap[Failed]} />,
+    [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={classesMap[Skipped]} />,
+    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={classesMap[Undefined]} />,
   };
 
   const navigateToBuild = (build: string): void => {
