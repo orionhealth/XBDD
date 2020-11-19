@@ -22,11 +22,12 @@ const useStyles = makeStyles(() =>
 
 interface Props {
   stepId: number;
+  stepName: string;
   status: Status;
   onStepStatusChange(e: MouseEvent<HTMLElement>, stepId: number, status: Status, newStatus: Status): void;
 }
 
-const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
+const PopperMenu: FC<Props> = ({ stepId, stepName, status, onStepStatusChange }) => {
   const classes = useStyles();
   const { t } = useTranslation();
   const ref = useRef(null);
@@ -45,6 +46,11 @@ const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
     </ListItem>
   );
 
+  const copyStepNameToClipboard = (event: MouseEvent<HTMLElement>): void => {
+    event.stopPropagation();
+    navigator.clipboard.writeText(stepName);
+  };
+
   return (
     <span ref={ref} onMouseEnter={(): void => setOpen(true)} onMouseLeave={(): void => setOpen(false)}>
       <IconButton className={classes.moreButton}>
@@ -59,6 +65,9 @@ const PopperMenu: FC<Props> = ({ stepId, status, onStepStatusChange }) => {
                 {renderListItem(Failed)}
                 {renderListItem(Skipped)}
                 {renderListItem(Undefined)}
+                <ListItem button onClick={(e: MouseEvent<HTMLElement>): void => copyStepNameToClipboard(e)}>
+                  {t('report.copy')}
+                </ListItem>
               </List>
             </Card>
           </Fade>
