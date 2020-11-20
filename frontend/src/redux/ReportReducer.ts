@@ -89,6 +89,11 @@ const updatePinStatusReducer: CaseReducer<ReportState, UpdatePinStatusAction> = 
   return state;
 };
 
+const resetReportIdReducer: CaseReducer<ReportState> = state => {
+  state.currentReportId = null;
+  return state;
+};
+
 const initialState: ReportState = { currentReportId: null, productList: null, selectedVersion: {} };
 
 const { actions, reducer } = createSlice({
@@ -101,10 +106,19 @@ const { actions, reducer } = createSlice({
     updateSelectedVersion: updateSelectedVersionReducer,
     updateFavouriteStatus: updateFavouriteStatusReducer,
     updatePinStatus: updatePinStatusReducer,
+    resetReportId: resetReportIdReducer,
   },
 });
 
-export const { updateReport, updateReportId, updateProductList, updateSelectedVersion, updateFavouriteStatus, updatePinStatus } = actions;
+export const {
+  updateReport,
+  updateReportId,
+  updateProductList,
+  updateSelectedVersion,
+  updateFavouriteStatus,
+  updatePinStatus,
+  resetReportId,
+} = actions;
 
 export const updateReportIdentifier = (product: string, version: string, build: string) => (dispatch: StoreDispatch): void => {
   dispatch(updateReportId({ product, version, build }));

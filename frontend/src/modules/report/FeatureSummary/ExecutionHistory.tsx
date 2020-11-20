@@ -24,7 +24,7 @@ const ExecutionHistory: FC<Props> = ({ executionHistory }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const report = useSelector((state: RootStore) => state.report.currentReportId);
+  const reportIdentifier = useSelector((state: RootStore) => state.report.currentReportId);
 
   const classesMap = useStatusColorStyles();
 
@@ -36,11 +36,11 @@ const ExecutionHistory: FC<Props> = ({ executionHistory }) => {
   };
 
   const navigateToBuild = (build: string): void => {
-    if (!report || report.build === build) {
+    if (!reportIdentifier || reportIdentifier.build === build) {
       return;
     }
     dispatch(resetFeatureState());
-    history.push(`/reports/${getEncodedURI(report.product, report.version, build)}`);
+    history.push(`/reports/${getEncodedURI(reportIdentifier.product, reportIdentifier.version, build)}`);
   };
 
   return (

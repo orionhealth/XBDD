@@ -6,7 +6,6 @@ import FeatureFilterButtons from './FeatureFilterButtons';
 import Loading from 'modules/loading/Loading';
 import { User } from 'models/User';
 import { RootStore } from 'rootReducer';
-import Status, { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 import FeatureListTitle from './FeatureListTitle/FeatureListTitle';
 import FeatureList from './FeatureList/FeatureList';
 
@@ -28,35 +27,12 @@ const FeatureListContainer: FC<Props> = props => {
   const [isAssignedTagsView, setAssignedTagsView] = useState(false);
   const [isTagView, setTagView] = useState(true);
 
-  const [isPassSelected, setPassSelected] = useState(true);
-  const [isFailedSelected, setFailedSelected] = useState(true);
-  const [isUndefinedSelected, setUndefinedSelected] = useState(true);
-  const [isSkippedSelected, setSkippedSelected] = useState(true);
-
-  const selectedStatus: StatusMap<boolean> = {
-    [Passed]: isPassSelected,
-    [Failed]: isFailedSelected,
-    [Undefined]: isUndefinedSelected,
-    [Skipped]: isSkippedSelected,
-  };
-
-  const handlerMap: StatusMap<(isSelected: boolean) => void> = {
-    [Passed]: setPassSelected,
-    [Failed]: setFailedSelected,
-    [Undefined]: setUndefinedSelected,
-    [Skipped]: setSkippedSelected,
-  };
-
-  const handleFilterButtonClick = (filterSelected: Status): void => {
-    handlerMap[filterSelected](!selectedStatus[filterSelected]);
-  };
-
   const { user, selectedFeatureId } = props;
 
   return (
     <>
       <Loading loading={loading} />
-      <FeatureFilterButtons selectedStatus={selectedStatus} handleFilterButtonClick={handleFilterButtonClick} />
+      <FeatureFilterButtons />
       <div className={classes.tagListContainer}>
         <FeatureListTitle
           isEditMode={isEditMode}
@@ -72,7 +48,6 @@ const FeatureListContainer: FC<Props> = props => {
           isAssignedTagsView={isAssignedTagsView}
           user={user}
           selectedFeatureId={selectedFeatureId}
-          selectedStatus={selectedStatus}
         />
       </div>
     </>

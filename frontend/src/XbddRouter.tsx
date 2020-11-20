@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { BrowserRouter as Router, Switch, Route, useParams } from 'react-router-dom';
+import React, { FC, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route, useParams, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Navbar from 'modules/navbar/Navbar';
@@ -10,9 +10,10 @@ import { RootStore } from 'rootReducer';
 import { fetchUser } from 'redux/UserReducer';
 import { User } from 'models/User';
 import { fetchProductList, updateReportIdentifier } from 'redux/ReportReducer';
-import { fetchIndexes } from 'redux/FeatureReducer';
+import { fetchIndexes, saveStatusFilter } from 'redux/FeatureReducer';
 import { fetchTagsMetadata } from 'redux/TagsMetadataReducer';
 import { getDecodedIdentifier } from 'lib/rest/URIHelper';
+import { Passed, Failed, Skipped, Undefined } from 'models/Status';
 
 interface Props {
   user: User;
@@ -26,12 +27,31 @@ interface ReportIdentifier {
 
 const ReportPage: FC<Props> = ({ user }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
+
   const { productParam, versionParam, buildParam } = useParams<ReportIdentifier>();
   const { product, version, build } = getDecodedIdentifier(productParam, versionParam, buildParam);
-  dispatch(updateReportIdentifier(product, version, build));
-  dispatch(fetchIndexes());
-  dispatch(fetchTagsMetadata());
-  dispatch(fetchProductList());
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const hiddenStatuses = searchParams.getAll('hidden');
+    const selectedStatuses = {
+      [Passed]: !hiddenStatuses.includes(Passed),
+      [Failed]: !hiddenStatuses.includes(Failed),
+      [Skipped]: !hiddenStatuses.includes(Skipped),
+      [Undefined]: !hiddenStatuses.includes(Undefined),
+    };
+    dispatch(saveStatusFilter({ selectedStatuses }));
+  }, [dispatch, location.search]);
+
+  useEffect(() => {
+    dispatch(updateReportIdentifier(product, version, build));
+
+    dispatch(fetchIndexes());
+    dispatch(fetchTagsMetadata());
+    dispatch(fetchProductList());
+  }, [dispatch, product, version, build]);
+
   return <ReportContainer user={user} />;
 };
 
