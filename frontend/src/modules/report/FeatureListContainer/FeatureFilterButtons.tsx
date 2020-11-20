@@ -43,8 +43,8 @@ const FilterButton: FC<FilterButtonProps> = ({ status }) => {
   const iconMap: StatusMap<ReactNode> = {
     [Passed]: <CheckCircleOutline />,
     [Failed]: <ErrorOutline />,
-    [Undefined]: <HelpOutline />,
     [Skipped]: <RemoveCircleOutline />,
+    [Undefined]: <HelpOutline />,
   };
 
   const iconColorClasses = selectedStatuses[status] ? classesMap[status] : classes.buttonUnselected;
