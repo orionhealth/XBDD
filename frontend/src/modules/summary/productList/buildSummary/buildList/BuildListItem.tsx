@@ -24,29 +24,28 @@ const BuildListItem: FC<Props> = ({ product, version, build }) => {
   const classes = useBuildListStyles();
   const history = useHistory();
 
-  const onItemClick = (e: MouseEvent<HTMLElement>, build: string, isPinned: boolean): void => {
-    let node: EventTarget | null = e.target;
-    while (node && node instanceof Element) {
-      if (node.className === 'MuiIconButton-label') {
-        dispatch(updatePinStatusWithRollback(product, version, build, isPinned));
-        return;
-      }
-      node = node.parentNode instanceof Element ? node.parentNode : null;
-    }
+  const handleSelectBuild = (e: MouseEvent<HTMLElement>): void => {
+    e.stopPropagation();
     dispatch(resetFeatureState());
-    history.push(`/reports/${getEncodedURI(product, version, build)}`);
+    history.push(`/reports/${getEncodedURI(product, version, build.name)}`);
+  };
+
+  const handlePinBuild = (e: MouseEvent<HTMLElement>): void => {
+    e.stopPropagation();
+    dispatch(updatePinStatusWithRollback(product, version, build.name, build.isPinned));
   };
 
   const publishDate = build.publishDate ? new Date(build.publishDate) : 'Unknown Publish Date';
 
   return (
-    <ListItem button onClick={(e: MouseEvent<HTMLElement>): void => onItemClick(e, build.name, build.isPinned)}>
+    <ListItem button onClick={handleSelectBuild}>
       <ListItemText>{t('summary.buildDisplay', { name: build.name, publishDate })}</ListItemText>
       <ListItemIcon>
         <Checkbox
           icon={<FontAwesomeIcon icon={faThumbtack} className={classes.unpinnedBuild} />}
           checkedIcon={<FontAwesomeIcon icon={faThumbtack} className={classes.pinnedBuild} />}
           checked={build.isPinned}
+          onClick={handlePinBuild}
         />
       </ListItemIcon>
     </ListItem>

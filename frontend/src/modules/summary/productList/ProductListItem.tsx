@@ -20,24 +20,26 @@ const ProductListItem: FC<Props> = ({ product }) => {
   const classes = useProductListStyles();
   const [expanded, setExpanded] = useState(false);
 
-  const onItemClick = (e: MouseEvent): void => {
-    let node: EventTarget | null = e.target;
-
-    while (node && node instanceof Element) {
-      if (node.className === 'MuiIconButton-label') {
-        dispatch(updateFavouriteStatusWithRollback(product.name, product.favourite));
-        return;
-      }
-      node = node.parentNode instanceof Element ? node.parentNode : null;
-    }
+  const handleExpandCollapse = (e: MouseEvent<HTMLElement>): void => {
+    e.stopPropagation();
     setExpanded(!expanded);
+  };
+
+  const handleFavouriteProduct = (e: MouseEvent<HTMLElement>): void => {
+    e.stopPropagation();
+    dispatch(updateFavouriteStatusWithRollback(product.name, product.favourite));
   };
 
   return (
     <>
-      <ListItem button className={classes.productListItem} onClick={onItemClick}>
+      <ListItem button className={classes.productListItem} onClick={handleExpandCollapse}>
         <ListItemIcon>
-          <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite className={classes.checkedFavourite} />} checked={product.favourite} />
+          <Checkbox
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite className={classes.checkedFavourite} />}
+            checked={product.favourite}
+            onClick={handleFavouriteProduct}
+          />
         </ListItemIcon>
         <ListItemText>{product.name}</ListItemText>
         {expanded ? <ExpandLess /> : <ExpandMore />}
