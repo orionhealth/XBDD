@@ -20,12 +20,12 @@ const ProductListItem: FC<Props> = ({ product }) => {
   const classes = useProductListStyles();
   const [expanded, setExpanded] = useState(false);
 
-  const handleExpandCollapse = (e: MouseEvent<HTMLElement>): void => {
+  const handleExpandCollapse = (e: MouseEvent): void => {
     e.stopPropagation();
     setExpanded(!expanded);
   };
 
-  const handleFavouriteProduct = (e: MouseEvent<HTMLElement>): void => {
+  const handleFavouriteProduct = (e: MouseEvent): void => {
     e.stopPropagation();
     dispatch(updateFavouriteStatusWithRollback(product.name, product.favourite));
   };

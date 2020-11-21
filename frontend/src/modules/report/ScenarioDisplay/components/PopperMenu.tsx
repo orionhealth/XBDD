@@ -31,7 +31,7 @@ const MenuListItem: FC<MenuListItemProps> = ({ scenarioId, stepId, status }) => 
     [Undefined]: t('report.undefine'),
   };
 
-  const onStepStatusChange = (e: MouseEvent<HTMLElement>): void => {
+  const onStepStatusChange = (e: MouseEvent): void => {
     e.stopPropagation();
     dispatch(updateStepStatusWithRollback(scenarioId, stepId, status));
   };
@@ -43,7 +43,7 @@ const MenuListItem: FC<MenuListItemProps> = ({ scenarioId, stepId, status }) => 
   );
 };
 
-const copyToClipboard = (e: MouseEvent<HTMLElement>, step: string): void => {
+const copyToClipboard = (e: MouseEvent, step: string): void => {
   e.stopPropagation();
   navigator.clipboard.writeText(step);
 };
@@ -69,7 +69,7 @@ const PopperMenu: FC<Props> = ({ scenarioId, stepId, stepName }) => {
                 {statuses.map(status => (
                   <MenuListItem key={status} scenarioId={scenarioId} stepId={stepId} status={status} />
                 ))}
-                <ListItem button onClick={(e: MouseEvent<HTMLElement>): void => copyToClipboard(e, stepName)}>
+                <ListItem button onClick={(e: MouseEvent): void => copyToClipboard(e, stepName)}>
                   {t(`report.copy`)}
                 </ListItem>
               </List>

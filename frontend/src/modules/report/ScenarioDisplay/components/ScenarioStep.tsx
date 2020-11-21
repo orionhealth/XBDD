@@ -12,6 +12,7 @@ import Step from 'models/Step';
 import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
 import { updateStepStatusWithRollback } from 'redux/FeatureReducer';
 import { useStatusColorStyles } from 'modules/styles/globalStyles';
+import LinkifiedText from 'lib/utils/LinkifiedText';
 
 interface Props {
   scenarioId: string;
@@ -31,7 +32,7 @@ const ScenarioStep: FC<Props> = ({ scenarioId, step }) => {
     [Undefined]: <FontAwesomeIcon icon={faSquare} />,
   };
 
-  const onStepStatusChange = (e: MouseEvent<HTMLElement>, stepId: number, status: Status): void => {
+  const onStepStatusChange = (e: MouseEvent, stepId: number, status: Status): void => {
     e.stopPropagation();
 
     const nextStatus: StatusMap<Status> = {
@@ -48,13 +49,15 @@ const ScenarioStep: FC<Props> = ({ scenarioId, step }) => {
   const stepTextClasses = status === Skipped ? classes.skippedStepText : undefined;
 
   return (
-    <ListItem button className={classes.step} onClick={(e: MouseEvent<HTMLElement>): void => onStepStatusChange(e, step.id, status)}>
+    <ListItem button className={classes.step} onClick={(e: MouseEvent): void => onStepStatusChange(e, step.id, status)}>
       <div className={classes.stepIconBox}>{iconMap[status]}</div>
       <div className={classes.stepContentBox}>
         <div className={stepTextClasses}>
           <span className={classes.stepKeyword}>{step.keyword}</span>
-          <span>{`${step.name} `}</span>
-          <PopperMenu scenarioId={scenarioId} stepId={step.id} />
+          <span>
+            <LinkifiedText text={`${step.name} `} />
+          </span>
+          <PopperMenu scenarioId={scenarioId} stepId={step.id} stepName={step.name} />
         </div>
         {step.rows ? <CucumberTable rows={step.rows} /> : null}
       </div>
