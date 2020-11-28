@@ -8,7 +8,7 @@ type UserState = User | null;
 
 type UserAction = PayloadAction<UserState>;
 
-const userReducer: CaseReducer<UserState, UserAction> = (state, action) => {
+const userReducer: CaseReducer<UserState, UserAction> = (_, action) => {
   return action.payload;
 };
 

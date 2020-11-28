@@ -8,7 +8,7 @@ export const useSummaryStyles = makeStyles(() =>
       paddingBottom: '16px',
     },
     productListContainer: {
-      overflow: 'scroll',
+      overflow: 'auto',
       padding: '24px',
     },
   })

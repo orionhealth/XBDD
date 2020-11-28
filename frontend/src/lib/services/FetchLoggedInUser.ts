@@ -6,9 +6,9 @@ import { getEncodedURI } from 'lib/rest/URIHelper';
 interface ResponseData {
   user_id: string;
   display: string;
-  socialLogin?: string;
   loginType: string;
-  favourites?: any;
+  socialLogin?: string;
+  favourites?: Record<string, boolean>;
 }
 
 export const getAvatarUrl = (loginType: string, socialLogin?: string): string | undefined => {
@@ -17,7 +17,6 @@ export const getAvatarUrl = (loginType: string, socialLogin?: string): string | 
   }
 };
 
-/* eslint-disable @typescript-eslint/camelcase */
 const createUser = (responseData: ResponseData): User => ({
   userId: responseData.user_id,
   display: responseData.display,

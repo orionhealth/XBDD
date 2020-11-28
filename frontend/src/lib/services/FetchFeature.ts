@@ -1,5 +1,5 @@
 import { doRequest, Method } from 'lib/rest/RestRequests';
-import { calculateAutoStatus, calculateManualStatus } from 'lib/StatusCalculator';
+import { calculateAutoStatus, calculateManualStatus } from 'lib/utils/StatusCalculator';
 import Scenario from 'models/Scenario';
 import Feature from 'models/Feature';
 import Step from 'models/Step';

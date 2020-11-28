@@ -23,7 +23,7 @@ export const useFeatureSummaryStyles = makeStyles(() =>
       paddingBottom: '6px',
     },
     featureDescription: {
-      overflowX: 'scroll',
+      overflowX: 'auto',
       textAlign: 'left',
       padding: '12px 0 12px 12px',
     },
