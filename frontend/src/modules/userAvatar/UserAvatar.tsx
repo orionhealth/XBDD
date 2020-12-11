@@ -4,9 +4,15 @@ import { useTranslation } from 'react-i18next';
 
 import { User } from 'models/User';
 
+interface Props {
+  user: User | null;
+  className?: string;
+  onClick?(event: MouseEvent): void;
+}
+
 const getInitials = (userName: string): string => {
-  let initials;
-  const nameParts = userName?.split(' ');
+  let initials: string | undefined;
+  const nameParts = userName?.trim().split(' ');
 
   if (nameParts) {
     if (nameParts.length > 1) {
@@ -16,11 +22,7 @@ const getInitials = (userName: string): string => {
     }
   }
 
-  if (!initials) {
-    initials = 'X';
-  }
-
-  return initials;
+  return initials || 'X';
 };
 
 const getHSLFromString = (display: string): string => {
@@ -31,27 +33,17 @@ const getHSLFromString = (display: string): string => {
   return 'hsl(' + ((val * val) % 360) + ', 21%, 63%)';
 };
 
-interface Props {
-  user: User | null;
-  className?: string;
-  onClick?(event: MouseEvent): void;
-}
-
 const UserAvatar: FC<Props> = ({ user, className, onClick }) => {
   const { t } = useTranslation();
-  let initials;
-  let color;
-
-  if (user) {
-    initials = getInitials(user.display);
-    color = getHSLFromString(user.display);
-  }
 
   if (user?.avatarUrl) {
-    return <Avatar className={className} src={user.avatarUrl} alt={initials} title={user?.display} onClick={onClick} />;
-  } else if (initials) {
+    return <Avatar className={className} src={user.avatarUrl} alt={user.display} title={user.display} onClick={onClick} />;
+  } else if (user) {
+    const initials = getInitials(user.display);
+    const color = getHSLFromString(user.display);
+
     return (
-      <Avatar className={className} onClick={onClick} alt={initials} title={user?.display} style={{ backgroundColor: color }}>
+      <Avatar className={className} onClick={onClick} alt={user.display} title={user.display} style={{ backgroundColor: color }}>
         {initials}
       </Avatar>
     );
