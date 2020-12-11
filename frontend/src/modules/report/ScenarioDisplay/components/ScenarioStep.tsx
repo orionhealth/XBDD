@@ -25,9 +25,9 @@ const ScenarioStep: FC<Props> = ({ scenarioId, step }) => {
   const classesMap = useStatusColorStyles();
 
   const iconMap: StatusMap<ReactNode> = {
-    [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={classesMap.passed} />,
-    [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={classesMap.failed} />,
-    [Skipped]: <FontAwesomeIcon icon={faMinusSquare} className={classesMap.skipped} />,
+    [Passed]: <FontAwesomeIcon icon={faCheckSquare} className={classesMap[Passed]} />,
+    [Failed]: <FontAwesomeIcon icon={faMinusSquare} className={classesMap[Failed]} />,
+    [Skipped]: <FontAwesomeIcon icon={faMinusSquare} className={classesMap[Skipped]} />,
     [Undefined]: <FontAwesomeIcon icon={faSquare} />,
   };
 
@@ -37,8 +37,8 @@ const ScenarioStep: FC<Props> = ({ scenarioId, step }) => {
     const nextStatus: StatusMap<Status> = {
       [Passed]: Failed,
       [Failed]: Passed,
-      [Undefined]: Passed,
       [Skipped]: Passed,
+      [Undefined]: Passed,
     };
 
     dispatch(updateStepStatusWithRollback(scenarioId, stepId, nextStatus[status]));

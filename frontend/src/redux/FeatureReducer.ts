@@ -8,7 +8,7 @@ import fetchFeature from 'lib/services/FetchFeature';
 import fetchExecutionHistory from 'lib/services/FetchExecutionHistory';
 import { User } from 'models/User';
 import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
-import Status from 'models/Status';
+import Status, { DefaultSelectedStatuses, SelectedStatuses } from 'models/Status';
 import Tag from 'models/Tag';
 import fetchSimpleFeaturesByTags from 'lib/services/FetchSimpleFeaturesByTags';
 import fetchSimpleFeatures from 'lib/services/FetchSimpleFeatures';
@@ -23,7 +23,11 @@ interface FeatureIndexes {
   byId: SimpleFeature[] | null;
 }
 
-type FeatureState = FeatureIndexes & SelectedFeature;
+interface StatusFilter {
+  selectedStatuses: SelectedStatuses;
+}
+
+type FeatureState = FeatureIndexes & SelectedFeature & StatusFilter;
 
 interface CommentUpdateDetails {
   scenarioId: string;
@@ -49,6 +53,7 @@ interface ScenarioStatusChange {
 
 type SaveIndexesAction = PayloadAction<FeatureIndexes>;
 type SaveFeatureAndHistoryAction = PayloadAction<SelectedFeature>;
+type SaveStatusFilterAction = PayloadAction<StatusFilter>;
 type CommentUpdateAction = PayloadAction<CommentUpdateDetails>;
 type StepStatusChangeAction = PayloadAction<StepStatusChange>;
 type ScenarioStatusChangeAction = PayloadAction<ScenarioStatusChange>;
@@ -61,6 +66,9 @@ const saveFeatureAndHistoryReducer: CaseReducer<FeatureState, SaveFeatureAndHist
   return { ...state, ...action.payload };
 };
 
+const saveStatusFilterReducer: CaseReducer<FeatureState, SaveStatusFilterAction> = (state, action) => {
+  return { ...state, ...action.payload };
+};
 const updateMetadata = (featureState: FeatureState, user: User, build?: string): void => {
   const { selected, executionHistory } = featureState;
   if (selected && executionHistory) {
@@ -145,6 +153,7 @@ const initialState: FeatureState = {
   byTag: null,
   selected: null,
   executionHistory: null,
+  selectedStatuses: DefaultSelectedStatuses,
 };
 
 const resetFeatureStateReducer: CaseReducer = () => {
@@ -157,6 +166,7 @@ const { actions, reducer } = createSlice({
   reducers: {
     saveIndexes: featureIndexReducer,
     saveFeatureAndHistory: saveFeatureAndHistoryReducer,
+    saveStatusFilter: saveStatusFilterReducer,
     updateScenarioComment: updateScenarioCommentReducer,
     stepStatusChange: stepStatusChangeReducer,
     scenarioStatusChange: scenarioStatusChangeReducer,
@@ -167,6 +177,7 @@ const { actions, reducer } = createSlice({
 export const {
   saveIndexes,
   saveFeatureAndHistory,
+  saveStatusFilter,
   updateScenarioComment,
   stepStatusChange,
   scenarioStatusChange,

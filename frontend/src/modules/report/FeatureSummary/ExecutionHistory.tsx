@@ -24,23 +24,23 @@ const ExecutionHistory: FC<Props> = ({ executionHistory }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const report = useSelector((state: RootStore) => state.report.currentReportId);
+  const reportIdentifier = useSelector((state: RootStore) => state.report.currentReportId);
 
   const classesMap = useStatusColorStyles();
 
   const iconMap: StatusMap<ReactNode> = {
-    [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={classesMap.passed} />,
-    [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={classesMap.failed} />,
-    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={classesMap.undefined} />,
-    [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={classesMap.skipped} />,
+    [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={classesMap[Passed]} />,
+    [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={classesMap[Failed]} />,
+    [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={classesMap[Skipped]} />,
+    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={classesMap[Undefined]} />,
   };
 
   const navigateToBuild = (build: string): void => {
-    if (!report || report.build === build) {
+    if (!reportIdentifier || reportIdentifier.build === build) {
       return;
     }
     dispatch(resetFeatureState());
-    history.push(`/reports/${getEncodedURI(report.product, report.version, build)}`);
+    history.push(`/reports/${getEncodedURI(reportIdentifier.product, reportIdentifier.version, build)}`);
   };
 
   return (
