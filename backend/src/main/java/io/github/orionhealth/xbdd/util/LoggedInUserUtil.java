@@ -25,8 +25,10 @@ public class LoggedInUserUtil {
 
 			// Github-specific attributes
 			user.setUserId(String.format("%s-%s", user.getLoginType(), principal.getName()));
-			user.setSocialLogin(principal.getAttribute("login"));
-			user.setDisplay(principal.getAttribute("name"));
+			final String socialLogin = principal.getAttribute("login");
+			user.setSocialLogin(socialLogin);
+			final String display = principal.getAttribute("name");
+			user.setDisplay(display != null ? display : socialLogin);
 
 			return user;
 		}
