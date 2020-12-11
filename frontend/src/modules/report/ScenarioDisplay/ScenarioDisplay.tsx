@@ -13,11 +13,6 @@ import ScenarioInputField from './components/ScenarioInputField';
 import { updateScenarioStatusWithRollback } from 'redux/FeatureReducer';
 import { useStatusColorStyles } from 'modules/styles/globalStyles';
 
-interface StepChange {
-  stepId: number;
-  status: Status;
-}
-
 interface Props {
   scenario: Scenario;
 }

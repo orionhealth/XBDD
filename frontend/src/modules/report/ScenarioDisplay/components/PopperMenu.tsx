@@ -4,13 +4,14 @@ import { MoreHoriz } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
-import Status, { Statuses } from 'models/Status';
+import Status, { Passed, Failed, Skipped, Undefined, Statuses } from 'models/Status';
 import { usePopperMenuStyles } from './styles/ScenarioComponentsStyles';
 import { updateStepStatusWithRollback } from 'redux/FeatureReducer';
 
 interface Props {
   scenarioId: string;
   stepId: number;
+  stepName: string;
 }
 
 interface MenuListItemProps {
@@ -23,6 +24,13 @@ const MenuListItem: FC<MenuListItemProps> = ({ scenarioId, stepId, status }) => 
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const textMap = {
+    [Passed]: t('report.pass'),
+    [Failed]: t('report.fail'),
+    [Skipped]: t('report.skip'),
+    [Undefined]: t('report.undefine'),
+  };
+
   const onStepStatusChange = (e: MouseEvent<HTMLElement>): void => {
     e.stopPropagation();
     dispatch(updateStepStatusWithRollback(scenarioId, stepId, status));
@@ -30,15 +38,21 @@ const MenuListItem: FC<MenuListItemProps> = ({ scenarioId, stepId, status }) => 
 
   return (
     <ListItem button onClick={onStepStatusChange}>
-      {t(`report.${status}`)}
+      {textMap[status]}
     </ListItem>
   );
 };
 
-const PopperMenu: FC<Props> = ({ scenarioId, stepId }) => {
-  const classes = usePopperMenuStyles();
+const copyToClipboard = (e: MouseEvent<HTMLElement>, step: string): void => {
+  e.stopPropagation();
+  navigator.clipboard.writeText(step);
+};
+
+const PopperMenu: FC<Props> = ({ scenarioId, stepId, stepName }) => {
+  const { t } = useTranslation();
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
+  const classes = usePopperMenuStyles();
 
   const statuses = Statuses;
 
@@ -55,6 +69,9 @@ const PopperMenu: FC<Props> = ({ scenarioId, stepId }) => {
                 {statuses.map(status => (
                   <MenuListItem key={status} scenarioId={scenarioId} stepId={stepId} status={status} />
                 ))}
+                <ListItem button onClick={(e: MouseEvent<HTMLElement>): void => copyToClipboard(e, stepName)}>
+                  {t(`report.copy`)}
+                </ListItem>
               </List>
             </Card>
           </Fade>

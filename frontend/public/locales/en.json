@@ -33,6 +33,8 @@
     "skipped": "Skipped",
     "skip": "Skip",
     "undefined": "Undefined",
+    "undefine": "Undefine",
+    "copy": "Copy Content",
     "steps": "Steps",
     "backgroundSteps": "Background Steps",
     "skipAllSteps": "Skip All Steps",
