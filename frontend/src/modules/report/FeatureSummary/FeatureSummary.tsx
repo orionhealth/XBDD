@@ -7,7 +7,7 @@ import ExecutionHistory from './ExecutionHistory';
 import StatusIcons from './StatusIcons';
 import Execution from 'models/Execution';
 import Feature from 'models/Feature';
-import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
+import { useStatusColorStyles } from 'modules/styles/globalStyles';
 
 interface Props {
   feature: Feature;
@@ -18,12 +18,7 @@ const FeatureSummary: FC<Props> = ({ feature, executionHistory }) => {
   const { t } = useTranslation();
   const classes = useFeatureSummaryStyles();
 
-  const classesMap: StatusMap<string> = {
-    [Passed]: classes.featurePassed,
-    [Failed]: classes.featureFailed,
-    [Undefined]: classes.featureUndefined,
-    [Skipped]: classes.featureSkipped,
-  };
+  const classesMap = useStatusColorStyles();
 
   return (
     <Card raised className={classes.featureSummary}>

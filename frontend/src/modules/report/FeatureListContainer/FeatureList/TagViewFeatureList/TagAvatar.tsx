@@ -9,7 +9,7 @@ import { useTagAvatarStyles } from './styles/TagListStyles';
 interface Props {
   user?: User;
   isIgnored: boolean;
-  onClick(event: MouseEvent): void;
+  onClick(e: MouseEvent): void;
 }
 
 const TagAvatar: FC<Props> = ({ user, isIgnored, onClick }) => {

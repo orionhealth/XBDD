@@ -1,25 +1,14 @@
 import React, { useState, useEffect, FC, useRef, useCallback } from 'react';
 import Alert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
 import { notifications$, UniqueNotification } from './notifications';
 import useClickOutside from 'hooks/useClickOutside';
-
-const useStyles = makeStyles({
-  root: {
-    position: 'fixed',
-    left: 10,
-    bottom: 5,
-  },
-  alert: {
-    marginBottom: 5,
-  },
-});
+import { useNotificationViewStyles } from './styles/NotificationViewStyles';
 
 const NotificationsView: FC = () => {
   const { t } = useTranslation();
-  const styles = useStyles();
+  const classes = useNotificationViewStyles();
 
   const [currentNotifications, setCurrentNotifications] = useState([] as UniqueNotification[]);
   const ref = useRef(null);
@@ -36,11 +25,11 @@ const NotificationsView: FC = () => {
   }, []);
 
   return (
-    <div ref={ref} className={styles.root}>
+    <div ref={ref} className={classes.root}>
       {currentNotifications.map(notification => (
         <Alert
           key={notification.id}
-          className={styles.alert}
+          className={classes.alert}
           elevation={6}
           variant="filled"
           severity={notification.severity}

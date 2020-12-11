@@ -1,6 +1,6 @@
 import { makeStyles, createStyles } from '@material-ui/core';
 
-export const useBuildListStyles = makeStyles(() =>
+export const useBuildSummaryStyles = makeStyles(() =>
   createStyles({
     versionsSelector: {
       paddingTop: '16px',

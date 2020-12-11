@@ -19,7 +19,7 @@ const UsernamePasswordForm: FC = () => {
       <TextField label="Username" name="username" variant="outlined" required className={classes.textField} />
       <TextField label="Password" name="password" variant="outlined" type="password" required className={classes.textField} />
       <Button className={classes.loginButton} variant="contained" type="submit">
-        {t('navbar.signin')}
+        {t('navbar.signIn')}
       </Button>
     </form>
   );

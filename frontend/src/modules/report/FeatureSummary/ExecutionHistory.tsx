@@ -12,6 +12,7 @@ import { StatusMap, Passed, Failed, Skipped, Undefined } from 'models/Status';
 import { resetFeatureState } from 'redux/FeatureReducer';
 import { RootStore } from 'rootReducer';
 import { getEncodedURI } from 'lib/rest/URIHelper';
+import { useStatusColorStyles } from 'modules/styles/globalStyles';
 
 interface Props {
   executionHistory: Execution[];
@@ -25,11 +26,13 @@ const ExecutionHistory: FC<Props> = ({ executionHistory }) => {
 
   const report = useSelector((state: RootStore) => state.report.currentReportId);
 
+  const classesMap = useStatusColorStyles();
+
   const iconMap: StatusMap<ReactNode> = {
-    [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={classes.featurePassed} />,
-    [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={classes.featureFailed} />,
-    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={classes.featureUndefined} />,
-    [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={classes.featureSkipped} />,
+    [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={classesMap.passed} />,
+    [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={classesMap.failed} />,
+    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={classesMap.undefined} />,
+    [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={classesMap.skipped} />,
   };
 
   const navigateToBuild = (build: string): void => {

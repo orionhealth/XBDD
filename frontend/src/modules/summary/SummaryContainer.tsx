@@ -1,22 +1,17 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
-import ProductList from './productList/ProductList';
+import ProductListContainer from './productList/ProductListContainer';
 import { useSummaryStyles } from './styles/SummaryStyles';
 import Loading from 'modules/loading/Loading';
-import { LoggedInUser } from 'models/User';
+import { User } from 'models/User';
 import { RootStore } from 'rootReducer';
-import Product from 'models/Product';
 
 interface Props {
-  user: LoggedInUser;
+  user: User;
 }
-
-const renderList = (productList: Product[], title: string): ReactNode => {
-  return productList && <ProductList list={productList} title={title} />;
-};
 
 const SummaryContainer: FC<Props> = ({ user }) => {
   const { t } = useTranslation();
@@ -33,10 +28,10 @@ const SummaryContainer: FC<Props> = ({ user }) => {
       <Loading loading={!productList} />
       <Grid container>
         <Grid item xs={6} className={classes.productListContainer}>
-          {productList && renderList(productList, t('summary.productList'))}
+          {productList && <ProductListContainer list={productList} title={t('summary.productList')} />}
         </Grid>
         <Grid item xs={6} className={classes.productListContainer}>
-          {favouriteList && renderList(favouriteList, t('summary.favourites'))}
+          {favouriteList && <ProductListContainer list={favouriteList} title={t('summary.favourites')} />}
         </Grid>
       </Grid>
     </>

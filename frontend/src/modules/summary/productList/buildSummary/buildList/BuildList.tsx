@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleUp, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
@@ -14,26 +14,37 @@ interface Props {
   buildList: Build[];
 }
 
+const BuildListItems: FC<Props> = ({ product, version, buildList }) => {
+  return (
+    <>
+      {buildList.map(build => (
+        <BuildListItem key={build.name} product={product} version={version} build={build} />
+      ))}
+    </>
+  );
+};
+
 const BuildList: FC<Props> = ({ product, version, buildList }) => {
   const { t } = useTranslation();
   const classes = useBuildListStyles();
   const [expanded, setExpanded] = useState(false);
+
   const pinnedBuildList = buildList.filter(build => build.isPinned);
   let unpinnedBuildList = buildList.filter(build => !build.isPinned);
 
   const isExpandable = unpinnedBuildList.length > 5;
   unpinnedBuildList = isExpandable && !expanded ? unpinnedBuildList.slice(0, 5) : unpinnedBuildList;
 
-  const renderList = (buildList: Build[]): ReactNode => {
-    return buildList.map(build => <BuildListItem key={build.name} product={product} version={version} build={build} />);
-  };
-
   return (
     <div className={classes.buildListContainer}>
-      {pinnedBuildList.length !== 0 && <List>{renderList(pinnedBuildList)}</List>}
+      {pinnedBuildList.length !== 0 && (
+        <List>
+          <BuildListItems product={product} version={version} buildList={pinnedBuildList} />
+        </List>
+      )}
       {unpinnedBuildList.length !== 0 && (
         <List>
-          {renderList(unpinnedBuildList)}
+          <BuildListItems product={product} version={version} buildList={unpinnedBuildList} />
           {isExpandable && (
             <ListItem button divider onClick={(): void => setExpanded(!expanded)}>
               <ListItemIcon className={classes.arrowIcon}>

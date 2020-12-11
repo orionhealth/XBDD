@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faExclamationCircle, faQuestionCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { useStatusIconStyles } from './styles/FeatureSummaryStyles';
+import { useStatusColorStyles } from 'modules/styles/globalStyles';
+import { Failed, Passed, Skipped, Undefined } from 'models/Status';
 
 interface Props {
   firstStatus: string;
@@ -19,11 +21,13 @@ const StatusIcons: FC<Props> = props => {
     sizeClasses = classes.smallIcons;
   }
 
+  const classesMap = useStatusColorStyles();
+
   const iconMap = {
-    passed: <FontAwesomeIcon icon={faCheckCircle} className={`${classes.featurePassed} ${sizeClasses}`} />,
-    failed: <FontAwesomeIcon icon={faExclamationCircle} className={`${classes.featureFailed} ${sizeClasses}`} />,
-    undefined: <FontAwesomeIcon icon={faQuestionCircle} className={`${classes.featureUndefined} ${sizeClasses}`} />,
-    skipped: <FontAwesomeIcon icon={faMinusCircle} className={`${classes.featureSkipped} ${sizeClasses}`} />,
+    [Passed]: <FontAwesomeIcon icon={faCheckCircle} className={`${classesMap[Passed]} ${sizeClasses}`} />,
+    [Failed]: <FontAwesomeIcon icon={faExclamationCircle} className={`${classesMap[Failed]} ${sizeClasses}`} />,
+    [Undefined]: <FontAwesomeIcon icon={faQuestionCircle} className={`${classesMap[Undefined]} ${sizeClasses}`} />,
+    [Skipped]: <FontAwesomeIcon icon={faMinusCircle} className={`${classesMap[Skipped]} ${sizeClasses}`} />,
   };
 
   return (

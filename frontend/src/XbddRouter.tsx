@@ -8,14 +8,14 @@ import ReportContainer from 'modules/report/ReportContainer';
 import NotificationsView from 'modules/notifications/NotificationsView';
 import { RootStore } from 'rootReducer';
 import { fetchUser } from 'redux/UserReducer';
-import { LoggedInUser } from 'models/User';
+import { User } from 'models/User';
 import { fetchProductList, updateReportIdentifier } from 'redux/ReportReducer';
 import { fetchIndexes } from 'redux/FeatureReducer';
 import { fetchTagsMetadata } from 'redux/TagsMetadataReducer';
 import { getDecodedIdentifier } from 'lib/rest/URIHelper';
 
 interface Props {
-  user: LoggedInUser;
+  user: User;
 }
 
 interface ReportIdentifier {

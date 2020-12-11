@@ -2,7 +2,7 @@ import React, { FC, ChangeEvent, useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 
-import { useInputFieldStyles } from './styles/ScenarioStepStyles';
+import { useInputFieldStyles } from './styles/ScenarioComponentsStyles';
 import { updateCommentWithRollback } from 'redux/FeatureReducer';
 
 interface Props {
@@ -38,7 +38,7 @@ const ScenarioInputField: FC<Props> = ({ scenarioId, label, content }) => {
         rows="2"
         fullWidth={true}
         value={text}
-        onChange={(event: ChangeEvent<HTMLInputElement>): void => setText(event.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>): void => setText(e.target.value)}
         onBlur={(): void => {
           dispatch(updateCommentWithRollback(scenarioId, labelMap[label], requestLabelMap[label], text));
         }}

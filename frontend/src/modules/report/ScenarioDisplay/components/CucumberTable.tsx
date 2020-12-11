@@ -1,27 +1,15 @@
 import React, { FC } from 'react';
 import { Table, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 import StepRow from 'models/StepRow';
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    scrollableTable: {
-      overflowX: 'scroll',
-    },
-    stepTable: {
-      width: 'auto',
-      margin: '4px 0 12px 0',
-    },
-  })
-);
+import { useCucumberTableStyles } from './styles/ScenarioComponentsStyles';
 
 interface Props {
   rows: StepRow[];
 }
 
 const CucumberTable: FC<Props> = ({ rows }) => {
-  const classes = useStyles();
+  const classes = useCucumberTableStyles();
 
   let index = 0;
   return (

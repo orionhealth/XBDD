@@ -1,9 +1,9 @@
 import { ReportIdentifier } from 'redux/ReportReducer';
 
-export const getEncodedURI = (...componenets: string[]): string => {
+export const getEncodedURI = (...components: string[]): string => {
   let path = '';
-  for (const componenet of componenets) {
-    path += encodeURIComponent(componenet) + '/';
+  for (const component of components) {
+    path += encodeURIComponent(component) + '/';
   }
   return path.slice(0, -1);
 };

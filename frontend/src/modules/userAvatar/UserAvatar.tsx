@@ -33,6 +33,12 @@ const getHSLFromString = (display: string): string => {
   return 'hsl(' + ((val * val) % 360) + ', 21%, 63%)';
 };
 
+interface Props {
+  user: User | null;
+  className?: string;
+  onClick?(e: MouseEvent): void;
+}
+
 const UserAvatar: FC<Props> = ({ user, className, onClick }) => {
   const { t } = useTranslation();
 

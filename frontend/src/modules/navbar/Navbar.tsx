@@ -16,7 +16,7 @@ const Navbar: FC = () => {
   const classes = useNavbarStyles();
 
   const [openDialog, setOpenDialog] = useState(false);
-  const loggedInUser = useSelector((state: RootStore) => state.user);
+  const user = useSelector((state: RootStore) => state.user);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -50,12 +50,12 @@ const Navbar: FC = () => {
             className={classes.loginButton}
             color="secondary"
             onClick={(): void => {
-              loggedInUser ? onLogout() : setOpenDialog(true);
+              user ? onLogout() : setOpenDialog(true);
             }}
           >
-            {loggedInUser ? t('navbar.logout') : t('navbar.login')}
+            {user ? t('navbar.logout') : t('navbar.login')}
           </Button>
-          <UserAvatar user={loggedInUser} />
+          <UserAvatar user={user} />
         </Box>
       </Toolbar>
       <LoginDialog open={openDialog} onClose={(): void => setOpenDialog(false)} />

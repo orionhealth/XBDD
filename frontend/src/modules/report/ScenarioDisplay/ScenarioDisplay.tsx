@@ -1,16 +1,17 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { ExpansionPanel, ExpansionPanelSummary, Box, Typography, ExpansionPanelDetails, Grid, Button } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import Scenario from 'models/Scenario';
-import Status, { Passed, Failed, Skipped, Undefined, StatusMap } from 'models/Status';
+import Status, { Passed, Skipped } from 'models/Status';
 import { useScenarioDisplayStyles } from './styles/ScenarioDisplayStyles';
 import StatusIcons from '../FeatureSummary/StatusIcons';
-import ScenarioStep from './components/ScenarioStep';
+import ScenarioSteps from './components/ScenarioSteps';
 import ScenarioInputField from './components/ScenarioInputField';
 import { updateScenarioStatusWithRollback } from 'redux/FeatureReducer';
+import { useStatusColorStyles } from 'modules/styles/globalStyles';
 
 interface StepChange {
   stepId: number;
@@ -21,43 +22,47 @@ interface Props {
   scenario: Scenario;
 }
 
-const ScenarioDisplay: FC<Props> = ({ scenario }) => {
-  const [expanded, setExpanded] = useState(false);
+interface ActionButtonProps {
+  scenarioId: string;
+  status: Status;
+  statusClass: string;
+  text: string;
+}
+
+const ActionButton: FC<ActionButtonProps> = ({ scenarioId, status, statusClass, text }) => {
   const dispatch = useDispatch();
   const classes = useScenarioDisplayStyles();
-  const { t } = useTranslation();
 
-  const classesMap: StatusMap<string> = {
-    [Passed]: classes.xbddScenarioPassed,
-    [Failed]: classes.xbddScenarioFailed,
-    [Undefined]: classes.xbddScenarioUndefined,
-    [Skipped]: classes.xbddScenarioSkipped,
-  };
+  const buttonClasses = `${classes.buttonForAllSteps} ${statusClass}`;
 
-  const { id, calculatedStatus, originalAutomatedStatus, steps, backgroundSteps, environmentNotes, testingTips, executionNotes } = scenario;
-
-  let className = expanded ? classes.expandedScenarioTitle : '';
-
-  if (calculatedStatus) {
-    className += ` ${classesMap[calculatedStatus]}`;
-  } else {
-    className += ` ${classesMap[originalAutomatedStatus]}`;
-  }
-
-  const buttonClasses = (statusClass: string): string => `${classes.buttonForAllSteps} ${statusClass}`;
-
-  const renderButton = (status: Status, classes: string, text: string): ReactNode => (
+  return (
     <Button
       variant="contained"
       size="small"
       onClick={(): void => {
-        dispatch(updateScenarioStatusWithRollback(scenario.id, status));
+        dispatch(updateScenarioStatusWithRollback(scenarioId, status));
       }}
-      className={classes}
+      className={buttonClasses}
     >
       {text}
     </Button>
   );
+};
+
+const ScenarioDisplay: FC<Props> = ({ scenario }) => {
+  const [expanded, setExpanded] = useState(false);
+  const classes = useScenarioDisplayStyles();
+  const { t } = useTranslation();
+
+  const classesMap = useStatusColorStyles();
+
+  const { id, calculatedStatus, originalAutomatedStatus, steps, backgroundSteps, environmentNotes, testingTips, executionNotes } = scenario;
+
+  let className = calculatedStatus ? classesMap[calculatedStatus] : classesMap[originalAutomatedStatus];
+
+  if (expanded) {
+    className += ` ${classes.expandedScenarioTitle}`;
+  }
 
   return (
     <ExpansionPanel key={id} expanded={expanded} className={classes.scenarioListItem} TransitionProps={{ unmountOnExit: true }}>
@@ -78,10 +83,10 @@ const ScenarioDisplay: FC<Props> = ({ scenario }) => {
       <ExpansionPanelDetails>
         <Grid container>
           <Grid item xs={11}>
-            {backgroundSteps && <ScenarioStep title={t('report.backgroundSteps')} steps={backgroundSteps} scenarioId={scenario.id} />}
+            {backgroundSteps && <ScenarioSteps scenarioId={scenario.id} title={t('report.backgroundSteps')} steps={backgroundSteps} />}
           </Grid>
           <Grid item xs={11}>
-            {steps && <ScenarioStep title={t('report.steps')} steps={steps} scenarioId={scenario.id} />}
+            {steps && <ScenarioSteps scenarioId={scenario.id} title={t('report.steps')} steps={steps} />}
           </Grid>
           <Grid item xs={5}>
             <ScenarioInputField scenarioId={scenario.id} label={t('report.environment')} content={environmentNotes} />
@@ -95,8 +100,8 @@ const ScenarioDisplay: FC<Props> = ({ scenario }) => {
           </Grid>
           <Grid item xs={11}>
             <div className={classes.buttons}>
-              {renderButton(Skipped, buttonClasses(classes.skipAllSteps), t('report.skipAllSteps'))}
-              {renderButton(Passed, buttonClasses(classes.passAllSteps), t('report.passAllSteps'))}
+              <ActionButton scenarioId={scenario.id} status={Skipped} statusClass={classes.skipAllSteps} text={t('report.skipAllSteps')} />
+              <ActionButton scenarioId={scenario.id} status={Passed} statusClass={classes.passAllSteps} text={t('report.passAllSteps')} />
             </div>
           </Grid>
         </Grid>

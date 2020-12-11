@@ -2,8 +2,12 @@
   "errors": {
     "unexpected": "An unexpected error has occurred, please reload.\nIf the problem persists please create an issue with any errors logged in your console to https://github.com/orionhealth/XBDD/issues."
   },
+  "dialog": {
+    "yes": "Hell Yeah",
+    "cancel": "Cancel"
+  },
   "navbar": {
-    "signin": "Sign in",
+    "signIn": "Sign in",
     "cancel": "Cancel",
     "login": "Login",
     "loginWithGithub": "Login with Github",

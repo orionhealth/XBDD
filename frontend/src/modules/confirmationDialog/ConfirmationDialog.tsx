@@ -1,15 +1,17 @@
-import React, { FC } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   open: boolean;
   title: string;
   msg: string;
-  handleConfirmed: (event: React.MouseEvent) => void;
-  handleClosed: (event: React.MouseEvent) => void;
+  handleConfirmed: (e: MouseEvent) => void;
+  handleClosed: (e: MouseEvent) => void;
 }
 
 const ConfirmationDialog: FC<Props> = props => {
+  const { t } = useTranslation();
   const { open, title, msg, handleConfirmed, handleClosed } = props;
 
   return (
@@ -20,10 +22,10 @@ const ConfirmationDialog: FC<Props> = props => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClosed} variant="contained">
-          Cancel
+          {t(`dialog.cancel`)}
         </Button>
         <Button onClick={handleConfirmed} variant="contained" color="primary">
-          Hell Yeah
+          {t(`dialog.yes`)}
         </Button>
       </DialogActions>
     </Dialog>
