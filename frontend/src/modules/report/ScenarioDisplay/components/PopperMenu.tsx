@@ -42,7 +42,7 @@ const MenuListItem: FC<MenuListItemProps> = ({ scenarioId, stepId, status }) => 
     </ListItem>
   );
 };
-
+    
 const copyToClipboard = (e: MouseEvent, step: string): void => {
   e.stopPropagation();
   navigator.clipboard.writeText(step);
