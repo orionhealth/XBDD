@@ -24,13 +24,13 @@ const BuildListItem: FC<Props> = ({ product, version, build }) => {
   const classes = useBuildListStyles();
   const history = useHistory();
 
-  const handleSelectBuild = (e: MouseEvent): void => {
+  const handleSelectBuild = (e: MouseEvent<HTMLElement>): void => {
     e.stopPropagation();
     dispatch(resetFeatureState());
     history.push(`/reports/${getEncodedURI(product, version, build.name)}`);
   };
 
-  const handlePinBuild = (e: MouseEvent): void => {
+  const handlePinBuild = (e: MouseEvent<HTMLElement>): void => {
     e.stopPropagation();
     dispatch(updatePinStatusWithRollback(product, version, build.name, build.isPinned));
   };
