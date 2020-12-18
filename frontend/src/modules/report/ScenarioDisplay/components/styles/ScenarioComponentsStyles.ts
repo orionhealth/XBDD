@@ -18,7 +18,7 @@ export const useStepStyles = makeStyles(() =>
     },
     stepContentBox: {
       padding: '3px',
-      overflowX: 'scroll',
+      overflowX: 'auto',
     },
     skippedStepText: {
       textDecoration: 'line-through',
@@ -43,7 +43,7 @@ export const useInputFieldStyles = makeStyles(() =>
 export const useCucumberTableStyles = makeStyles(() =>
   createStyles({
     scrollableTable: {
-      overflowX: 'scroll',
+      overflowX: 'auto',
     },
     stepTable: {
       width: 'auto',

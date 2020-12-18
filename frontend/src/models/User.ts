@@ -1,7 +1,7 @@
 export interface User {
   userId: string;
-  socialLogin?: string;
   display: string;
+  socialLogin?: string;
   avatarUrl?: string;
   favourites?: Record<string, boolean>;
 }

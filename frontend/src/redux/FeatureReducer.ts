@@ -7,7 +7,7 @@ import Feature, { SimpleFeature } from 'models/Feature';
 import fetchFeature from 'lib/services/FetchFeature';
 import fetchExecutionHistory from 'lib/services/FetchExecutionHistory';
 import { User } from 'models/User';
-import { calculateManualStatus, calculateFeatureStatus } from 'lib/StatusCalculator';
+import { calculateManualStatus, calculateFeatureStatus } from 'lib/utils/StatusCalculator';
 import Status, { DefaultSelectedStatuses, SelectedStatuses } from 'models/Status';
 import Tag from 'models/Tag';
 import fetchSimpleFeaturesByTags from 'lib/services/FetchSimpleFeaturesByTags';
