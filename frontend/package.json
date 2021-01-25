@@ -29,7 +29,7 @@
     "ts-interface-builder": "^0.2.2"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-regular-svg-icons": "^5.13.0",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/react-fontawesome": "^0.1.10",
