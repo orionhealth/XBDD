@@ -1,0 +1,69 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/frontend"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: prettier
+    versions:
+    - "^2.0.0"
+  - dependency-name: y18n
+    versions:
+    - 4.0.1
+  - dependency-name: i18next
+    versions:
+    - 19.8.4
+    - 19.8.5
+    - 19.8.7
+    - 19.8.9
+    - 19.9.1
+    - 19.9.2
+    - 20.1.0
+  - dependency-name: "@types/jest"
+    versions:
+    - 26.0.20
+    - 26.0.21
+  - dependency-name: "@types/react"
+    versions:
+    - 17.0.0
+    - 17.0.1
+    - 17.0.2
+  - dependency-name: "@fortawesome/fontawesome-svg-core"
+    versions:
+    - 1.2.34
+  - dependency-name: "@fortawesome/free-solid-svg-icons"
+    versions:
+    - 5.15.2
+  - dependency-name: "@reduxjs/toolkit"
+    versions:
+    - 1.5.0
+  - dependency-name: lodash
+    versions:
+    - 4.17.20
+  - dependency-name: elliptic
+    versions:
+    - 6.5.3
+- package-ecosystem: maven
+  directory: "/frontend"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.github.eirslett:frontend-maven-plugin
+    versions:
+    - 1.11.0
+    - 1.11.2
+- package-ecosystem: maven
+  directory: "/backend"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: org.springframework.boot:spring-boot-dependencies
+    versions:
+    - ">= 0"
+  - dependency-name: org.springframework.boot:spring-boot-maven-plugin
+    versions:
+    - ">= 0"
