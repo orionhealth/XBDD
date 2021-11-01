@@ -23,6 +23,8 @@ See [DEVELOPMENT](/docs/DEVELOPMENT.md) for information on setting up a developm
 
 Run the script contained within `mongoIndexes.txt` to create compound indexes required for search/sort.
 
+To adjust the authentication timeout, see backend application.yml - server.servlet.session.timeout
+
 ## Uploading reports
 
 See [UPLOAD](/docs/UPLOAD.md) for instructions on automated test report uploads via Maven. 
