@@ -1,0 +1,13 @@
+name: Build frontend (via Maven)
+on: [push]
+jobs:
+  build-frontend-via-maven:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This action is running the frontend build with Maven. Once node is upograded, disable and remove this action."
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - run: mvn --batch-mode --update-snapshots --projects frontend --also-make clean package
