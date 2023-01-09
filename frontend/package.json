@@ -47,7 +47,7 @@
     "i18next": "^19.4.5",
     "i18next-browser-languagedetector": "^5.0.0",
     "i18next-http-backend": "^1.0.15",
-    "immer": "^8.0.1",
+    "immer": "^9.0.17",
     "prop-types": "^15.6.1",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
